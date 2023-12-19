@@ -52,6 +52,8 @@
   background-image: url("./images/particles.png");
   background-repeat: repeat-y;
   background-size: contain;
+  display: flex;
+  flex-direction: row;
 }
 
 .inputLabel {
@@ -65,4 +67,6 @@
 
 .rightInputs {
   width: 50%;
+  margin-left: 10rem;
+  margin-top: 1rem;
 }

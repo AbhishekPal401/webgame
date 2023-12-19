@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./createusers.module.css";
 import PageContainer from "../../../../components/ui/pagecontainer";
 import Input from "../../../../components/common/input";
+import ImageDropZone from "../../../../components/common/upload/ImageDropzone";
 
 const CreateUser = () => {
   const onChange = () => {};
@@ -86,7 +87,9 @@ const CreateUser = () => {
                 </select>
               </div>
             </div>
-            <div className={styles.rightInputs}></div>
+            <div className={styles.rightInputs}>
+              <ImageDropZone label="Upload Profile Pic" />
+            </div>
           </div>
         </div>
       </div>
