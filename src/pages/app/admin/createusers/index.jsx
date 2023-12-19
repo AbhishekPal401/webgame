@@ -3,6 +3,7 @@ import styles from "./createusers.module.css";
 import PageContainer from "../../../../components/ui/pagecontainer";
 import Input from "../../../../components/common/input";
 import ImageDropZone from "../../../../components/common/upload/ImageDropzone";
+import Button from "../../../../components/common/button";
 
 const CreateUser = () => {
   const onChange = () => {};
@@ -94,6 +95,10 @@ const CreateUser = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className={styles.buttonContainer}>
+        <Button buttonType="cancel">Cancel</Button>
+        <Button>Create</Button>
       </div>
     </PageContainer>
   );
