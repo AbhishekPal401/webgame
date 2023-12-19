@@ -1,0 +1,28 @@
+.container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  background-color: var(--background-color);
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Styling the left column */
+.containerLeftColumn {
+  flex: 5.5;
+  margin-left: 5.3rem;
+}
+
+/* Styling the right column */
+.containerRightColumn {
+  flex: 4.5;
+  background-color: #ffc404;
+  height: 100%;
+  width: 100%;
+}
+
+.containerRightColumn img {
+  width: 160%;
+  height: 100%;
+  overflow: hidden;
+}

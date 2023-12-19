@@ -1,0 +1,83 @@
+.container {
+  width: 50%;
+  text-align: left;
+}
+
+.flexCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+}
+
+.button {
+  margin: 0.5rem 0;
+}
+
+.containerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.7rem;
+  font-size: 1.1rem;
+}
+
+.containerLogo {
+  margin-bottom: 3.8rem;
+}
+
+.containerLogo img {
+  width: 8rem;
+}
+
+.containerHeading {
+  margin-bottom: 5.4rem;
+}
+.containerHeading h3 {
+  font-weight: normal;
+  font-size: 3.6rem;
+}
+
+.containerHeading p {
+  margin-top: 1.2rem;
+  font-size: 2rem;
+}
+
+.containerDivider {
+  margin-top: 12rem;
+  margin-bottom: 2rem;
+}
+
+.containerDivider hr {
+  border: 1px solid #707070;
+}
+
+.microsoftLoginButton {
+  width: 100%;
+  height: auto;
+  background-color: rgb(255, 241, 162);
+  border: 0.2rem solid rgb(248, 248, 107);
+  color: #171717;
+  display: inline-block;
+  font-weight: 400;
+  color: #212529;
+  text-align: center;
+  border: 1px solid transparent;
+  padding: 0.5rem 2.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.forgotpassword {
+  /* text-decoration: underline; */
+  text-decoration: none;
+  color: var(--black);
+  font-size: 1.4rem;
+}

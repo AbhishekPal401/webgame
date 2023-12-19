@@ -1,0 +1,57 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.pages_status {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.pages_status input {
+  display: inline;
+  width: 2.8rem;
+  height: 2rem;
+  line-height: 2rem; /* Center the text vertically */
+  text-align: center; /* Center the text horizontally */
+  border-radius: 0.4rem;
+  outline: none;
+  appearance: none;
+  border: 2px solid var(--primary); /* Add a border for better visibility */
+}
+
+.pages_status div {
+  margin-left: 0.6rem;
+  font-size: 1.2rem;
+}
+
+.pages_status div label {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.previous,
+.next {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.disabled {
+  color: #979797;
+  opacity: 1;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.previous:hover,
+.next:hover {
+  cursor: pointer;
+}

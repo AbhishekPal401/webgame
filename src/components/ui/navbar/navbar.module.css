@@ -1,0 +1,50 @@
+.navbarContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 4rem;
+  background-color: var(--innerbackground);
+  padding-left: 2.4rem;
+  padding-right: 2.4rem;
+  box-shadow: 0px 0.3rem 0.6rem #00000029;
+}
+.pwcLogo {
+  width: 4.2rem;
+  padding-top: 0.3rem;
+}
+
+.pwcLogo img {
+  width: 100%;
+  height: 100%;
+}
+.label {
+  font-size: 1.3rem;
+  padding-left: 2.4rem;
+}
+
+.containerRight {
+  margin-left: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.role {
+  font-size: 1.3rem;
+  margin-right: 2.4rem;
+  font-weight: 500;
+}
+.profileIcon {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 3.4rem;
+  background-color: var(--primary);
+  color: var(--black);
+  font-size: 1.5rem;
+  font-weight: 800;
+}

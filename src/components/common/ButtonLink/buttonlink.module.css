@@ -1,0 +1,20 @@
+.iconContainer {
+  height: 5.2rem;
+  background-color: var(--primary);
+}
+
+.iconContainer:hover {
+  cursor: pointer;
+}
+
+.logoActive {
+  width: 100%;
+  height: 100%;
+  fill: var(--primary);
+}
+
+.logoInactive {
+  width: 100%;
+  height: 100%;
+  fill: white;
+}

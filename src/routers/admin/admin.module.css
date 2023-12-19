@@ -1,0 +1,20 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--background-color);
+}
+.layoutContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+.leftContainer {
+  position: relative;
+  width: 6rem;
+}
+.rightContainer {
+  width: 100%;
+  height: 100%;
+}
