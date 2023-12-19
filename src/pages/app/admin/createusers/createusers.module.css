@@ -30,7 +30,7 @@
 .mainContainer {
   width: 100%;
   height: fit-content;
-  height: 45rem;
+  height: 36rem;
 }
 .formContainer {
   width: 100%;
@@ -49,8 +49,20 @@
   width: 100%;
   height: 100%;
   background: #474747 0% 0% no-repeat padding-box;
-
   background-image: url("./images/particles.png");
   background-repeat: repeat-y;
   background-size: contain;
+}
+
+.inputLabel {
+  color: var(--input_label);
+}
+
+.leftInputs {
+  width: 30%;
+  margin-left: 2rem;
+}
+
+.rightInputs {
+  width: 50%;
 }

@@ -6,12 +6,13 @@ const Input = ({
   customStyle,
   label,
   name,
+  labelStyle = "",
   onChange = () => {},
   ...props
 }) => {
   return (
     <div style={customStyle} className={style.formGroup}>
-      <label>{label}</label>
+      <label className={labelStyle}>{label}</label>
       {textArea ? (
         <textarea
           className={style.formControl}
