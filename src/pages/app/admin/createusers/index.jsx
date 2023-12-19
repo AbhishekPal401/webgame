@@ -13,7 +13,12 @@ const CreateUser = () => {
           <img src="./images/scenario.png" />
         </div>
       </div>
-      <div className={styles.mainContainer}></div>
+      <div className={styles.mainContainer}>
+        <div className={styles.formContainer}>
+          <div className={styles.formLeft}></div>
+          <div className={styles.formRight}></div>
+        </div>
+      </div>
     </PageContainer>
   );
 };
