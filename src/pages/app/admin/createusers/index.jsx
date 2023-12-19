@@ -69,7 +69,8 @@ const CreateUser = () => {
                   <option value="option3">Option 3</option>
                 </select>
               </div>
-
+            </div>
+            <div className={styles.rightInputs}>
               <div>
                 <label htmlFor="dropdown_Organisation" className="select_label">
                   Organisation:
@@ -86,9 +87,10 @@ const CreateUser = () => {
                   <option value="option3">Option 3</option>
                 </select>
               </div>
-            </div>
-            <div className={styles.rightInputs}>
-              <ImageDropZone label="Upload Profile Pic" />
+              <ImageDropZone
+                customstyle={{ marginTop: "1rem" }}
+                label="Upload Profile Pic"
+              />
             </div>
           </div>
         </div>
