@@ -90,7 +90,15 @@ const Users = () => {
                     <td>{user.Designation}</td>
                     <td>{user.OrganizationName}</td>
                     <td>
-                      <button onClick={() => {}}>Delete</button>
+                      <Button
+                        customStyle={{
+                          paddingTop: "0.2rem",
+                          paddingBottom: "0.2rem",
+                        }}
+                        buttonType="cancel"
+                      >
+                        Delete
+                      </Button>
                     </td>
                   </tr>
                 );

@@ -5,10 +5,12 @@ const Button = ({
   children,
   buttonType,
   customClassName,
+  customStyle = {},
   onClick = () => {},
   ...props
 }) => (
   <button
+    style={customStyle}
     className={`${styles[buttonType] || customClassName || styles.default}`}
     {...props}
     onClick={onClick}
