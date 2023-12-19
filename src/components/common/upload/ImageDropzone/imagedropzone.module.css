@@ -10,7 +10,7 @@
   padding: 1rem;
   cursor: pointer;
   border: 0.2rem dotted var(--primary);
-  width: 40rem;
+  width: 100%;
   height: 10rem;
   margin-top: 1rem;
 }
