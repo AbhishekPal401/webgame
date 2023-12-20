@@ -82,7 +82,6 @@ const Users = () => {
               usersByPage.success &&
               usersByPage.data &&
               JSON.parse(usersByPage.data)?.UserDetails.map((user, index) => {
-                console.log(user);
                 return (
                   <tr key={index}>
                     <td>{index + pageCount * (pageNumber - 1) + 1}</td>

@@ -7,9 +7,9 @@ const ImageDropZone = ({
   customstyle = {},
   resetImage = false,
   imageSrc = "",
+  setUrl = () => {},
   onUpload = () => {},
 }) => {
-  const [selectedImage, setSelectedImage] = useState(null);
   const [error, setError] = useState(null);
 
   const onDrop = useCallback((acceptedFiles) => {
@@ -21,7 +21,8 @@ const ImageDropZone = ({
 
         const reader = new FileReader();
         reader.onload = (e) => {
-          setSelectedImage(e.target.result);
+          // setSelectedImage(e.target.result);
+          setUrl(e.target.result);
           setError(null);
         };
         reader.readAsDataURL(file);
@@ -32,14 +33,10 @@ const ImageDropZone = ({
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: "image/jpeg, image/png",
+    accept: {
+      "image/*": [".jpeg", ".jpg", ".png"],
+    },
   });
-
-  useEffect(() => {
-    if (resetImage) {
-      setSelectedImage(null);
-    }
-  }, [resetImage]);
 
   return (
     <>
@@ -52,10 +49,10 @@ const ImageDropZone = ({
           <p>Drop the files here ...</p>
         ) : (
           <>
-            {selectedImage || imageSrc ? (
+            {imageSrc ? (
               <div className={styles.previewContainer}>
                 <img
-                  src={selectedImage || imageSrc}
+                  src={imageSrc}
                   alt="Profile Image"
                   className={styles.previewImage}
                 />
