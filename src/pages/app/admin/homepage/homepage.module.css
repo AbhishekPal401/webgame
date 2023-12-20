@@ -1,0 +1,255 @@
+PageContainer {
+  overflow: auto;
+}
+
+.topContainer {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.left {
+  flex: 1;
+  height: 100%;
+  display: flex;
+}
+
+.left label {
+  font-size: 4rem;
+  color: var(--label);
+  font-weight: bold;
+}
+.right {
+  flex: 1.5;
+  /* display: flex;
+  align-items: end; */
+  height: 100%;
+  background-image: url("./images/binary.png");
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.right img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.buttonContainer {
+  position: absolute;
+  bottom: 0;
+  right: 0.8rem;
+}
+
+/* Main container */
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  
+}
+
+/* Sesion History */
+
+.sessionHistoryContainer {
+  width: 100%;
+  height: fit-content;
+  background: rgb(61, 61, 61);
+  border-radius: 0.5rem;
+  padding: 2rem 1rem;
+  background-image: url("/images/session-history.png");
+  background-size: cover;
+  background-position: top;
+  overflow: hidden;
+}
+
+.sessionHistoryContainer h3 {
+  font-size: 2rem;
+  color: #f3f3f3;
+  margin-bottom: 1.6rem;
+  font-weight: bold;
+  width: 31.5rem;
+}
+
+.sessionHistoryCardContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 2.4rem;
+  overflow-x: auto; 
+  white-space: nowrap;
+}
+
+.sessionHistoryCard {
+  background-color: #f3f3f3;
+  padding: 2rem 1rem;
+  border-radius: 0.5rem;
+  width: 31.5rem;
+}
+
+.sessionHistoryCard h4 {
+  font-size: 1.4rem;
+  color: #415385;
+  font-weight: bold;
+}
+
+.sessionHistoryCard p {
+  font-size: 1.2rem;
+  color: #2d2d2d;
+  font-weight: normal;
+}
+
+.butonFlexContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: space-between;
+}
+
+.updatedDate p {
+  font-size: 1rem;
+  flex: 7;
+}
+
+.butonFlexContainer Button {
+  display: inline-block;
+  font-weight: 500;
+  color: #212529;
+  text-align: center;
+  border: 1px solid #3b3b3b;
+  font-size: 1.2rem;
+  border-radius: 0.5rem;
+  color: var(--black);
+  background-color: #fcf2db;
+  padding: 0.5rem 2.5rem;
+  flex: 3;
+}
+
+/* Scenarios Table */
+.scenarioTopContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.scenarioContainer {
+
+}
+
+.scenarioContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+.scenarioContainerRight Button{
+  font-size: 1.4rem;
+}
+.scenarioContainerLeft {
+  display: flex;
+  justify-content: start;
+  align-items: end;
+  gap: 2.4rem;
+}
+.scenarioContainerLeft h3 {
+  font-size: 2rem;
+  color: var(--black);
+  font-weight: bold;
+}
+.scenarioContainerLeft a {
+  font-size: 1.2rem;
+}
+.mainTableContainer {
+  width: 100%;
+  height: 100%;
+  border: 0.1rem solid #707070;
+  border-radius: 0.6rem;
+  padding: 0.3rem;
+}
+.table_content {
+  border-collapse: collapse;
+  font-size: 1.2rem;
+  text-align: left;
+  width: 100%;
+}
+.table_content thead {
+  width: 100%;
+  background-color: var(--black);
+}
+.table_content thead tr {
+  font-size: 1.2rem;
+  height: 3.4rem;
+  font-weight: 600;
+}
+.table_content thead tr th {
+  color: var(--primary);
+  text-align: left;
+  padding-left: 0.5rem;
+}
+
+.table_content tbody {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.table_content tbody tr {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #434343;
+  border-bottom: 1px solid #707070;
+}
+
+/* .table_content tbody tr:hover {
+  background-color: #d6d6d6;
+} */
+
+.table_content tbody tr td {
+  height: 3rem;
+  padding-left: 0.5rem;
+}
+
+/* for table head rounding */
+
+.table_content th:first-child {
+  border-radius: 0.6rem 0 0 0.6rem;
+}
+
+.table_content th:last-child {
+  border-radius: 0 0.6rem 0.6rem 0;
+}
+
+/* pagination */
+
+.paginationContainer {
+  width: 100%;
+  height: 3rem;
+  border-radius: 0rem 0rem 0.8rem 0.8rem;
+  background-color: #dedede;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Media queries */
+/* Main container */
+@media (max-height: 150px) {
+  .mainContainer {
+    gap: 4rem; 
+  }
+}
+
+/* Session history */
+@media (max-width: 850px) {
+  .sessionHistoryCard {
+    padding: 1rem 1rem;
+
+  }
+  .butonFlexContainer {
+    margin-top: 0.5rem; 
+    flex-direction: column; 
+    align-items: start; 
+  }
+
+  .butonFlexContainer Button {
+    margin-top: 0.5rem; 
+  }
+}
