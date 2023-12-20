@@ -85,7 +85,7 @@ const Users = () => {
                 return (
                   <tr key={index}>
                     <td>{index + pageCount * (pageNumber - 1) + 1}</td>
-                    <td>{user.UserName}</td>
+                    <td onClick={() => {}}>{user.UserName}</td>
                     <td>{user.Email}</td>
                     <td>{user.Designation}</td>
                     <td>{user.OrganizationName}</td>
