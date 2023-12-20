@@ -5,3 +5,11 @@ export const generateGUID = () => {
     return v.toString(16);
   });
 };
+export const isJSONString = (str) => {
+  try {
+    JSON.parse(str);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};

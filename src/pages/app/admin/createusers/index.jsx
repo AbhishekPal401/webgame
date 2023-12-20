@@ -5,6 +5,7 @@ import Input from "../../../../components/common/input";
 import ImageDropZone from "../../../../components/common/upload/ImageDropzone";
 import Button from "../../../../components/common/button";
 import { getAllMasters } from "../../../../store/app/admin/users/masters";
+import { getUserDetailsByID } from "../../../../store/app/admin/users/getUserbyId.js";
 import { useDispatch, useSelector } from "react-redux";
 import { validateEmail } from "../../../../utils/validators";
 import { baseUrl } from "../../../../middleware/url";
@@ -13,9 +14,10 @@ import {
   createUser,
   resetCreateUserState,
 } from "../../../../store/app/admin/users/createUser.js";
-import { getUsersbyPage } from "../../../../store/app/admin/users/users.js";
 import { generateGUID } from "../../../../utils/common.js";
+import { useParams } from "react-router-dom";
 import axios from "axios";
+import { isJSONString } from "../../../../utils/common.js";
 
 const CreateUser = () => {
   const [userData, setUserData] = useState({
@@ -46,12 +48,19 @@ const CreateUser = () => {
   });
 
   const [resetImage, setResetImage] = useState(false);
+  const [imageURl, setImageURl] = useState(null);
+
+  const { userID } = useParams();
 
   const { masters, loading: masterLoading } = useSelector(
     (state) => state.masters
   );
 
   const { credentials } = useSelector((state) => state.login);
+
+  const { userByIdDetails, loading: getUserDetailsLoading } = useSelector(
+    (state) => state.getUserbyId
+  );
 
   const { createUserResponse, loading: createUserResponseLoading } =
     useSelector((state) => state.createUser);
@@ -102,6 +111,59 @@ const CreateUser = () => {
       dispatch(resetCreateUserState());
     }
   }, [createUserResponse, resetImage]);
+
+  useEffect(() => {
+    if (userID === null || userID === undefined) return;
+
+    dispatch(
+      getUserDetailsByID({
+        userID: userID,
+      })
+    );
+  }, [userID]);
+
+  const setUserDetailState = useCallback(() => {
+    if (isJSONString(userByIdDetails.data)) {
+      const data = JSON.parse(userByIdDetails.data);
+
+      const newData = {
+        username: {
+          value: data.UserName,
+          error: "",
+        },
+        email: {
+          value: data.Email,
+          error: "",
+        },
+        role: {
+          value: data.Role,
+          error: "",
+        },
+        designation: {
+          value: data.Designation,
+          error: "",
+        },
+        organizationName: {
+          value: data.OrganizationName,
+          error: "",
+        },
+        profileImage: {
+          value: "",
+          error: "",
+        },
+      };
+
+      setImageURl(data.ProfileImage);
+
+      setUserData(newData);
+    }
+  }, [userByIdDetails]);
+
+  useEffect(() => {
+    if (userByIdDetails === null || userByIdDetails === undefined) return;
+
+    setUserDetailState();
+  }, [userByIdDetails]);
 
   const onChange = (event) => {
     setUserData({
@@ -271,9 +333,9 @@ const CreateUser = () => {
         const url = JSON.parse(serializedData.Data).URL;
 
         const data = {
-          userID: "",
+          userID: userID ? userID : "",
           userName: userData.username.value,
-          password: "pwc@123456",
+          password: "",
           role: userData.role.value,
           email: userData.email.value,
           mobile: "",
@@ -296,41 +358,46 @@ const CreateUser = () => {
   };
 
   const onCancel = () => {
-    setUserData({
-      username: {
-        value: "",
-        error: "",
-      },
-      email: {
-        value: "",
-        error: "",
-      },
-      role: {
-        value: "",
-        error: "",
-      },
-      designation: {
-        value: "",
-        error: "",
-      },
-      organizationName: {
-        value: "",
-        error: "",
-      },
-      profileImage: {
-        value: "",
-        error: "",
-      },
-    });
+    if (userID) {
+      setUserDetailState();
+      return;
+    } else {
+      setUserData({
+        username: {
+          value: "",
+          error: "",
+        },
+        email: {
+          value: "",
+          error: "",
+        },
+        role: {
+          value: "",
+          error: "",
+        },
+        designation: {
+          value: "",
+          error: "",
+        },
+        organizationName: {
+          value: "",
+          error: "",
+        },
+        profileImage: {
+          value: "",
+          error: "",
+        },
+      });
 
-    setResetImage(!resetImage);
+      setResetImage(!resetImage);
+    }
   };
 
   return (
     <PageContainer>
       <div className={styles.topContainer}>
         <div className={styles.left}>
-          <label>Create User</label>
+          <label> {userID ? "Update User" : "Create User"}</label>
         </div>
         <div className={styles.right}>
           <img src="./images/scenario.png" />
@@ -438,6 +505,7 @@ const CreateUser = () => {
                 label="Upload Profile Pic"
                 onUpload={onUpload}
                 resetImage={resetImage}
+                imageSrc={imageURl}
               />
             </div>
           </div>
@@ -447,7 +515,7 @@ const CreateUser = () => {
         <Button buttonType="cancel" onClick={onCancel}>
           Cancel
         </Button>
-        <Button onClick={onSubmit}>Create</Button>
+        <Button onClick={onSubmit}> {userID ? "Update" : "Create"}</Button>
       </div>
     </PageContainer>
   );

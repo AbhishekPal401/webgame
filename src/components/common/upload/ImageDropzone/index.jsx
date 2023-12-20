@@ -6,6 +6,7 @@ const ImageDropZone = ({
   label = "",
   customstyle = {},
   resetImage = false,
+  imageSrc = "",
   onUpload = () => {},
 }) => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -51,10 +52,10 @@ const ImageDropZone = ({
           <p>Drop the files here ...</p>
         ) : (
           <>
-            {selectedImage ? (
+            {selectedImage || imageSrc ? (
               <div className={styles.previewContainer}>
                 <img
-                  src={selectedImage}
+                  src={selectedImage || imageSrc}
                   alt="Profile Image"
                   className={styles.previewImage}
                 />

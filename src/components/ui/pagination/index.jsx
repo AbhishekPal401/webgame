@@ -9,8 +9,6 @@ const Pagination = ({
 }) => {
   const totalPages = Math.ceil(totalCount / countPerPage);
 
-  console.log(totalCount, pageNumber, countPerPage, totalPages);
-
   const handlePageChange = (newPage) => {
     if (onPageChange) {
       onPageChange(newPage);
