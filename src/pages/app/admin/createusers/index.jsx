@@ -90,7 +90,6 @@ const CreateUser = () => {
                     masters.data &&
                     Array.isArray(JSON.parse(masters.data)) &&
                     JSON.parse(masters.data).map((item, index) => {
-                      console.log(item);
                       if (item.MasterType !== "Designation") return;
                       return (
                         <option value={item.MasterID} key={index}>
@@ -117,7 +116,6 @@ const CreateUser = () => {
                     masters.data &&
                     Array.isArray(JSON.parse(masters.data)) &&
                     JSON.parse(masters.data).map((item, index) => {
-                      console.log(item);
                       if (item.MasterType !== "Organization") return;
                       return (
                         <option value={item.MasterID} key={index}>

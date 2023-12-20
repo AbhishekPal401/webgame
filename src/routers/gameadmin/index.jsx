@@ -2,12 +2,12 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "../../components/ui/navbar";
 import Sidebar from "../../components/ui/sidebar/adminsidebar/AdminSidebar";
-import styles from "./admin.module.css";
+import styles from "./gameadmin.module.css";
 import Homepage from "../../pages/app/admin/homepage";
 import Users from "../../pages/app/admin/users";
 import CreateUser from "../../pages/app/admin/createusers";
 
-const Admin = () => {
+const GameAdmin = () => {
   return (
     <div className={styles.container}>
       <Navbar />
@@ -27,4 +27,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default GameAdmin;

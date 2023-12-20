@@ -1,8 +1,9 @@
 // App.js
 import React, { useEffect, useState } from "react";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
-import AuthRoutes from "../routers/Auth";
-import AdminRoutes from "../routers/admin";
+import AuthRoutes from "./Auth.jsx";
+import AdminRoutes from "./admin";
+import GameAdmin from "./gameadmin";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { resetLoginState } from "../store/auth/login.js";
@@ -35,7 +36,25 @@ const Routers = () => {
     }
   }, [credentials, isAuthorised]);
 
-  return <Router>{isAuthorised ? <AdminRoutes /> : <AuthRoutes />}</Router>;
+  const RoutesBasedOnRole = () => {
+    if (credentials && credentials.data) {
+      const role = credentials?.data?.role;
+
+      if (role === "1") {
+        return <AdminRoutes />;
+      } else if (role === "2") {
+        return <GameAdmin />;
+      } else {
+        return <AuthRoutes />;
+      }
+    } else {
+      return <AuthRoutes />;
+    }
+  };
+
+  return (
+    <Router>{isAuthorised ? <RoutesBasedOnRole /> : <AuthRoutes />}</Router>
+  );
 };
 
 export default Routers;

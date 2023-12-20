@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styles from "./adminsidebar.module.css";
-import ButtonLink from "../../common/ButtonLink";
+import ButtonLink from "../../../common/ButtonLink/index.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentActive } from "../../../store/local/sidebar.js";
+import { setCurrentActive } from "../../../../store/local/sidebar.js";
 
 const AdminSidebar = () => {
   const { currentActive } = useSelector((state) => state.sidebar);
