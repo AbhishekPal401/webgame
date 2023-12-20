@@ -1,8 +1,13 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./imagedropzone.module.css";
 import { useDropzone } from "react-dropzone";
 
-const ImageDropZone = ({ label = "", customstyle = {} }) => {
+const ImageDropZone = ({
+  label = "",
+  customstyle = {},
+  resetImage = false,
+  onUpload = () => {},
+}) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [error, setError] = useState(null);
 
@@ -10,8 +15,9 @@ const ImageDropZone = ({ label = "", customstyle = {} }) => {
     const file = acceptedFiles[0];
 
     if (file) {
-      // Validate file type
       if (file.type === "image/jpeg" || file.type === "image/png") {
+        onUpload(file);
+
         const reader = new FileReader();
         reader.onload = (e) => {
           setSelectedImage(e.target.result);
@@ -27,6 +33,12 @@ const ImageDropZone = ({ label = "", customstyle = {} }) => {
     onDrop,
     accept: "image/jpeg, image/png",
   });
+
+  useEffect(() => {
+    if (resetImage) {
+      setSelectedImage(null);
+    }
+  }, [resetImage]);
 
   return (
     <>
