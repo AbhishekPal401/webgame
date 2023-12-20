@@ -10,10 +10,12 @@ import {
 } from "../../../../store/app/admin/users/users";
 import { generateGUID } from "../../../../utils/common.js";
 import { useNavigate } from "react-router-dom";
+import ModalContainer from "../../../../components/modal/index.jsx";
 
 const Users = () => {
   const [pageCount, setPageCount] = useState(10);
   const [pageNumber, setPageNumber] = useState(1);
+  const [showDeleteModal, setShowDeleteModal] = useState(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -103,6 +105,9 @@ const Users = () => {
                           paddingBottom: "0.2rem",
                         }}
                         buttonType="cancel"
+                        onClick={() => {
+                          setShowDeleteModal(user);
+                        }}
                       >
                         Delete
                       </Button>
@@ -136,6 +141,48 @@ const Users = () => {
           </div>
         )}
       </div>
+
+      {showDeleteModal && (
+        <ModalContainer>
+          <div className={styles.modal_content}>
+            <div className={styles.modal_header}>
+              <div>Delete User</div>
+              <div>
+                <svg
+                  className={styles.crossIcon}
+                  onClick={() => {
+                    setShowDeleteModal(null);
+                  }}
+                >
+                  <use xlinkHref={"sprite.svg#crossIcon"} />
+                </svg>
+              </div>
+            </div>
+            <div className={styles.modal_description}>
+              Are you sure you want to delete this user ?
+            </div>
+
+            <div className={styles.modal_buttonContainer}>
+              <Button
+                buttonType={"cancel"}
+                onClick={() => {
+                  setShowDeleteModal(null);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                customStyle={{
+                  marginLeft: "1rem",
+                }}
+                onClick={() => {}}
+              >
+                Delete
+              </Button>
+            </div>
+          </div>
+        </ModalContainer>
+      )}
     </PageContainer>
   );
 };

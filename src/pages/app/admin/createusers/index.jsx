@@ -21,7 +21,6 @@ import { generateGUID } from "../../../../utils/common.js";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { isJSONString } from "../../../../utils/common.js";
-import { useLocation } from "react-router-dom";
 
 const CreateUser = () => {
   const [userData, setUserData] = useState({
@@ -54,8 +53,6 @@ const CreateUser = () => {
   const [imageURl, setImageURl] = useState(null);
 
   const { userID } = useParams();
-
-  const location = useLocation();
 
   const { masters, loading: masterLoading } = useSelector(
     (state) => state.masters
