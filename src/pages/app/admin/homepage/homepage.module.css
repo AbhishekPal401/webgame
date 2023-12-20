@@ -69,7 +69,6 @@ PageContainer {
   color: #f3f3f3;
   margin-bottom: 1.6rem;
   font-weight: bold;
-  width: 31.5rem;
 }
 
 .sessionHistoryCardContainer {
@@ -78,6 +77,8 @@ PageContainer {
   gap: 2.4rem;
   overflow-x: auto; 
   white-space: nowrap;
+  width: 120rem;
+
 }
 
 .sessionHistoryCard {

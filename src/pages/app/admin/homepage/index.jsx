@@ -112,7 +112,7 @@ const {sessionsHistoryByType} = useSelector((state) => state.sessionHistory);
                       </div>
                       <div>
                         <Button>
-                          Start
+                          {scenario.Status === "Complete" ? 'Report' : 'Start'}
                         </Button>
                       </div>
                     </div>
