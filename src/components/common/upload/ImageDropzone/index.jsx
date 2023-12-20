@@ -1,10 +1,32 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import styles from "./imagedropzone.module.css";
 import { useDropzone } from "react-dropzone";
 
 const ImageDropZone = ({ label = "", customstyle = {} }) => {
-  const onDrop = useCallback((acceptedFiles) => {}, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [error, setError] = useState(null);
+
+  const onDrop = useCallback((acceptedFiles) => {
+    const file = acceptedFiles[0];
+
+    if (file) {
+      // Validate file type
+      if (file.type === "image/jpeg" || file.type === "image/png") {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setSelectedImage(e.target.result);
+          setError(null);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        setError("Invalid file type. Please choose a JPG or PNG file.");
+      }
+    }
+  }, []);
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: "image/jpeg, image/png",
+  });
 
   return (
     <>
@@ -16,11 +38,25 @@ const ImageDropZone = ({ label = "", customstyle = {} }) => {
         {isDragActive ? (
           <p>Drop the files here ...</p>
         ) : (
-          <p>
-            Drag and drop or <label>Choose file</label>{" "}
-          </p>
+          <>
+            {selectedImage ? (
+              <div className={styles.previewContainer}>
+                <img
+                  src={selectedImage}
+                  alt="Profile Image"
+                  className={styles.previewImage}
+                />
+              </div>
+            ) : (
+              <p>
+                Drag and drop or <label>Choose file</label>
+              </p>
+            )}
+          </>
         )}
       </div>
+      {error && <div className={styles.error}>{error}</div>}
+
       <div className={styles.hint}>Eligible Formats: JPG and PNG</div>
     </>
   );
