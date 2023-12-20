@@ -60,9 +60,18 @@ const CreateUser = () => {
                   onChange={onRoleSelect}
                 >
                   <option value="">Select Roles</option>
-                  <option value="option1">Option 1</option>
-                  <option value="option2">Option 2</option>
-                  <option value="option3">Option 3</option>
+
+                  {masters &&
+                    masters.data &&
+                    Array.isArray(JSON.parse(masters.data)) &&
+                    JSON.parse(masters.data).map((item, index) => {
+                      if (item.MasterType !== "Role") return;
+                      return (
+                        <option value={item.MasterID} key={index}>
+                          {item.MasterDisplayName}
+                        </option>
+                      );
+                    })}
                 </select>
               </div>
 
@@ -77,9 +86,18 @@ const CreateUser = () => {
                   onChange={onRoleSelect}
                 >
                   <option value="">Select Designation</option>
-                  <option value="option1">Option 1</option>
-                  <option value="option2">Option 2</option>
-                  <option value="option3">Option 3</option>
+                  {masters &&
+                    masters.data &&
+                    Array.isArray(JSON.parse(masters.data)) &&
+                    JSON.parse(masters.data).map((item, index) => {
+                      console.log(item);
+                      if (item.MasterType !== "Designation") return;
+                      return (
+                        <option value={item.MasterID} key={index}>
+                          {item.MasterDisplayName}
+                        </option>
+                      );
+                    })}
                 </select>
               </div>
             </div>
@@ -95,9 +113,18 @@ const CreateUser = () => {
                   onChange={onRoleSelect}
                 >
                   <option value="">Select Organisation</option>
-                  <option value="option1">Option 1</option>
-                  <option value="option2">Option 2</option>
-                  <option value="option3">Option 3</option>
+                  {masters &&
+                    masters.data &&
+                    Array.isArray(JSON.parse(masters.data)) &&
+                    JSON.parse(masters.data).map((item, index) => {
+                      console.log(item);
+                      if (item.MasterType !== "Organization") return;
+                      return (
+                        <option value={item.MasterID} key={index}>
+                          {item.MasterDisplayName}
+                        </option>
+                      );
+                    })}
                 </select>
               </div>
               <ImageDropZone
