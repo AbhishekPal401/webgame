@@ -49,7 +49,7 @@ const Users = () => {
   }, [usersByPage]);
 
   const navigateTo = () => {
-    navigate("/users/createusers");
+    navigate("/users/createandedit");
   };
 
   return (

@@ -19,7 +19,7 @@ const Admin = () => {
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/users" element={<Users />} />
-            <Route path="/users/createusers" element={<CreateUser />} />
+            <Route path="/users/createandedit/:id?" element={<CreateUser />} />
           </Routes>
         </div>
       </div>
