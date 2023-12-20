@@ -19,7 +19,10 @@ const Admin = () => {
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/users" element={<Users />} />
-            <Route path="/users/createandedit/:id?" element={<CreateUser />} />
+            <Route
+              path="/users/createandedit/:userID?"
+              element={<CreateUser />}
+            />
           </Routes>
         </div>
       </div>
