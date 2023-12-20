@@ -45,6 +45,7 @@
 }
 
 .default:hover,
-.login:hover {
+.login:hover,
+.cancel:hover {
   cursor: pointer;
 }

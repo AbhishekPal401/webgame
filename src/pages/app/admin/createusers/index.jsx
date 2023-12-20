@@ -295,6 +295,37 @@ const CreateUser = () => {
     }
   };
 
+  const onCancel = () => {
+    setUserData({
+      username: {
+        value: "",
+        error: "",
+      },
+      email: {
+        value: "",
+        error: "",
+      },
+      role: {
+        value: "",
+        error: "",
+      },
+      designation: {
+        value: "",
+        error: "",
+      },
+      organizationName: {
+        value: "",
+        error: "",
+      },
+      profileImage: {
+        value: "",
+        error: "",
+      },
+    });
+
+    setResetImage(!resetImage);
+  };
+
   return (
     <PageContainer>
       <div className={styles.topContainer}>
@@ -413,7 +444,9 @@ const CreateUser = () => {
         </div>
       </div>
       <div className={styles.buttonContainer}>
-        <Button buttonType="cancel">Cancel</Button>
+        <Button buttonType="cancel" onClick={onCancel}>
+          Cancel
+        </Button>
         <Button onClick={onSubmit}>Create</Button>
       </div>
     </PageContainer>

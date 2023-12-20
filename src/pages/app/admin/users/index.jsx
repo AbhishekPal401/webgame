@@ -12,7 +12,7 @@ import { generateGUID } from "../../../../utils/common.js";
 import { useNavigate } from "react-router-dom";
 
 const Users = () => {
-  const [pageCount, setPageCount] = useState(5);
+  const [pageCount, setPageCount] = useState(10);
   const [pageNumber, setPageNumber] = useState(1);
 
   const dispatch = useDispatch();
