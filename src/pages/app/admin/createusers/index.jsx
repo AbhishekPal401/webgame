@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./createusers.module.css";
 import PageContainer from "../../../../components/ui/pagecontainer";
 import Input from "../../../../components/common/input";
 import ImageDropZone from "../../../../components/common/upload/ImageDropzone";
 import Button from "../../../../components/common/button";
+import { getAllMasters } from "../../../../store/app/admin/users/masters";
+import { useDispatch, useSelector } from "react-redux";
 
 const CreateUser = () => {
+  const { masters, loading: masterLoading } = useSelector(
+    (state) => state.masters
+  );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllMasters());
+  }, []);
   const onChange = () => {};
   const onRoleSelect = () => {};
+
   return (
     <PageContainer>
       <div className={styles.topContainer}>
