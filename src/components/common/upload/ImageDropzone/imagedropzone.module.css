@@ -34,6 +34,7 @@
 
 .error {
   color: var(--red);
+  margin-top: 0.5rem;
 }
 
 .previewContainer {

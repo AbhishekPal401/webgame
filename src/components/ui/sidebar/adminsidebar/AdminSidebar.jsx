@@ -3,11 +3,13 @@ import styles from "./adminsidebar.module.css";
 import ButtonLink from "../../../common/ButtonLink/index.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentActive } from "../../../../store/local/sidebar.js";
+import { useLocation } from "react-router-dom";
 
 const AdminSidebar = () => {
   const { currentActive } = useSelector((state) => state.sidebar);
 
   const dispatch = useDispatch();
+  const location = useLocation();
 
   return (
     <div className={styles.container}>
@@ -16,7 +18,9 @@ const AdminSidebar = () => {
           marginTop: "2rem",
         }}
         linkTo="/"
-        isActive={currentActive === "home"}
+        isActive={
+          location.pathname === "/" || location.pathname.includes("home")
+        }
         svgSrc="sprite.svg#homepage"
         onClick={() => {
           dispatch(setCurrentActive("home"));
@@ -25,7 +29,7 @@ const AdminSidebar = () => {
 
       <ButtonLink
         linkTo="/users"
-        isActive={currentActive === "users"}
+        isActive={location.pathname.includes("/users")}
         svgSrc="sprite.svg#homepage"
         onClick={() => {
           dispatch(setCurrentActive("users"));
@@ -34,7 +38,7 @@ const AdminSidebar = () => {
 
       <ButtonLink
         linkTo="/scenario"
-        isActive={currentActive === "scenario"}
+        isActive={location.pathname.includes("scenario")}
         svgSrc="sprite.svg#scenario"
         onClick={() => {
           dispatch(setCurrentActive("scenario"));
@@ -42,7 +46,7 @@ const AdminSidebar = () => {
       />
       <ButtonLink
         linkTo="/questionbuilder"
-        isActive={currentActive === "questionbuilder"}
+        isActive={location.pathname.includes("questionbuilder")}
         svgSrc="sprite.svg#questionBuilder"
         onClick={() => {
           dispatch(setCurrentActive("questionbuilder"));
@@ -50,7 +54,7 @@ const AdminSidebar = () => {
       />
       <ButtonLink
         linkTo="/decisiontree"
-        isActive={currentActive === "decisiontree"}
+        isActive={location.pathname.includes("decisiontree")}
         svgSrc="sprite.svg#decisionTree"
         onClick={() => {
           dispatch(setCurrentActive("decisiontree"));
