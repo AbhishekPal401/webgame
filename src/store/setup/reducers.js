@@ -4,7 +4,7 @@ import sidebar from "../local/sidebar.js";
 import users from "../app/admin/users/users.js";
 import scenarios from "../app/admin/scenario/scenario.js";
 import sessionHistory from "../app/admin/session/session.js";
-
+import masters from "../app/admin/users/masters.js";
 
 // dawdaw
 
@@ -12,6 +12,7 @@ const reducers = combineReducers({
   login,
   sidebar,
   users,
+  masters,
   sessionHistory,
   scenarios,
 });
