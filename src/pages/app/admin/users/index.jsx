@@ -11,6 +11,11 @@ import {
 import { generateGUID } from "../../../../utils/common.js";
 import { useNavigate } from "react-router-dom";
 import ModalContainer from "../../../../components/modal/index.jsx";
+import {
+  deleteUserByID,
+  resetDeleteUserState,
+} from "../../../../store/app/admin/users/deleteUser.js";
+import { toast } from "react-toastify";
 
 const Users = () => {
   const [pageCount, setPageCount] = useState(10);
@@ -22,6 +27,7 @@ const Users = () => {
 
   const { usersByPage, loading } = useSelector((state) => state.users);
   const { credentials } = useSelector((state) => state.login);
+  const { deleteUserResponse } = useSelector((state) => state.deleteUser);
 
   useEffect(() => {
     if (credentials) {
@@ -50,8 +56,46 @@ const Users = () => {
     }
   }, [usersByPage]);
 
+  useEffect(() => {
+    if (deleteUserResponse === null || deleteUserResponse === undefined) return;
+
+    if (deleteUserResponse.success) {
+      toast.success(deleteUserResponse.message);
+      const data = {
+        pageNumber: pageNumber,
+        pageCount: pageCount,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      dispatch(getUsersbyPage(data));
+      dispatch(resetDeleteUserState());
+      setShowDeleteModal(null);
+    } else if (!deleteUserResponse.success) {
+      toast.error(deleteUserResponse.message);
+    }
+  }, [deleteUserResponse]);
+
   const navigateTo = () => {
     navigate("/users/createandedit");
+  };
+
+  const onDeleteUser = () => {
+    const data = {
+      userID: showDeleteModal.UserID,
+      requester: {
+        requestID: generateGUID(),
+        requesterID: credentials.data.userID,
+        requesterName: credentials.data.userName,
+        requesterType: credentials.data.role,
+      },
+    };
+
+    dispatch(deleteUserByID(data));
   };
 
   return (
@@ -175,7 +219,7 @@ const Users = () => {
                 customStyle={{
                   marginLeft: "1rem",
                 }}
-                onClick={() => {}}
+                onClick={onDeleteUser}
               >
                 Delete
               </Button>
