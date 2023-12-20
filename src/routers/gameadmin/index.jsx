@@ -1,16 +1,14 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "../../components/ui/navbar";
-import Sidebar from "../../components/ui/sidebar/adminsidebar/AdminSidebar";
+import Sidebar from "../../components/ui/sidebar/gameadminsidebar";
 import styles from "./gameadmin.module.css";
-import Homepage from "../../pages/app/admin/homepage";
-import Users from "../../pages/app/admin/users";
-import CreateUser from "../../pages/app/admin/createusers";
+import Homepage from "../../pages/app/gameadmin/homepage";
 
 const GameAdmin = () => {
   return (
     <div className={styles.container}>
-      <Navbar />
+      <Navbar role="Game Admin" />
       <div className={styles.layoutContainer}>
         <div className={styles.leftContainer}>
           <Sidebar />
@@ -18,8 +16,6 @@ const GameAdmin = () => {
         <div className={styles.rightContainer}>
           <Routes>
             <Route path="/" element={<Homepage />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/createusers" element={<CreateUser />} />
           </Routes>
         </div>
       </div>
