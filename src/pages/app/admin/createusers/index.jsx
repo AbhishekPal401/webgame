@@ -50,6 +50,8 @@ const CreateUser = () => {
     },
   });
 
+  const [defaultUrl, setDefaultUrl] = useState(null);
+
   const [imageURl, setImageURl] = useState(null);
 
   const { userID } = useParams();
@@ -181,6 +183,7 @@ const CreateUser = () => {
       };
 
       setImageURl(data.ProfileImageDisplay);
+      setDefaultUrl(data.ProfileImage);
 
       setUserData(newData);
     }
@@ -338,7 +341,7 @@ const CreateUser = () => {
     }
 
     if (valid) {
-      let url = "";
+      let url = defaultUrl;
 
       if (userData.profileImage.value) {
         const formData = new FormData();
