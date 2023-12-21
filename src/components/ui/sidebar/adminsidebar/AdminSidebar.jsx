@@ -7,12 +7,14 @@ import { useLocation } from "react-router-dom";
 import ModalContainer from "../../../modal";
 import Button from "../../../common/button/index.jsx";
 import { logoutUser } from "../../../../store/auth/login.js";
+import { useNavigate } from "react-router-dom";
 
 const AdminSidebar = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <div className={styles.container}>
@@ -110,6 +112,7 @@ const AdminSidebar = () => {
                 }}
                 onClick={() => {
                   dispatch(logoutUser());
+                  navigate("/");
                 }}
               >
                 Confirm
