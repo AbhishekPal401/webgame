@@ -2,6 +2,31 @@ PageContainer {
   overflow: auto;
 }
 
+/* .container {
+  width: 95%;
+  float: right;
+} */
+@media (max-width: 1300px) {
+  .container {
+    width: 98%; 
+    float: right;
+  }
+}
+
+@media (max-width: 1280px) {
+  .container {
+    width: 96%; 
+    float: right;
+  }
+}
+
+@media (max-width: 990px) {
+  .container {
+    width: 94%; 
+    float: right;
+  }
+}
+
 .topContainer {
   width: 100%;
   height: fit-content;

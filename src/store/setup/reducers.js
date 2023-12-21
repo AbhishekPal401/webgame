@@ -5,8 +5,8 @@ import users from "../app/admin/users/users.js";
 
 import masters from "../app/admin/users/masters.js";
 import createUser from "../app/admin/users/createUser.js";
-
 import scenarios from "../app/admin/scenario/scenario.js";
+import createScenario from "../app/admin/scenario/createScenario.js";
 import sessionHistory from "../app/admin/session/session.js";
 
 // dawdaw
@@ -19,6 +19,7 @@ const reducers = combineReducers({
   createUser,
   sessionHistory,
   scenarios,
+  createScenario,
 });
 
 const rootReducer = (state, action) => {
