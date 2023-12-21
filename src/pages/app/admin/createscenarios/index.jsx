@@ -42,7 +42,9 @@ const CreateScenario = () => {
 
   const { credentials } = useSelector((state) => state.login);
 
-  const { createScenarioResponse } = useSelector((state => state.createScenario));  
+  const { createScenarioResponse } = useSelector(
+    (state) => state.createScenario
+  );
   const dispatch = useDispatch();
 
   // useEffect(() => {
@@ -50,8 +52,8 @@ const CreateScenario = () => {
   // }, []);
 
   useEffect(() => {
-
-    if (createScenarioResponse === null) return;
+    if (createScenarioResponse === null || createScenarioResponse === undefined)
+      return;
 
     if (createScenarioResponse?.success) {
       toast.success(createScenarioResponse.message);
@@ -105,7 +107,6 @@ const CreateScenario = () => {
     },
     [scenarioData]
   );
-
 
   // Create scenario on submit
   const onSubmit = async (event) => {
@@ -180,7 +181,6 @@ const CreateScenario = () => {
       );
 
       if (response.data && response.data.success) {
-
         const serializedData = JSON.parse(response.data.data);
 
         const url = JSON.parse(serializedData.Data).URL;
@@ -190,7 +190,7 @@ const CreateScenario = () => {
           description: scenarioData?.scenarioDescription?.value,
           // not accepting :: gameIntroText: scenarioData.gameIntroText.value,
           introFile: url,
-          introFileType: scenarioData?.gameIntroVideo?.value?.type, 
+          introFileType: scenarioData?.gameIntroVideo?.value?.type,
           status: "Create",
           version: "1",
           baseVersionID: "1",
@@ -203,7 +203,7 @@ const CreateScenario = () => {
           },
         };
 
-        console.log("data sent to API :",data);
+        console.log("data sent to API :", data);
         dispatch(createScenario(data));
       }
     }
@@ -237,14 +237,14 @@ const CreateScenario = () => {
       <div className={styles.topContainer}>
         <div className={styles.left}>
           <label>Create Scenario</label>
-          <div className={styles.lastEditedOn}>{}</div>{/* Last edited On */}
+          <div className={styles.lastEditedOn}>{}</div>
+          {/* Last edited On */}
         </div>
         <div className={styles.right}>
           <img src={bg_2} alt="create scenario background 2" />
         </div>
       </div>
       <div className={styles.mainContainer}>
-
         {/* Create Scenario:: start */}
         <div className={styles.formContainer}>
           <div className={styles.createScenarioFormLeft}></div>
@@ -262,7 +262,7 @@ const CreateScenario = () => {
               <Input
                 value={scenarioData?.scenarioDescription?.value}
                 labelStyle={styles.inputLabel}
-                customStyle={{ height: '70%' }}
+                customStyle={{ height: "70%" }}
                 name={"scenarioDescription"}
                 placeholder="Scenario Description"
                 textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
@@ -281,11 +281,11 @@ const CreateScenario = () => {
           <div className={styles.gameIntroductionFormLeft}></div>
           <div className={styles.gameIntroductionFormRight}>
             <div className={styles.gameIntroductionLeftInputs}>
-            <label>Game Introduction</label>
+              <label>Game Introduction</label>
               <Input
                 value={scenarioData?.gameIntroText?.value}
                 labelStyle={styles.inputLabel}
-                customStyle={{ height: '80%' }}
+                customStyle={{ height: "80%" }}
                 name={"gameIntroText"}
                 placeholder="Add Game Intro Text"
                 textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
@@ -295,15 +295,14 @@ const CreateScenario = () => {
             </div>
             <div className={styles.gameIntroductionRightInputs}>
               <div className={styles.imageDropZoneContainerLeft}>
-              <FileDropZone
-                customstyle={{ marginTop: "1rem" }}
-                label="Upload Game Intro Video"
-                onUpload={onUpload}
-                resetFile={resetFile}
-              />
+                <FileDropZone
+                  customstyle={{ marginTop: "1rem" }}
+                  label="Upload Game Intro Video"
+                  onUpload={onUpload}
+                  resetFile={resetFile}
+                />
               </div>
               <div className={styles.imageDropZoneContainerRight}></div>
-           
             </div>
           </div>
         </div>

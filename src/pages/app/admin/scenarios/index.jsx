@@ -5,11 +5,10 @@ import Button from "../../../../components/common/button/index.jsx";
 import Pagination from "../../../../components/ui/pagination/index.jsx";
 import Checkbox from "../../../../components/ui/checkbox/index.jsx";
 import { useSelector, useDispatch } from "react-redux";
-import { generateGUID } from "../../../../utils/common.js";
+import { generateGUID, isJSONString } from "../../../../utils/common.js";
 import { getScenarioByPage } from "../../../../store/app/admin/scenario/scenario.js";
 import { formatDateString } from "../../../../utils/helper.js";
 import { useNavigate } from "react-router-dom";
-
 
 const Scenarios = () => {
   const [pageCount, setPageCount] = useState(10);
@@ -40,7 +39,7 @@ const Scenarios = () => {
   }, []);
 
   useEffect(() => {
-    if (scenarioByPage) {
+    if (scenarioByPage && isJSONString(scenarioByPage?.data)) {
       const newPageNumber = JSON.parse(scenarioByPage?.data)?.CurrentPage;
 
       if (newPageNumber && typeof newPageNumber === "number") {
@@ -52,7 +51,6 @@ const Scenarios = () => {
   const navigateTo = () => {
     navigate("/createscenarios");
   };
-
 
   return (
     <PageContainer>
@@ -73,7 +71,7 @@ const Scenarios = () => {
         <table className={styles.table_content}>
           <thead>
             <tr>
-            <th></th>
+              <th></th>
               <th>#</th>
               <th>Scenario Name</th>
               <th>Description</th>
@@ -86,21 +84,23 @@ const Scenarios = () => {
             {scenarioByPage &&
               scenarioByPage.success &&
               scenarioByPage.data &&
-              JSON.parse(scenarioByPage.data)?.ScenarioDetails.map((scenario, index) => {
-                return (
-                  <tr key={index}>
-                                            <td>
-                          <Checkbox />
-                        </td>
-                    <td>{index + 1}</td>
-                    <td>{scenario.ScenarioName}</td>
-                    <td>{scenario.Description}</td>
-                    <td>{formatDateString(scenario.CreatedAt)}</td>
-                    <td>{scenario.GamesPlayed}</td>
-                    <td>{scenario.Status}</td>
-                  </tr>
-                );
-              })}
+              JSON.parse(scenarioByPage.data)?.ScenarioDetails.map(
+                (scenario, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>
+                        <Checkbox />
+                      </td>
+                      <td>{index + 1}</td>
+                      <td>{scenario.ScenarioName}</td>
+                      <td>{scenario.Description}</td>
+                      <td>{formatDateString(scenario.CreatedAt)}</td>
+                      <td>{scenario.GamesPlayed}</td>
+                      <td>{scenario.Status}</td>
+                    </tr>
+                  );
+                }
+              )}
           </tbody>
         </table>
         {scenarioByPage && scenarioByPage.success && scenarioByPage.data && (
@@ -130,6 +130,6 @@ const Scenarios = () => {
       {/* Scenario Table:: end */}
     </PageContainer>
   );
-}
+};
 
 export default Scenarios;
