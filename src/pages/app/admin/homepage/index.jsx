@@ -7,7 +7,7 @@ import Checkbox from "../../../../components/ui/checkbox/index.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { getScenarioByPage } from "../../../../store/app/admin/scenario/scenario.js";
 import { getSessionHistoryByType } from "../../../../store/app/admin/session/session.js";
-import { generateGUID } from "../../../../utils/common.js";
+import { generateGUID , isJSONString} from "../../../../utils/common.js";
 import { Link } from "react-router-dom";
 import { formatDateString } from "../../../../utils/helper.js";
 import { useNavigate } from "react-router-dom";
@@ -67,7 +67,7 @@ const Homepage = () => {
   }, []);
 
   useEffect(() => {
-    if (scenarioByPage) {
+    if (scenarioByPage && isJSONString(scenarioByPage?.data)) {
       const newPageNumber = JSON.parse(scenarioByPage?.data)?.CurrentPage;
 
       if (newPageNumber && typeof newPageNumber === "number") {
@@ -160,7 +160,7 @@ const Homepage = () => {
                   {scenarioByPage &&
                     scenarioByPage.success &&
                     scenarioByPage.data &&
-                    JSON.parse(scenarioByPage.data)?.ScenarioDetails.map(
+                    JSON.parse(scenarioByPage?.data)?.ScenarioDetails.map(
                       (scenario, index) => {
                         return (
                           <tr key={index}>
@@ -184,13 +184,14 @@ const Homepage = () => {
                 scenarioByPage.data && (
                   <div className={styles.paginationContainer}>
                     <Pagination
-                      totalCount={JSON.parse(scenarioByPage.data)?.TotalCount}
+                      totalCount={JSON.parse(scenarioByPage?.data)?.TotalCount}
                       pageNumber={pageNumber}
                       countPerPage={pageCount}
                       onPageChange={(pageNumber) => {
                         const data = {
                           pageNumber: pageNumber,
                           pageCount: pageCount,
+                          type: "",
                           requester: {
                             requestID: generateGUID(),
                             requesterID: credentials.data.userID,

@@ -113,6 +113,7 @@ const Scenarios = () => {
                 const data = {
                   pageNumber: pageNumber,
                   pageCount: pageCount,
+                  type: "",
                   requester: {
                     requestID: generateGUID(),
                     requesterID: credentials.data.userID,
