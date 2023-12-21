@@ -47,7 +47,6 @@ PageContainer {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  
 }
 
 /* Sesion History */
@@ -76,7 +75,7 @@ PageContainer {
   display: flex;
   flex-direction: row;
   gap: 2.4rem;
-  overflow-x: auto; 
+  overflow-x: auto;
   white-space: nowrap;
 }
 
@@ -132,7 +131,6 @@ PageContainer {
   gap: 0.5rem;
 }
 .scenarioContainer {
-
 }
 
 .scenarioContainer {
@@ -140,7 +138,7 @@ PageContainer {
   justify-content: space-between;
   align-items: end;
 }
-.scenarioContainerRight Button{
+.scenarioContainerRight Button {
   font-size: 1.4rem;
 }
 .scenarioContainerLeft {
@@ -233,7 +231,7 @@ PageContainer {
 /* Main container */
 @media (max-height: 150px) {
   .mainContainer {
-    gap: 4rem; 
+    gap: 4rem;
   }
 }
 
@@ -241,15 +239,35 @@ PageContainer {
 @media (max-width: 850px) {
   .sessionHistoryCard {
     padding: 1rem 1rem;
-
   }
   .butonFlexContainer {
-    margin-top: 0.5rem; 
-    flex-direction: column; 
-    align-items: start; 
+    margin-top: 0.5rem;
+    flex-direction: column;
+    align-items: start;
   }
 
   .butonFlexContainer Button {
-    margin-top: 0.5rem; 
+    margin-top: 0.5rem;
+  }
+}
+
+@media (max-width: 1300px) {
+  .container {
+    width: 98%;
+    float: right;
+  }
+}
+
+@media (max-width: 1280px) {
+  .container {
+    width: 96%;
+    float: right;
+  }
+}
+
+@media (max-width: 990px) {
+  .container {
+    width: 94%;
+    float: right;
   }
 }
