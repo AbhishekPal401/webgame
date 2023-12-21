@@ -160,7 +160,7 @@ const Homepage = () => {
                   {scenarioByPage &&
                     scenarioByPage.success &&
                     scenarioByPage.data &&
-                    JSON.parse(scenarioByPage.data)?.ScenarioDetails.map(
+                    JSON.parse(scenarioByPage?.data)?.ScenarioDetails.map(
                       (scenario, index) => {
                         return (
                           <tr key={index}>
@@ -184,13 +184,14 @@ const Homepage = () => {
                 scenarioByPage.data && (
                   <div className={styles.paginationContainer}>
                     <Pagination
-                      totalCount={JSON.parse(scenarioByPage.data)?.TotalCount}
+                      totalCount={JSON.parse(scenarioByPage?.data)?.TotalCount}
                       pageNumber={pageNumber}
                       countPerPage={pageCount}
                       onPageChange={(pageNumber) => {
                         const data = {
                           pageNumber: pageNumber,
                           pageCount: pageCount,
+                          type: "",
                           requester: {
                             requestID: generateGUID(),
                             requesterID: credentials.data.userID,
