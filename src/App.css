@@ -46,7 +46,7 @@
 /************************** Custom Scroll Bar  *************************/
 ::-webkit-scrollbar {
   height: 1rem;
-  width: 0.5rem;
+  width: 0.4rem;
 }
 
 /* Track */

@@ -72,11 +72,15 @@
   flex: 6.5;
 }
 
-.verticalLine {
+.createScenarioFormRight .verticalLine {
   flex: 0 0 0.1rem;
   background-color: var(--primary);
 }
 
+.gameIntroductionFormRight .verticalLine {
+  flex: 0 0 0.1rem;
+  background-color: transparent;
+}
 
 /* Game introduction */
 .gameIntroductionFormLeft {

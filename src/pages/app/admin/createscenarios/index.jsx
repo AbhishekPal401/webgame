@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styles from "./createscenarios.module.css";
-import bg_2 from "../../../../../public/images/create_scenario_bg_2.png";
+import bg_2 from "/images/createscenario2.png";
 import PageContainer from "../../../../components/ui/pagecontainer";
 import Input from "../../../../components/common/input";
 import ImageDropZone from "../../../../components/common/upload/ImageDropzone";
@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { validateEmail } from "../../../../utils/validators";
 import { baseUrl } from "../../../../middleware/url";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import {
   createScenario,
   resetCreateScenarioState,
@@ -46,6 +47,8 @@ const CreateScenario = () => {
     (state) => state.createScenario
   );
   const dispatch = useDispatch();
+  const naigateTo = useNavigate();
+
 
   // useEffect(() => {
   //   dispatch(getAllMasters());
@@ -115,7 +118,7 @@ const CreateScenario = () => {
     let valid = true;
     let data = scenarioData;
 
-    if (scenarioData.scenarioName.value === "") {
+    if (scenarioData?.scenarioName?.value === "") {
       data = {
         ...data,
         scenarioName: {
@@ -127,7 +130,7 @@ const CreateScenario = () => {
       valid = false;
     }
 
-    if (scenarioData.scenarioDescription.value === "") {
+    if (scenarioData?.scenarioDescription?.value === "") {
       data = {
         ...data,
         scenarioDescription: {
@@ -139,7 +142,7 @@ const CreateScenario = () => {
       valid = false;
     }
 
-    if (scenarioData.gameIntroText.value === "") {
+    if (scenarioData?.gameIntroText?.value === "") {
       data = {
         ...data,
         gameIntroText: {
@@ -151,7 +154,7 @@ const CreateScenario = () => {
       valid = false;
     }
 
-    if (scenarioData.gameIntroVideo.value === "") {
+    if (scenarioData?.gameIntroVideo?.value === "") {
       data = {
         ...data,
         gameIntroVideo: {
@@ -230,6 +233,7 @@ const CreateScenario = () => {
     });
 
     setResetFile(!resetFile);
+    naigateTo("/scenario");
   };
 
   return (
@@ -238,7 +242,7 @@ const CreateScenario = () => {
         <div className={styles.left}>
           <label>Create Scenario</label>
           <div className={styles.lastEditedOn}>{}</div>
-          {/* Last edited On */}
+          {/*Todo:: Last edited On */}
         </div>
         <div className={styles.right}>
           <img src={bg_2} alt="create scenario background 2" />
@@ -293,6 +297,7 @@ const CreateScenario = () => {
                 textArea
               />
             </div>
+            <div className={styles.verticalLine}></div>
             <div className={styles.gameIntroductionRightInputs}>
               <div className={styles.imageDropZoneContainerLeft}>
                 <FileDropZone
@@ -312,7 +317,7 @@ const CreateScenario = () => {
         <Button buttonType="cancel" onClick={onCancel}>
           Cancel
         </Button>
-        <Button onClick={onSubmit}>Create</Button>
+        <Button onClick={onSubmit}>Build Scenario</Button>
       </div>
     </PageContainer>
   );

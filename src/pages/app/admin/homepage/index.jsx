@@ -103,20 +103,26 @@ const Homepage = () => {
                   (scenario, index) => {
                     return (
                       <div key={index} className={styles.sessionHistoryCard}>
-                        <h4>{scenario.InstanceName}</h4>
-                        <p>Scenario:{scenario.Description}</p>
-                        <p>Status: {scenario.Status}</p>
-                        <div className={styles.butonFlexContainer}>
-                          <div className={styles.updatedDate}>
+                        <div className={styles.cardTopContainer}>
+                          <div className={styles.cardTopContainerLeft}>
+                            <h4>{scenario.InstanceName}</h4>
+                            <p>Scenario:{scenario.Description}</p>
+                            <p>Status: {scenario.Status}</p>
+                          </div>
+                          <div className={styles.cardTopContainerRight}></div>
+
+                        </div>
+                        <div className={styles.cardBottomContainer}>
+                          <div className={styles.cardBottomContainerLeft}>
                             <p>
-                              Updated:{" "}
+                              Updated :
                               {formatDateString(
                                 scenario.UpdatedAt,
                                 "DD-MM-YYYY"
                               )}
                             </p>
                           </div>
-                          <div>
+                          <div className={styles.cardBottomContainerRight}>
                             <Button>Start</Button>
                           </div>
                         </div>

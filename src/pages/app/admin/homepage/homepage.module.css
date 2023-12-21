@@ -52,10 +52,10 @@
   height: fit-content;
   background: rgb(61, 61, 61);
   border-radius: 0.5rem;
-  padding: 2rem 1rem;
-  background-image: url("/images/session-history.png");
+  padding: 1rem 1rem;
+  background-image: url("/images/home1.png");
+  background-repeat: no-repeat;
   background-size: cover;
-  background-position: top;
   overflow: hidden;
 }
 
@@ -67,46 +67,84 @@
 }
 
 .sessionHistoryCardContainer {
-  width: 80vw;
+  max-width: 91vw;
   display: flex;
   flex-direction: row;
-  gap: 2.4rem;
+  gap: 1rem;
   overflow-x: auto;
   white-space: nowrap;
+  padding-bottom: 1rem; 
 }
 
 .sessionHistoryCard {
   background-color: #f3f3f3;
   padding: 2rem 1rem;
   border-radius: 0.5rem;
-  width: 31.5rem;
+  min-width: 31rem;
 }
 
-.sessionHistoryCard h4 {
-  font-size: 1.4rem;
-  color: #415385;
-  font-weight: bold;
-}
-
-.sessionHistoryCard p {
-  font-size: 1.2rem;
-  color: #2d2d2d;
-  font-weight: normal;
-}
-
-.butonFlexContainer {
+.cardTopContainer{
   display: flex;
   flex-direction: row;
   align-items: end;
   justify-content: space-between;
 }
 
-.updatedDate p {
-  font-size: 1rem;
+.cardTopContainerLeft {
   flex: 7;
+  max-width: 70%;
 }
 
-.butonFlexContainer Button {
+.cardTopContainerRight {
+  flex: 3;
+  max-width: 30%;
+}
+
+.cardTopContainerLeft h4,
+.cardTopContainerLeft p {
+  font-size: 1.2rem;
+  color: #2d2d2d;
+  font-weight: normal;
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden; /* Hide overflowing text */
+  text-overflow: ellipsis; /* Display ellipsis for overflowed text */
+}
+
+.cardTopContainerLeft h4 {
+  font-size: 1.4rem;
+  color: #415385;
+  font-weight: bold;
+}
+
+.cardTopContainerLeft p {
+  font-size: 1.2rem;
+  color: #2d2d2d;
+  font-weight: normal;
+}
+
+.cardBottomContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: space-between;
+}
+
+.cardBottomContainerLeft p {
+  font-size: 1rem;
+}
+
+.cardBottomContainerLeft {
+  flex: 7;
+  max-width: 70%;
+}
+
+.cardBottomContainerRight{
+  flex: 3;
+  max-width: 30%;
+  text-align: center;
+}
+
+.cardBottomContainerRight Button {
   display: inline-block;
   font-weight: 500;
   color: #212529;
@@ -117,7 +155,6 @@
   color: var(--black);
   background-color: #fcf2db;
   padding: 0.5rem 2.5rem;
-  flex: 3;
 }
 
 /* Scenarios Table */
@@ -236,13 +273,13 @@
   .sessionHistoryCard {
     padding: 1rem 1rem;
   }
-  .butonFlexContainer {
+  .cardBottomContainer {
     margin-top: 0.5rem;
     flex-direction: column;
     align-items: start;
   }
 
-  .butonFlexContainer Button {
+  .cardBottomContainer Button {
     margin-top: 0.5rem;
   }
 }
