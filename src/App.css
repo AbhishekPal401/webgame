@@ -47,12 +47,11 @@
 ::-webkit-scrollbar {
   height: 1rem;
   width: 0.5rem;
-  /* left: -100px; */
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background-color: #e5e5e5;
+  background-color: var(--background-color);
   border-radius: 1rem;
 }
 
