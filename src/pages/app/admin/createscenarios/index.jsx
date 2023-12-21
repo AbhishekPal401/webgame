@@ -12,14 +12,13 @@ import { validateEmail } from "../../../../utils/validators";
 import { baseUrl } from "../../../../middleware/url";
 import { toast } from "react-toastify";
 import {
-  createScenarioAPI,
+  createScenario,
   resetCreateScenarioState,
-} from "../../../../store/app/admin/scenario/createScenarioResponse.js";
-import { getUsersbyPage } from "../../../../store/app/admin/users/users.js";
+} from "../../../../store/app/admin/scenario/createScenario.js";
 import { generateGUID } from "../../../../utils/common.js";
 import axios from "axios";
 
-const CreateUser = () => {
+const CreateScenario = () => {
   const [scenarioData, setScenarioData] = useState({
     scenarioName: {
       value: "",
@@ -43,7 +42,7 @@ const CreateUser = () => {
 
   const { credentials } = useSelector((state) => state.login);
 
-  const { createScenarioResponse } = useSelector((state => state.createScenarioResponse));  
+  const { createScenarioResponse } = useSelector((state => state.createScenario));  
   const dispatch = useDispatch();
 
   // useEffect(() => {
@@ -51,9 +50,7 @@ const CreateUser = () => {
   // }, []);
 
   useEffect(() => {
-    console.log("scenarioData :",scenarioData);
-    console.log("createScenarioResponse :",createScenarioResponse);
-    console.log("credentials :",credentials);
+
     if (createScenarioResponse === null) return;
 
     if (createScenarioResponse?.success) {
@@ -141,6 +138,18 @@ const CreateUser = () => {
       valid = false;
     }
 
+    if (scenarioData.gameIntroText.value === "") {
+      data = {
+        ...data,
+        gameIntroText: {
+          ...data.gameIntroText,
+          error: "Please select game intro text",
+        },
+      };
+
+      valid = false;
+    }
+
     if (scenarioData.gameIntroVideo.value === "") {
       data = {
         ...data,
@@ -171,15 +180,10 @@ const CreateUser = () => {
       );
 
       if (response.data && response.data.success) {
-        console.log(JSON.parse(response.data.data));
 
         const serializedData = JSON.parse(response.data.data);
-        console.log("serializedData :",serializedData);
 
         const url = JSON.parse(serializedData.Data).URL;
-        console.log("url :",url);
-
-        console.log("scenarioData.scenarioDescription.value, : ",scenarioData.scenarioDescription.value,);
 
         const data = {
           scenarioName: scenarioData?.scenarioName?.value,
@@ -200,8 +204,7 @@ const CreateUser = () => {
         };
 
         console.log("data sent to API :",data);
-
-        dispatch(createScenarioAPI(data));
+        dispatch(createScenario(data));
       }
     }
   };
@@ -316,4 +319,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default CreateScenario;
