@@ -5,6 +5,10 @@ import Input from "../../../../components/common/input";
 import ImageDropZone from "../../../../components/common/upload/ImageDropzone";
 import Button from "../../../../components/common/button";
 import { getAllMasters } from "../../../../store/app/admin/users/masters";
+import {
+  getUserDetailsByID,
+  resetUserDetailState,
+} from "../../../../store/app/admin/users/getUserbyId.js";
 import { useDispatch, useSelector } from "react-redux";
 import { validateEmail } from "../../../../utils/validators";
 import { baseUrl } from "../../../../middleware/url";
@@ -13,9 +17,10 @@ import {
   createUser,
   resetCreateUserState,
 } from "../../../../store/app/admin/users/createUser.js";
-import { getUsersbyPage } from "../../../../store/app/admin/users/users.js";
 import { generateGUID } from "../../../../utils/common.js";
+import { useParams } from "react-router-dom";
 import axios from "axios";
+import { isJSONString } from "../../../../utils/common.js";
 
 const CreateUser = () => {
   const [userData, setUserData] = useState({
@@ -45,7 +50,9 @@ const CreateUser = () => {
     },
   });
 
-  const [resetImage, setResetImage] = useState(false);
+  const [imageURl, setImageURl] = useState(null);
+
+  const { userID } = useParams();
 
   const { masters, loading: masterLoading } = useSelector(
     (state) => state.masters
@@ -53,13 +60,47 @@ const CreateUser = () => {
 
   const { credentials } = useSelector((state) => state.login);
 
+  const { userByIdDetails, loading: getUserDetailsLoading } = useSelector(
+    (state) => state.getUserbyId
+  );
+
   const { createUserResponse, loading: createUserResponseLoading } =
     useSelector((state) => state.createUser);
 
   const dispatch = useDispatch();
 
+  const resetUserData = () => {
+    setUserData({
+      username: {
+        value: "",
+        error: "",
+      },
+      email: {
+        value: "",
+        error: "",
+      },
+      role: {
+        value: "",
+        error: "",
+      },
+      designation: {
+        value: "",
+        error: "",
+      },
+      organizationName: {
+        value: "",
+        error: "",
+      },
+      profileImage: {
+        value: "",
+        error: "",
+      },
+    });
+  };
+
   useEffect(() => {
     dispatch(getAllMasters());
+    dispatch(resetUserDetailState());
   }, []);
 
   useEffect(() => {
@@ -67,41 +108,91 @@ const CreateUser = () => {
 
     if (createUserResponse?.success) {
       toast.success(createUserResponse.message);
-      setUserData({
+      if (userID) {
+        dispatch(
+          getUserDetailsByID({
+            userID: userID,
+          })
+        );
+      } else {
+        setImageURl(null);
+        resetUserData();
+      }
+
+      dispatch(resetCreateUserState());
+      dispatch(resetUserDetailState());
+    } else if (!createUserResponse.success) {
+      if (userID) {
+        dispatch(
+          getUserDetailsByID({
+            userID: userID,
+          })
+        );
+      }
+      toast.error(createUserResponse.message);
+      dispatch(resetCreateUserState());
+    } else {
+      dispatch(resetCreateUserState());
+    }
+  }, [createUserResponse]);
+
+  useEffect(() => {
+    if (userID === null || userID === undefined) {
+      resetUserData();
+      setImageURl(null);
+    } else {
+      dispatch(
+        getUserDetailsByID({
+          userID: userID,
+        })
+      );
+    }
+  }, [userID]);
+
+  const setUserDetailState = useCallback(() => {
+    if (isJSONString(userByIdDetails.data)) {
+      const data = JSON.parse(userByIdDetails.data);
+
+      const newData = {
         username: {
-          value: "",
+          value: data.UserName,
           error: "",
         },
         email: {
-          value: "",
+          value: data.Email,
           error: "",
         },
         role: {
-          value: "",
+          value: data.Role,
           error: "",
         },
         designation: {
-          value: "",
+          value: data.Designation,
           error: "",
         },
         organizationName: {
-          value: "",
+          value: data.OrganizationName,
           error: "",
         },
         profileImage: {
           value: "",
           error: "",
         },
-      });
-      setResetImage(!resetImage);
-      dispatch(resetCreateUserState());
-    } else if (!createUserResponse.success) {
-      toast.error(createUserResponse.message);
-      dispatch(resetCreateUserState());
-    } else {
-      dispatch(resetCreateUserState());
+      };
+
+      setImageURl(data.ProfileImageDisplay);
+
+      setUserData(newData);
     }
-  }, [createUserResponse, resetImage]);
+  }, [userByIdDetails]);
+
+  useEffect(() => {
+    if (userByIdDetails === null || userByIdDetails === undefined) return;
+
+    if (!userID) return;
+
+    setUserDetailState();
+  }, [userByIdDetails]);
 
   const onChange = (event) => {
     setUserData({
@@ -234,7 +325,7 @@ const CreateUser = () => {
       valid = false;
     }
 
-    if (userData.profileImage.value === "") {
+    if (!userID && userData.profileImage.value === "") {
       data = {
         ...data,
         profileImage: {
@@ -247,90 +338,69 @@ const CreateUser = () => {
     }
 
     if (valid) {
-      const formData = new FormData();
+      let url = "";
 
-      formData.append("Module", "ProfileImage");
-      formData.append("contentType", userData.profileImage.value.type);
-      formData.append("FormFile", userData.profileImage.value);
+      if (userData.profileImage.value) {
+        const formData = new FormData();
 
-      const response = await axios.post(
-        `${baseUrl}/api/Storage/FileUpload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+        formData.append("Module", "ProfileImage");
+        formData.append("contentType", userData.profileImage.value.type);
+        formData.append("FormFile", userData.profileImage.value);
+
+        const response = await axios.post(
+          `${baseUrl}/api/Storage/FileUpload`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        if (response.data && response.data.success) {
+          const serializedData = JSON.parse(response.data.data);
+
+          url = JSON.parse(serializedData.Data).URL;
         }
-      );
-
-      if (response.data && response.data.success) {
-        console.log(JSON.parse(response.data.data));
-
-        const serializedData = JSON.parse(response.data.data);
-
-        const url = JSON.parse(serializedData.Data).URL;
-
-        const data = {
-          userID: "",
-          userName: userData.username.value,
-          password: "pwc@123456",
-          role: userData.role.value,
-          email: userData.email.value,
-          mobile: "",
-          designation: userData.designation.value,
-          organizationName: userData.organizationName.value,
-          profileImage: url,
-          requester: {
-            requestID: generateGUID(),
-            requesterID: credentials.data.userID,
-            requesterName: credentials.data.userName,
-            requesterType: credentials.data.role,
-          },
-        };
-
-        // console.log(data);
-
-        dispatch(createUser(data));
       }
+
+      const data = {
+        userID: userID ? userID : "",
+        userName: userData.username.value,
+        password: "",
+        role: userData.role.value,
+        email: userData.email.value,
+        mobile: "",
+        designation: userData.designation.value,
+        organizationName: userData.organizationName.value,
+        profileImage: url,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      dispatch(createUser(data));
     }
   };
 
   const onCancel = () => {
-    setUserData({
-      username: {
-        value: "",
-        error: "",
-      },
-      email: {
-        value: "",
-        error: "",
-      },
-      role: {
-        value: "",
-        error: "",
-      },
-      designation: {
-        value: "",
-        error: "",
-      },
-      organizationName: {
-        value: "",
-        error: "",
-      },
-      profileImage: {
-        value: "",
-        error: "",
-      },
-    });
-
-    setResetImage(!resetImage);
+    if (userID) {
+      setUserDetailState();
+      return;
+    } else {
+      resetUserData();
+      setImageURl(null);
+    }
   };
 
   return (
     <PageContainer>
       <div className={styles.topContainer}>
         <div className={styles.left}>
-          <label>Create User</label>
+          <label> {userID ? "Update User" : "Create User"}</label>
         </div>
         <div className={styles.right}>
           <img src="./images/scenario.png" />
@@ -371,6 +441,7 @@ const CreateUser = () => {
 
                   {masters &&
                     masters.data &&
+                    isJSONString(masters.data) &&
                     Array.isArray(JSON.parse(masters.data)) &&
                     JSON.parse(masters.data).map((item, index) => {
                       if (item.MasterType !== "Role") return;
@@ -396,6 +467,7 @@ const CreateUser = () => {
                   <option value="">Select Designation</option>
                   {masters &&
                     masters.data &&
+                    isJSONString(masters.data) &&
                     Array.isArray(JSON.parse(masters.data)) &&
                     JSON.parse(masters.data).map((item, index) => {
                       if (item.MasterType !== "Designation") return;
@@ -422,6 +494,7 @@ const CreateUser = () => {
                   <option value="">Select Organisation</option>
                   {masters &&
                     masters.data &&
+                    isJSONString(masters.data) &&
                     Array.isArray(JSON.parse(masters.data)) &&
                     JSON.parse(masters.data).map((item, index) => {
                       if (item.MasterType !== "Organization") return;
@@ -437,7 +510,10 @@ const CreateUser = () => {
                 customstyle={{ marginTop: "1rem" }}
                 label="Upload Profile Pic"
                 onUpload={onUpload}
-                resetImage={resetImage}
+                imageSrc={imageURl}
+                setUrl={(file) => {
+                  setImageURl(file);
+                }}
               />
             </div>
           </div>
@@ -447,7 +523,7 @@ const CreateUser = () => {
         <Button buttonType="cancel" onClick={onCancel}>
           Cancel
         </Button>
-        <Button onClick={onSubmit}>Create</Button>
+        <Button onClick={onSubmit}> {userID ? "Update" : "Create"}</Button>
       </div>
     </PageContainer>
   );

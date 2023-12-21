@@ -7,39 +7,34 @@ import axios from "axios";
 import { baseUrl } from "../../../middleware/url.js";
 import { azurelogin } from "../../../store/auth/login.js";
 import { useDispatch } from "react-redux";
+import { azureService } from "../../../services/azure.js";
+import { toast } from "react-toastify";
 
 const azure = () => {
   const dispatch = useDispatch();
-  const publicClientApp = new PublicClientApplication({
-    auth: {
-      clientId: azureConfig.appId,
-      redirectUri: azureConfig.redirectURL,
-      authority: azureConfig.authority,
-    },
-    cache: {
-      cacheLocation: "sessionStorage",
-      storeAuthStateInCookie: false,
-    },
-  });
 
   useEffect(() => {
-    publicClientApp.initialize();
+    azureService.azureInit();
   }, []);
 
   const login = async () => {
     try {
-      const loginResponse = await publicClientApp.loginPopup({
-        scopes: azureConfig.scopes,
-        prompt: "select_account",
-      });
+      const { email } = await azureService.azureLogin();
 
-      if (loginResponse?.account?.username) {
-        const email = loginResponse?.account?.username;
-
+      if (email) {
         dispatch(azurelogin({ emailID: email }));
       }
     } catch (error) {
-      console.error("error", error);
+      toast.error("Azure AD login error:", JSON.stringify(error));
+
+      if (
+        error.errorMessage &&
+        error.errorMessage.includes("consent_required")
+      ) {
+        toast.error(
+          "Insufficient permissions. Please grant the required permissions."
+        );
+      }
     }
   };
 

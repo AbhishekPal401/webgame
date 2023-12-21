@@ -113,12 +113,14 @@ const LoginForm = () => {
           type="text"
           name={"username"}
           label="Username"
+          value={loginData.username.value}
           onChange={onChange}
         />
         <Input
           type="password"
           name={"password"}
           label="Password"
+          value={loginData.password.value}
           customStyle={{
             marginTop: "2rem",
           }}

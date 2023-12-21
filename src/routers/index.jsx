@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import AuthRoutes from "./Auth.jsx";
 import AdminRoutes from "./admin";
-import GameAdmin from "./gameadmin";
+import GameAdminRoutes from "./gameadmin";
+import UserRoutes from "./user";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { resetLoginState } from "../store/auth/login.js";
@@ -43,7 +44,9 @@ const Routers = () => {
       if (role === "1") {
         return <AdminRoutes />;
       } else if (role === "2") {
-        return <GameAdmin />;
+        return <GameAdminRoutes />;
+      } else if (role === "3") {
+        return <UserRoutes />;
       } else {
         return <AuthRoutes />;
       }
