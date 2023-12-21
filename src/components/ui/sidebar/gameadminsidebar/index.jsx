@@ -4,7 +4,7 @@ import ButtonLink from "../../../common/ButtonLink/index.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentActive } from "../../../../store/local/sidebar.js";
 import { logoutUser } from "../../../../store/auth/login.js";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ModalContainer from "../../../modal";
 import Button from "../../../common/button/index.jsx";
 
