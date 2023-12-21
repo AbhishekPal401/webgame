@@ -105,7 +105,7 @@ const CreateUser = () => {
 
   useEffect(() => {
     if (createUserResponse === null) return;
-
+    
     if (createUserResponse?.success) {
       toast.success(createUserResponse.message);
       if (userID) {

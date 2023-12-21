@@ -12,9 +12,9 @@ import { validateEmail } from "../../../../utils/validators";
 import { baseUrl } from "../../../../middleware/url";
 import { toast } from "react-toastify";
 import {
-  createScenario,
+  createScenarioAPI,
   resetCreateScenarioState,
-} from "../../../../store/app/admin/scenario/createScenario.js";
+} from "../../../../store/app/admin/scenario/createScenarioResponse.js";
 import { getUsersbyPage } from "../../../../store/app/admin/users/users.js";
 import { generateGUID } from "../../../../utils/common.js";
 import axios from "axios";
@@ -43,7 +43,7 @@ const CreateUser = () => {
 
   const { credentials } = useSelector((state) => state.login);
 
-  const {createScenario} = useSelector((state => state.createScenario));  
+  const { createScenarioResponse } = useSelector((state => state.createScenarioResponse));  
   const dispatch = useDispatch();
 
   // useEffect(() => {
@@ -52,10 +52,12 @@ const CreateUser = () => {
 
   useEffect(() => {
     console.log("scenarioData :",scenarioData);
-    if (createScenario === null) return;
+    console.log("createScenarioResponse :",createScenarioResponse);
+    console.log("credentials :",credentials);
+    if (createScenarioResponse === null) return;
 
-    if (createScenario?.success) {
-      toast.success(createScenario.message);
+    if (createScenarioResponse?.success) {
+      toast.success(createScenarioResponse.message);
       setScenarioData({
         scenarioName: {
           value: "",
@@ -76,13 +78,13 @@ const CreateUser = () => {
       });
       setResetFile(!resetFile);
       dispatch(resetCreateScenarioState());
-    } else if (!createScenario.success) {
-      toast.error(createScenario.message);
+    } else if (!createScenarioResponse.success) {
+      toast.error(createScenarioResponse.message);
       dispatch(resetCreateScenarioState());
     } else {
       dispatch(resetCreateScenarioState());
     }
-  }, [createScenario, resetFile]);
+  }, [createScenarioResponse, resetFile]);
 
   const onChange = (event) => {
     setScenarioData({
@@ -177,12 +179,14 @@ const CreateUser = () => {
         const url = JSON.parse(serializedData.Data).URL;
         console.log("url :",url);
 
+        console.log("scenarioData.scenarioDescription.value, : ",scenarioData.scenarioDescription.value,);
+
         const data = {
-          scenarioName: scenarioData.scenarioName.value,
-          description: scenarioData.scenarioDescription.value,
+          scenarioName: scenarioData?.scenarioName?.value,
+          description: scenarioData?.scenarioDescription?.value,
           // not accepting :: gameIntroText: scenarioData.gameIntroText.value,
           introFile: url,
-          // todo:: introFileType: type 
+          introFileType: scenarioData?.gameIntroVideo?.value?.type, 
           status: "Create",
           version: "1",
           baseVersionID: "1",
@@ -195,9 +199,9 @@ const CreateUser = () => {
           },
         };
 
-        console.log("data :",data);
+        console.log("data sent to API :",data);
 
-        dispatch(createScenario(data));
+        dispatch(createScenarioAPI(data));
       }
     }
   };
@@ -247,16 +251,16 @@ const CreateUser = () => {
                 labelStyle={styles.inputLabel}
                 type="text"
                 name={"scenarioName"}
-                value={setScenarioData?.scenarioName?.value}
+                value={scenarioData?.scenarioName?.value}
                 placeholder="Scenario Name"
                 onChange={onChange}
               />
               {/* Rich Text Editor */}
               <Input
+                value={scenarioData?.scenarioDescription?.value}
                 labelStyle={styles.inputLabel}
                 customStyle={{ height: '70%' }}
                 name={"scenarioDescription"}
-                value={setScenarioData?.scenarioDescription?.value}
                 placeholder="Scenario Description"
                 textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
                 onChange={onChange}
@@ -276,11 +280,10 @@ const CreateUser = () => {
             <div className={styles.gameIntroductionLeftInputs}>
             <label>Game Introduction</label>
               <Input
+                value={scenarioData?.gameIntroText?.value}
                 labelStyle={styles.inputLabel}
                 customStyle={{ height: '80%' }}
-                type="text"
                 name={"gameIntroText"}
-                value={setScenarioData?.gameIntroText?.value}
                 placeholder="Add Game Intro Text"
                 textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
                 onChange={onChange}

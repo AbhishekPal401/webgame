@@ -4,7 +4,7 @@ import { apiCallBegan } from "../../../../middleware/actions.js";
 const slice = createSlice({
   name: "create-scenario",
   initialState: {
-    createScenario: null,
+    createScenarioResponse: null,
     loading: false,
   },
   reducers: {
@@ -12,15 +12,15 @@ const slice = createSlice({
       users.loading = true;
     },
     success: (users, action) => {
-      users.createScenario = action.payload;
+      users.createScenarioResponse = action.payload;
       users.loading = false;
     },
     failed: (users, action) => {
-      users.createScenario = action.payload;
+      users.createScenarioResponse = action.payload;
       users.loading = false;
     },
     reset: (users, action) => {
-      users.createScenario = null;
+      users.createScenarioResponse = null;
       users.loading = false;
     },
   },
