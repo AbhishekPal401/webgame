@@ -441,6 +441,7 @@ const CreateUser = () => {
 
                   {masters &&
                     masters.data &&
+                    isJSONString(masters.data) &&
                     Array.isArray(JSON.parse(masters.data)) &&
                     JSON.parse(masters.data).map((item, index) => {
                       if (item.MasterType !== "Role") return;
@@ -466,6 +467,7 @@ const CreateUser = () => {
                   <option value="">Select Designation</option>
                   {masters &&
                     masters.data &&
+                    isJSONString(masters.data) &&
                     Array.isArray(JSON.parse(masters.data)) &&
                     JSON.parse(masters.data).map((item, index) => {
                       if (item.MasterType !== "Designation") return;
@@ -492,6 +494,7 @@ const CreateUser = () => {
                   <option value="">Select Organisation</option>
                   {masters &&
                     masters.data &&
+                    isJSONString(masters.data) &&
                     Array.isArray(JSON.parse(masters.data)) &&
                     JSON.parse(masters.data).map((item, index) => {
                       if (item.MasterType !== "Organization") return;

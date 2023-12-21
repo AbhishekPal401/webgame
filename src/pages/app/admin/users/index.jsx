@@ -8,7 +8,7 @@ import {
   getUsersbyPage,
   resetUserState,
 } from "../../../../store/app/admin/users/users";
-import { generateGUID } from "../../../../utils/common.js";
+import { generateGUID, isJSONString } from "../../../../utils/common.js";
 import { useNavigate } from "react-router-dom";
 import ModalContainer from "../../../../components/modal/index.jsx";
 import {
@@ -47,7 +47,7 @@ const Users = () => {
   }, []);
 
   useEffect(() => {
-    if (usersByPage) {
+    if (usersByPage && isJSONString(usersByPage?.data)) {
       const newPageNumber = JSON.parse(usersByPage?.data)?.CurrentPage;
 
       if (newPageNumber && typeof newPageNumber === "number") {
@@ -127,6 +127,7 @@ const Users = () => {
             {usersByPage &&
               usersByPage.success &&
               usersByPage.data &&
+              isJSONString(usersByPage.data) &&
               JSON.parse(usersByPage.data)?.UserDetails.map((user, index) => {
                 return (
                   <tr key={index}>
@@ -161,29 +162,32 @@ const Users = () => {
               })}
           </tbody>
         </table>
-        {usersByPage && usersByPage.success && usersByPage.data && (
-          <div className={styles.paginationContainer}>
-            <Pagination
-              totalCount={JSON.parse(usersByPage.data)?.TotalCount}
-              pageNumber={pageNumber}
-              countPerPage={pageCount}
-              onPageChange={(pageNumber) => {
-                const data = {
-                  pageNumber: pageNumber,
-                  pageCount: pageCount,
-                  requester: {
-                    requestID: generateGUID(),
-                    requesterID: credentials.data.userID,
-                    requesterName: credentials.data.userName,
-                    requesterType: credentials.data.role,
-                  },
-                };
+        {usersByPage &&
+          usersByPage.success &&
+          usersByPage.data &&
+          isJSONString(usersByPage.data) && (
+            <div className={styles.paginationContainer}>
+              <Pagination
+                totalCount={JSON.parse(usersByPage.data)?.TotalCount}
+                pageNumber={pageNumber}
+                countPerPage={pageCount}
+                onPageChange={(pageNumber) => {
+                  const data = {
+                    pageNumber: pageNumber,
+                    pageCount: pageCount,
+                    requester: {
+                      requestID: generateGUID(),
+                      requesterID: credentials.data.userID,
+                      requesterName: credentials.data.userName,
+                      requesterType: credentials.data.role,
+                    },
+                  };
 
-                dispatch(getUsersbyPage(data));
-              }}
-            />
-          </div>
-        )}
+                  dispatch(getUsersbyPage(data));
+                }}
+              />
+            </div>
+          )}
       </div>
 
       {showDeleteModal && (
