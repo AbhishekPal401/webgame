@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { apiCallBegan } from "../../middleware/actions.js";
 import axios from "axios";
 import { baseUrl } from "../../middleware/url.js";
+import { azureService } from "../../services/azure.js";
 
 //api calling type 2
 
@@ -62,7 +62,8 @@ const slice = createSlice({
   // },
 });
 
-const { requested, success, failed, logout, reset, loginType } = slice.actions;
+export const { requested, success, failed, logout, reset, loginType } =
+  slice.actions;
 
 export default slice.reducer;
 
@@ -118,6 +119,19 @@ export const azurelogin = (data) => async (dispatch) => {
   }
 };
 
-export const logoutUser = (data) => async (dispatch) => {
-  dispatch(logout());
+export const logoutUser = () => async (dispatch, getState) => {
+  const {
+    login: { loginType },
+  } = getState();
+
+  if (loginType === "azure") {
+    // const { success } = await azureService.azureLogout(dispatch);
+    // if (success) {
+    //   dispatch(logout());
+    // }
+
+    dispatch(logout());
+  } else {
+    dispatch(logout());
+  }
 };

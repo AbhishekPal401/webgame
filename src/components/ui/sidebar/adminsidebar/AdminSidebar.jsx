@@ -6,6 +6,7 @@ import { setCurrentActive } from "../../../../store/local/sidebar.js";
 import { useLocation } from "react-router-dom";
 import ModalContainer from "../../../modal";
 import Button from "../../../common/button/index.jsx";
+import { logoutUser } from "../../../../store/auth/login.js";
 
 const AdminSidebar = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -107,7 +108,9 @@ const AdminSidebar = () => {
                 customStyle={{
                   marginLeft: "1rem",
                 }}
-                onClick={() => {}}
+                onClick={() => {
+                  dispatch(logoutUser());
+                }}
               >
                 Confirm
               </Button>
