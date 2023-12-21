@@ -12,9 +12,7 @@ import { Link } from "react-router-dom";
 import { formatDateString } from "../../../../utils/helper.js";
 import { useNavigate } from "react-router-dom";
 
-
 const Homepage = () => {
-
   const [pageCount, setPageCount] = useState(5);
   const [pageNumber, setPageNumber] = useState(1);
 
@@ -24,13 +22,13 @@ const Homepage = () => {
   const { usersByPage, loading } = useSelector((state) => state.users);
   const { credentials } = useSelector((state) => state.login);
 
-  const { sessionsHistoryByType } = useSelector((state) => state.sessionHistory);
+  const { sessionsHistoryByType } = useSelector(
+    (state) => state.sessionHistory
+  );
   const { scenarioByPage } = useSelector((state) => state.scenarios);
-
 
   //console.log("session history :", sessionsHistoryByType?.data);
   //console.log("scenarios :", JSON.parse(scenarioByPage.data));
-
 
   useEffect(() => {
     if (credentials) {
@@ -101,28 +99,32 @@ const Homepage = () => {
               {sessionsHistoryByType &&
                 sessionsHistoryByType.success &&
                 sessionsHistoryByType.data &&
-                JSON.parse(sessionsHistoryByType.data)?.InstanceDetails.map((scenario, index) => {
-                  return (
-                    <div key={index} className={styles.sessionHistoryCard}>
-                      <h4>{scenario.InstanceName}</h4>
-                      <p>Scenario:{scenario.Description}</p>
-                      <p>Status: {scenario.Status}</p>
-                      <div className={styles.butonFlexContainer}>
-                        <div className={styles.updatedDate}>
-                          <p>Updated: {formatDateString(scenario.UpdatedAt, 'DD-MM-YYYY')}</p>
-                        </div>
-                        <div>
-                          <Button>
-                            {scenario.Status === "Complete" ? 'Report' : 'Start'}
-                          </Button>
+                JSON.parse(sessionsHistoryByType.data)?.InstanceDetails.map(
+                  (scenario, index) => {
+                    return (
+                      <div key={index} className={styles.sessionHistoryCard}>
+                        <h4>{scenario.InstanceName}</h4>
+                        <p>Scenario:{scenario.Description}</p>
+                        <p>Status: {scenario.Status}</p>
+                        <div className={styles.butonFlexContainer}>
+                          <div className={styles.updatedDate}>
+                            <p>
+                              Updated:{" "}
+                              {formatDateString(
+                                scenario.UpdatedAt,
+                                "DD-MM-YYYY"
+                              )}
+                            </p>
+                          </div>
+                          <div>
+                            <Button>Start</Button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
-
+                    );
+                  }
+                )}
             </div>
-
           </div>
           {/* Session History:: end */}
 
@@ -130,7 +132,9 @@ const Homepage = () => {
           <div className={styles.scenarioTopContainer}>
             <div className={styles.scenarioContainer}>
               <div className={styles.scenarioContainerLeft}>
-                <div><h3>Scenarios</h3></div>
+                <div>
+                  <h3>Scenarios</h3>
+                </div>
                 <div>
                   <Link to="/scenario">See All</Link>
                 </div>
@@ -156,56 +160,57 @@ const Homepage = () => {
                   {scenarioByPage &&
                     scenarioByPage.success &&
                     scenarioByPage.data &&
-                    JSON.parse(scenarioByPage.data)?.ScenarioDetails.map((scenario, index) => {
-                      return (
-                        <tr key={index}>
-                          <td>
-                            <Checkbox />
-                          </td>
-                          <td>{index + 1}</td>
-                          <td>{scenario.ScenarioName}</td>
-                          <td>{scenario.Desription}</td>
-                          <td>{formatDateString(scenario.CreatedAt)}</td>
-                          <td>{scenario.GamesPlayed}</td>
-                          <td>{scenario.Status}</td>
-                        </tr>
-                      );
-                    })}
+                    JSON.parse(scenarioByPage.data)?.ScenarioDetails.map(
+                      (scenario, index) => {
+                        return (
+                          <tr key={index}>
+                            <td>
+                              <Checkbox />
+                            </td>
+                            <td>{index + 1}</td>
+                            <td>{scenario.ScenarioName}</td>
+                            <td>{scenario.Desription}</td>
+                            <td>{formatDateString(scenario.CreatedAt)}</td>
+                            <td>{scenario.GamesPlayed}</td>
+                            <td>{scenario.Status}</td>
+                          </tr>
+                        );
+                      }
+                    )}
                 </tbody>
               </table>
-              {scenarioByPage && scenarioByPage.success && scenarioByPage.data && (
-                <div className={styles.paginationContainer}>
-                  <Pagination
-                    totalCount={JSON.parse(scenarioByPage.data)?.TotalCount}
-                    pageNumber={pageNumber}
-                    countPerPage={pageCount}
-                    onPageChange={(pageNumber) => {
-                      const data = {
-                        pageNumber: pageNumber,
-                        pageCount: pageCount,
-                        requester: {
-                          requestID: generateGUID(),
-                          requesterID: credentials.data.userID,
-                          requesterName: credentials.data.userName,
-                          requesterType: credentials.data.role,
-                        },
-                      };
+              {scenarioByPage &&
+                scenarioByPage.success &&
+                scenarioByPage.data && (
+                  <div className={styles.paginationContainer}>
+                    <Pagination
+                      totalCount={JSON.parse(scenarioByPage.data)?.TotalCount}
+                      pageNumber={pageNumber}
+                      countPerPage={pageCount}
+                      onPageChange={(pageNumber) => {
+                        const data = {
+                          pageNumber: pageNumber,
+                          pageCount: pageCount,
+                          requester: {
+                            requestID: generateGUID(),
+                            requesterID: credentials.data.userID,
+                            requesterName: credentials.data.userName,
+                            requesterType: credentials.data.role,
+                          },
+                        };
 
-                      dispatch(getScenarioByPage(data));
-                    }}
-                  />
-                </div>
-              )}
+                        dispatch(getScenarioByPage(data));
+                      }}
+                    />
+                  </div>
+                )}
             </div>
           </div>
 
           {/* Scenario Table:: end */}
         </div>
       </div>
-
-
     </PageContainer>
-
   );
 };
 

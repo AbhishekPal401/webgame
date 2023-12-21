@@ -119,7 +119,7 @@ const Users = () => {
               <th>Username</th>
               <th>EmailId</th>
               <th>Designation</th>
-              <th>Organisation</th>
+              <th>Organization</th>
               <th>Delete</th>
             </tr>
           </thead>
@@ -192,12 +192,12 @@ const Users = () => {
 
       {showDeleteModal && (
         <ModalContainer>
-          <div className={styles.modal_content}>
-            <div className={styles.modal_header}>
+          <div className="modal_content">
+            <div className="modal_header">
               <div>Delete User</div>
               <div>
                 <svg
-                  className={styles.crossIcon}
+                  className="modal_crossIcon"
                   onClick={() => {
                     setShowDeleteModal(null);
                   }}
@@ -206,11 +206,11 @@ const Users = () => {
                 </svg>
               </div>
             </div>
-            <div className={styles.modal_description}>
+            <div className="modal_description">
               Are you sure you want to delete this user ?
             </div>
 
-            <div className={styles.modal_buttonContainer}>
+            <div className="modal_buttonContainer">
               <Button
                 buttonType={"cancel"}
                 onClick={() => {

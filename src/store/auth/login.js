@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { apiCallBegan } from "../../middleware/actions.js";
 import axios from "axios";
 import { baseUrl } from "../../middleware/url.js";
+import { azureService } from "../../services/azure.js";
 
 //api calling type 2
 
@@ -14,6 +14,7 @@ const slice = createSlice({
   name: "user-login",
   initialState: {
     credentials: null,
+    loginType: "default",
     loading: false,
     status: "idle",
   },
@@ -30,14 +31,19 @@ const slice = createSlice({
       users.loading = false;
     },
     logout: (users, action) => {
-      users.credentials = action.payload;
+      users.credentials = null;
       users.loading = false;
+      users.status = "idle";
     },
 
     reset: (users, action) => {
       users.credentials = null;
       users.loading = false;
       users.status = "idle";
+    },
+
+    loginType: (users, action) => {
+      users.loginType = action.payload;
     },
   },
   // extraReducers(builder) {
@@ -56,21 +62,10 @@ const slice = createSlice({
   // },
 });
 
-const { requested, success, failed, logout, reset } = slice.actions;
+export const { requested, success, failed, logout, reset, loginType } =
+  slice.actions;
 
 export default slice.reducer;
-
-//api calling type 1
-
-// export const login = (data) =>
-//   apiCallBegan({
-//     url: "api/Auth/Auth",
-//     method: "POST",
-//     data,
-//     onStart: requested.type,
-//     onSuccess: success.type,
-//     onFailed: failed.type,
-//   });
 
 export const login = (data) => async (dispatch) => {
   try {
@@ -114,11 +109,29 @@ export const azurelogin = (data) => async (dispatch) => {
     });
 
     dispatch(success(response.data));
+    dispatch(loginType("azure"));
   } catch (err) {
     dispatch(
       failed(
         err.response && err.response.data ? err.response.data : err.message
       )
     );
+  }
+};
+
+export const logoutUser = () => async (dispatch, getState) => {
+  const {
+    login: { loginType },
+  } = getState();
+
+  if (loginType === "azure") {
+    // const { success } = await azureService.azureLogout(dispatch);
+    // if (success) {
+    //   dispatch(logout());
+    // }
+    sessionStorage.clear();
+    dispatch(logout());
+  } else {
+    dispatch(logout());
   }
 };

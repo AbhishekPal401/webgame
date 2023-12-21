@@ -21,6 +21,7 @@ import { generateGUID } from "../../../../utils/common.js";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { isJSONString } from "../../../../utils/common.js";
+import { useNavigate } from "react-router-dom";
 
 const CreateUser = () => {
   const [userData, setUserData] = useState({
@@ -50,6 +51,8 @@ const CreateUser = () => {
     },
   });
 
+  const [defaultUrl, setDefaultUrl] = useState(null);
+
   const [imageURl, setImageURl] = useState(null);
 
   const { userID } = useParams();
@@ -68,6 +71,7 @@ const CreateUser = () => {
     useSelector((state) => state.createUser);
 
   const dispatch = useDispatch();
+  const naigateTo = useNavigate();
 
   const resetUserData = () => {
     setUserData({
@@ -181,6 +185,7 @@ const CreateUser = () => {
       };
 
       setImageURl(data.ProfileImageDisplay);
+      setDefaultUrl(data.ProfileImage);
 
       setUserData(newData);
     }
@@ -338,7 +343,7 @@ const CreateUser = () => {
     }
 
     if (valid) {
-      let url = "";
+      let url = defaultUrl;
 
       if (userData.profileImage.value) {
         const formData = new FormData();
@@ -389,11 +394,14 @@ const CreateUser = () => {
   const onCancel = () => {
     if (userID) {
       setUserDetailState();
+      naigateTo("/users");
       return;
     } else {
       resetUserData();
       setImageURl(null);
     }
+
+    naigateTo("/users");
   };
 
   return (

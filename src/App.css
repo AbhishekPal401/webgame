@@ -65,3 +65,41 @@
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary-light);
 }
+
+/* ================ modal ================= */
+
+.modal_content {
+  width: 40rem;
+  background-color: var(--innerbackground);
+  box-shadow: 0px 0.8rem 1.6rem #d1d1d1;
+  border-radius: 0.8rem;
+  opacity: 1;
+  padding: 2rem;
+  z-index: 1000;
+}
+.modal_header {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+.modal_crossIcon {
+  width: 2rem;
+  height: 2rem;
+}
+.modal_crossIcon:hover {
+  cursor: pointer;
+}
+.modal_description {
+  margin-top: 1rem;
+  font-size: 1.3rem;
+}
+.modal_buttonContainer {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+}

@@ -27,8 +27,6 @@ export const azureService = {
 
     const email = loginResponse?.account?.username;
 
-    console.log("email in service", email);
-
     return { email: email };
   },
   azureLogout: async () => {
@@ -36,8 +34,12 @@ export const azureService = {
       await publicClientApp.logoutPopup({
         mainWindowRedirectUri: azureConfig.redirectURL,
       });
+
+      return { success: true, message: "Logout successful" };
     } catch (error) {
       console.error("error", error);
+
+      return { success: false, message: "Logout failed" };
     }
   },
 };
