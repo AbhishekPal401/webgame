@@ -4,6 +4,7 @@ import Navbar from "../../components/ui/navbar";
 import Sidebar from "../../components/ui/sidebar/gameadminsidebar";
 import styles from "./gameadmin.module.css";
 import Homepage from "../../pages/app/gameadmin/homepage";
+import Profile from "../../pages/app/common/profile";
 
 const GameAdmin = () => {
   return (
@@ -16,6 +17,7 @@ const GameAdmin = () => {
         <div className={styles.rightContainer}>
           <Routes>
             <Route path="/" element={<Homepage />} />
+            <Route path="/profile/:userID?" element={<Profile />} />
           </Routes>
         </div>
       </div>
