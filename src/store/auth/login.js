@@ -129,7 +129,7 @@ export const logoutUser = () => async (dispatch, getState) => {
     // if (success) {
     //   dispatch(logout());
     // }
-
+    sessionStorage.clear();
     dispatch(logout());
   } else {
     dispatch(logout());
