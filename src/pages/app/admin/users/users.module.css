@@ -12,8 +12,9 @@
 }
 
 .left label {
-  font-size: 5rem;
+  font-size: 4rem;
   color: var(--label);
+  font-weight: bold;
 }
 .right {
   flex: 1.5;

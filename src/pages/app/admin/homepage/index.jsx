@@ -169,7 +169,7 @@ const Homepage = () => {
                             </td>
                             <td>{index + 1}</td>
                             <td>{scenario.ScenarioName}</td>
-                            <td>{scenario.Desription}</td>
+                            <td>{scenario.Description}</td>
                             <td>{formatDateString(scenario.CreatedAt)}</td>
                             <td>{scenario.GamesPlayed}</td>
                             <td>{scenario.Status}</td>

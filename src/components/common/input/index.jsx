@@ -8,6 +8,7 @@ const Input = ({
   name,
   value = "",
   labelStyle = "",
+  textAreaStyleClass,
   onChange = () => {},
   ...props
 }) => {
@@ -16,10 +17,12 @@ const Input = ({
       <label className={labelStyle}>{label}</label>
       {textArea ? (
         <textarea
+          name={name}
           value={value}
-          className={style.formControl}
+          className={`${style.formControl} ${textAreaStyleClass}`}
           placeholder={label}
           {...props}
+          onChange={onChange}
         />
       ) : (
         <input

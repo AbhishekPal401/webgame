@@ -73,6 +73,8 @@
   gap: 2.4rem;
   overflow-x: auto;
   white-space: nowrap;
+  width: 120rem;
+
 }
 
 .sessionHistoryCard {
