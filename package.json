@@ -18,7 +18,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
-    "react-motion": "^0.5.2",
     "react-quill": "^2.0.0",
     "react-redux": "^9.0.4",
     "react-router-dom": "^6.21.0",
