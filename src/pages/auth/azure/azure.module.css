@@ -10,6 +10,10 @@
   border: 1px solid transparent;
   padding: 0.8rem 2.5rem;
   padding-top: 1rem;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   border-radius: 0.8rem;
+}
+
+.microsoftLoginButton:hover {
+  cursor: pointer;
 }
