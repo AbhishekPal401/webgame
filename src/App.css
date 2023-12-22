@@ -38,9 +38,21 @@
   font-size: 1.3rem;
   color: #495057;
   background-color: #fff;
-  border: 1px solid #9b9b9b;
+  border: 1px solid #dedede;
   border-radius: 0.7rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.select_input:disabled {
+  appearance: none;
+  cursor: not-allowed;
+}
+
+.select_input:disabled:focus {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  box-shadow: none;
 }
 
 /************************** Custom Scroll Bar  *************************/

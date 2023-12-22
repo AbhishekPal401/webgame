@@ -8,6 +8,7 @@ import Users from "../../pages/app/admin/users";
 import CreateUser from "../../pages/app/admin/createusers";
 import CreateScenarios from "../../pages/app/admin/createscenarios";
 import Scenarios from "../../pages/app/admin/scenarios";
+import Profile from "../../pages/app/common/profile";
 
 const Admin = () => {
   return (
@@ -27,6 +28,7 @@ const Admin = () => {
             />
             <Route path="/scenario" element={<Scenarios />} />
             <Route path="/createscenarios" element={<CreateScenarios />} />
+            <Route path="/profile/:userID?" element={<Profile />} />
           </Routes>
         </div>
       </div>

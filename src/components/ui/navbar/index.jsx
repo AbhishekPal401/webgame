@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import styles from "./navbar.module.css";
 import logo from "../../../assets/logo/pwclabel.png";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = ({ role = "Admin" }) => {
   const [initial, setInitials] = useState("");
 
   const { credentials } = useSelector((state) => state.login);
+
+  const navigate = useNavigate();
 
   const extractInitials = (username) => {
     const words = username.split(" ");
@@ -25,7 +27,6 @@ const Navbar = ({ role = "Admin" }) => {
   useEffect(() => {
     if (credentials?.data) {
       const init = extractInitials(credentials.data.userName);
-      console.log(init);
 
       if (init) {
         setInitials(init);
@@ -41,7 +42,14 @@ const Navbar = ({ role = "Admin" }) => {
       <div className={styles.label}>Game of Risks</div>
       <div className={styles.containerRight}>
         <div className={styles.role}>{role}</div>
-        <div className={styles.profileIcon}>{initial}</div>
+        <div
+          className={styles.profileIcon}
+          onClick={() => {
+            navigate(`/profile/${credentials.data.userID}`);
+          }}
+        >
+          {initial}
+        </div>
       </div>
     </div>
   );
