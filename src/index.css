@@ -28,6 +28,10 @@ html {
   font-family: "Helvetica 400", "Poppins", sans-serif;
 }
 
+body {
+  overflow: hidden;
+}
+
 @font-face {
   font-family: "Helvetica 100";
   src: url("./assets/fonts/HelveticaNeueLTPro-100.ttf") format("truetype");
