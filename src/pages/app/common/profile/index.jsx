@@ -71,7 +71,6 @@ const UserProfile = () => {
     useSelector((state) => state.createUser);
 
   const dispatch = useDispatch();
-  const naigateTo = useNavigate();
 
   const resetUserData = () => {
     setUserData({
@@ -108,7 +107,7 @@ const UserProfile = () => {
   }, []);
 
   useEffect(() => {
-    if (createUserResponse === null) return;
+    if (createUserResponse === null || createUserResponse === undefined) return;
 
     if (createUserResponse?.success) {
       toast.success(createUserResponse.message);
@@ -394,21 +393,18 @@ const UserProfile = () => {
   const onCancel = () => {
     if (userID) {
       setUserDetailState();
-      naigateTo("/users");
       return;
     } else {
       resetUserData();
       setImageURl(null);
     }
-
-    naigateTo("/users");
   };
 
   return (
     <PageContainer>
       <div className={styles.topContainer}>
         <div className={styles.left}>
-          <label> {userID ? "Update User" : "Create User"}</label>
+          <label>User Profile</label>
         </div>
         <div className={styles.right}>
           <img src="./images/scenario.png" />
@@ -426,6 +422,7 @@ const UserProfile = () => {
                 name={"username"}
                 label="Username"
                 onChange={onChange}
+                disabled={credentials.data.role === "3"}
               />
               <Input
                 labelStyle={styles.inputLabel}
@@ -433,40 +430,45 @@ const UserProfile = () => {
                 value={userData.email.value}
                 name={"email"}
                 label="Email"
+                disabled={true}
                 onChange={onChange}
               />
-              <div>
-                <label htmlFor="dropdown_role" className="select_label">
-                  Role:
-                </label>
-                <select
-                  id="dropdown_role"
-                  value={userData.role.value}
-                  className="select_input"
-                  onChange={onRoleSelect}
-                >
-                  <option value={""}>Select Roles</option>
+              {credentials?.data?.role === "1" ||
+              credentials?.data?.role === "2" ? (
+                <div>
+                  <label htmlFor="dropdown_role" className="select_label">
+                    Role:
+                  </label>
+                  <select
+                    id="dropdown_role"
+                    value={userData.role.value}
+                    className="select_input"
+                    onChange={onRoleSelect}
+                  >
+                    <option value={""}>Select Roles</option>
 
-                  {masters &&
-                    masters.data &&
-                    isJSONString(masters.data) &&
-                    Array.isArray(JSON.parse(masters.data)) &&
-                    JSON.parse(masters.data).map((item, index) => {
-                      if (item.MasterType !== "Role") return;
-                      return (
-                        <option value={item.MasterID} key={index}>
-                          {item.MasterDisplayName}
-                        </option>
-                      );
-                    })}
-                </select>
-              </div>
+                    {masters &&
+                      masters.data &&
+                      isJSONString(masters.data) &&
+                      Array.isArray(JSON.parse(masters.data)) &&
+                      JSON.parse(masters.data).map((item, index) => {
+                        if (item.MasterType !== "Role") return;
+                        return (
+                          <option value={item.MasterID} key={index}>
+                            {item.MasterDisplayName}
+                          </option>
+                        );
+                      })}
+                  </select>
+                </div>
+              ) : null}
 
               <div>
                 <label htmlFor="dropdown_designation" className="select_label">
                   Designation:
                 </label>
                 <select
+                  disabled={credentials.data.role === "3"}
                   id="dropdown_designation"
                   value={userData.designation.value}
                   className="select_input"
@@ -514,6 +516,7 @@ const UserProfile = () => {
                     })}
                 </select>
               </div>
+
               <ImageDropZone
                 customstyle={{ marginTop: "1rem" }}
                 label="Upload Profile Pic"
@@ -531,7 +534,7 @@ const UserProfile = () => {
         <Button buttonType="cancel" onClick={onCancel}>
           Cancel
         </Button>
-        <Button onClick={onSubmit}> {userID ? "Update" : "Create"}</Button>
+        <Button onClick={onSubmit}>Update</Button>
       </div>
     </PageContainer>
   );

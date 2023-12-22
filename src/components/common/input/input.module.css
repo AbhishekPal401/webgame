@@ -28,3 +28,15 @@
   border-color: #80bdff;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
+
+/* Disabled styles */
+.formControl:disabled {
+  background-color: #dedede;
+  cursor: not-allowed;
+}
+
+/* Disabled focus styles (optional) */
+.formControl:disabled:focus {
+  outline: none;
+  box-shadow: none;
+}

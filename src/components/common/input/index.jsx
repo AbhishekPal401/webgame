@@ -6,6 +6,7 @@ const Input = ({
   customStyle,
   label,
   name,
+  disabled = false,
   value = "",
   labelStyle = "",
   textAreaStyleClass,
@@ -17,6 +18,7 @@ const Input = ({
       <label className={labelStyle}>{label}</label>
       {textArea ? (
         <textarea
+          disabled={disabled}
           name={name}
           value={value}
           className={`${style.formControl} ${textAreaStyleClass}`}
@@ -26,6 +28,7 @@ const Input = ({
         />
       ) : (
         <input
+          disabled={disabled}
           type={type}
           name={name}
           value={value}
