@@ -57,6 +57,16 @@
   flex-direction: row;
   gap: 5rem;
   padding: 1.5rem 1rem;
+  
+  /* Rotate the background image */
+  transform: scaleY(-1);
+
+}
+
+.createScenarioLeftInputs,
+.createScenarioFormRight .verticalLine,
+.createScenarioRightInputs {
+  transform: scaleY(-1); /* Reset rotation for inner contents */
 }
 
 .inputLabel {
