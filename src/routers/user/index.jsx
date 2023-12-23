@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Navbar from "../../components/ui/navbar";
+import UserNavBar from "../../components/ui/usernavbar";
+
 import styles from "./userroutes.module.css";
 import Homepage from "../../pages/app/gameuser/homepage";
 import Profile from "../../pages/app/common/profile";
@@ -8,7 +9,7 @@ import Profile from "../../pages/app/common/profile";
 const User = () => {
   return (
     <div className={styles.container}>
-      <Navbar role="User" />
+      <UserNavBar role="Players" />
       <div className={styles.layoutContainer}>
         <Routes>
           <Route path="/" element={<Homepage />} />
