@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import styles from "./homepage.module.css";
 import Button from "../../../../components/common/button";
 import { motion } from "framer-motion";
-import { useNavigation } from "react-router";
+import { useNavigate } from "react-router-dom";
 const UserHomePage = () => {
   const [ready, setReady] = useState(true);
-  const naigate = useNavigation();
+  const naigate = useNavigate();
 
   const onsubmit = () => {
     naigate("./intro");

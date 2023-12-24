@@ -1,19 +1,25 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import UserNavBar from "../../components/ui/usernavbar";
 
 import styles from "./userroutes.module.css";
 import Homepage from "../../pages/app/gameuser/homepage";
 import Profile from "../../pages/app/common/profile";
+import Intro from "../../pages/app/gameuser/introduction";
 
 const User = () => {
+  const location = useLocation();
+
   return (
     <div className={styles.container}>
-      <UserNavBar role="Players" />
+      {location.pathname.includes("/intro") ? null : (
+        <UserNavBar role="Players" />
+      )}
       <div className={styles.layoutContainer}>
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/profile/:userID?" element={<Profile />} />
+          <Route path="/intro" element={<Intro />} />
         </Routes>
       </div>
     </div>
