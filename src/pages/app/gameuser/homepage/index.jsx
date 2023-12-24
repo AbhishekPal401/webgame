@@ -2,8 +2,14 @@ import React, { useState } from "react";
 import styles from "./homepage.module.css";
 import Button from "../../../../components/common/button";
 import { motion } from "framer-motion";
+import { useNavigation } from "react-router";
 const UserHomePage = () => {
   const [ready, setReady] = useState(true);
+  const naigate = useNavigation();
+
+  const onsubmit = () => {
+    naigate("./intro");
+  };
 
   return (
     <motion.div
@@ -19,6 +25,7 @@ const UserHomePage = () => {
         <div className={styles.players}>
           <div>
             <Button
+              onClick={onsubmit}
               customClassName={ready ? styles.button : styles.buttonDisabled}
             >
               Ready
