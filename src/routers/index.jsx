@@ -8,9 +8,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { resetLoginState } from "../store/auth/login.js";
 import { AnimatePresence, motion } from "framer-motion";
+import Loader from "../components/loader/index.jsx";
 
 const Routers = () => {
   const [isAuthorised, setIsAuthorised] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -35,6 +37,8 @@ const Routers = () => {
       dispatch(resetLoginState());
       setIsAuthorised(false);
     }
+
+    setIsLoading(false);
   }, [credentials, isAuthorised]);
 
   const RoutesBasedOnRole = () => {
@@ -77,6 +81,10 @@ const Routers = () => {
       }
     }
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <Router>

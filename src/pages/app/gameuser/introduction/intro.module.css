@@ -1,0 +1,37 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  background-color: #2d2d2d;
+  padding: 10rem 25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.videoContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.videoContainer video {
+  width: 100%;
+  height: 100%;
+  margin: 0; /* Reset margin */
+  padding: 0; /* Reset padding */
+  object-fit: fill;
+}
+.buttonContainer {
+  width: 35rem;
+  position: absolute;
+  right: 0rem;
+  bottom: 0rem;
+  background-image: url("./images/grey_strip.png");
+  background-size: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 1rem;
+}
