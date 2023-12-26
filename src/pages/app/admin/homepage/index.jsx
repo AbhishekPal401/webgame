@@ -11,6 +11,7 @@ import { generateGUID, isJSONString } from "../../../../utils/common.js";
 import { Link } from "react-router-dom";
 import { formatDateString } from "../../../../utils/helper.js";
 import { useNavigate } from "react-router-dom";
+import { dateFormats } from "../../../../constants/date.js";
 
 const Homepage = () => {
   const [pageCount, setPageCount] = useState(5);
@@ -77,7 +78,7 @@ const Homepage = () => {
   }, [scenarioByPage]);
 
   const navigateTo = () => {
-    navigate("/createscenarios");
+    navigate("/scenario/createscenarios");
   };
 
   return (
@@ -115,15 +116,15 @@ const Homepage = () => {
                         <div className={styles.cardBottomContainer}>
                           <div className={styles.cardBottomContainerLeft}>
                             <p>
-                              Updated :
+                              Updated : 
                               {formatDateString(
                                 scenario.UpdatedAt,
-                                "DD-MM-YYYY"
+                                dateFormats.DATE_FORMAT_8
                               )}
                             </p>
                           </div>
                           <div className={styles.cardBottomContainerRight}>
-                            <Button>Start</Button>
+                            <Button>{scenario.Status === "Create" ? 'Start' : 'Report'}</Button>
                           </div>
                         </div>
                       </div>
@@ -174,7 +175,14 @@ const Homepage = () => {
                               <Checkbox />
                             </td>
                             <td>{index + 1}</td>
-                            <td>{scenario.ScenarioName}</td>
+                            <td
+                              className={styles.scenarioName}
+                              onClick={() => {
+                                navigate(`/scenario/updatescenarios/${scenario.ScenarioID}`);
+                              }}
+                            >
+                              {scenario.ScenarioName}
+                            </td>
                             <td>{scenario.Description}</td>
                             <td>{formatDateString(scenario.CreatedAt)}</td>
                             <td>{scenario.GamesPlayed}</td>

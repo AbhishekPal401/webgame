@@ -5,10 +5,11 @@ import { useDropzone } from "react-dropzone";
 const FileDropZone = ({
   label = "",
   customstyle = {},
+  fileSrc = "",
   resetFile = false,
+  setUrl = () => {},
   onUpload = () => {},
 }) => {
-  const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState(null);
 
   const onDrop = useCallback((acceptedFiles) => {
@@ -20,7 +21,7 @@ const FileDropZone = ({
 
         const reader = new FileReader();
         reader.onload = (e) => {
-          setSelectedFile(e.target.result);
+          setUrl(e.target.result);
           setError(null);
         };
         reader.readAsDataURL(file);
@@ -33,12 +34,6 @@ const FileDropZone = ({
     onDrop,
     accept: "audio/mp3, video/mp4",
   });
-  
-  useEffect(() => {
-    if (resetFile) {
-      setSelectedFile(null);
-    }
-  }, [resetFile]);
 
   return (
     <>
@@ -51,16 +46,16 @@ const FileDropZone = ({
           <p>Drop the files here ...</p>
         ) : (
           <>
-            {selectedFile ? (
+            {fileSrc ? (
               <div className={styles.previewContainer}>
-                {selectedFile.type === "audio/mp3" ? (
+                {fileSrc.type === "audio/mp3" ? (
                   <audio controls>
-                    <source src={selectedFile} type="audio/mpeg" />
+                    <source src={fileSrc} type="audio/mpeg" />
                     Your browser does not support the audio element.
                   </audio>
                 ) : (
                   <video controls>
-                    <source src={selectedFile} type="video/mp4" />
+                    <source src={fileSrc} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                 )}

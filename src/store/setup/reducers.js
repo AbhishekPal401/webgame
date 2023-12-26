@@ -11,7 +11,9 @@ import masters from "../app/admin/users/masters.js";
 import createUser from "../app/admin/users/createUser.js";
 import scenarios from "../app/admin/scenario/scenario.js";
 import createScenario from "../app/admin/scenario/createScenario.js";
+import updateScenario from "../app/admin/scenario/updateScenario.js";
 import sessionHistory from "../app/admin/session/session.js";
+import getScenarioById from "../app/admin/scenario/getScenarioById.js";
 
 // dawdaw
 
@@ -26,6 +28,8 @@ const reducers = combineReducers({
   sessionHistory,
   scenarios,
   createScenario,
+  updateScenario,
+  getScenarioById,
 });
 
 const rootReducer = (state, action) => {

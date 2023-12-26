@@ -49,14 +49,14 @@ const Scenarios = () => {
   }, [scenarioByPage]);
 
   const navigateTo = () => {
-    navigate("/createscenarios");
+    navigate("/scenario/createscenarios");
   };
 
   return (
     <PageContainer>
       <div className={styles.topContainer}>
         <div className={styles.left}>
-          <label>Scenario</label>
+          <label>Scenarios</label>
         </div>
         <div className={styles.right}>
           <img src="./images/scenario.png" />
@@ -92,7 +92,14 @@ const Scenarios = () => {
                         <Checkbox />
                       </td>
                       <td>{index + 1}</td>
-                      <td>{scenario.ScenarioName}</td>
+                      <td
+                        className={styles.scenarioName}
+                        onClick={() => {
+                          navigate(`/scenario/updatescenarios/${scenario.ScenarioID}`); 
+                        }}
+                      >
+                        {scenario.ScenarioName}
+                      </td>
                       <td>{scenario.Description}</td>
                       <td>{formatDateString(scenario.CreatedAt)}</td>
                       <td>{scenario.GamesPlayed}</td>

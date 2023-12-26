@@ -3,12 +3,9 @@ import styles from "./createscenarios.module.css";
 import bg_2 from "/images/createscenario2.png";
 import PageContainer from "../../../../components/ui/pagecontainer";
 import Input from "../../../../components/common/input";
-import ImageDropZone from "../../../../components/common/upload/ImageDropzone";
 import FileDropZone from "../../../../components/common/upload/FileDropZone";
 import Button from "../../../../components/common/button";
-import { getAllMasters } from "../../../../store/app/admin/users/masters";
 import { useDispatch, useSelector } from "react-redux";
-import { validateEmail } from "../../../../utils/validators";
 import { baseUrl } from "../../../../middleware/url";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -40,6 +37,7 @@ const CreateScenario = () => {
   });
 
   const [resetFile, setResetFile] = useState(false);
+  const [introFileDisplay, setIntroFileDisplay] = useState(null);
 
   const { credentials } = useSelector((state) => state.login);
 
@@ -48,11 +46,6 @@ const CreateScenario = () => {
   );
   const dispatch = useDispatch();
   const naigateTo = useNavigate();
-
-
-  // useEffect(() => {
-  //   dispatch(getAllMasters());
-  // }, []);
 
   useEffect(() => {
     if (createScenarioResponse === null || createScenarioResponse === undefined)
@@ -191,7 +184,7 @@ const CreateScenario = () => {
         const data = {
           scenarioName: scenarioData?.scenarioName?.value,
           description: scenarioData?.scenarioDescription?.value,
-          // not accepting :: gameIntroText: scenarioData.gameIntroText.value,
+          // TODO :: not accepting gameIntroText: scenarioData.gameIntroText.value,
           introFile: url,
           introFileType: scenarioData?.gameIntroVideo?.value?.type,
           status: "Create",
@@ -241,8 +234,8 @@ const CreateScenario = () => {
       <div className={styles.topContainer}>
         <div className={styles.left}>
           <label>Create Scenario</label>
-          <div className={styles.lastEditedOn}>{}</div>
-          {/*Todo:: Last edited On */}
+          <div className={styles.lastEditedOn}>{ }</div>
+          {/*TODO:: Last edited On */}
         </div>
         <div className={styles.right}>
           <img src={bg_2} alt="create scenario background 2" />
@@ -262,7 +255,7 @@ const CreateScenario = () => {
                 placeholder="Scenario Name"
                 onChange={onChange}
               />
-              {/* Rich Text Editor */}
+              {/*TODO:: Rich Text Editor */}
               <Input
                 value={scenarioData?.scenarioDescription?.value}
                 labelStyle={styles.inputLabel}
@@ -286,6 +279,7 @@ const CreateScenario = () => {
           <div className={styles.gameIntroductionFormRight}>
             <div className={styles.gameIntroductionLeftInputs}>
               <label>Game Introduction</label>
+              {/*TODO:: Rich Text Editor */}
               <Input
                 value={scenarioData?.gameIntroText?.value}
                 labelStyle={styles.inputLabel}
@@ -303,6 +297,10 @@ const CreateScenario = () => {
                 <FileDropZone
                   customstyle={{ marginTop: "1rem" }}
                   label="Upload Game Intro Video"
+                  fileSrc={introFileDisplay}
+                  setUrl={(file) => {
+                    setIntroFileDisplay(file);
+                  }}
                   onUpload={onUpload}
                   resetFile={resetFile}
                 />
