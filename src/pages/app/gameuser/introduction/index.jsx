@@ -33,10 +33,7 @@ const Intro = () => {
         console.error("Autoplay failed:", error);
       });
 
-    return () => {
-      // Cleanup: remove the event listener
-      videoRef.current.removeEventListener("ended", handleEnded);
-    };
+    return () => {};
   }, []);
   return (
     <motion.div

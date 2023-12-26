@@ -2,6 +2,8 @@ import React from "react";
 import styles from "./gameplay.module.css";
 import { motion } from "framer-motion";
 import CountDown from "../../../../components/ui/countdown";
+import Question from "../../../../components/ui/gameplay/question";
+
 const GamePlay = () => {
   return (
     <motion.div
@@ -46,7 +48,9 @@ const GamePlay = () => {
           <div></div>
         </div>
         <div className={styles.middle}>
-          <div className={styles.questionContainer}></div>
+          <div className={styles.questionContainer}>
+            <Question />
+          </div>
         </div>
         <div className={styles.right}>
           <div className={styles.notification}>

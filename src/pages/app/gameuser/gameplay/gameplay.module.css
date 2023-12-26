@@ -157,7 +157,9 @@
   margin-top: 8rem;
   flex: 1;
   background-color: #474747;
+  padding: 1.5rem;
 }
+
 .right {
   flex: 1;
   display: flex;
