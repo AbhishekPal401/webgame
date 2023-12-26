@@ -5,7 +5,8 @@
 .formGroup label {
   display: block;
   margin-bottom: 0.8rem;
-  font-size: 1.3rem;
+  font-size: 1.35rem;
+  font-family: "Helvetica 500";
 }
 
 /* Input style */
@@ -17,25 +18,26 @@
   font-size: 1.3rem;
   color: #495057;
   background-color: #fff;
-  border: 1px solid #9b9b9b;
+  border: 1px solid #d7d7d7;
   border-radius: 0.7rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-/* Focus styles */
-.formControl:focus {
-  outline: none;
-  border-color: #80bdff;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+.formControl::placeholder {
+  color: #b0b0b0;
 }
 
-/* Disabled styles */
+.formControl:focus {
+  outline: none;
+  border: 1px solid var(--primary);
+  box-shadow: 0 0 0 0.2rem var(--primary-light);
+}
+
 .formControl:disabled {
   background-color: #dedede;
   cursor: not-allowed;
 }
 
-/* Disabled focus styles (optional) */
 .formControl:disabled:focus {
   outline: none;
   box-shadow: none;

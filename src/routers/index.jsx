@@ -1,4 +1,3 @@
-// App.js
 import React, { useEffect, useState } from "react";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import AuthRoutes from "./Auth.jsx";
@@ -8,6 +7,7 @@ import UserRoutes from "./user";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { resetLoginState } from "../store/auth/login.js";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Routers = () => {
   const [isAuthorised, setIsAuthorised] = useState(false);
@@ -42,21 +42,48 @@ const Routers = () => {
       const role = credentials?.data?.role;
 
       if (role === "1") {
-        return <AdminRoutes />;
+        return (
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.3, damping: 10 }}
+          >
+            <AdminRoutes />
+          </motion.div>
+        );
       } else if (role === "2") {
-        return <GameAdminRoutes />;
-      } else if (role === "3") {
-        return <UserRoutes />;
+        return (
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.3, damping: 10 }}
+          >
+            <GameAdminRoutes />
+          </motion.div>
+        );
       } else {
-        return <AuthRoutes />;
+        return (
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.3, damping: 10 }}
+          >
+            <UserRoutes />
+          </motion.div>
+        );
       }
-    } else {
-      return <AuthRoutes />;
     }
   };
 
   return (
-    <Router>{isAuthorised ? <RoutesBasedOnRole /> : <AuthRoutes />}</Router>
+    <Router>
+      <AnimatePresence>
+        {isAuthorised ? <RoutesBasedOnRole /> : <AuthRoutes />}
+      </AnimatePresence>
+    </Router>
   );
 };
 
