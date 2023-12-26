@@ -1,0 +1,219 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  width: 100%;
+  height: 12rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: var(--black);
+}
+.header_left {
+  width: 27%;
+  height: 100%;
+  background-color: var(--innerbackground);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 9rem;
+}
+
+.header_left > div:nth-child(1) {
+  font-size: 1.8rem;
+  font-family: "helvetica 500";
+  color: var(--black);
+}
+
+.header_left > div:nth-child(2) {
+  font-size: 1.4rem;
+  font-family: "helvetica 400";
+  color: var(--black);
+  margin-top: 0.5rem;
+}
+
+.header_middle {
+  width: 46%;
+  height: 100%;
+  background-color: var(--innerbackground);
+  background-image: url("/images/gameplay_header.png");
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  background-size: 65% 80%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.strip1 {
+  width: 15rem;
+  height: 100%;
+}
+.strip2 {
+  width: 15rem;
+  height: 100%;
+}
+.header_right {
+  width: 27%;
+  height: 100%;
+  background-color: var(--innerbackground);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.counter > div:nth-child(1) {
+  color: var(--black);
+  font-size: 1.4rem;
+  font-family: "helvetica 500";
+}
+
+.counter > div:nth-child(2) {
+  color: var(--primary);
+  font-size: 3rem;
+  font-family: "helvetica 700";
+  text-transform: uppercase;
+  margin-top: 0.8rem;
+}
+
+.counter > div:nth-child(3) {
+  color: var(--primary);
+  font-size: 2.2rem;
+  font-family: "helvetica 500";
+  text-transform: uppercase;
+}
+
+.vertical_line {
+  height: 80%;
+  width: 0.1rem;
+  background-color: var(--primary);
+  align-self: center;
+}
+
+.score {
+  margin-top: 2rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.score > div:nth-child(1) {
+  color: var(--black);
+  font-size: 1.4rem;
+  font-family: "helvetica 500";
+}
+
+.score > div:nth-child(2) {
+  color: #ec920c;
+  font-size: 3rem;
+  font-family: "helvetica 700";
+  text-transform: uppercase;
+  margin-top: 0.8rem;
+}
+
+.mainContent {
+  width: 100%;
+  height: calc(100vh - 17rem);
+  background-image: url("/images/user_background.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-color: #2d2d2d;
+  overflow: hidden;
+  padding: 1.2rem 2rem;
+  display: flex;
+  flex-direction: row;
+}
+.left {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  width: 7rem;
+}
+
+.left > div {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 5rem;
+  background-color: var(--innerbackground);
+  margin-top: 1rem;
+}
+.middle {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  padding-left: 4rem;
+  flex: 2;
+}
+.questionContainer {
+  margin-top: 8rem;
+  flex: 1;
+  background-color: #474747;
+}
+.right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: end;
+}
+.notification {
+  width: 3.5rem;
+  height: 5rem;
+  background-color: var(--innerbackground);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification > div:nth-child(1) {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.notification svg {
+  width: 50%;
+  height: 50%;
+}
+
+.notification > div:nth-child(2) {
+  width: 0.4rem;
+  height: 100%;
+  background-color: var(--primary);
+}
+.accordian {
+  width: 24rem;
+  height: 3.5rem;
+  background-color: var(--innerbackground);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.accordian > div:nth-child(1) {
+  font-size: 1.4rem;
+  font-family: "helvetica 300";
+}
+
+.accordian > div:nth-child(2) {
+  width: 1.4rem;
+  font-size: 3rem;
+  color: var(--black);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "helvetica 300";
+}
