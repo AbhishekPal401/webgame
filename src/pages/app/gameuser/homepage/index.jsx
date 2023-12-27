@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./homepage.module.css";
 import Button from "../../../../components/common/button";
 import { motion } from "framer-motion";
@@ -10,6 +10,8 @@ const UserHomePage = () => {
   const onsubmit = () => {
     naigate("./intro");
   };
+
+  useEffect(() => {}, []);
 
   return (
     <motion.div

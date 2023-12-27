@@ -15,6 +15,10 @@
   fill: var(--innerbackground);
 }
 
+.icon svg:hover {
+  cursor: pointer;
+}
+
 .label {
   font-size: 1.75rem;
   padding-left: 2.4rem;
