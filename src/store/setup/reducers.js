@@ -14,6 +14,8 @@ import createScenario from "../app/admin/scenario/createScenario.js";
 import sessionHistory from "../app/admin/session/session.js";
 
 import getSession from "../app/user/session/getSession.js";
+import getNextQuestion from "../app/user/questions/getNextQuestion.js";
+import postAnswer from "../app/user/answers/postAnswer.js";
 
 const reducers = combineReducers({
   login,
@@ -27,6 +29,8 @@ const reducers = combineReducers({
   scenarios,
   createScenario,
   getSession,
+  getNextQuestion,
+  postAnswer,
 });
 
 const rootReducer = (state, action) => {

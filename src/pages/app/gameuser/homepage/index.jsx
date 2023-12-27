@@ -1,17 +1,83 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./homepage.module.css";
 import Button from "../../../../components/common/button";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import {
+  getSessionDetails,
+  resetSessionDetailsState,
+} from "../../../../store/app/user/session/getSession";
+import { useDispatch, useSelector } from "react-redux";
+import { generateGUID } from "../../../../utils/common";
+import {
+  getNextQuestionDetails,
+  resetNextQuestionDetailsState,
+} from "../../../../store/app/user/questions/getNextQuestion";
+import { toast } from "react-toastify";
+
 const UserHomePage = () => {
   const [ready, setReady] = useState(true);
-  const naigate = useNavigate();
+
+  const { credentials } = useSelector((state) => state.login);
+  const { sessionDetails } = useSelector((state) => state.getSession);
+  const { questionDetails } = useSelector((state) => state.getNextQuestion);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const fetchIntro = useCallback(() => {
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    const data = {
+      sessionID: sessionData.SessionID,
+      scenarioID: sessionData.ScenarioID,
+      currentQuestionID: "",
+      currentQuestionNo: 0,
+      currentStatus: "Play",
+      userID: credentials.data.userID,
+      currentTotalScore: 0,
+      requester: {
+        requestID: generateGUID(),
+        requesterID: credentials.data.userID,
+        requesterName: credentials.data.userName,
+        requesterType: credentials.data.role,
+      },
+    };
+
+    dispatch(getNextQuestionDetails(data));
+  }, [sessionDetails, credentials]);
 
   const onsubmit = () => {
-    naigate("./intro");
+    fetchIntro();
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (!credentials) return;
+
+    const data = {
+      userID: credentials.data.userID,
+      type: "",
+      requester: {
+        requestID: generateGUID(),
+        requesterID: credentials.data.userID,
+        requesterName: credentials.data.userName,
+        requesterType: credentials.data.role,
+      },
+    };
+
+    dispatch(getSessionDetails(data));
+  }, []);
+
+  useEffect(() => {
+    if (questionDetails === null || questionDetails === undefined) return;
+
+    if (questionDetails.success) {
+      toast.success(questionDetails.message);
+      navigate("./intro");
+    } else {
+      toast.error(questionDetails.message);
+    }
+  }, [questionDetails]);
 
   return (
     <motion.div

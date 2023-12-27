@@ -39,7 +39,7 @@ const UserNavBar = ({ role = "User" }) => {
       <div className={styles.icon}>
         <svg
           onClick={() => {
-            navigate("./");
+            // navigate("./");
           }}
         >
           <use xlinkHref={"sprite.svg#pwc"} />

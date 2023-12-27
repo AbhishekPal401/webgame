@@ -109,7 +109,7 @@ export default class PieTimer extends Component {
           style={{ cursor: "pointer" }}
           width={this.props.width}
           height={this.props.width}
-          viewbox={"0 0 " + this.props.width + "" + this.props.height}
+          viewBox={"0 0 " + this.props.width + " " + this.props.height}
         >
           <path
             className="svg-border"

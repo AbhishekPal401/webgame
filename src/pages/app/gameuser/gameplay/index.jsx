@@ -3,8 +3,11 @@ import styles from "./gameplay.module.css";
 import { motion } from "framer-motion";
 import CountDown from "../../../../components/ui/countdown";
 import Question from "../../../../components/ui/gameplay/question";
+import { useSelector } from "react-redux";
 
 const GamePlay = () => {
+  const { questionDetails } = useSelector((state) => state.getNextQuestion);
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 100 }}
@@ -38,7 +41,11 @@ const GamePlay = () => {
           <div className={styles.vertical_line}></div>
           <div className={styles.score}>
             <div>Score</div>
-            <div>000</div>
+            <div>
+              {questionDetails?.data?.CurrentScore
+                ? questionDetails?.data?.CurrentScore
+                : 0}
+            </div>
           </div>
         </div>
       </div>

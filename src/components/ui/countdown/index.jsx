@@ -14,10 +14,12 @@ const renderer = ({ hours, minutes, seconds, completed }) => {
   }
 };
 
-const CountDown = () => {
+//duration is milliseconds (5000 ms => 5sec)
+
+const CountDown = ({ duration = 5000 }) => {
   return (
     <Countdown
-      date={Date.now() + 500000}
+      date={Date.now() + duration}
       renderer={renderer}
       autoStart={true}
     />
