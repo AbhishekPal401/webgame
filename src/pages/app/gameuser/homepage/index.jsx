@@ -51,14 +51,14 @@ const UserHomePage = () => {
   const onsubmit = () => {
     const sessionData = JSON.parse(sessionDetails.data);
 
+    console.log("sessionData", sessionData);
+
     const data = {
       InstanceID: sessionData.InstanceID,
       SessionID: sessionData.SessionID,
       UserID: credentials.data.userID,
       UserName: credentials.data.userName,
     };
-
-    console.log("data", data);
 
     signalRService.joinSession(data);
     // fetchIntro();

@@ -1,7 +1,9 @@
 import * as signalR from "@microsoft/signalr";
 
 const hubConnection = new signalR.HubConnectionBuilder()
-  .withUrl(import.meta.env.VITE_WEBSOCKET_URL)
+  .withUrl(import.meta.env.VITE_WEBSOCKET_URL, {
+    withCredentials: false,
+  })
   .configureLogging(signalR.LogLevel.Information)
   .build();
 
