@@ -8,7 +8,7 @@ import {
   resetSessionDetailsState,
 } from "../../../../store/app/user/session/getSession";
 import { useDispatch, useSelector } from "react-redux";
-import { generateGUID } from "../../../../utils/common";
+import { generateGUID, isJSONString } from "../../../../utils/common";
 import {
   getNextQuestionDetails,
   resetNextQuestionDetailsState,
@@ -51,8 +51,6 @@ const UserHomePage = () => {
   const onsubmit = () => {
     const sessionData = JSON.parse(sessionDetails.data);
 
-    console.log("sessionData", sessionData);
-
     const data = {
       InstanceID: sessionData.InstanceID,
       SessionID: sessionData.SessionID,
@@ -61,7 +59,6 @@ const UserHomePage = () => {
     };
 
     signalRService.joinSession(data);
-    // fetchIntro();
   };
 
   useEffect(() => {
@@ -86,8 +83,14 @@ const UserHomePage = () => {
   }, []);
 
   useEffect(() => {
-    const users = signalRService.connectedUsers();
-    signalRService.ReceiveNotification();
+    signalRService.ReceiveNotification((actionType, message) => {
+      console.log("actionType", actionType);
+      console.log("message", message);
+
+      if (actionType === "AdminPlayStart") {
+        fetchIntro();
+      }
+    });
   });
 
   useEffect(() => {
@@ -114,44 +117,19 @@ const UserHomePage = () => {
         <h1>Game of Risks</h1>
         <div className={styles.players}>
           <div>
-            <Button
-              onClick={onsubmit}
-              customClassName={ready ? styles.button : styles.buttonDisabled}
-            >
-              Ready
-            </Button>
-          </div>
-          <div className={styles.wait}>
-            {/* <div>Waiting for players to join</div>
-            <div className={styles.users}>
-              <motion.div
-                initial={{ opacity: 0, x: "6em" }}
-                animate={{ opacity: 1, x: "0" }}
-                exit={{ opacity: 0, x: "-6rem" }}
-                transition={{ duration: 0.8, damping: 10 }}
-                className={styles.userbadge}
-              >
-                COO
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, x: "6em" }}
-                animate={{ opacity: 1, x: "0" }}
-                exit={{ opacity: 0, x: "-6rem" }}
-                transition={{ duration: 0.8, damping: 10 }}
-                className={styles.userbadge}
-              >
-                CTO
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, x: "6em" }}
-                animate={{ opacity: 1, x: "0" }}
-                exit={{ opacity: 0, x: "-6rem" }}
-                transition={{ duration: 0.8, damping: 10 }}
-                className={styles.userbadge}
-              >
-                CFO
-              </motion.div>
-            </div> */}
+            {sessionDetails &&
+              sessionDetails.data &&
+              isJSONString(sessionDetails.data) &&
+              JSON.parse(sessionDetails.data)?.SessionID && (
+                <Button
+                  onClick={onsubmit}
+                  customClassName={
+                    ready ? styles.button : styles.buttonDisabled
+                  }
+                >
+                  Ready
+                </Button>
+              )}
           </div>
         </div>
       </div>

@@ -73,13 +73,14 @@ const UserHomePage = () => {
 
         // Listen for connected users
         signalRService.connectedUsers((users) => {
-          setConnectedUsers(users);
           console.log("ConnectedUsers", users);
+          setConnectedUsers(users);
         });
 
         signalRService.ReceiveNotification((actionType, message) => {
-          console.log("actionType", actionType);
-          console.log("message", message);
+          if (actionType === "AdminPlayStart") {
+            fetchIntro();
+          }
         });
       } catch (error) {
         console.error("Error during connection and join room:", error);
