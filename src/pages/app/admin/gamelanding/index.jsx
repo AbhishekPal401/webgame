@@ -27,6 +27,19 @@ const UserHomePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const startGame = useCallback(() => {
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    const payload = {
+      InstanceID: sessionData.InstanceID,
+      SessionID: sessionData.SessionID,
+      UserID: credentials.data.userID,
+      UserName: credentials.data.userName,
+      ActionType: "AdminPlayStart",
+      Message: "",
+    };
+  }, []);
+
   const fetchIntro = useCallback(() => {
     const sessionData = JSON.parse(sessionDetails.data);
 
