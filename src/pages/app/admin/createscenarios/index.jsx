@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styles from "./createscenarios.module.css";
-import bg_2 from "../../../../../public/images/create_scenario_bg_2.png";
 import PageContainer from "../../../../components/ui/pagecontainer";
 import Input from "../../../../components/common/input";
 import ImageDropZone from "../../../../components/common/upload/ImageDropzone";
@@ -241,7 +240,10 @@ const CreateScenario = () => {
           {/* Last edited On */}
         </div>
         <div className={styles.right}>
-          <img src={bg_2} alt="create scenario background 2" />
+          <img
+            src={"/images/create_scenario_bg_2.png"}
+            alt="create scenario background 2"
+          />
         </div>
       </div>
       <div className={styles.mainContainer}>

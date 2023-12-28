@@ -108,7 +108,13 @@ const UserHomePage = () => {
     dispatch(getSessionDetails(data));
   }, []);
 
-  useEffect(() => {});
+  useEffect(() => {
+    if (connectedUsers && connectedUsers.length >= 2) {
+      setReady(true);
+    } else {
+      setReady(false);
+    }
+  }, [connectedUsers]);
 
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
