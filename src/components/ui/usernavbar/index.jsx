@@ -90,8 +90,17 @@ const UserNavBar = ({ role = "User" }) => {
         <div ref={dropdownRef} className={styles.dropdownContainer}>
           <div className={styles.headRow}>
             <div className={styles.playerDetails}>
-              <div>Player Name</div>
-              <div>Player@gmail.com</div>
+              {credentials?.data?.userName ? (
+                <div>{credentials.data.userName}</div>
+              ) : (
+                <div></div>
+              )}
+
+              {credentials?.data?.emailID ? (
+                <div>{credentials.data.emailID}</div>
+              ) : (
+                <div></div>
+              )}
             </div>
             <div className={styles.profileIcon2}>{initial}</div>
           </div>

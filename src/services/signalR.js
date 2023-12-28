@@ -12,7 +12,6 @@ export const signalRService = {
     try {
       if (hubConnection.state === signalR.HubConnectionState.Disconnected) {
         await hubConnection.start();
-        console.log("Connection started!");
       }
 
       hubConnection.onclose(async () => {
@@ -37,20 +36,20 @@ export const signalRService = {
 
   joinSession: async (joinSessionRequest) => {
     try {
-      await hubConnection.invoke("JoinSession", joinSessionRequest);
-      console.log("Joined the session successfully!");
+      if (hubConnection.state === signalR.HubConnectionState.Connected) {
+        await hubConnection.invoke("JoinSession", joinSessionRequest);
+        console.log("Joined the session successfully!");
+      }
     } catch (error) {
       console.error("Error while joining the session:", error);
       throw error;
     }
   },
 
-  connectedUsers: () => {
+  connectedUsers: (callback = () => {}) => {
     try {
       hubConnection.on("ConnectedUsers", (connectedUsers) => {
-        console.log("Connected users", connectedUsers);
-
-        return connectedUsers;
+        callback(connectedUsers);
       });
     } catch (error) {
       console.error("Error while joining the session:", error);
@@ -58,11 +57,10 @@ export const signalRService = {
     }
   },
 
-  ReceiveNotification: () => {
+  ReceiveNotification: (callback = () => {}) => {
     try {
       hubConnection.on("ReceiveNotification", (actionType, message) => {
-        console.log("actionType", actionType);
-        console.log("message", message);
+        callback(actionType, message);
       });
     } catch (error) {
       console.error("Error while joining the session:", error);

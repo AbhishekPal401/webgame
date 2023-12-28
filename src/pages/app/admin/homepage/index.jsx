@@ -27,9 +27,6 @@ const Homepage = () => {
   );
   const { scenarioByPage } = useSelector((state) => state.scenarios);
 
-  //console.log("session history :", sessionsHistoryByType?.data);
-  //console.log("scenarios :", JSON.parse(scenarioByPage.data));
-
   useEffect(() => {
     if (credentials) {
       const data = {
@@ -117,7 +114,13 @@ const Homepage = () => {
                             </p>
                           </div>
                           <div>
-                            <Button>Start</Button>
+                            <Button
+                              onClick={() => {
+                                navigate("/game");
+                              }}
+                            >
+                              Start
+                            </Button>
                           </div>
                         </div>
                       </div>
