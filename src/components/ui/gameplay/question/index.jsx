@@ -48,6 +48,8 @@ const Question = () => {
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { answerDetails, loading } = useSelector((state) => state.postAnswer);
 
+  console.log("questionDetails", questionDetails);
+
   useEffect(() => {
     setStartedAt(Math.floor(Date.now() / 1000));
   }, []);
@@ -88,14 +90,18 @@ const Question = () => {
       scenarioID: sessionData.ScenarioID,
       userID: credentials.data.userID,
       questionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-      questionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
+      questionNo: questionDetails?.data?.QuestionDetails?.QuestionNo.toString(),
       answerID: selectedAnswer.AnswerID,
       score: selectedAnswer.Score,
-      startedAt: startedAt,
-      finishedAt: Math.floor(Date.now() / 1000),
-      duration: questionDetails?.data?.QuestionDetails?.Duration,
-      isAnswerDeligated: credentials.data.role !== "3" ? true : false,
-      delegatedUserID: credentials.data.role !== "3" ? true : false,
+      startedAt: startedAt.toString(),
+      finishedAt: Math.floor(Date.now() / 1000).toString(),
+      duration: "",
+      isAnswerDeligated:
+        questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker,
+      delegatedUserID: questionDetails?.data?.QuestionDetails
+        ?.IsUserDecisionMaker
+        ? credentials.data.userID
+        : "",
       isOptimal: selectedAnswer.IsOptimalAnswer,
       currentState: "InProgress",
       requester: {
@@ -109,16 +115,16 @@ const Question = () => {
     dispatch(submitAnswerDetails(data));
   }, [credentials, questionDetails, selectedAnswer, startedAt, sessionDetails]);
 
-  useEffect(() => {
-    if (answerDetails === undefined || answerDetails === null) return;
+  // useEffect(() => {
+  //   if (answerDetails === undefined || answerDetails === null) return;
 
-    if (answerDetails.success) {
-      fetchNextQuestion();
-    } else if (answerDetails.success === false) {
-      //retry after fail
-      answerSubmit();
-    }
-  }, [answerDetails]);
+  //   if (answerDetails.success) {
+  //     fetchNextQuestion();
+  //   } else if (answerDetails.success === false) {
+  //     //retry after fail
+  //     answerSubmit();
+  //   }
+  // }, [answerDetails]);
 
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;

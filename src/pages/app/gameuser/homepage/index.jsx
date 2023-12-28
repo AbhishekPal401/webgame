@@ -14,6 +14,7 @@ import {
   resetNextQuestionDetailsState,
 } from "../../../../store/app/user/questions/getNextQuestion";
 import { toast } from "react-toastify";
+import { signalRService } from "../../../../services/signalR";
 
 const UserHomePage = () => {
   const [ready, setReady] = useState(true);
@@ -48,7 +49,19 @@ const UserHomePage = () => {
   }, [sessionDetails, credentials]);
 
   const onsubmit = () => {
-    fetchIntro();
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    const data = {
+      InstanceID: sessionData.InstanceID,
+      SessionID: sessionData.SessionID,
+      UserID: credentials.data.userID,
+      UserName: credentials.data.userName,
+    };
+
+    console.log("data", data);
+
+    signalRService.joinSession(data);
+    // fetchIntro();
   };
 
   useEffect(() => {
@@ -66,6 +79,10 @@ const UserHomePage = () => {
     };
 
     dispatch(getSessionDetails(data));
+  }, []);
+
+  useEffect(() => {
+    signalRService.startConnection();
   }, []);
 
   useEffect(() => {
