@@ -44,4 +44,29 @@ export const signalRService = {
       throw error;
     }
   },
+
+  connectedUsers: () => {
+    try {
+      hubConnection.on("ConnectedUsers", (connectedUsers) => {
+        console.log("Connected users", connectedUsers);
+
+        return connectedUsers;
+      });
+    } catch (error) {
+      console.error("Error while joining the session:", error);
+      throw error;
+    }
+  },
+
+  ReceiveNotification: () => {
+    try {
+      hubConnection.on("ReceiveNotification", (actionType, message) => {
+        console.log("actionType", actionType);
+        console.log("message", message);
+      });
+    } catch (error) {
+      console.error("Error while joining the session:", error);
+      throw error;
+    }
+  },
 };

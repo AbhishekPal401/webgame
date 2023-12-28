@@ -83,7 +83,7 @@
 .modal_content {
   width: 40rem;
   background-color: var(--innerbackground);
-  box-shadow: 0px 0.8rem 1.6rem #d1d1d1;
+  /* box-shadow: 0px 0.8rem 1.6rem #d1d1d1; */
   border-radius: 0.8rem;
   opacity: 1;
   padding: 2rem;

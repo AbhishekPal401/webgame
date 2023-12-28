@@ -86,6 +86,11 @@ const UserHomePage = () => {
   }, []);
 
   useEffect(() => {
+    const users = signalRService.connectedUsers();
+    signalRService.ReceiveNotification();
+  });
+
+  useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
     if (questionDetails.success) {
