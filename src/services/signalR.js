@@ -77,4 +77,28 @@ export const signalRService = {
       throw error;
     }
   },
+
+  ProceedToNextQuestionInvoke: async (data) => {
+    // data ={
+    //   sessionID,  Yes
+    // }
+
+    try {
+      await hubConnection.invoke("ProceedToNextQuestion", data);
+    } catch (error) {
+      console.error("Error while sending to ProceedToNextQuestion:", error);
+      throw error;
+    }
+  },
+  ProceedToNextQuestionListener: async (callback = () => {}) => {
+    try {
+      // isFinal --> Yes || No
+      hubConnection.on("ProceedToNextQuestion", (isFinal) => {
+        callback(isFinal);
+      });
+    } catch (error) {
+      console.error("Error while listening ProceedToNextQuestion:", error);
+      throw error;
+    }
+  },
 };

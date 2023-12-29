@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import styles from "./question.module.css";
 import SmallCountDown from "../smallcountdown";
 import Button from "../../../common/button";
@@ -26,21 +26,21 @@ const renderer = ({ minutes, seconds, completed }) => {
   }
 };
 
-const CountDown = ({ duration = 5000 }) => {
+const CountDown = memo(({ duration = 5000 }) => {
   return (
     <Countdown
+      key={duration}
       date={Date.now() + duration}
       renderer={renderer}
       autoStart={true}
-      zeroPadDays={3}
     />
   );
-};
+});
 
 const Question = () => {
   const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
-
   const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [showMedia, setShowMedia] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -49,8 +49,6 @@ const Question = () => {
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { answerDetails, loading } = useSelector((state) => state.postAnswer);
-
-  console.log("questionDetails", questionDetails);
 
   useEffect(() => {
     setStartedAt(Math.floor(Date.now() / 1000));
@@ -124,10 +122,16 @@ const Question = () => {
       setSelectedAnswer(null);
       setStartedAt(Math.floor(Date.now() / 1000));
     } else if (questionDetails.success === false) {
-      //retry after fail
       fetchNextQuestion();
     }
   }, [questionDetails]);
+
+  useEffect(() => {
+    if (answerDetails === null || answerDetails === undefined) return;
+    if (answerDetails.success) {
+      toast.success(answerDetails.message);
+    }
+  }, [answerDetails]);
 
   return (
     <div className={styles.container}>
@@ -210,18 +214,51 @@ const Question = () => {
             })}
         </div>
         <div className={styles.buttonContainer}>
+          <div
+            onClick={() => {
+              setShowMedia(true);
+            }}
+          >
+            Replay{" "}
+            {questionDetails?.data?.QuestionDetails?.MediaType === "Video"
+              ? "Video"
+              : "Audio"}
+          </div>
           <Button customClassName={styles.button} onClick={answerSubmit}>
             Vote
           </Button>
         </div>
       </div>
-      <div className={styles.mediaContainer}>
-        <div>Incoming Media</div>
-        <div>
-          {/* <VideoController videoUrl={"example.mp4"} onCompleted={() => {}} /> */}
-          <AudioController audioUrl={"example.mp4"} />
-        </div>
-      </div>
+      {showMedia &&
+        questionDetails &&
+        questionDetails.data &&
+        questionDetails.data.QuestionDetails &&
+        questionDetails.data.QuestionDetails.QuestionIntroMediaURL && (
+          <div className={styles.mediaContainer}>
+            <div>Incoming Media</div>
+            <div>
+              {questionDetails.data.QuestionDetails?.MediaType === "Video" ? (
+                <VideoController
+                  videoUrl={
+                    questionDetails.data.QuestionDetails.QuestionIntroMediaURL
+                  }
+                  onCompleted={() => {
+                    setShowMedia(false);
+                  }}
+                />
+              ) : (
+                <AudioController
+                  audioUrl={
+                    questionDetails.data.QuestionDetails.QuestionIntroMediaURL
+                  }
+                  onCompleted={() => {
+                    setShowMedia(false);
+                  }}
+                />
+              )}
+            </div>
+          </div>
+        )}
     </div>
   );
 };

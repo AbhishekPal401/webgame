@@ -60,7 +60,7 @@ const AudioController = ({ audioUrl = "", onCompleted = () => {} }) => {
     });
 
     return () => {
-      audio.current.pause();
+      // audio.current.pause();
       audio.current = null;
     };
   }, [audioUrl]);
@@ -93,7 +93,7 @@ const AudioController = ({ audioUrl = "", onCompleted = () => {} }) => {
     <div className={styles.container}>
       <div>You have an incoming audio message...</div>
 
-      <div className={styles.image} onClick={handlePlayPause}>
+      <div className={styles.image}>
         <img src="./images/audio_background.png" alt="Audio Background" />
         {/* <input
           ref={seekTrackRef}
@@ -108,7 +108,7 @@ const AudioController = ({ audioUrl = "", onCompleted = () => {} }) => {
           ref={audio}
           src={audioUrl}
           controls={true}
-          onClick={handlePlayPause}
+          // onClick={handlePlayPause}
           onEnded={handleAudioEnd}
         />
         {/* {!isPlaying && (

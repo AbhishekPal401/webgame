@@ -27,6 +27,7 @@ const VideoController = ({ videoUrl, onCompleted }) => {
         ref={videoRef}
         src={videoUrl}
         controls={false}
+        muted={false}
         onClick={handlePlayPause}
         onEnded={handleVideoEnd} // Callback for video completion
       />

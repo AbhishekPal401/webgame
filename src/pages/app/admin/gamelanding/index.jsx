@@ -8,7 +8,7 @@ import {
   resetSessionDetailsState,
 } from "../../../../store/app/user/session/getSession";
 import { useDispatch, useSelector } from "react-redux";
-import { generateGUID } from "../../../../utils/common";
+import { generateGUID, isJSONString } from "../../../../utils/common";
 import {
   getNextQuestionDetails,
   resetNextQuestionDetailsState,
@@ -65,6 +65,7 @@ const UserHomePage = () => {
   }, [sessionDetails, credentials]);
 
   const joinRoom = useCallback(async () => {
+    if (!isJSONString(sessionDetails.data)) return;
     const sessionData = JSON.parse(sessionDetails.data);
 
     const data = {

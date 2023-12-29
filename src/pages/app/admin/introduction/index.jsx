@@ -25,6 +25,7 @@ const Intro = () => {
       sessionID: sessionData.SessionID,
       scenarioID: sessionData.ScenarioID,
       currentQuestionID: "",
+
       currentQuestionNo: 0,
       currentStatus: "InProgress",
       userID: credentials.data.userID,

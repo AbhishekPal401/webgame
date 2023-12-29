@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./gameplay.module.css";
 import { motion } from "framer-motion";
 import CountDown from "../../../../components/ui/countdown";
 import Question from "../../../../components/ui/gameplay/question";
 import { useSelector } from "react-redux";
+import { signalRService } from "../../../../services/signalR";
 
 const GamePlay = () => {
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
+
+  useEffect(() => {
+    signalRService.ProceedToNextQuestionListener((isFinal) => {});
+  }, []);
 
   return (
     <motion.div

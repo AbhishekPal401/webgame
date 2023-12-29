@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./gameplay.module.css";
 import { motion } from "framer-motion";
 import CountDown from "../../../../components/ui/countdown";
 import Question from "../../../../components/ui/gameplay/question";
 import { useSelector } from "react-redux";
+import { signalRService } from "../../../../services/signalR";
+import { isJSONString } from "../../../../utils/common";
 
 const GamePlay = () => {
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
+  const { sessionDetails } = useSelector((state) => state.getSession);
+  const { credentials } = useSelector((state) => state.login);
+
+  useEffect(() => {
+    signalRService.ProceedToNextQuestionListener((isFinal) => {
+      console.log("isFinal", isFinal);
+    });
+  }, []);
 
   return (
     <motion.div
@@ -62,7 +72,20 @@ const GamePlay = () => {
         <div className={styles.right}>
           <div className={styles.notification}>
             <div>
-              <svg onClick={() => {}}>
+              <svg
+                onClick={() => {
+                  if (!isJSONString(sessionDetails.data)) return;
+                  const sessionData = JSON.parse(sessionDetails.data);
+
+                  const data = {
+                    InstanceID: sessionData.InstanceID,
+                    UserID: credentials.data.userID,
+                    isFinalPlay: "Yes",
+                  };
+
+                  signalRService.ProceedToNextQuestionInvoke(data);
+                }}
+              >
                 <use xlinkHref={"sprite.svg#notifcation"} />
               </svg>
             </div>
