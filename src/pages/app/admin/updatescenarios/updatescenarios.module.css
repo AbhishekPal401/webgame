@@ -8,7 +8,10 @@
   flex: 1;
   height: 100%;
   display: flex;
-  align-items: center;
+  flex-direction: column; 
+  align-items: flex-start; 
+  justify-content: center; 
+
 }
 
 .left label {
@@ -16,6 +19,12 @@
   color: var(--label);
   font-weight: bold;
 }
+
+.lastEditedOn {
+  font-size: 1.4rem;
+  color: var(--black);
+}
+
 .right {
   flex: 1.5;
   display: flex;
@@ -27,8 +36,6 @@
 .right img {
   max-width: 100%;
   max-height: 100%;
-  display: block;
-  float: right;
 }
 
 .mainContainer {
@@ -61,10 +68,9 @@
   flex-direction: row;
   gap: 5rem;
   padding: 1.5rem 1rem;
-  
+
   /* Rotate the background image */
   transform: scaleY(-1);
-
 }
 
 .createScenarioLeftInputs,

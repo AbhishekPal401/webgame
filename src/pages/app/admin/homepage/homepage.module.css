@@ -18,8 +18,9 @@
 }
 .right {
   flex: 1.5;
-  /* display: flex;
-  align-items: end; */
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
   height: 100%;
   background-image: url("./images/binary.png");
   background-size: cover;
@@ -245,6 +246,11 @@
 
 .table_content th:last-child {
   border-radius: 0 0.6rem 0.6rem 0;
+}
+
+.scenarioName:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 /* pagination */

@@ -1,29 +1,165 @@
-// export const getDateOrTime = (dateTimeString, wantTime = false) => {
-//     const [date, time] = dateTimeString.split(' ');
-//     return wantTime ? (time ? time : '') : (date ? date.slice(1) : '');
-// };
-// utils.js
-
-// utils.js
+import { dateFormats } from "../constants/date";
 
 export const formatDateString = (dateTimeString, formatType = 'default') => {
-    const [datePart, timePart] = dateTimeString.split(' ');
-    const [day, month, year] = datePart.split('/');
+    const formats = [
+        {
+            format: dateFormats.DATE_FORMAT_3,
+            regex: /^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})$/
+        },
+        {
+            format: dateFormats.DATE_FORMAT_5,
+            regex: /^(\d{2})\/(\d{2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/
+        },
+        {
+            format: dateFormats.DATE_FORMAT_1,
+            regex: /^(\d{2})\/(\d{2})\/(\d{4})$/
+        },
+        {
+            format: dateFormats.DATE_FORMAT_2,
+            regex: /^(\d{2})\/(\d{2})\/(\d{4})$/
+        },
+    ];
+
+    const months = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+
+    let formattedMonth;
+    let parsedDate;
+    let timeString;
+
+    for (const dateFormat of formats) {
+        const matches = dateTimeString.match(dateFormat.regex);
+        if (matches) {
+            parsedDate = createDateFromMatches(matches, dateFormat.format);
+            break;
+        }
+    }
+
+    if (!parsedDate) {
+        return 'Invalid Date';
+    }
 
     switch (formatType) {
-        case 'DD-MM-YYYY':
-            return `${day}-${month}-${year}`;
-        case 'DD/MM/YYYY':
-            return `${day}/${month}/${year}`;
-        case 'timeOnly':
-            return timePart || ''; // Return time if available, otherwise an empty string
+        case dateFormats.DATE_FORMAT_8:
+            return `${parsedDate.getDate()}-${parsedDate.getMonth() + 1}-${parsedDate.getFullYear()}`;
+
+        case dateFormats.DATE_FORMAT_1:
+            return `${parsedDate.getDate()}/${parsedDate.getMonth() + 1}/${parsedDate.getFullYear()}`;
+
+        case dateFormats.DATE_FORMAT_9:
+            return `${parsedDate.getMonth() + 1}-${parsedDate.getDate()}-${parsedDate.getFullYear()}`;
+
+        case dateFormats.DATE_FORMAT_2:
+            return `${parsedDate.getMonth() + 1}/${parsedDate.getDate()}/${parsedDate.getFullYear()}`;
+
+        case dateFormats.DATE_FORMAT_7:
+            formattedMonth = months[parsedDate.getMonth()];
+            timeString = parsedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            console.log("toLocaleTimeString :", timeString);
+            return `${parsedDate.getDate()} 
+                    ${formattedMonth} 
+                    ${parsedDate.getFullYear()} 
+                    ${timeString}
+                    `;
+
         case 'default':
         default:
-            const months = [
-                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-            ];
-            const formattedMonth = months[parseInt(month, 10) - 1];
-            return `${parseInt(day, 10)} ${formattedMonth} ${year}`;
+            formattedMonth = months[parsedDate.getMonth()];
+            return `${parsedDate.getDate()} 
+                    ${formattedMonth} 
+                    ${parsedDate.getFullYear()} 
+                    `;
     }
 };
+
+const createDateFromMatches = (matches, format) => {
+    try {
+        const [, ...parsedMatches] = matches.map(match => parseInt(match, 10));
+
+        const formatParts = format.split(/\W+/); // Split format by non-word characters
+
+        const yearIndex = formatParts.findIndex(part => part === 'YYYY');
+        const monthIndex = formatParts.findIndex(part => part === 'MM' || part === 'M');
+        const dayIndex = formatParts.findIndex(part => part === 'DD' || part === 'D');
+
+        const hourIndex = formatParts.findIndex(part => part === 'hh' || part === 'h' || part === 'HH' || part === 'H');
+        const minuteIndex = formatParts.findIndex(part => part === 'mm' || part === 'm');
+        const secondIndex = formatParts.findIndex(part => part === 'ss' || part === 's');
+        const meridiemIndex = formatParts.findIndex(part => part === 'A' || part === 'a');
+
+        const year = yearIndex !== -1 ? parsedMatches[yearIndex] : 0;
+        const month = monthIndex !== -1 ? parsedMatches[monthIndex] - 1 : 0;
+        const day = dayIndex !== -1 ? parsedMatches[dayIndex] : 1;
+
+        let hour = hourIndex !== -1 ? parsedMatches[hourIndex] : 0;
+        const minute = minuteIndex !== -1 ? parsedMatches[minuteIndex] : 0;
+        const second = secondIndex !== -1 ? parsedMatches[secondIndex] : 0;
+
+        // Adjust hour for AM/PM format if available
+        if (meridiemIndex !== -1) {
+            const meridiem = matches[meridiemIndex + 1]; // Check the match at meridiemIndex + 1
+            if ((meridiem === 'PM' || meridiem === 'pm') && hour < 12) {
+                hour += 12;
+            } else if ((meridiem === 'AM' || meridiem === 'am') && hour === 12) {
+                hour = 0;
+            }
+        }
+
+        const date = new Date(year, month, day, hour, minute, second);
+
+        return date;
+
+    } catch (error) {
+        return null;
+    }
+};
+
+// extract mimeType from file source 
+// export const extractFileType = (fileSrc) => {
+//     // // Split the fileSrc by commas to separate the data and the MIME type
+//     // const splitFileSrc = fileSrc.split(',');
+
+//     // // The MIME type is present after the 'data:' prefix before the first semicolon
+//     // const mimeType = splitFileSrc[0].split(':')[1].split(';')[0];
+
+//     // Find the index of the first semicolon after 'data:'
+//     const semicolonIndex = fileSrc.indexOf(';');
+
+//     // Extract the substring starting from 'data:' up to the first semicolon
+//     const mimeType = fileSrc.substring(5, semicolonIndex);
+
+
+//     return mimeType;
+// }    
+
+export const extractFileType = (fileSrc) => {
+    if (fileSrc.startsWith('data:')) {
+      // For data URL
+      const semicolonIndex = fileSrc.indexOf(';');
+      const mimeType = fileSrc.substring(5, semicolonIndex);
+
+      console.log("fileExtension :",mimeType)
+      return mimeType;
+
+    } else if (fileSrc.startsWith('https')) {
+      // For URLs starting with 'https'
+      const urlParts = fileSrc.split('/');
+      const filename = urlParts[urlParts.length - 1];
+      const queryParamIndex = filename.indexOf('?');
+      const filenameToParse = queryParamIndex !== -1 ? filename.substring(0, queryParamIndex) : filename;
+      const dotIndex = filenameToParse.lastIndexOf('.');
+      if (dotIndex !== -1) {
+        const fileExtension = filenameToParse.substring(dotIndex + 1);
+        // Return the file extension directly
+        console.log("fileExtension :",fileExtension)
+        return fileExtension;
+      }
+      return 'unknown'; // Return 'unknown' if no extension found
+    } else {
+      return 'unknown'; // Handle other cases or return a default type if needed
+    }
+  };
+  
+  
