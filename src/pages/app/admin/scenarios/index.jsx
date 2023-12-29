@@ -100,7 +100,14 @@ const Scenarios = () => {
                       >
                         {scenario.ScenarioName}
                       </td>
-                      <td>{scenario.Description}</td>
+                      <td 
+                        className={styles.scenarioDescription}
+                        onClick={() => {
+                          navigate(`/questions/${scenario.ScenarioID}`); 
+                        }}  
+                      >
+                        {scenario.Description}
+                      </td>
                       <td>{formatDateString(scenario.CreatedAt)}</td>
                       <td>{scenario.GamesPlayed}</td>
                       <td>{scenario.Status}</td>

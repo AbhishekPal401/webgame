@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { apiCallBegan } from "../../../../middleware/actions.js";
 
 const slice = createSlice({
-  name: "update-scenario",
+  name: "get_question_details_by_id",
   initialState: {
-    updateScenarioResponse: null,
+    questionByIdDetails: null,
     loading: false,
   },
   reducers: {
@@ -12,15 +12,15 @@ const slice = createSlice({
       users.loading = true;
     },
     success: (users, action) => {
-      users.updateScenarioResponse = action.payload;
+      users.questionByIdDetails = action.payload;
       users.loading = false;
     },
     failed: (users, action) => {
-      users.updateScenarioResponse = action.payload;
+      users.questionByIdDetails = action.payload;
       users.loading = false;
     },
     reset: (users, action) => {
-      users.updateScenarioResponse = null;
+      users.questionByIdDetails = null;
       users.loading = false;
     },
   },
@@ -30,16 +30,16 @@ const { requested, success, failed, reset } = slice.actions;
 
 export default slice.reducer;
 
-export const updateScenario = (data) =>
+export const getQuestionDetailsByID = (data) =>
   apiCallBegan({
-    url: "api/Scenario/UpdateScenario", 
-    method: "PUT",
+    url: "api/Question/GetQuestionDetailsByID",
+    method: "POST",
     data,
     onStart: requested.type,
     onSuccess: success.type,
     onFailed: failed.type,
   });
 
-export const resetUpdateScenarioState = () => async (dispatch) => {
+export const resetQuestionDetailState = () => async (dispatch) => {
   dispatch(reset());
 };

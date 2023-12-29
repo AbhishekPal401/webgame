@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { apiCallBegan } from "../../../../middleware/actions.js";
 
 const slice = createSlice({
-  name: "update-scenario",
+  name: "update-question",
   initialState: {
-    updateScenarioResponse: null,
+    updateQuestionResponse: null,
     loading: false,
   },
   reducers: {
@@ -12,15 +12,15 @@ const slice = createSlice({
       users.loading = true;
     },
     success: (users, action) => {
-      users.updateScenarioResponse = action.payload;
+      users.updateQuestionResponse = action.payload;
       users.loading = false;
     },
     failed: (users, action) => {
-      users.updateScenarioResponse = action.payload;
+      users.updateQuestionResponse = action.payload;
       users.loading = false;
     },
     reset: (users, action) => {
-      users.updateScenarioResponse = null;
+      users.updateQuestionResponse = null;
       users.loading = false;
     },
   },
@@ -30,9 +30,9 @@ const { requested, success, failed, reset } = slice.actions;
 
 export default slice.reducer;
 
-export const updateScenario = (data) =>
+export const updateQuestion = (data) =>
   apiCallBegan({
-    url: "api/Scenario/UpdateScenario", 
+    url: "api/Question/UpdateQuestionBuilders", 
     method: "PUT",
     data,
     onStart: requested.type,
@@ -40,6 +40,6 @@ export const updateScenario = (data) =>
     onFailed: failed.type,
   });
 
-export const resetUpdateScenarioState = () => async (dispatch) => {
+export const resetUpdateQuestionState = () => async (dispatch) => {
   dispatch(reset());
 };

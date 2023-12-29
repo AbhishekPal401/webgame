@@ -15,6 +15,9 @@ import {
 } from "../../../../store/app/admin/scenario/createScenario.js";
 import { generateGUID } from "../../../../utils/common.js";
 import axios from "axios";
+import { fileTypes } from "../../../../constants/filetypes.js";
+import { extractFileType } from "../../../../utils/helper.js";
+
 
 const CreateScenario = () => {
   const [scenarioData, setScenarioData] = useState({
@@ -45,7 +48,7 @@ const CreateScenario = () => {
     (state) => state.createScenario
   );
   const dispatch = useDispatch();
-  const naigateTo = useNavigate();
+  const navigateTo = useNavigate();
 
   useEffect(() => {
     if (createScenarioResponse === null || createScenarioResponse === undefined)
@@ -73,6 +76,11 @@ const CreateScenario = () => {
       });
       setResetFile(!resetFile);
       dispatch(resetCreateScenarioState());
+      console.log("uploaded");
+
+      //navigate to upload questions excel
+      navigateTo(`/questions/uploadquestions/${createScenarioResponse.ScenarioID}`);
+
     } else if (!createScenarioResponse.success) {
       toast.error(createScenarioResponse.message);
       dispatch(resetCreateScenarioState());
@@ -165,6 +173,11 @@ const CreateScenario = () => {
       formData.append("Module", "scenario");
       formData.append("contentType", scenarioData.gameIntroVideo.value.type);
       formData.append("FormFile", scenarioData.gameIntroVideo.value);
+      formData.append("ScenarioID", ""); // TODO :: not implemented in backend
+      formData.append("Requester.RequestID", generateGUID());
+      formData.append("Requester.RequesterID", credentials.data.userID);
+      formData.append("Requester.RequesterName", credentials.data.userName);
+      formData.append("Requester.RequesterType", credentials.data.role);
 
       const response = await axios.post(
         `${baseUrl}/api/Storage/FileUpload`,
@@ -201,6 +214,7 @@ const CreateScenario = () => {
 
         console.log("data sent to API :", data);
         dispatch(createScenario(data));
+
       }
     }
   };
@@ -226,7 +240,7 @@ const CreateScenario = () => {
     });
 
     setResetFile(!resetFile);
-    naigateTo("/scenario");
+    navigateTo("/scenario");
   };
 
   return (
@@ -301,8 +315,17 @@ const CreateScenario = () => {
                   setUrl={(file) => {
                     setIntroFileDisplay(file);
                   }}
+                  hint="Eligible Formats: MP4 and MP3"
                   onUpload={onUpload}
                   resetFile={resetFile}
+                  fileSrcType={introFileDisplay && extractFileType(introFileDisplay)}
+                  allowedFileTypes={[
+                    fileTypes.AUDIO_EXTENSION,
+                    fileTypes.MIME_AUDIO_1,
+                    fileTypes.MIME_AUDIO_2,
+                    fileTypes.VIDEO_EXTENSION,
+                    fileTypes.MIME_VIDEO,
+                  ]}
                 />
               </div>
               <div className={styles.imageDropZoneContainerRight}></div>

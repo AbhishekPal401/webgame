@@ -23,6 +23,9 @@ import {
 import { isJSONString } from "../../../../utils/common.js";
 import { formatDateString } from "../../../../utils/helper.js";
 import { dateFormats } from "../../../../constants/date.js";
+import { fileTypes } from "../../../../constants/filetypes.js";
+import { extractFileType } from "../../../../utils/helper.js";
+
 
 const UpdateScenarios = () => {
     const [scenarioData, setScenarioData] = useState({
@@ -306,8 +309,13 @@ const UpdateScenarios = () => {
                 const formData = new FormData();
 
                 formData.append("Module", "scenario");
-                formData.append("contentType", scenarioData.gameIntroFile.value.type);
-                formData.append("FormFile", scenarioData.gameIntroFile.value);
+                formData.append("contentType", scenarioData?.gameIntroFile?.value?.type);
+                formData.append("FormFile", scenarioData?.gameIntroFile?.value);
+                formData.append("ScenarioID", scenarioID); // TODO :: not implemented in backend
+                formData.append("Requester.RequestID", generateGUID());
+                formData.append("Requester.RequesterID", credentials.data.userID);
+                formData.append("Requester.RequesterName", credentials.data.userName);
+                formData.append("Requester.RequesterType", credentials.data.role);
 
                 const response = await axios.post(
                     `${baseUrl}/api/Storage/FileUpload`,
@@ -433,11 +441,20 @@ const UpdateScenarios = () => {
                                 <FileDropZone
                                     customstyle={{ marginTop: "1rem" }}
                                     label="Upload Game Intro Video"
+                                    hint="Eligible Formats: MP4 and MP3"
+                                    allowedFileTypes={[
+                                        fileTypes.AUDIO_EXTENSION,
+                                        fileTypes.VIDEO_EXTENSION,
+                                        fileTypes.MIME_AUDIO_1,
+                                        fileTypes.MIME_AUDIO_2,
+                                        fileTypes.MIME_VIDEO,
+                                    ]}
                                     onUpload={onUpload}
                                     fileSrc={introFileDisplay}
                                     setUrl={(file) => {
                                         setIntroFileDisplay(file);
                                     }}
+                                    fileSrcType={introFileDisplay && extractFileType(introFileDisplay)}
                                 />
                             </div>
                             <div className={styles.imageDropZoneContainerRight}></div>

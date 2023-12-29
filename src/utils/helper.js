@@ -2,21 +2,21 @@ import { dateFormats } from "../constants/date";
 
 export const formatDateString = (dateTimeString, formatType = 'default') => {
     const formats = [
-        { 
+        {
             format: dateFormats.DATE_FORMAT_3,
-            regex: /^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})$/ 
+            regex: /^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})$/
         },
-        { 
-            format: dateFormats.DATE_FORMAT_5, 
-            regex: /^(\d{2})\/(\d{2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/ 
-        }, 
-        { 
-            format: dateFormats.DATE_FORMAT_1, 
-            regex: /^(\d{2})\/(\d{2})\/(\d{4})$/ 
-        }, 
-        { 
-            format: dateFormats.DATE_FORMAT_2, 
-            regex: /^(\d{2})\/(\d{2})\/(\d{4})$/ 
+        {
+            format: dateFormats.DATE_FORMAT_5,
+            regex: /^(\d{2})\/(\d{2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/
+        },
+        {
+            format: dateFormats.DATE_FORMAT_1,
+            regex: /^(\d{2})\/(\d{2})\/(\d{4})$/
+        },
+        {
+            format: dateFormats.DATE_FORMAT_2,
+            regex: /^(\d{2})\/(\d{2})\/(\d{4})$/
         },
     ];
 
@@ -115,3 +115,51 @@ const createDateFromMatches = (matches, format) => {
         return null;
     }
 };
+
+// extract mimeType from file source 
+// export const extractFileType = (fileSrc) => {
+//     // // Split the fileSrc by commas to separate the data and the MIME type
+//     // const splitFileSrc = fileSrc.split(',');
+
+//     // // The MIME type is present after the 'data:' prefix before the first semicolon
+//     // const mimeType = splitFileSrc[0].split(':')[1].split(';')[0];
+
+//     // Find the index of the first semicolon after 'data:'
+//     const semicolonIndex = fileSrc.indexOf(';');
+
+//     // Extract the substring starting from 'data:' up to the first semicolon
+//     const mimeType = fileSrc.substring(5, semicolonIndex);
+
+
+//     return mimeType;
+// }    
+
+export const extractFileType = (fileSrc) => {
+    if (fileSrc.startsWith('data:')) {
+      // For data URL
+      const semicolonIndex = fileSrc.indexOf(';');
+      const mimeType = fileSrc.substring(5, semicolonIndex);
+
+      console.log("fileExtension :",mimeType)
+      return mimeType;
+
+    } else if (fileSrc.startsWith('https')) {
+      // For URLs starting with 'https'
+      const urlParts = fileSrc.split('/');
+      const filename = urlParts[urlParts.length - 1];
+      const queryParamIndex = filename.indexOf('?');
+      const filenameToParse = queryParamIndex !== -1 ? filename.substring(0, queryParamIndex) : filename;
+      const dotIndex = filenameToParse.lastIndexOf('.');
+      if (dotIndex !== -1) {
+        const fileExtension = filenameToParse.substring(dotIndex + 1);
+        // Return the file extension directly
+        console.log("fileExtension :",fileExtension)
+        return fileExtension;
+      }
+      return 'unknown'; // Return 'unknown' if no extension found
+    } else {
+      return 'unknown'; // Handle other cases or return a default type if needed
+    }
+  };
+  
+  
