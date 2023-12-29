@@ -8,6 +8,8 @@ import { submitAnswerDetails } from "../../../../store/app/user/answers/postAnsw
 import { getNextQuestionDetails } from "../../../../store/app/user/questions/getNextQuestion";
 import { generateGUID } from "../../../../utils/common";
 import { toast } from "react-toastify";
+import VideoController from "../../../media/videocontroller";
+import AudioController from "../../../media/audiocontroller";
 
 const renderer = ({ minutes, seconds, completed }) => {
   if (completed) {
@@ -115,17 +117,6 @@ const Question = () => {
     dispatch(submitAnswerDetails(data));
   }, [credentials, questionDetails, selectedAnswer, startedAt, sessionDetails]);
 
-  // useEffect(() => {
-  //   if (answerDetails === undefined || answerDetails === null) return;
-
-  //   if (answerDetails.success) {
-  //     fetchNextQuestion();
-  //   } else if (answerDetails.success === false) {
-  //     //retry after fail
-  //     answerSubmit();
-  //   }
-  // }, [answerDetails]);
-
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
@@ -213,7 +204,7 @@ const Question = () => {
                     setSelectedAnswer(item);
                   }}
                 >
-                  {String.fromCharCode(64 + (index + 1))}. {item.AnswerID}
+                  {String.fromCharCode(64 + (index + 1))}. {item.AnswerText}
                 </div>
               );
             })}
@@ -222,6 +213,13 @@ const Question = () => {
           <Button customClassName={styles.button} onClick={answerSubmit}>
             Vote
           </Button>
+        </div>
+      </div>
+      <div className={styles.mediaContainer}>
+        <div>Incoming Media</div>
+        <div>
+          {/* <VideoController videoUrl={"example.mp4"} onCompleted={() => {}} /> */}
+          <AudioController audioUrl={"example.mp4"} />
         </div>
       </div>
     </div>

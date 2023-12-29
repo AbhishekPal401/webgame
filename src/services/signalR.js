@@ -12,6 +12,7 @@ export const signalRService = {
     try {
       if (hubConnection.state === signalR.HubConnectionState.Disconnected) {
         await hubConnection.start();
+        console.log("Connection established");
       }
 
       hubConnection.onclose(async () => {
@@ -62,6 +63,15 @@ export const signalRService = {
       hubConnection.on("ReceiveNotification", (actionType, message) => {
         callback(actionType, message);
       });
+    } catch (error) {
+      console.error("Error while joining the session:", error);
+      throw error;
+    }
+  },
+
+  AdminMessage: async (data) => {
+    try {
+      await hubConnection.invoke("AdminMessage", data);
     } catch (error) {
       console.error("Error while joining the session:", error);
       throw error;

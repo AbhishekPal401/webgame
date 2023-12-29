@@ -98,7 +98,7 @@ const UserHomePage = () => {
 
     if (questionDetails.success) {
       toast.success(questionDetails.message);
-      navigate("./intro");
+      navigate("/intro");
     } else {
       toast.error(questionDetails.message);
     }

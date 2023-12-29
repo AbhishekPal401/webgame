@@ -36,9 +36,11 @@ const UserHomePage = () => {
       UserID: credentials.data.userID,
       UserName: credentials.data.userName,
       ActionType: "AdminPlayStart",
-      Message: "",
+      Message: "Success",
     };
-  }, []);
+
+    signalRService.AdminMessage(payload);
+  }, [sessionDetails, credentials]);
 
   const fetchIntro = useCallback(() => {
     const sessionData = JSON.parse(sessionDetails.data);
@@ -77,31 +79,43 @@ const UserHomePage = () => {
 
   useEffect(() => {
     //signalR connection initiated and joining room
-    const startConnectionAndJoinRoom = async () => {
+    const startConnection = async () => {
       try {
         // Start the SignalR connection
         await signalRService.startConnection();
+      } catch (error) {
+        console.error("Error during connection ", error);
+      }
+    };
 
+    startConnection();
+  }, []);
+
+  useEffect(() => {
+    const startJoiningRoom = async () => {
+      try {
         await joinRoom();
 
-        // Listen for connected users
         signalRService.connectedUsers((users) => {
           console.log("ConnectedUsers", users);
           setConnectedUsers(users);
         });
 
         signalRService.ReceiveNotification((actionType, message) => {
+          console.log("actionType", actionType);
+          console.log("message", message);
+
           if (actionType === "AdminPlayStart") {
             fetchIntro();
           }
         });
       } catch (error) {
-        console.error("Error during connection and join room:", error);
+        console.error("Error during join room:", error);
       }
     };
 
-    startConnectionAndJoinRoom();
-  }, []);
+    startJoiningRoom();
+  }, [sessionDetails]);
 
   //get session details by id api call
   useEffect(() => {
@@ -133,8 +147,7 @@ const UserHomePage = () => {
     if (questionDetails === null || questionDetails === undefined) return;
 
     if (questionDetails.success) {
-      toast.success(questionDetails.message);
-      navigate("./intro");
+      navigate("/intro");
     } else {
       toast.error(questionDetails.message);
     }
@@ -154,7 +167,11 @@ const UserHomePage = () => {
         <div className={styles.players}>
           <div>
             <Button
-              onClick={() => {}}
+              onClick={() => {
+                if (ready) {
+                  startGame();
+                }
+              }}
               customClassName={ready ? styles.button : styles.buttonDisabled}
             >
               Start
@@ -169,6 +186,7 @@ const UserHomePage = () => {
                   if (userString === credentials.data.userName) return null;
                   return (
                     <motion.div
+                      key={index}
                       initial={{ opacity: 0, x: "6em" }}
                       animate={{ opacity: 1, x: "0" }}
                       exit={{ opacity: 0, x: "-6rem" }}

@@ -34,6 +34,23 @@ const reducers = combineReducers({
 });
 
 const rootReducer = (state, action) => {
+  if (action.type === "user-login/logout") {
+    if (state) {
+      const nullState = Object.keys(state).reduce((acc, key) => {
+        if (
+          Object.keys(acc).length === 0 ||
+          acc[key] === null ||
+          acc[key] === undefined
+        )
+          return acc;
+
+        acc[key] = null;
+        return acc;
+      }, {});
+      state = nullState;
+    }
+  }
+
   return reducers(state, action);
 };
 

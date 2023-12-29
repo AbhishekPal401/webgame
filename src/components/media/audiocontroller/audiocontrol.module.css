@@ -1,0 +1,54 @@
+.container {
+  width: 100%;
+  height: 100%;
+}
+
+.container > div:nth-child(1) {
+  font-size: 1.7rem;
+  font-family: "helvetica 500";
+  color: var(--innerbackground);
+  margin-bottom: 1rem;
+}
+.seekTrack {
+  width: 80%;
+  align-self: center;
+  margin-top: 2rem;
+}
+
+.image {
+  width: 100%;
+  height: 36rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.image img {
+  width: 30%;
+}
+.image audio {
+  margin-top: 2rem;
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 400;
+  background-color: rgba(1, 1, 1, 0.5);
+  backdrop-filter: blur(0.8rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.overlay svg {
+  width: 10rem;
+  height: 10rem;
+  fill: var(--primary);
+}
+
+.overlay svg:hover {
+  cursor: pointer;
+}
