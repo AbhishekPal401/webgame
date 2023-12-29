@@ -3,8 +3,7 @@ import { PublicClientApplication } from "@azure/msal-browser";
 import { azureConfig } from "../../../constants/azure.js";
 import Button from "../../../components/common/button/index.jsx";
 import styles from "./azure.module.css";
-import axios from "axios";
-import { baseUrl } from "../../../middleware/url.js";
+
 import { azurelogin } from "../../../store/auth/login.js";
 import { useDispatch } from "react-redux";
 import { azureService } from "../../../services/azure.js";

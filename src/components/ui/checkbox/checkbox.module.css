@@ -1,10 +1,10 @@
 .checkboxContainer {
   display: flex;
-  align-items: center;
+  flex-direction: row;
 }
 
 .checkboxLabel {
   margin-left: 0.8rem;
-  font-size: 1.3rem;
-  font: "Helvetica Neue";
+  font-size: 1.35rem;
+  font-family: "Helvetica 400";
 }

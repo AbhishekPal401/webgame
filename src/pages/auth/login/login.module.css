@@ -4,18 +4,17 @@
   display: flex;
   background-color: var(--background-color);
   align-items: center;
-  overflow: hidden;
 }
 
 /* Styling the left column */
 .containerLeftColumn {
-  flex: 5.5;
-  margin-left: 5.3rem;
+  flex: 6;
+  padding-left: 8rem;
 }
 
 /* Styling the right column */
 .containerRightColumn {
-  flex: 4.5;
+  flex: 4;
   background-color: #ffc404;
   height: 100%;
   width: 100%;

@@ -1,0 +1,141 @@
+.header {
+  font-size: 1.8rem;
+  color: var(--innerbackground);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-self: center;
+}
+
+.header > div:nth-child(2) {
+  font-size: 1.4rem;
+  font-family: "Helvetica 500";
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.smallCountContainer {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 2.4rem;
+  background-color: var(--primary);
+  position: relative;
+  font-family: sans-serif;
+}
+
+.smallCountContainer > div:nth-child(1) {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2rem;
+  height: 2rem;
+  border-radius: 2rem;
+  background-color: #fff;
+  font-family: sans-serif;
+}
+
+.timer {
+  margin-left: 1rem;
+}
+.countdown {
+}
+
+.questionContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  margin-top: 1rem;
+}
+
+.questionContainer > div:nth-child(1) {
+  width: 3rem;
+  height: 100%;
+  color: var(--innerbackground);
+  font-family: "Helvetica 700";
+  font-size: 1.6rem;
+}
+
+.question {
+  color: var(--innerbackground);
+  font-family: "Helvetica 300";
+  font-size: 1.6rem;
+}
+
+.question p {
+  color: var(--innerbackground);
+  font-family: "Helvetica 700";
+  font-size: 1.6rem;
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 45vh;
+}
+
+.answerContainer {
+  margin-top: 3rem;
+  max-height: 45vh;
+  overflow-y: auto;
+  padding: 0 1rem;
+}
+
+.answer {
+  width: 100%;
+  height: 4rem;
+  border: 0.1rem solid var(--primary);
+  background-color: var(--innerbackground);
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 1.1rem;
+  font-size: 1.5rem;
+  font-family: "Helvetica 700";
+  color: var(--black);
+}
+
+.answer:hover {
+  cursor: pointer;
+}
+
+.selected {
+  background-color: var(--active);
+}
+
+.buttonContainer {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.button {
+  display: inline-block;
+  text-align: center;
+  border: 0.1rem solid transparent;
+  font-size: 1.8rem;
+  padding: 0.5rem 5rem;
+  background-color: var(--primary);
+  border-radius: 0;
+  color: var(--black);
+}
+.buttonDisabled {
+  display: inline-block;
+  text-align: center;
+  border: 0.1rem solid transparent;
+  font-size: 2.2rem;
+  padding: 1.2rem 7rem;
+  background-color: #969696;
+  border-radius: 0.5rem;
+  color: var(--black);
+}
+
+.button:hover {
+  cursor: pointer;
+}

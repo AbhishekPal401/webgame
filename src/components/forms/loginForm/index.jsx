@@ -140,9 +140,11 @@ const LoginForm = () => {
           </Button>
         </div>
       </div>
+
       <div className={styles.containerDivider}>
         <hr />
       </div>
+
       <div>
         <Azure />
       </div>
