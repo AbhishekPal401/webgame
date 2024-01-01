@@ -1,17 +1,125 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./gameplay.module.css";
 import { motion } from "framer-motion";
 import CountDown from "../../../../components/ui/countdown";
 import Question from "../../../../components/ui/gameplay/question";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { signalRService } from "../../../../services/signalR";
+import { generateGUID, isJSONString } from "../../../../utils/common";
+import { submitAnswerDetails } from "../../../../store/app/user/answers/postAnswer";
+import { toast } from "react-toastify";
 
 const GamePlay = () => {
+  const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
+  const [selectedAnswer, setSelectedAnswer] = useState({});
+  const [showMedia, setShowMedia] = useState(false);
+
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
+  const { sessionDetails } = useSelector((state) => state.getSession);
+  const { credentials } = useSelector((state) => state.login);
+
+  const dispatch = useDispatch();
+
+  const { answerDetails, loading } = useSelector((state) => state.postAnswer);
 
   useEffect(() => {
-    signalRService.ProceedToNextQuestionListener((isFinal) => {});
+    setStartedAt(Math.floor(Date.now() / 1000));
   }, []);
+
+  const fetchNextQuestion = useCallback(() => {
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    const data = {
+      sessionID: sessionData.SessionID,
+      scenarioID: sessionData.ScenarioID,
+      currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+      currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
+      currentStatus: "InProgress",
+      userID: credentials.data.userID,
+      currentTotalScore: 0,
+      requester: {
+        requestID: generateGUID(),
+        requesterID: credentials.data.userID,
+        requesterName: credentials.data.userName,
+        requesterType: credentials.data.role,
+      },
+    };
+
+    dispatch(getNextQuestionDetails(data));
+  }, [sessionDetails, credentials, questionDetails]);
+
+  const answerSubmit = useCallback(() => {
+    if (!selectedAnswer) {
+      toast.error("Please select an answer");
+      return;
+    }
+
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    const data = {
+      sessionID: sessionData.SessionID,
+      instanceID: sessionData.InstanceID,
+      scenarioID: sessionData.ScenarioID,
+      userID: credentials.data.userID,
+      questionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+      questionNo: questionDetails?.data?.QuestionDetails?.QuestionNo.toString(),
+      answerID: selectedAnswer?.AnswerID,
+      score: selectedAnswer?.Score,
+      startedAt: startedAt.toString(),
+      finishedAt: Math.floor(Date.now() / 1000).toString(),
+      duration: "",
+      isAnswerDeligated:
+        questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker,
+      delegatedUserID: questionDetails?.data?.QuestionDetails
+        ?.IsUserDecisionMaker
+        ? credentials.data.userID
+        : "",
+      isOptimal: selectedAnswer?.IsOptimalAnswer,
+      currentState: "InProgress",
+      requester: {
+        requestID: generateGUID(),
+        requesterID: credentials.data.userID,
+        requesterName: credentials.data.userName,
+        requesterType: credentials.data.role,
+      },
+    };
+
+    dispatch(submitAnswerDetails(data));
+  }, [credentials, questionDetails, selectedAnswer, startedAt, sessionDetails]);
+
+  useEffect(() => {
+    if (questionDetails === null || questionDetails === undefined) return;
+
+    if (questionDetails.success) {
+      setSelectedAnswer(null);
+      setStartedAt(Math.floor(Date.now() / 1000));
+    } else if (questionDetails.success === false) {
+      fetchNextQuestion();
+    }
+  }, [questionDetails]);
+
+  useEffect(() => {
+    if (answerDetails === null || answerDetails === undefined) return;
+    if (answerDetails.success) {
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      const data = {
+        InstanceID: sessionData.InstanceID,
+        SessionID: sessionData.SessionID,
+        UserID: credentials.data.userID,
+        UserName: credentials.data.userName,
+        ActionType: questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker
+          ? "DeciderVote"
+          : "UserVote",
+        Message: "Voting",
+        QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+        AnswerID: selectedAnswer.AnswerID,
+      };
+
+      signalRService.SendVotes(data);
+      toast.success(answerDetails.message);
+    }
+  }, [answerDetails]);
 
   return (
     <motion.div
@@ -61,13 +169,46 @@ const GamePlay = () => {
         </div>
         <div className={styles.middle}>
           <div className={styles.questionContainer}>
-            <Question />
+            {questionDetails &&
+              questionDetails.success &&
+              questionDetails.data && (
+                <Question
+                  Duration={
+                    Number(questionDetails.data.QuestionDetails.Duration) * 1000
+                  }
+                  QuestionNo={questionDetails.data.QuestionDetails.QuestionNo}
+                  QuestionText={
+                    questionDetails.data.QuestionDetails.QuestionText
+                  }
+                  Options={questionDetails.data.AnswerDetails}
+                  QuestionIntroMediaURL={
+                    questionDetails.data.QuestionDetails.QuestionIntroMediaURL
+                  }
+                  MediaType={questionDetails.data.QuestionDetails.MediaType}
+                  selectedAnswer={selectedAnswer}
+                  setSelectedAnswer={setSelectedAnswer}
+                  onAnswerSubmit={answerSubmit}
+                />
+              )}
           </div>
         </div>
         <div className={styles.right}>
           <div className={styles.notification}>
             <div>
-              <svg onClick={() => {}}>
+              <svg
+                onClick={() => {
+                  if (!isJSONString(sessionDetails.data)) return;
+                  const sessionData = JSON.parse(sessionDetails.data);
+
+                  const data = {
+                    InstanceID: sessionData.InstanceID,
+                    UserID: credentials.data.userID,
+                    isFinalPlay: "Yes",
+                  };
+
+                  signalRService.ProceedToNextQuestionInvoke(data);
+                }}
+              >
                 <use xlinkHref={"sprite.svg#notifcation"} />
               </svg>
             </div>

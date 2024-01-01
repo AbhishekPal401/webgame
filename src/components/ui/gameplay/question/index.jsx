@@ -10,6 +10,7 @@ import { generateGUID } from "../../../../utils/common";
 import { toast } from "react-toastify";
 import VideoController from "../../../media/videocontroller";
 import AudioController from "../../../media/audiocontroller";
+import { signalRService } from "../../../../services/signalR";
 
 const renderer = ({ minutes, seconds, completed }) => {
   if (completed) {
@@ -37,165 +38,162 @@ const CountDown = memo(({ duration = 5000 }) => {
   );
 });
 
-const Question = () => {
-  const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+const Question = ({
+  Duration = 10,
+  QuestionNo = 0,
+  QuestionText = "",
+  Options = [],
+  selectedAnswer = null,
+  setSelectedAnswer = () => {},
+  QuestionIntroMediaURL = "",
+  MediaType = "Video",
+  onAnswerSubmit = () => {},
+}) => {
   const [showMedia, setShowMedia] = useState(false);
 
   const dispatch = useDispatch();
 
-  const { credentials } = useSelector((state) => state.login);
-  const { sessionDetails } = useSelector((state) => state.getSession);
+  // useEffect(() => {
+  //   setStartedAt(Math.floor(Date.now() / 1000));
+  // }, []);
 
-  const { questionDetails } = useSelector((state) => state.getNextQuestion);
-  const { answerDetails, loading } = useSelector((state) => state.postAnswer);
+  // const fetchNextQuestion = useCallback(() => {
+  //   const sessionData = JSON.parse(sessionDetails.data);
 
-  useEffect(() => {
-    setStartedAt(Math.floor(Date.now() / 1000));
-  }, []);
+  //   const data = {
+  //     sessionID: sessionData.SessionID,
+  //     scenarioID: sessionData.ScenarioID,
+  //     currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+  //     currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
+  //     currentStatus: "InProgress",
+  //     userID: credentials.data.userID,
+  //     currentTotalScore: 0,
+  //     requester: {
+  //       requestID: generateGUID(),
+  //       requesterID: credentials.data.userID,
+  //       requesterName: credentials.data.userName,
+  //       requesterType: credentials.data.role,
+  //     },
+  //   };
 
-  const fetchNextQuestion = useCallback(() => {
-    const sessionData = JSON.parse(sessionDetails.data);
+  //   dispatch(getNextQuestionDetails(data));
+  // }, [sessionDetails, credentials, questionDetails]);
 
-    const data = {
-      sessionID: sessionData.SessionID,
-      scenarioID: sessionData.ScenarioID,
-      currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-      currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
-      currentStatus: "InProgress",
-      userID: credentials.data.userID,
-      currentTotalScore: 0,
-      requester: {
-        requestID: generateGUID(),
-        requesterID: credentials.data.userID,
-        requesterName: credentials.data.userName,
-        requesterType: credentials.data.role,
-      },
-    };
+  // const answerSubmit = useCallback(() => {
+  //   if (!selectedAnswer) {
+  //     toast.error("Please select an answer");
+  //     return;
+  //   }
 
-    dispatch(getNextQuestionDetails(data));
-  }, [sessionDetails, credentials, questionDetails]);
+  //   const sessionData = JSON.parse(sessionDetails.data);
 
-  const answerSubmit = useCallback(() => {
-    if (!selectedAnswer) {
-      toast.error("Please select an answer");
-      return;
-    }
+  //   const data = {
+  //     sessionID: sessionData.SessionID,
+  //     instanceID: sessionData.InstanceID,
+  //     scenarioID: sessionData.ScenarioID,
+  //     userID: credentials.data.userID,
+  //     questionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+  //     questionNo: questionDetails?.data?.QuestionDetails?.QuestionNo.toString(),
+  //     answerID: selectedAnswer.AnswerID,
+  //     score: selectedAnswer.Score,
+  //     startedAt: startedAt.toString(),
+  //     finishedAt: Math.floor(Date.now() / 1000).toString(),
+  //     duration: "",
+  //     isAnswerDeligated:
+  //       questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker,
+  //     delegatedUserID: questionDetails?.data?.QuestionDetails
+  //       ?.IsUserDecisionMaker
+  //       ? credentials.data.userID
+  //       : "",
+  //     isOptimal: selectedAnswer.IsOptimalAnswer,
+  //     currentState: "InProgress",
+  //     requester: {
+  //       requestID: generateGUID(),
+  //       requesterID: credentials.data.userID,
+  //       requesterName: credentials.data.userName,
+  //       requesterType: credentials.data.role,
+  //     },
+  //   };
 
-    const sessionData = JSON.parse(sessionDetails.data);
+  //   dispatch(submitAnswerDetails(data));
+  // }, [credentials, questionDetails, selectedAnswer, startedAt, sessionDetails]);
 
-    const data = {
-      sessionID: sessionData.SessionID,
-      instanceID: sessionData.InstanceID,
-      scenarioID: sessionData.ScenarioID,
-      userID: credentials.data.userID,
-      questionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-      questionNo: questionDetails?.data?.QuestionDetails?.QuestionNo.toString(),
-      answerID: selectedAnswer.AnswerID,
-      score: selectedAnswer.Score,
-      startedAt: startedAt.toString(),
-      finishedAt: Math.floor(Date.now() / 1000).toString(),
-      duration: "",
-      isAnswerDeligated:
-        questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker,
-      delegatedUserID: questionDetails?.data?.QuestionDetails
-        ?.IsUserDecisionMaker
-        ? credentials.data.userID
-        : "",
-      isOptimal: selectedAnswer.IsOptimalAnswer,
-      currentState: "InProgress",
-      requester: {
-        requestID: generateGUID(),
-        requesterID: credentials.data.userID,
-        requesterName: credentials.data.userName,
-        requesterType: credentials.data.role,
-      },
-    };
+  // useEffect(() => {
+  //   if (questionDetails === null || questionDetails === undefined) return;
 
-    dispatch(submitAnswerDetails(data));
-  }, [credentials, questionDetails, selectedAnswer, startedAt, sessionDetails]);
+  //   if (questionDetails.success) {
+  //     setSelectedAnswer(null);
+  //     setStartedAt(Math.floor(Date.now() / 1000));
+  //   } else if (questionDetails.success === false) {
+  //     fetchNextQuestion();
+  //   }
+  // }, [questionDetails]);
 
-  useEffect(() => {
-    if (questionDetails === null || questionDetails === undefined) return;
+  // useEffect(() => {
+  //   if (answerDetails === null || answerDetails === undefined) return;
+  //   if (answerDetails.success) {
+  //     const sessionData = JSON.parse(sessionDetails.data);
 
-    if (questionDetails.success) {
-      setSelectedAnswer(null);
-      setStartedAt(Math.floor(Date.now() / 1000));
-    } else if (questionDetails.success === false) {
-      fetchNextQuestion();
-    }
-  }, [questionDetails]);
+  //     const data = {
+  //       InstanceID: sessionData.InstanceID,
+  //       SessionID: sessionData.SessionID,
+  //       UserID: credentials.data.userID,
+  //       UserName: credentials.data.userName,
+  //       ActionType: questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker
+  //         ? "DeciderVote"
+  //         : "UserVote",
+  //       Message: "Voting",
+  //       QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+  //       AnswerID: selectedAnswer.AnswerID,
+  //     };
 
-  useEffect(() => {
-    if (answerDetails === null || answerDetails === undefined) return;
-    if (answerDetails.success) {
-      toast.success(answerDetails.message);
-    }
-  }, [answerDetails]);
+  //     signalRService.SendVotes(data);
+  //     toast.success(answerDetails.message);
+  //   }
+  // }, [answerDetails]);
+
+  // useEffect(() => {
+  //   signalRService.GetVotingDetails((VotesDetail) => {
+  //     console.log("VotesDetail", VotesDetail);
+  //   });
+  // }, []);
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <div>Make a decision</div>
         <div>
-          {questionDetails &&
-            questionDetails.data &&
-            questionDetails.data.QuestionDetails &&
-            questionDetails.data.QuestionDetails.Duration && (
-              <div className={styles.smallCountContainer}>
-                <div></div>
-                <SmallCountDown
-                  height={16}
-                  width={16}
-                  duration={
-                    Number(questionDetails.data.QuestionDetails.Duration) * 1000
-                  }
-                  loops={1}
-                  reverse={true}
-                  inverse={false}
-                />
-              </div>
-            )}
-          {questionDetails &&
-            questionDetails.data &&
-            questionDetails.data.QuestionDetails &&
-            questionDetails.data.QuestionDetails.Duration && (
-              <div className={styles.timer}>
-                Time Left to Vote{" "}
-                <CountDown
-                  duration={
-                    Number(questionDetails.data.QuestionDetails.Duration) * 1000
-                  }
-                />
-                min
-              </div>
-            )}
+          {Duration && (
+            <div className={styles.smallCountContainer}>
+              <div></div>
+              <SmallCountDown
+                height={16}
+                width={16}
+                duration={Duration}
+                loops={1}
+                reverse={true}
+                inverse={false}
+              />
+            </div>
+          )}
+          {Duration && (
+            <div className={styles.timer}>
+              Time Left to Vote <CountDown duration={Duration} /> min
+            </div>
+          )}
         </div>
       </div>
-      {questionDetails?.data?.QuestionDetails?.QuestionNo}
       <div className={styles.questionContainer}>
-        <div>
-          {questionDetails?.data?.QuestionDetails?.QuestionNo
-            ? questionDetails?.data?.QuestionDetails?.QuestionNo
-            : 0}
-          .
-        </div>
+        <div>{QuestionNo}.</div>
         <div className={styles.question}>
-          {questionDetails &&
-            questionDetails.data &&
-            questionDetails.data.QuestionDetails &&
-            questionDetails.data.QuestionDetails.QuestionText && (
-              <div>{questionDetails.data.QuestionDetails.QuestionText}</div>
-            )}
+          {QuestionText && <div>{QuestionText}</div>}
         </div>
       </div>
       <div className={styles.mainContent}>
         <div className={styles.answerContainer}>
-          {questionDetails &&
-            questionDetails.data &&
-            questionDetails.data.AnswerDetails &&
-            Array.isArray(questionDetails.data.AnswerDetails) &&
-            questionDetails.data.AnswerDetails.map((item, index) => {
+          {Options &&
+            Array.isArray(Options) &&
+            Options.map((item, index) => {
               return (
                 <div
                   className={`${styles.answer} ${
@@ -219,46 +217,35 @@ const Question = () => {
               setShowMedia(true);
             }}
           >
-            Replay{" "}
-            {questionDetails?.data?.QuestionDetails?.MediaType === "Video"
-              ? "Video"
-              : "Audio"}
+            Replay {MediaType === "Video" ? "Video" : "Audio"}
           </div>
-          <Button customClassName={styles.button} onClick={answerSubmit}>
+          <Button customClassName={styles.button} onClick={onAnswerSubmit}>
             Vote
           </Button>
         </div>
       </div>
-      {showMedia &&
-        questionDetails &&
-        questionDetails.data &&
-        questionDetails.data.QuestionDetails &&
-        questionDetails.data.QuestionDetails.QuestionIntroMediaURL && (
-          <div className={styles.mediaContainer}>
-            <div>Incoming Media</div>
-            <div>
-              {questionDetails.data.QuestionDetails?.MediaType === "Video" ? (
-                <VideoController
-                  videoUrl={
-                    questionDetails.data.QuestionDetails.QuestionIntroMediaURL
-                  }
-                  onCompleted={() => {
-                    setShowMedia(false);
-                  }}
-                />
-              ) : (
-                <AudioController
-                  audioUrl={
-                    questionDetails.data.QuestionDetails.QuestionIntroMediaURL
-                  }
-                  onCompleted={() => {
-                    setShowMedia(false);
-                  }}
-                />
-              )}
-            </div>
+      {showMedia && QuestionIntroMediaURL && (
+        <div className={styles.mediaContainer}>
+          <div>Incoming Media</div>
+          <div>
+            {MediaType === "Video" ? (
+              <VideoController
+                videoUrl={QuestionIntroMediaURL}
+                onCompleted={() => {
+                  setShowMedia(false);
+                }}
+              />
+            ) : (
+              <AudioController
+                audioUrl={QuestionIntroMediaURL}
+                onCompleted={() => {
+                  setShowMedia(false);
+                }}
+              />
+            )}
           </div>
-        )}
+        </div>
+      )}
     </div>
   );
 };

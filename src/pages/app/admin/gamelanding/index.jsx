@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { signalRService } from "../../../../services/signalR";
 
 const UserHomePage = () => {
+  const [connected, setConnected] = useState(false);
   const [ready, setReady] = useState(false);
   const [connectedUsers, setConnectedUsers] = useState([]);
 
@@ -75,6 +76,7 @@ const UserHomePage = () => {
       UserName: credentials.data.userName,
     };
 
+    console.log("Joining the room...", data);
     await signalRService.joinSession(data);
   }, [sessionDetails, credentials]);
 
@@ -83,7 +85,9 @@ const UserHomePage = () => {
     const startConnection = async () => {
       try {
         // Start the SignalR connection
-        await signalRService.startConnection();
+        await signalRService.startConnection(() => {
+          setConnected(true);
+        });
       } catch (error) {
         console.error("Error during connection ", error);
       }
@@ -115,10 +119,11 @@ const UserHomePage = () => {
       }
     };
 
-    startJoiningRoom();
-  }, [sessionDetails]);
+    if (connected) {
+      startJoiningRoom();
+    }
+  }, [sessionDetails, connected]);
 
-  //get session details by id api call
   useEffect(() => {
     if (!credentials) return;
 
