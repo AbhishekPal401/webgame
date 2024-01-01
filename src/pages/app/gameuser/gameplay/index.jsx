@@ -8,11 +8,17 @@ import { signalRService } from "../../../../services/signalR";
 import { generateGUID, isJSONString } from "../../../../utils/common";
 import { submitAnswerDetails } from "../../../../store/app/user/answers/postAnswer";
 import { toast } from "react-toastify";
+import { PlayingStates } from "../../../../constants/playingStates";
+import DecisionLoader from "../../../../components/loader/decisionloader";
 
 const GamePlay = () => {
   const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
   const [selectedAnswer, setSelectedAnswer] = useState({});
   const [showMedia, setShowMedia] = useState(false);
+  const [currentState, setCurrentState] = useState(PlayingStates.UserVote);
+  const [currentQuestionSubmitted, setCurrentQuestionSubmitted] =
+    useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -25,6 +31,29 @@ const GamePlay = () => {
   useEffect(() => {
     setStartedAt(Math.floor(Date.now() / 1000));
   }, []);
+
+  useEffect(() => {
+    signalRService.GetVotingDetails((votesDetails) => {
+      console.log("votesDetails", votesDetails);
+
+      if (!votesDetails) return;
+
+      if (votesDetails.decisionDisplayType === PlayingStates.VotingInProgress) {
+        setCurrentState(PlayingStates.VotingInProgress);
+        setShowModal(false);
+      } else if (
+        votesDetails.decisionDisplayType === PlayingStates.VotingCompleted
+      ) {
+        setCurrentState(PlayingStates.VotingCompleted);
+        setShowModal(true);
+      } else if (
+        votesDetails.decisionDisplayType === PlayingStates.DecisionCompleted
+      ) {
+        setCurrentState(PlayingStates.DecisionCompleted);
+        setShowModal(false);
+      }
+    });
+  });
 
   const fetchNextQuestion = useCallback(() => {
     const sessionData = JSON.parse(sessionDetails.data);
@@ -100,7 +129,9 @@ const GamePlay = () => {
 
   useEffect(() => {
     if (answerDetails === null || answerDetails === undefined) return;
-    if (answerDetails.success) {
+    if (answerDetails.success && selectedAnswer) {
+      setCurrentQuestionSubmitted(true);
+
       const sessionData = JSON.parse(sessionDetails.data);
 
       const data = {
@@ -117,7 +148,6 @@ const GamePlay = () => {
       };
 
       signalRService.SendVotes(data);
-      toast.success(answerDetails.message);
     }
   }, [answerDetails]);
 
@@ -173,6 +203,13 @@ const GamePlay = () => {
               questionDetails.success &&
               questionDetails.data && (
                 <Question
+                  isAdmin={
+                    credentials.data.role === "1" ||
+                    credentials.data.role === "2"
+                  }
+                  IsDecisionMaker={
+                    questionDetails.data.QuestionDetails.IsUserDecisionMaker
+                  }
                   Duration={
                     Number(questionDetails.data.QuestionDetails.Duration) * 1000
                   }
@@ -188,6 +225,8 @@ const GamePlay = () => {
                   selectedAnswer={selectedAnswer}
                   setSelectedAnswer={setSelectedAnswer}
                   onAnswerSubmit={answerSubmit}
+                  CurrentState={currentState}
+                  isCurrentQuestionVotted={currentQuestionSubmitted}
                 />
               )}
           </div>
@@ -225,6 +264,8 @@ const GamePlay = () => {
           </div>
         </div>
       </div>
+
+      {showModal && <DecisionLoader />}
     </motion.div>
   );
 };

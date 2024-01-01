@@ -8,11 +8,14 @@ import { signalRService } from "../../../../services/signalR";
 import { generateGUID, isJSONString } from "../../../../utils/common";
 import { submitAnswerDetails } from "../../../../store/app/user/answers/postAnswer";
 import { toast } from "react-toastify";
+import { PlayingStates } from "../../../../constants/playingStates";
 
 const GamePlay = () => {
   const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
   const [selectedAnswer, setSelectedAnswer] = useState({});
-  const [showMedia, setShowMedia] = useState(false);
+  const [currentState, setCurrentState] = useState(
+    PlayingStates.VotingInProgress
+  );
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -28,6 +31,26 @@ const GamePlay = () => {
   useEffect(() => {
     setStartedAt(Math.floor(Date.now() / 1000));
   }, []);
+
+  useEffect(() => {
+    signalRService.GetVotingDetails((votesDetails) => {
+      console.log("votesDetails", votesDetails);
+
+      if (!votesDetails) return;
+
+      if (votesDetails.decisionDisplayType === PlayingStates.VotingInProgress) {
+        setCurrentState(PlayingStates.VotingInProgress);
+      } else if (
+        votesDetails.decisionDisplayType === PlayingStates.VotingCompleted
+      ) {
+        setCurrentState(PlayingStates.VotingCompleted);
+      } else if (
+        votesDetails.decisionDisplayType === PlayingStates.DecisionCompleted
+      ) {
+        setCurrentState(PlayingStates.DecisionCompleted);
+      }
+    });
+  });
 
   const fetchNextQuestion = useCallback(() => {
     const sessionData = JSON.parse(sessionDetails.data);
@@ -103,7 +126,7 @@ const GamePlay = () => {
 
   useEffect(() => {
     if (answerDetails === null || answerDetails === undefined) return;
-    if (answerDetails.success) {
+    if (answerDetails.success && selectedAnswer) {
       const sessionData = JSON.parse(sessionDetails.data);
 
       const data = {
@@ -116,7 +139,7 @@ const GamePlay = () => {
           : "UserVote",
         Message: "Voting",
         QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-        AnswerID: selectedAnswer.AnswerID,
+        AnswerID: selectedAnswer?.AnswerID,
       };
 
       signalRService.SendVotes(data);
@@ -176,6 +199,13 @@ const GamePlay = () => {
               questionDetails.success &&
               questionDetails.data && (
                 <Question
+                  isAdmin={
+                    credentials.data.role === "1" ||
+                    credentials.data.role === "2"
+                  }
+                  IsDecisionMaker={
+                    questionDetails.data.QuestionDetails.IsUserDecisionMaker
+                  }
                   Duration={
                     Number(questionDetails.data.QuestionDetails.Duration) * 1000
                   }
@@ -191,6 +221,7 @@ const GamePlay = () => {
                   selectedAnswer={selectedAnswer}
                   setSelectedAnswer={setSelectedAnswer}
                   onAnswerSubmit={answerSubmit}
+                  CurrentState={currentState}
                 />
               )}
           </div>

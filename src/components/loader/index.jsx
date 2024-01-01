@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "../modal";
 import styles from "./loader.module.css";
+import ModalContainer from "../modal";
 
 const LoaderTypes = {
   DEFAULT: "default",
@@ -11,7 +12,7 @@ const Loader = ({ type = LoaderTypes.DEFAULT, scale = 24 }) => {
   const data_scale = `${scale}rem`;
 
   return (
-    <Modal>
+    <ModalContainer>
       <div
         style={{
           width: data_scale,
@@ -24,7 +25,7 @@ const Loader = ({ type = LoaderTypes.DEFAULT, scale = 24 }) => {
           <use xlinkHref={"sprite.svg#loader"} />
         </svg>
       </div>
-    </Modal>
+    </ModalContainer>
   );
 };
 

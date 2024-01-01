@@ -1,16 +1,13 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useState } from "react";
 import styles from "./question.module.css";
 import SmallCountDown from "../smallcountdown";
 import Button from "../../../common/button";
-import { useSelector, useDispatch } from "react-redux";
 import Countdown from "react-countdown";
-import { submitAnswerDetails } from "../../../../store/app/user/answers/postAnswer";
-import { getNextQuestionDetails } from "../../../../store/app/user/questions/getNextQuestion";
-import { generateGUID } from "../../../../utils/common";
-import { toast } from "react-toastify";
+
 import VideoController from "../../../media/videocontroller";
 import AudioController from "../../../media/audiocontroller";
-import { signalRService } from "../../../../services/signalR";
+
+import { PlayingStates } from "../../../../constants/playingStates";
 
 const renderer = ({ minutes, seconds, completed }) => {
   if (completed) {
@@ -47,116 +44,113 @@ const Question = ({
   setSelectedAnswer = () => {},
   QuestionIntroMediaURL = "",
   MediaType = "Video",
+  CurrentState = PlayingStates.VotingInProgress,
   onAnswerSubmit = () => {},
+  isAdmin = false,
+  IsDecisionMaker = false,
+  isCurrentQuestionVotted = false,
+  onDecisionSubmit = () => {},
 }) => {
   const [showMedia, setShowMedia] = useState(false);
 
-  const dispatch = useDispatch();
+  let CustomButtonRender = null;
 
-  // useEffect(() => {
-  //   setStartedAt(Math.floor(Date.now() / 1000));
-  // }, []);
-
-  // const fetchNextQuestion = useCallback(() => {
-  //   const sessionData = JSON.parse(sessionDetails.data);
-
-  //   const data = {
-  //     sessionID: sessionData.SessionID,
-  //     scenarioID: sessionData.ScenarioID,
-  //     currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-  //     currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
-  //     currentStatus: "InProgress",
-  //     userID: credentials.data.userID,
-  //     currentTotalScore: 0,
-  //     requester: {
-  //       requestID: generateGUID(),
-  //       requesterID: credentials.data.userID,
-  //       requesterName: credentials.data.userName,
-  //       requesterType: credentials.data.role,
-  //     },
-  //   };
-
-  //   dispatch(getNextQuestionDetails(data));
-  // }, [sessionDetails, credentials, questionDetails]);
-
-  // const answerSubmit = useCallback(() => {
-  //   if (!selectedAnswer) {
-  //     toast.error("Please select an answer");
-  //     return;
-  //   }
-
-  //   const sessionData = JSON.parse(sessionDetails.data);
-
-  //   const data = {
-  //     sessionID: sessionData.SessionID,
-  //     instanceID: sessionData.InstanceID,
-  //     scenarioID: sessionData.ScenarioID,
-  //     userID: credentials.data.userID,
-  //     questionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-  //     questionNo: questionDetails?.data?.QuestionDetails?.QuestionNo.toString(),
-  //     answerID: selectedAnswer.AnswerID,
-  //     score: selectedAnswer.Score,
-  //     startedAt: startedAt.toString(),
-  //     finishedAt: Math.floor(Date.now() / 1000).toString(),
-  //     duration: "",
-  //     isAnswerDeligated:
-  //       questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker,
-  //     delegatedUserID: questionDetails?.data?.QuestionDetails
-  //       ?.IsUserDecisionMaker
-  //       ? credentials.data.userID
-  //       : "",
-  //     isOptimal: selectedAnswer.IsOptimalAnswer,
-  //     currentState: "InProgress",
-  //     requester: {
-  //       requestID: generateGUID(),
-  //       requesterID: credentials.data.userID,
-  //       requesterName: credentials.data.userName,
-  //       requesterType: credentials.data.role,
-  //     },
-  //   };
-
-  //   dispatch(submitAnswerDetails(data));
-  // }, [credentials, questionDetails, selectedAnswer, startedAt, sessionDetails]);
-
-  // useEffect(() => {
-  //   if (questionDetails === null || questionDetails === undefined) return;
-
-  //   if (questionDetails.success) {
-  //     setSelectedAnswer(null);
-  //     setStartedAt(Math.floor(Date.now() / 1000));
-  //   } else if (questionDetails.success === false) {
-  //     fetchNextQuestion();
-  //   }
-  // }, [questionDetails]);
-
-  // useEffect(() => {
-  //   if (answerDetails === null || answerDetails === undefined) return;
-  //   if (answerDetails.success) {
-  //     const sessionData = JSON.parse(sessionDetails.data);
-
-  //     const data = {
-  //       InstanceID: sessionData.InstanceID,
-  //       SessionID: sessionData.SessionID,
-  //       UserID: credentials.data.userID,
-  //       UserName: credentials.data.userName,
-  //       ActionType: questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker
-  //         ? "DeciderVote"
-  //         : "UserVote",
-  //       Message: "Voting",
-  //       QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-  //       AnswerID: selectedAnswer.AnswerID,
-  //     };
-
-  //     signalRService.SendVotes(data);
-  //     toast.success(answerDetails.message);
-  //   }
-  // }, [answerDetails]);
-
-  // useEffect(() => {
-  //   signalRService.GetVotingDetails((VotesDetail) => {
-  //     console.log("VotesDetail", VotesDetail);
-  //   });
-  // }, []);
+  if (CurrentState === PlayingStates.VotingInProgress) {
+    if (isAdmin) {
+      CustomButtonRender = (
+        <div className={styles.buttonContainer}>
+          <div
+            onClick={() => {
+              setShowMedia(true);
+            }}
+          >
+            Replay {MediaType === "Video" ? "Video" : "Audio"}
+          </div>
+          <div className={styles.label}>Voting in Progress ...</div>
+        </div>
+      );
+    } else {
+      if (isCurrentQuestionVotted) {
+        CustomButtonRender = (
+          <div className={styles.buttonContainer}>
+            <div></div>
+            <Button customClassName={styles.buttonDisabled}>
+              Waiting for Votes
+            </Button>
+          </div>
+        );
+      } else {
+        CustomButtonRender = (
+          <div className={styles.buttonContainer}>
+            <div
+              onClick={() => {
+                setShowMedia(true);
+              }}
+            >
+              Replay {MediaType === "Video" ? "Video" : "Audio"}
+            </div>
+            <Button customClassName={styles.button} onClick={onAnswerSubmit}>
+              Vote
+            </Button>
+          </div>
+        );
+      }
+    }
+  } else if (CurrentState === PlayingStates.VotingCompleted) {
+    if (isAdmin) {
+      CustomButtonRender = (
+        <div className={styles.buttonContainer}>
+          <div></div>
+          <div className={styles.makeDecision}>
+            <div className={styles.label}>
+              Voting Complete - Waiting for Descision
+            </div>
+            <Button
+              customStyle={{ marginLeft: "4rem" }}
+              customClassName={styles.buttonDisabled}
+            >
+              Make Decision
+            </Button>
+          </div>
+        </div>
+      );
+    } else {
+      if (IsDecisionMaker) {
+        CustomButtonRender = (
+          <div className={styles.buttonContainer}>
+            <div></div>
+            <Button customClassName={styles.button} onClick={onDecisionSubmit}>
+              Select Decision
+            </Button>
+          </div>
+        );
+      } else {
+        CustomButtonRender = (
+          <div className={styles.buttonContainer}>
+            <div></div>
+            <Button customClassName={styles.buttonDisabled}>
+              Waiting for Votes
+            </Button>
+          </div>
+        );
+      }
+    }
+  } else {
+    CustomButtonRender = (
+      <div className={styles.buttonContainer}>
+        <div
+          onClick={() => {
+            setShowMedia(true);
+          }}
+        >
+          Replay {MediaType === "Video" ? "Video" : "Audio"}
+        </div>
+        <Button customClassName={styles.button} onClick={onAnswerSubmit}>
+          Vote
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -211,18 +205,7 @@ const Question = ({
               );
             })}
         </div>
-        <div className={styles.buttonContainer}>
-          <div
-            onClick={() => {
-              setShowMedia(true);
-            }}
-          >
-            Replay {MediaType === "Video" ? "Video" : "Audio"}
-          </div>
-          <Button customClassName={styles.button} onClick={onAnswerSubmit}>
-            Vote
-          </Button>
-        </div>
+        {CustomButtonRender}
       </div>
       {showMedia && QuestionIntroMediaURL && (
         <div className={styles.mediaContainer}>
