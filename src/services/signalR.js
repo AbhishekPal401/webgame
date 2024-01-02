@@ -134,6 +134,14 @@ class SignalRService {
     }
   }
 
+  GetVotingDetailsOff(callback) {
+    this.hubConnection.off("ReceiveVotingInfo", callback);
+  }
+
+  ProceedToNextQuestionListenerOff(callback) {
+    this.hubConnection.off("ProceedToNextQuestion", callback);
+  }
+
   // Ensure a single instance of SignalRService is used
   static getInstance() {
     if (!SignalRService.instance) {

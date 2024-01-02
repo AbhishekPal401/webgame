@@ -32,7 +32,6 @@ const GamePlay = () => {
   const dispatch = useDispatch();
 
   console.log("questionDetails", questionDetails);
-  // console.log("answerDetails", answerDetails);
 
   const fetchNextQuestion = useCallback(() => {
     const sessionData = JSON.parse(sessionDetails.data);
@@ -59,11 +58,7 @@ const GamePlay = () => {
   }, [questionDetails, credentials, sessionDetails, dispatch]);
 
   useEffect(() => {
-    setStartedAt(Math.floor(Date.now() / 1000));
-  }, []);
-
-  useEffect(() => {
-    signalRService.GetVotingDetails((votesDetails) => {
+    const handleVotingDetails = (votesDetails) => {
       console.log("votesDetails", votesDetails);
 
       if (!votesDetails) return;
@@ -85,9 +80,17 @@ const GamePlay = () => {
         setShowModal(false);
         setNextQuestionFetched(false);
       }
-    });
+    };
 
-    signalRService.ProceedToNextQuestionListener((data) => {
+    signalRService.GetVotingDetails(handleVotingDetails);
+
+    return () => {
+      signalRService.GetVotingDetailsOff(handleVotingDetails);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleProceedToNextQuestion = (data) => {
       console.log("data", data, "nextQuestionFetched", nextQuestionFetched);
 
       if (
@@ -96,16 +99,24 @@ const GamePlay = () => {
         !nextQuestionFetched
       ) {
         fetchNextQuestion();
-      } else if (data.ActionType === "IsCompleted") {
+      } else if (
+        data.ActionType === "IsCompleted" ||
+        data.actionType === "IsCompleted"
+      ) {
         navigate("/missioncompleted");
       } else {
-        console.log(
-          "ProceedToNextQuestionListener ActionType",
-          data.ActionType
-        );
+        console.log("ProceedToNextQuestionListener ActionType", data);
       }
-    });
-  }, [fetchNextQuestion]);
+    };
+
+    signalRService.ProceedToNextQuestionListener(handleProceedToNextQuestion);
+
+    return () => {
+      signalRService.ProceedToNextQuestionListenerOff(
+        handleProceedToNextQuestion
+      );
+    };
+  }, [fetchNextQuestion, questionDetails]);
 
   const answerSubmit = useCallback(() => {
     if (!selectedAnswer) {
