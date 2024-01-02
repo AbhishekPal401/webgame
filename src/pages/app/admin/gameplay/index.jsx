@@ -32,34 +32,37 @@ const GamePlay = () => {
 
   const { answerDetails, loading } = useSelector((state) => state.postAnswer);
 
-  // console.log("questionDetails", questionDetails);
+  console.log("questionDetails", questionDetails);
   // console.log("answerDetails", answerDetails);
 
-  const fetchNextQuestion = useCallback(() => {
-    const sessionData = JSON.parse(sessionDetails.data);
+  const fetchNextQuestion = useCallback(
+    useCallback(() => {
+      const sessionData = JSON.parse(sessionDetails.data);
 
-    console.log("questionDetails in fetchNextQuestion", questionDetails);
+      console.log("questionDetails in fetchNextQuestion", questionDetails);
 
-    const data = {
-      sessionID: sessionData.SessionID,
-      scenarioID: sessionData.ScenarioID,
-      currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-      currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
-      currentStatus: "InProgress",
-      userID: credentials.data.userID,
-      currentTotalScore: 0,
-      requester: {
-        requestID: generateGUID(),
-        requesterID: credentials.data.userID,
-        requesterName: credentials.data.userName,
-        requesterType: credentials.data.role,
-      },
-    };
+      const data = {
+        sessionID: sessionData.SessionID,
+        scenarioID: sessionData.ScenarioID,
+        currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+        currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
+        currentStatus: "InProgress",
+        userID: credentials.data.userID,
+        currentTotalScore: 0,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
 
-    console.log("get next question data", data);
+      console.log("get next question data", data);
 
-    dispatch(getNextQuestionDetails(data));
-  }, [sessionDetails, credentials, questionDetails]);
+      dispatch(getNextQuestionDetails(data));
+    }),
+    [questionDetails, credentials, sessionDetails, dispatch]
+  );
 
   useEffect(() => {
     setStartedAt(Math.floor(Date.now() / 1000));
@@ -111,7 +114,7 @@ const GamePlay = () => {
         console.log("ProceedToNextQuestionListener ActionType", data);
       }
     });
-  }, []);
+  }, [fetchNextQuestion]);
 
   const answerSubmit = useCallback(() => {
     if (!selectedAnswer) {
@@ -163,7 +166,6 @@ const GamePlay = () => {
       setCurrentState(PlayingStates.VotingInProgress);
       setStartedAt(Math.floor(Date.now() / 1000));
     } else if (questionDetails.success === false) {
-      // fetchNextQuestion();
     }
   }, [questionDetails]);
 

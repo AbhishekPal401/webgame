@@ -32,7 +32,7 @@ const GamePlay = () => {
   const dispatch = useDispatch();
 
   console.log("questionDetails", questionDetails);
-  console.log("answerDetails", answerDetails);
+  // console.log("answerDetails", answerDetails);
 
   const fetchNextQuestion = useCallback(() => {
     const sessionData = JSON.parse(sessionDetails.data);
@@ -56,7 +56,7 @@ const GamePlay = () => {
     console.log("get next question data", data);
 
     dispatch(getNextQuestionDetails(data));
-  }, [sessionDetails, credentials, questionDetails]);
+  }, [questionDetails, credentials, sessionDetails, dispatch]);
 
   useEffect(() => {
     setStartedAt(Math.floor(Date.now() / 1000));
@@ -105,7 +105,7 @@ const GamePlay = () => {
         );
       }
     });
-  }, []);
+  }, [fetchNextQuestion]);
 
   const answerSubmit = useCallback(() => {
     if (!selectedAnswer) {
@@ -158,8 +158,6 @@ const GamePlay = () => {
       setShowModal(false);
       setIsDecision(false);
     } else if (questionDetails.success === false) {
-      // toast.error("Next question fetch error");
-      // fetchNextQuestion();
     }
   }, [questionDetails]);
 
