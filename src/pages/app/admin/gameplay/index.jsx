@@ -19,8 +19,8 @@ const GamePlay = () => {
   );
   const [votesDetails, setVoteDetails] = useState([]);
   const [nextQuestionFetched, setNextQuestionFetched] = useState(false);
-
   const [adminState, setAdminState] = useState("MakeDecision");
+  const [showVotes, setShowVotes] = useState(false);
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -33,27 +33,27 @@ const GamePlay = () => {
   console.log("questionDetails", questionDetails);
   console.log("answerDetails", answerDetails);
 
-  const fetchNextQuestion = useCallback(() => {
-    const sessionData = JSON.parse(sessionDetails.data);
+  // const fetchNextQuestion = useCallback(() => {
+  //   const sessionData = JSON.parse(sessionDetails.data);
 
-    const data = {
-      sessionID: sessionData.SessionID,
-      scenarioID: sessionData.ScenarioID,
-      currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-      currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
-      currentStatus: "InProgress",
-      userID: credentials.data.userID,
-      currentTotalScore: 0,
-      requester: {
-        requestID: generateGUID(),
-        requesterID: credentials.data.userID,
-        requesterName: credentials.data.userName,
-        requesterType: credentials.data.role,
-      },
-    };
+  //   const data = {
+  //     sessionID: sessionData.SessionID,
+  //     scenarioID: sessionData.ScenarioID,
+  //     currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+  //     currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
+  //     currentStatus: "InProgress",
+  //     userID: credentials.data.userID,
+  //     currentTotalScore: 0,
+  //     requester: {
+  //       requestID: generateGUID(),
+  //       requesterID: credentials.data.userID,
+  //       requesterName: credentials.data.userName,
+  //       requesterType: credentials.data.role,
+  //     },
+  //   };
 
-    dispatch(getNextQuestionDetails(data));
-  }, [sessionDetails, credentials, questionDetails]);
+  //   dispatch(getNextQuestionDetails(data));
+  // }, [sessionDetails, credentials, questionDetails]);
 
   useEffect(() => {
     setStartedAt(Math.floor(Date.now() / 1000));
@@ -71,6 +71,7 @@ const GamePlay = () => {
           setVoteDetails(votesDetails.votes);
         }
         setNextQuestionFetched(false);
+        setShowVotes(false);
       } else if (
         votesDetails.decisionDisplayType === PlayingStates.VotingCompleted
       ) {
@@ -79,6 +80,7 @@ const GamePlay = () => {
           setVoteDetails(votesDetails.votes);
         }
         setNextQuestionFetched(false);
+        setShowVotes(false);
       } else if (
         votesDetails.decisionDisplayType === PlayingStates.DecisionCompleted
       ) {
@@ -270,6 +272,8 @@ const GamePlay = () => {
                   adminState={adminState}
                   onNextQuestion={NextQuestionInvoke}
                   Votes={votesDetails}
+                  showVotes={showVotes}
+                  setShowVotes={setShowVotes}
                 />
               )}
           </div>

@@ -53,9 +53,10 @@ const Question = ({
   adminState = "",
   Votes = [],
   onNextQuestion = () => {},
+  showVotes = false,
+  setShowVotes = () => {},
 }) => {
   const [showMedia, setShowMedia] = useState(true);
-  const [showVotes, setShowVotes] = useState(false);
 
   let CustomButtonRender = null;
 
