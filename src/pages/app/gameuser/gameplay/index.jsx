@@ -10,6 +10,7 @@ import { submitAnswerDetails } from "../../../../store/app/user/answers/postAnsw
 import { toast } from "react-toastify";
 import { PlayingStates } from "../../../../constants/playingStates";
 import DecisionLoader from "../../../../components/loader/decisionloader";
+import { getNextQuestionDetails } from "../../../../store/app/user/questions/getNextQuestion";
 
 const GamePlay = () => {
   const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
@@ -19,41 +20,19 @@ const GamePlay = () => {
   const [currentQuestionSubmitted, setCurrentQuestionSubmitted] =
     useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [isDecision, setIsDecision] = useState(false);
+
+  const [nextQuestionFetched, setNextQuestionFetched] = useState(false);
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { credentials } = useSelector((state) => state.login);
+  const { answerDetails, loading } = useSelector((state) => state.postAnswer);
 
   const dispatch = useDispatch();
 
-  const { answerDetails, loading } = useSelector((state) => state.postAnswer);
-
-  useEffect(() => {
-    setStartedAt(Math.floor(Date.now() / 1000));
-  }, []);
-
-  useEffect(() => {
-    signalRService.GetVotingDetails((votesDetails) => {
-      console.log("votesDetails", votesDetails);
-
-      if (!votesDetails) return;
-
-      if (votesDetails.decisionDisplayType === PlayingStates.VotingInProgress) {
-        setCurrentState(PlayingStates.VotingInProgress);
-        setShowModal(false);
-      } else if (
-        votesDetails.decisionDisplayType === PlayingStates.VotingCompleted
-      ) {
-        setCurrentState(PlayingStates.VotingCompleted);
-        setShowModal(true);
-      } else if (
-        votesDetails.decisionDisplayType === PlayingStates.DecisionCompleted
-      ) {
-        setCurrentState(PlayingStates.DecisionCompleted);
-        setShowModal(false);
-      }
-    });
-  });
+  console.log("questionDetails", questionDetails);
+  console.log("answerDetails", answerDetails);
 
   const fetchNextQuestion = useCallback(() => {
     const sessionData = JSON.parse(sessionDetails.data);
@@ -76,6 +55,65 @@ const GamePlay = () => {
 
     dispatch(getNextQuestionDetails(data));
   }, [sessionDetails, credentials, questionDetails]);
+
+  useEffect(() => {
+    setStartedAt(Math.floor(Date.now() / 1000));
+  }, []);
+
+  useEffect(() => {
+    signalRService.GetVotingDetails((votesDetails) => {
+      console.log("votesDetails", votesDetails);
+
+      if (!votesDetails) return;
+
+      if (votesDetails.decisionDisplayType === PlayingStates.VotingInProgress) {
+        setCurrentState(PlayingStates.VotingInProgress);
+        setShowModal(false);
+        setNextQuestionFetched(false);
+      } else if (
+        votesDetails.decisionDisplayType === PlayingStates.VotingCompleted
+      ) {
+        setCurrentState(PlayingStates.VotingCompleted);
+        setShowModal(true);
+        setNextQuestionFetched(false);
+      } else if (
+        votesDetails.decisionDisplayType === PlayingStates.DecisionCompleted
+      ) {
+        setCurrentState(PlayingStates.DecisionCompleted);
+        setShowModal(false);
+        setNextQuestionFetched(false);
+      }
+    });
+
+    signalRService.ProceedToNextQuestionListener((data) => {
+      if (data.ActionType !== "" && !nextQuestionFetched) {
+        const sessionData = JSON.parse(sessionDetails.data);
+
+        const data = {
+          sessionID: sessionData.SessionID,
+          scenarioID: sessionData.ScenarioID,
+          currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+          currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
+          currentStatus: "InProgress",
+          userID: credentials.data.userID,
+          currentTotalScore: 0,
+          requester: {
+            requestID: generateGUID(),
+            requesterID: credentials.data.userID,
+            requesterName: credentials.data.userName,
+            requesterType: credentials.data.role,
+          },
+        };
+
+        dispatch(getNextQuestionDetails(data));
+      } else {
+        console.log(
+          "ProceedToNextQuestionListener ActionType",
+          data.ActionType
+        );
+      }
+    });
+  }, []);
 
   const answerSubmit = useCallback(() => {
     if (!selectedAnswer) {
@@ -122,16 +160,20 @@ const GamePlay = () => {
     if (questionDetails.success) {
       setSelectedAnswer(null);
       setStartedAt(Math.floor(Date.now() / 1000));
+      setNextQuestionFetched(true);
+      setCurrentState(PlayingStates.UserVote);
+      setCurrentQuestionSubmitted(false);
+      setShowModal(false);
+      setIsDecision(false);
     } else if (questionDetails.success === false) {
-      fetchNextQuestion();
+      // toast.error("Next question fetch error");
+      // fetchNextQuestion();
     }
   }, [questionDetails]);
 
   useEffect(() => {
     if (answerDetails === null || answerDetails === undefined) return;
     if (answerDetails.success && selectedAnswer) {
-      setCurrentQuestionSubmitted(true);
-
       const sessionData = JSON.parse(sessionDetails.data);
 
       const data = {
@@ -139,17 +181,25 @@ const GamePlay = () => {
         SessionID: sessionData.SessionID,
         UserID: credentials.data.userID,
         UserName: credentials.data.userName,
-        ActionType: questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker
+        ActionType: isDecision
+          ? "DeciderDecision"
+          : questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker
           ? "DeciderVote"
           : "UserVote",
         Message: "Voting",
+
         QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
         AnswerID: selectedAnswer.AnswerID,
       };
 
+      console.log("send vote data", data);
+
       signalRService.SendVotes(data);
+
+      setCurrentQuestionSubmitted(true);
+      setSelectedAnswer(null);
     }
-  }, [answerDetails]);
+  }, [answerDetails, isDecision]);
 
   return (
     <motion.div
@@ -162,10 +212,7 @@ const GamePlay = () => {
       <div className={styles.header}>
         <div className={styles.header_left}>
           <div>Objectives</div>
-          <div>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          </div>
+          <div>Cyber security game</div>
         </div>
         <div className={styles.header_middle}>
           <svg className={styles.strip1} onClick={() => {}}>
@@ -225,6 +272,10 @@ const GamePlay = () => {
                   selectedAnswer={selectedAnswer}
                   setSelectedAnswer={setSelectedAnswer}
                   onAnswerSubmit={answerSubmit}
+                  onDecisionSubmit={() => {
+                    setIsDecision(true);
+                    answerSubmit();
+                  }}
                   CurrentState={currentState}
                   isCurrentQuestionVotted={currentQuestionSubmitted}
                 />
@@ -265,7 +316,10 @@ const GamePlay = () => {
         </div>
       </div>
 
-      {showModal && <DecisionLoader />}
+      {showModal &&
+        !questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker && (
+          <DecisionLoader />
+        )}
     </motion.div>
   );
 };

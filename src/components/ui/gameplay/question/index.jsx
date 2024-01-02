@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 import styles from "./question.module.css";
 import SmallCountDown from "../smallcountdown";
 import Button from "../../../common/button";
@@ -50,8 +50,12 @@ const Question = ({
   IsDecisionMaker = false,
   isCurrentQuestionVotted = false,
   onDecisionSubmit = () => {},
+  adminState = "",
+  Votes = [],
+  onNextQuestion = () => {},
 }) => {
-  const [showMedia, setShowMedia] = useState(false);
+  const [showMedia, setShowMedia] = useState(true);
+  const [showVotes, setShowVotes] = useState(false);
 
   let CustomButtonRender = null;
 
@@ -135,6 +139,53 @@ const Question = ({
         );
       }
     }
+  } else if (CurrentState === PlayingStates.DecisionCompleted) {
+    if (isAdmin) {
+      if (showVotes) {
+        CustomButtonRender = (
+          <div className={styles.buttonContainer}>
+            <div>Decision Made by CTO</div>
+            <Button customClassName={styles.button} onClick={onNextQuestion}>
+              Next Question
+            </Button>
+          </div>
+        );
+      } else {
+        if (adminState === "MakeDecision") {
+          CustomButtonRender = (
+            <div className={styles.buttonContainer}>
+              <div></div>
+              <Button customClassName={styles.button} onClick={onAnswerSubmit}>
+                Make a Decision
+              </Button>
+            </div>
+          );
+        } else if (adminState === "RevealDecision") {
+          CustomButtonRender = (
+            <div className={styles.buttonContainer}>
+              <div>Decision Made by CTO</div>
+              <Button
+                customClassName={styles.button}
+                onClick={() => {
+                  setShowVotes(true);
+                }}
+              >
+                Reveal Votes
+              </Button>
+            </div>
+          );
+        }
+      }
+    } else {
+      CustomButtonRender = (
+        <div className={styles.buttonContainer}>
+          <div></div>
+          <Button customClassName={styles.buttonDisabled}>
+            Wait for Next Question
+          </Button>
+        </div>
+      );
+    }
   } else {
     CustomButtonRender = (
       <div className={styles.buttonContainer}>
@@ -151,6 +202,13 @@ const Question = ({
       </div>
     );
   }
+
+  const getVotesDetailsById = useCallback(
+    (answerId) => {
+      return Votes.find((answer) => answer.answer === answerId) || null;
+    },
+    [Votes]
+  );
 
   return (
     <div className={styles.container}>
@@ -200,7 +258,25 @@ const Question = ({
                     setSelectedAnswer(item);
                   }}
                 >
-                  {String.fromCharCode(64 + (index + 1))}. {item.AnswerText}
+                  <div>
+                    {String.fromCharCode(64 + (index + 1))}. {item.AnswerText}
+                  </div>
+                  <div className={styles.vote}>
+                    {showVotes &&
+                      Votes &&
+                      Array.isArray(Votes) &&
+                      Votes.length > 0 &&
+                      getVotesDetailsById(item?.AnswerID) &&
+                      getVotesDetailsById(item?.AnswerID).userName.map(
+                        (username) => {
+                          return (
+                            <div className={styles.userbadge}>
+                              {username[0]}
+                            </div>
+                          );
+                        }
+                      )}
+                  </div>
                 </div>
               );
             })}

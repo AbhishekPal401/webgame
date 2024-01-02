@@ -183,3 +183,19 @@
   justify-content: end;
   align-items: center;
 }
+
+.userbadge {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 1.8rem;
+  background-color: var(--primary);
+  color: var(--black);
+  font-size: 1rem;
+  font-family: "helvetica 500";
+  margin-right: 0.1rem;
+  padding-top: 0.3rem;
+}

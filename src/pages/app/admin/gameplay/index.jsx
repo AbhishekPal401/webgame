@@ -9,6 +9,7 @@ import { generateGUID, isJSONString } from "../../../../utils/common";
 import { submitAnswerDetails } from "../../../../store/app/user/answers/postAnswer";
 import { toast } from "react-toastify";
 import { PlayingStates } from "../../../../constants/playingStates";
+import { getNextQuestionDetails } from "../../../../store/app/user/questions/getNextQuestion";
 
 const GamePlay = () => {
   const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
@@ -16,6 +17,10 @@ const GamePlay = () => {
   const [currentState, setCurrentState] = useState(
     PlayingStates.VotingInProgress
   );
+  const [votesDetails, setVoteDetails] = useState([]);
+  const [nextQuestionFetched, setNextQuestionFetched] = useState(false);
+
+  const [adminState, setAdminState] = useState("MakeDecision");
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -27,30 +32,6 @@ const GamePlay = () => {
 
   console.log("questionDetails", questionDetails);
   console.log("answerDetails", answerDetails);
-
-  useEffect(() => {
-    setStartedAt(Math.floor(Date.now() / 1000));
-  }, []);
-
-  useEffect(() => {
-    signalRService.GetVotingDetails((votesDetails) => {
-      console.log("votesDetails", votesDetails);
-
-      if (!votesDetails) return;
-
-      if (votesDetails.decisionDisplayType === PlayingStates.VotingInProgress) {
-        setCurrentState(PlayingStates.VotingInProgress);
-      } else if (
-        votesDetails.decisionDisplayType === PlayingStates.VotingCompleted
-      ) {
-        setCurrentState(PlayingStates.VotingCompleted);
-      } else if (
-        votesDetails.decisionDisplayType === PlayingStates.DecisionCompleted
-      ) {
-        setCurrentState(PlayingStates.DecisionCompleted);
-      }
-    });
-  });
 
   const fetchNextQuestion = useCallback(() => {
     const sessionData = JSON.parse(sessionDetails.data);
@@ -73,6 +54,71 @@ const GamePlay = () => {
 
     dispatch(getNextQuestionDetails(data));
   }, [sessionDetails, credentials, questionDetails]);
+
+  useEffect(() => {
+    setStartedAt(Math.floor(Date.now() / 1000));
+  }, []);
+
+  useEffect(() => {
+    signalRService.GetVotingDetails((votesDetails) => {
+      console.log("votesDetails", votesDetails);
+
+      if (!votesDetails) return;
+
+      if (votesDetails.decisionDisplayType === PlayingStates.VotingInProgress) {
+        setCurrentState(PlayingStates.VotingInProgress);
+        if (votesDetails.votes) {
+          setVoteDetails(votesDetails.votes);
+        }
+        setNextQuestionFetched(false);
+      } else if (
+        votesDetails.decisionDisplayType === PlayingStates.VotingCompleted
+      ) {
+        setCurrentState(PlayingStates.VotingCompleted);
+        if (votesDetails.votes) {
+          setVoteDetails(votesDetails.votes);
+        }
+        setNextQuestionFetched(false);
+      } else if (
+        votesDetails.decisionDisplayType === PlayingStates.DecisionCompleted
+      ) {
+        setCurrentState(PlayingStates.DecisionCompleted);
+        if (votesDetails.votes) {
+          setVoteDetails(votesDetails.votes);
+        }
+        setNextQuestionFetched(false);
+      }
+    });
+
+    signalRService.ProceedToNextQuestionListener((data) => {
+      if (data.ActionType !== "" && !nextQuestionFetched) {
+        const sessionData = JSON.parse(sessionDetails.data);
+
+        const data = {
+          sessionID: sessionData.SessionID,
+          scenarioID: sessionData.ScenarioID,
+          currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+          currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
+          currentStatus: "InProgress",
+          userID: credentials.data.userID,
+          currentTotalScore: 0,
+          requester: {
+            requestID: generateGUID(),
+            requesterID: credentials.data.userID,
+            requesterName: credentials.data.userName,
+            requesterType: credentials.data.role,
+          },
+        };
+
+        dispatch(getNextQuestionDetails(data));
+      } else {
+        console.log(
+          "ProceedToNextQuestionListener ActionType",
+          data.ActionType
+        );
+      }
+    });
+  }, []);
 
   const answerSubmit = useCallback(() => {
     if (!selectedAnswer) {
@@ -117,35 +163,37 @@ const GamePlay = () => {
     if (questionDetails === null || questionDetails === undefined) return;
 
     if (questionDetails.success) {
+      setNextQuestionFetched(true);
       setSelectedAnswer(null);
+      setAdminState("MakeDecision");
+      setVoteDetails([]);
+      setCurrentState(PlayingStates.VotingInProgress);
       setStartedAt(Math.floor(Date.now() / 1000));
     } else if (questionDetails.success === false) {
-      fetchNextQuestion();
+      // fetchNextQuestion();
     }
   }, [questionDetails]);
 
   useEffect(() => {
     if (answerDetails === null || answerDetails === undefined) return;
     if (answerDetails.success && selectedAnswer) {
-      const sessionData = JSON.parse(sessionDetails.data);
-
-      const data = {
-        InstanceID: sessionData.InstanceID,
-        SessionID: sessionData.SessionID,
-        UserID: credentials.data.userID,
-        UserName: credentials.data.userName,
-        ActionType: questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker
-          ? "DeciderVote"
-          : "UserVote",
-        Message: "Voting",
-        QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-        AnswerID: selectedAnswer?.AnswerID,
-      };
-
-      signalRService.SendVotes(data);
-      toast.success(answerDetails.message);
+      setAdminState("RevealDecision");
     }
   }, [answerDetails]);
+
+  const NextQuestionInvoke = () => {
+    if (!isJSONString(sessionDetails.data)) return;
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    const data = {
+      InstanceID: sessionData.InstanceID,
+      UserID: credentials.data.userID,
+      ActionType: selectedAnswer?.AnswerID,
+      Message: "Success",
+    };
+
+    signalRService.ProceedToNextQuestionInvoke(data);
+  };
 
   return (
     <motion.div
@@ -158,10 +206,7 @@ const GamePlay = () => {
       <div className={styles.header}>
         <div className={styles.header_left}>
           <div>Objectives</div>
-          <div>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          </div>
+          <div>Cyber security game</div>
         </div>
         <div className={styles.header_middle}>
           <svg className={styles.strip1} onClick={() => {}}>
@@ -222,6 +267,9 @@ const GamePlay = () => {
                   setSelectedAnswer={setSelectedAnswer}
                   onAnswerSubmit={answerSubmit}
                   CurrentState={currentState}
+                  adminState={adminState}
+                  onNextQuestion={NextQuestionInvoke}
+                  Votes={votesDetails}
                 />
               )}
           </div>
@@ -229,20 +277,7 @@ const GamePlay = () => {
         <div className={styles.right}>
           <div className={styles.notification}>
             <div>
-              <svg
-                onClick={() => {
-                  if (!isJSONString(sessionDetails.data)) return;
-                  const sessionData = JSON.parse(sessionDetails.data);
-
-                  const data = {
-                    InstanceID: sessionData.InstanceID,
-                    UserID: credentials.data.userID,
-                    isFinalPlay: "Yes",
-                  };
-
-                  signalRService.ProceedToNextQuestionInvoke(data);
-                }}
-              >
+              <svg onClick={() => {}}>
                 <use xlinkHref={"sprite.svg#notifcation"} />
               </svg>
             </div>

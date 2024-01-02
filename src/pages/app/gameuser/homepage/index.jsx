@@ -48,7 +48,8 @@ const UserHomePage = () => {
     dispatch(getNextQuestionDetails(data));
   }, [sessionDetails, credentials]);
 
-  const onsubmit = () => {
+  const onsubmit = async () => {
+    if (!ready) return;
     const sessionData = JSON.parse(sessionDetails.data);
 
     const data = {
@@ -58,7 +59,8 @@ const UserHomePage = () => {
       UserName: credentials.data.userName,
     };
 
-    signalRService.joinSession(data);
+    await signalRService.joinSession(data);
+    setReady(false);
   };
 
   useEffect(() => {
