@@ -7,6 +7,7 @@ import Homepage from "../../pages/app/gameuser/homepage";
 import Profile from "../../pages/app/common/profile";
 import Intro from "../../pages/app/gameuser/introduction";
 import GamePlay from "../../pages/app/gameuser/gameplay";
+import MissionCompleted from "../../pages/app/gameuser/missioncompleted";
 
 const User = () => {
   const location = useLocation();
@@ -22,6 +23,7 @@ const User = () => {
           <Route path="/profile/:userID?" element={<Profile />} />
           <Route path="/intro" element={<Intro />} />
           <Route path="/gameplay" element={<GamePlay />} />
+          <Route path="/missioncompleted" element={<MissionCompleted />} />
         </Routes>
       </div>
     </div>

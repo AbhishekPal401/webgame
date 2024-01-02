@@ -13,6 +13,7 @@ import Gamelanding from "../../pages/app/admin/gamelanding";
 import Intro from "../../pages/app/admin/introduction";
 import GamePlay from "../../pages/app/admin/gameplay";
 import UserNavbar from "../../components/ui/usernavbar";
+import MissionCompleted from "../../pages/app/admin/missioncompleted";
 
 const Admin = () => {
   const location = useLocation();
@@ -21,7 +22,9 @@ const Admin = () => {
     <div className={styles.container}>
       {location.pathname.includes("/intro") ? null : location.pathname.includes(
           "/game"
-        ) || location.pathname.includes("/gameplay") ? (
+        ) ||
+        location.pathname.includes("/gameplay") ||
+        location.pathname.includes("/missioncompleted") ? (
         <UserNavbar />
       ) : (
         <Navbar />
@@ -30,7 +33,8 @@ const Admin = () => {
       <div className={styles.layoutContainer}>
         {location.pathname.includes("/game") ||
         location.pathname.includes("/intro") ||
-        location.pathname.includes("/gameplay") ? null : (
+        location.pathname.includes("/gameplay") ||
+        location.pathname.includes("/missioncompleted") ? null : (
           <div className={styles.leftContainer}>
             <Sidebar />
           </div>
@@ -50,6 +54,7 @@ const Admin = () => {
             <Route path="/game" element={<Gamelanding />} />
             <Route path="/intro" element={<Intro />} />
             <Route path="/gameplay" element={<GamePlay />} />
+            <Route path="/missioncompleted" element={<MissionCompleted />} />
           </Routes>
         </div>
       </div>

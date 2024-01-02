@@ -10,6 +10,7 @@ import { submitAnswerDetails } from "../../../../store/app/user/answers/postAnsw
 import { toast } from "react-toastify";
 import { PlayingStates } from "../../../../constants/playingStates";
 import { getNextQuestionDetails } from "../../../../store/app/user/questions/getNextQuestion";
+import { useNavigate } from "react-router-dom";
 
 const GamePlay = () => {
   const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
@@ -27,14 +28,17 @@ const GamePlay = () => {
   const { credentials } = useSelector((state) => state.login);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { answerDetails, loading } = useSelector((state) => state.postAnswer);
 
-  console.log("questionDetails", questionDetails);
-  console.log("answerDetails", answerDetails);
+  // console.log("questionDetails", questionDetails);
+  // console.log("answerDetails", answerDetails);
 
   const fetchNextQuestion = useCallback(() => {
     const sessionData = JSON.parse(sessionDetails.data);
+
+    console.log("questionDetails in fetchNextQuestion", questionDetails);
 
     const data = {
       sessionID: sessionData.SessionID,
@@ -51,6 +55,8 @@ const GamePlay = () => {
         requesterType: credentials.data.role,
       },
     };
+
+    console.log("get next question data", data);
 
     dispatch(getNextQuestionDetails(data));
   }, [sessionDetails, credentials, questionDetails]);
@@ -93,13 +99,16 @@ const GamePlay = () => {
     });
 
     signalRService.ProceedToNextQuestionListener((data) => {
-      if (data.ActionType !== "" && !nextQuestionFetched) {
+      if (
+        (data.ActionType === "NextQuestion" ||
+          data.actionType === "NextQuestion") &&
+        !nextQuestionFetched
+      ) {
         fetchNextQuestion();
+      } else if (data.ActionType === "IsCompleted") {
+        navigate("/missioncompleted");
       } else {
-        console.log(
-          "ProceedToNextQuestionListener ActionType",
-          data.ActionType
-        );
+        console.log("ProceedToNextQuestionListener ActionType", data);
       }
     });
   }, []);
@@ -158,26 +167,42 @@ const GamePlay = () => {
     }
   }, [questionDetails]);
 
-  useEffect(() => {
-    if (answerDetails === null || answerDetails === undefined) return;
-    if (answerDetails.success && selectedAnswer) {
-      setAdminState("RevealDecision");
-    }
-  }, [answerDetails]);
-
-  const NextQuestionInvoke = () => {
+  const NextQuestionInvoke = useCallback(() => {
     if (!isJSONString(sessionDetails.data)) return;
     const sessionData = JSON.parse(sessionDetails.data);
 
     const data = {
       InstanceID: sessionData.InstanceID,
       UserID: credentials.data.userID,
-      ActionType: selectedAnswer?.AnswerID,
+      ActionType: "NextQuestion",
       Message: "Success",
     };
 
+    console.log(data);
     signalRService.ProceedToNextQuestionInvoke(data);
-  };
+  }, [sessionDetails, credentials]);
+
+  useEffect(() => {
+    if (answerDetails === null || answerDetails === undefined) return;
+    if (answerDetails.success && selectedAnswer) {
+      if (answerDetails.data.IsPlayCompleted) {
+        if (!isJSONString(sessionDetails.data)) return;
+        const sessionData = JSON.parse(sessionDetails.data);
+
+        const data = {
+          InstanceID: sessionData.InstanceID,
+          UserID: credentials.data.userID,
+          ActionType: "IsCompleted",
+          Message: "Success",
+        };
+
+        console.log(data);
+        signalRService.ProceedToNextQuestionInvoke(data);
+      } else {
+        setAdminState("RevealDecision");
+      }
+    }
+  }, [answerDetails]);
 
   return (
     <motion.div

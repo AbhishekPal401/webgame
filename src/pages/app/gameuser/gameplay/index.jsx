@@ -53,6 +53,8 @@ const GamePlay = () => {
       },
     };
 
+    console.log("get next question data", data);
+
     dispatch(getNextQuestionDetails(data));
   }, [sessionDetails, credentials, questionDetails]);
 
@@ -88,8 +90,14 @@ const GamePlay = () => {
     signalRService.ProceedToNextQuestionListener((data) => {
       console.log("data", data, "nextQuestionFetched", nextQuestionFetched);
 
-      if (data.ActionType !== "" && !nextQuestionFetched) {
+      if (
+        (data.ActionType === "NextQuestion" ||
+          data.actionType === "NextQuestion") &&
+        !nextQuestionFetched
+      ) {
         fetchNextQuestion();
+      } else if (data.ActionType === "IsCompleted") {
+        navigate("/missioncompleted");
       } else {
         console.log(
           "ProceedToNextQuestionListener ActionType",
