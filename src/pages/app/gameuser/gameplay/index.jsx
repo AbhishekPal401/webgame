@@ -21,8 +21,8 @@ const GamePlay = () => {
     useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isDecision, setIsDecision] = useState(false);
-
   const [nextQuestionFetched, setNextQuestionFetched] = useState(false);
+  const [callNextQuestion, setCallNextQuestion] = useState(false);
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -31,7 +31,7 @@ const GamePlay = () => {
 
   const dispatch = useDispatch();
 
-  console.log("questionDetails", questionDetails);
+  // console.log("questionDetails", questionDetails);
 
   const fetchNextQuestion = useCallback(() => {
     const sessionData = JSON.parse(sessionDetails.data);
@@ -55,12 +55,16 @@ const GamePlay = () => {
     console.log("get next question data", data);
 
     dispatch(getNextQuestionDetails(data));
-  }, [questionDetails, credentials, sessionDetails, dispatch]);
+  }, [
+    questionDetails,
+    credentials,
+    sessionDetails,
+    dispatch,
+    callNextQuestion,
+  ]);
 
   useEffect(() => {
     const handleVotingDetails = (votesDetails) => {
-      console.log("votesDetails", votesDetails);
-
       if (!votesDetails) return;
 
       if (votesDetails.decisionDisplayType === PlayingStates.VotingInProgress) {
@@ -91,14 +95,12 @@ const GamePlay = () => {
 
   useEffect(() => {
     const handleProceedToNextQuestion = (data) => {
-      console.log("data", data, "nextQuestionFetched", nextQuestionFetched);
-
       if (
         (data.ActionType === "NextQuestion" ||
           data.actionType === "NextQuestion") &&
         !nextQuestionFetched
       ) {
-        fetchNextQuestion();
+        setCallNextQuestion(true);
       } else if (
         data.ActionType === "IsCompleted" ||
         data.actionType === "IsCompleted"
@@ -116,7 +118,33 @@ const GamePlay = () => {
         handleProceedToNextQuestion
       );
     };
-  }, [fetchNextQuestion, questionDetails]);
+  }, [nextQuestionFetched]);
+
+  useEffect(() => {
+    if (callNextQuestion) {
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      const data = {
+        sessionID: sessionData.SessionID,
+        scenarioID: sessionData.ScenarioID,
+        currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+        currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
+        currentStatus: "InProgress",
+        userID: credentials.data.userID,
+        currentTotalScore: 0,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      console.log("get next question data", data);
+
+      dispatch(getNextQuestionDetails(data));
+    }
+  }, [callNextQuestion]);
 
   const answerSubmit = useCallback(() => {
     if (!selectedAnswer) {
@@ -168,7 +196,7 @@ const GamePlay = () => {
       setCurrentQuestionSubmitted(false);
       setShowModal(false);
       setIsDecision(false);
-    } else if (questionDetails.success === false) {
+      setCallNextQuestion(false);
     }
   }, [questionDetails]);
 

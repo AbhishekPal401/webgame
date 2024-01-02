@@ -22,6 +22,7 @@ const GamePlay = () => {
   const [nextQuestionFetched, setNextQuestionFetched] = useState(false);
   const [adminState, setAdminState] = useState("MakeDecision");
   const [showVotes, setShowVotes] = useState(false);
+  const [callNextQuestion, setCallNextQuestion] = useState(false);
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -32,41 +33,40 @@ const GamePlay = () => {
 
   const { answerDetails, loading } = useSelector((state) => state.postAnswer);
 
-  console.log("questionDetails", questionDetails);
+  // console.log("questionDetails", questionDetails);
 
-  const fetchNextQuestion = useCallback(
-    useCallback(() => {
-      const sessionData = JSON.parse(sessionDetails.data);
+  // const fetchNextQuestion = useCallback(() => {
+  //   const sessionData = JSON.parse(sessionDetails.data);
 
-      console.log("questionDetails in fetchNextQuestion", questionDetails);
+  //   const data = {
+  //     sessionID: sessionData.SessionID,
+  //     scenarioID: sessionData.ScenarioID,
+  //     currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+  //     currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
+  //     currentStatus: "InProgress",
+  //     userID: credentials.data.userID,
+  //     currentTotalScore: 0,
+  //     requester: {
+  //       requestID: generateGUID(),
+  //       requesterID: credentials.data.userID,
+  //       requesterName: credentials.data.userName,
+  //       requesterType: credentials.data.role,
+  //     },
+  //   };
 
-      const data = {
-        sessionID: sessionData.SessionID,
-        scenarioID: sessionData.ScenarioID,
-        currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-        currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
-        currentStatus: "InProgress",
-        userID: credentials.data.userID,
-        currentTotalScore: 0,
-        requester: {
-          requestID: generateGUID(),
-          requesterID: credentials.data.userID,
-          requesterName: credentials.data.userName,
-          requesterType: credentials.data.role,
-        },
-      };
+  //   console.log("get next question data", data);
 
-      console.log("get next question data", data);
-
-      dispatch(getNextQuestionDetails(data));
-    }),
-    [questionDetails, credentials, sessionDetails, dispatch]
-  );
+  //   dispatch(getNextQuestionDetails(data));
+  // }, [
+  //   questionDetails,
+  //   credentials,
+  //   sessionDetails,
+  //   dispatch,
+  //   callNextQuestion,
+  // ]);
 
   useEffect(() => {
     const handleVotingDetails = (votesDetails) => {
-      console.log("votesDetails", votesDetails);
-
       if (!votesDetails) return;
 
       if (votesDetails.decisionDisplayType === PlayingStates.VotingInProgress) {
@@ -105,13 +105,12 @@ const GamePlay = () => {
 
   useEffect(() => {
     const handleProceedToNextQuestion = (data) => {
-      console.log("data", data, "nextQuestionFetched", nextQuestionFetched);
       if (
         (data.ActionType === "NextQuestion" ||
           data.actionType === "NextQuestion") &&
         !nextQuestionFetched
       ) {
-        fetchNextQuestion();
+        setCallNextQuestion(true);
       } else if (
         data.ActionType === "IsCompleted" ||
         data.actionType === "IsCompleted"
@@ -129,7 +128,7 @@ const GamePlay = () => {
         handleProceedToNextQuestion
       );
     };
-  }, [fetchNextQuestion, nextQuestionFetched, questionDetails]);
+  }, [nextQuestionFetched]);
 
   const answerSubmit = useCallback(() => {
     if (!selectedAnswer) {
@@ -180,9 +179,36 @@ const GamePlay = () => {
       setVoteDetails([]);
       setCurrentState(PlayingStates.VotingInProgress);
       setStartedAt(Math.floor(Date.now() / 1000));
+      setCallNextQuestion(false);
     } else if (questionDetails.success === false) {
     }
   }, [questionDetails]);
+
+  useEffect(() => {
+    if (callNextQuestion) {
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      const data = {
+        sessionID: sessionData.SessionID,
+        scenarioID: sessionData.ScenarioID,
+        currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+        currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
+        currentStatus: "InProgress",
+        userID: credentials.data.userID,
+        currentTotalScore: 0,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      console.log("get next question data", data);
+
+      dispatch(getNextQuestionDetails(data));
+    }
+  }, [callNextQuestion]);
 
   const NextQuestionInvoke = useCallback(() => {
     if (!isJSONString(sessionDetails.data)) return;
