@@ -34,27 +34,27 @@ const GamePlay = () => {
   console.log("questionDetails", questionDetails);
   console.log("answerDetails", answerDetails);
 
-  // const fetchNextQuestion = useCallback(() => {
-  //   const sessionData = JSON.parse(sessionDetails.data);
+  const fetchNextQuestion = useCallback(() => {
+    const sessionData = JSON.parse(sessionDetails.data);
 
-  //   const data = {
-  //     sessionID: sessionData.SessionID,
-  //     scenarioID: sessionData.ScenarioID,
-  //     currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-  //     currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
-  //     currentStatus: "InProgress",
-  //     userID: credentials.data.userID,
-  //     currentTotalScore: 0,
-  //     requester: {
-  //       requestID: generateGUID(),
-  //       requesterID: credentials.data.userID,
-  //       requesterName: credentials.data.userName,
-  //       requesterType: credentials.data.role,
-  //     },
-  //   };
+    const data = {
+      sessionID: sessionData.SessionID,
+      scenarioID: sessionData.ScenarioID,
+      currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+      currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
+      currentStatus: "InProgress",
+      userID: credentials.data.userID,
+      currentTotalScore: 0,
+      requester: {
+        requestID: generateGUID(),
+        requesterID: credentials.data.userID,
+        requesterName: credentials.data.userName,
+        requesterType: credentials.data.role,
+      },
+    };
 
-  //   dispatch(getNextQuestionDetails(data));
-  // }, [sessionDetails, credentials, questionDetails]);
+    dispatch(getNextQuestionDetails(data));
+  }, [sessionDetails, credentials, questionDetails]);
 
   useEffect(() => {
     setStartedAt(Math.floor(Date.now() / 1000));
@@ -89,27 +89,7 @@ const GamePlay = () => {
       console.log("data", data, "nextQuestionFetched", nextQuestionFetched);
 
       if (data.ActionType !== "" && !nextQuestionFetched) {
-        const sessionData = JSON.parse(sessionDetails.data);
-
-        const data = {
-          sessionID: sessionData.SessionID,
-          scenarioID: sessionData.ScenarioID,
-          currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-          currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
-          currentStatus: "InProgress",
-          userID: credentials.data.userID,
-          currentTotalScore: 0,
-          requester: {
-            requestID: generateGUID(),
-            requesterID: credentials.data.userID,
-            requesterName: credentials.data.userName,
-            requesterType: credentials.data.role,
-          },
-        };
-
-        console.log("data in if", data);
-
-        dispatch(getNextQuestionDetails(data));
+        fetchNextQuestion();
       } else {
         console.log(
           "ProceedToNextQuestionListener ActionType",
