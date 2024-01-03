@@ -15,7 +15,7 @@ const User = () => {
   return (
     <div className={styles.container}>
       {location.pathname.includes("/intro") ? null : (
-        <UserNavBar role="Players" />
+        <UserNavBar role="Player" />
       )}
       <div className={styles.layoutContainer}>
         <Routes>

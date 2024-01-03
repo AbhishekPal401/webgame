@@ -57,6 +57,9 @@ const UserHomePage = () => {
       SessionID: sessionData.SessionID,
       UserID: credentials.data.userID,
       UserName: credentials.data.userName,
+      Designation: credentials?.data?.designation
+        ? credentials.data.designation
+        : "",
     };
 
     await signalRService.joinSession(data);
@@ -69,6 +72,10 @@ const UserHomePage = () => {
     const data = {
       userID: credentials.data.userID,
       type: "",
+
+      InstanceID: "",
+      IsPlayStart: false,
+
       requester: {
         requestID: generateGUID(),
         requesterID: credentials.data.userID,
@@ -99,10 +106,10 @@ const UserHomePage = () => {
     if (questionDetails === null || questionDetails === undefined) return;
 
     if (questionDetails.success) {
-      toast.success(questionDetails.message);
+      // toast.success(questionDetails.message);
       navigate("/intro");
     } else {
-      toast.error(questionDetails.message);
+      // toast.error(questionDetails.message);
     }
   }, [questionDetails]);
 

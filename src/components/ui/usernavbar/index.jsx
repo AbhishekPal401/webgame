@@ -7,7 +7,7 @@ import ModalContainer from "../../modal";
 import { logoutUser } from "../../../store/auth/login";
 import Button from "../../common/button";
 
-const UserNavBar = ({ role = "User" }) => {
+const UserNavBar = ({ role = "Player" }) => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const [showDropdown, setShowDropdown] = useState(false);

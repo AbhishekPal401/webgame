@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { PlayingStates } from "../../../../constants/playingStates";
 import DecisionLoader from "../../../../components/loader/decisionloader";
 import { getNextQuestionDetails } from "../../../../store/app/user/questions/getNextQuestion";
+import { useNavigate } from "react-router-dom";
 
 const GamePlay = () => {
   const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
@@ -30,38 +31,7 @@ const GamePlay = () => {
   const { answerDetails, loading } = useSelector((state) => state.postAnswer);
 
   const dispatch = useDispatch();
-
-  // console.log("questionDetails", questionDetails);
-
-  const fetchNextQuestion = useCallback(() => {
-    const sessionData = JSON.parse(sessionDetails.data);
-
-    const data = {
-      sessionID: sessionData.SessionID,
-      scenarioID: sessionData.ScenarioID,
-      currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-      currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
-      currentStatus: "InProgress",
-      userID: credentials.data.userID,
-      currentTotalScore: 0,
-      requester: {
-        requestID: generateGUID(),
-        requesterID: credentials.data.userID,
-        requesterName: credentials.data.userName,
-        requesterType: credentials.data.role,
-      },
-    };
-
-    console.log("get next question data", data);
-
-    dispatch(getNextQuestionDetails(data));
-  }, [
-    questionDetails,
-    credentials,
-    sessionDetails,
-    dispatch,
-    callNextQuestion,
-  ]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleVotingDetails = (votesDetails) => {
@@ -347,7 +317,9 @@ const GamePlay = () => {
 
       {showModal &&
         !questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker && (
-          <DecisionLoader />
+          <DecisionLoader
+            HeaderText={` Waiting for ${questionDetails?.data?.QuestionDetails?.DelegatedTo}'s Final Decision... `}
+          />
         )}
     </motion.div>
   );

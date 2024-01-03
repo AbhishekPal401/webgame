@@ -98,6 +98,7 @@ const Homepage = () => {
                 sessionsHistoryByType.data &&
                 JSON.parse(sessionsHistoryByType.data)?.InstanceDetails.map(
                   (scenario, index) => {
+                    console.log("scenario", scenario);
                     return (
                       <div key={index} className={styles.sessionHistoryCard}>
                         <h4>{scenario.InstanceName}</h4>
@@ -116,7 +117,7 @@ const Homepage = () => {
                           <div>
                             <Button
                               onClick={() => {
-                                navigate("/game");
+                                navigate(`/game/${scenario.InstanceID}`);
                               }}
                             >
                               Start

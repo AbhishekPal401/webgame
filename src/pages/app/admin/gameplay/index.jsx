@@ -228,7 +228,10 @@ const GamePlay = () => {
   useEffect(() => {
     if (answerDetails === null || answerDetails === undefined) return;
     if (answerDetails.success && selectedAnswer) {
-      if (answerDetails.data.IsPlayCompleted) {
+      if (
+        answerDetails.data.IsPlayCompleted ||
+        answerDetails.data.NextQuestionID === ""
+      ) {
         if (!isJSONString(sessionDetails.data)) return;
         const sessionData = JSON.parse(sessionDetails.data);
 

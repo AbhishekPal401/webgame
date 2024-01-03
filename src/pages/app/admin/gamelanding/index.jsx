@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import styles from "./gamelanding.module.css";
 import Button from "../../../../components/common/button";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   getSessionDetails,
   resetSessionDetailsState,
@@ -24,6 +24,10 @@ const UserHomePage = () => {
   const { credentials } = useSelector((state) => state.login);
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
+
+  const { instanceID } = useParams();
+
+  console.log("InstanceID", instanceID);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -74,6 +78,9 @@ const UserHomePage = () => {
       SessionID: sessionData.SessionID,
       UserID: credentials.data.userID,
       UserName: credentials.data.userName,
+      Designation: credentials?.data?.designation
+        ? credentials.data.designation
+        : "",
     };
 
     console.log("Joining the room...", data);
@@ -130,6 +137,8 @@ const UserHomePage = () => {
     const data = {
       userID: credentials.data.userID,
       type: "",
+      InstanceID: instanceID,
+      IsPlayStart: true,
       requester: {
         requestID: generateGUID(),
         requesterID: credentials.data.userID,
@@ -139,7 +148,7 @@ const UserHomePage = () => {
     };
 
     dispatch(getSessionDetails(data));
-  }, []);
+  }, [instanceID]);
 
   useEffect(() => {
     if (connectedUsers && connectedUsers.length >= 2) {
@@ -155,7 +164,7 @@ const UserHomePage = () => {
     if (questionDetails.success) {
       navigate("/intro");
     } else {
-      toast.error(questionDetails.message);
+      // toast.error(questionDetails.message);
     }
   }, [questionDetails]);
 

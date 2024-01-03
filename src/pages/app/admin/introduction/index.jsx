@@ -71,7 +71,7 @@ const Intro = () => {
     ) {
       navigate("/gameplay");
     } else if (!questionDetails.success) {
-      toast.error(questionDetails.message);
+      // toast.error(questionDetails.message);
     }
   }, [questionDetails]);
 

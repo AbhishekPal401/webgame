@@ -25,7 +25,7 @@ const Admin = () => {
         ) ||
         location.pathname.includes("/gameplay") ||
         location.pathname.includes("/missioncompleted") ? (
-        <UserNavbar />
+        <UserNavbar role="Player" />
       ) : (
         <Navbar />
       )}
@@ -51,7 +51,7 @@ const Admin = () => {
             <Route path="/scenario" element={<Scenarios />} />
             <Route path="/createscenarios" element={<CreateScenarios />} />
             <Route path="/profile/:userID?" element={<Profile />} />
-            <Route path="/game" element={<Gamelanding />} />
+            <Route path="/game/:instanceID?" element={<Gamelanding />} />
             <Route path="/intro" element={<Intro />} />
             <Route path="/gameplay" element={<GamePlay />} />
             <Route path="/missioncompleted" element={<MissionCompleted />} />
