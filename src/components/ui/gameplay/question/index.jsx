@@ -66,10 +66,16 @@ const Question = ({
         <div className={styles.buttonContainer}>
           <div
             onClick={() => {
-              setShowMedia(true);
+              if (MediaType) {
+                setShowMedia(true);
+              }
             }}
           >
-            Replay {MediaType === "Video" ? "Video" : "Audio"}
+            {MediaType === "Video"
+              ? "Replay Video"
+              : MediaType === "Audio"
+              ? "Replay Audio"
+              : ""}
           </div>
           <div className={styles.label}>Voting in Progress ...</div>
         </div>
@@ -89,10 +95,16 @@ const Question = ({
           <div className={styles.buttonContainer}>
             <div
               onClick={() => {
-                setShowMedia(true);
+                if (MediaType) {
+                  setShowMedia(true);
+                }
               }}
             >
-              Replay {MediaType === "Video" ? "Video" : "Audio"}
+              {MediaType === "Video"
+                ? "Replay Video"
+                : MediaType === "Audio"
+                ? "Replay Audio"
+                : ""}
             </div>
             <Button customClassName={styles.button} onClick={onAnswerSubmit}>
               Vote
@@ -192,10 +204,16 @@ const Question = ({
       <div className={styles.buttonContainer}>
         <div
           onClick={() => {
-            setShowMedia(true);
+            if (MediaType) {
+              setShowMedia(true);
+            }
           }}
         >
-          Replay {MediaType === "Video" ? "Video" : "Audio"}
+          {MediaType === "Video"
+            ? "Replay Video"
+            : MediaType === "Audio"
+            ? "Replay Audio"
+            : ""}
         </div>
         <Button customClassName={styles.button} onClick={onAnswerSubmit}>
           Vote
