@@ -289,9 +289,7 @@ const Question = ({
                       getVotesDetailsById(item?.AnswerID).userName.map(
                         (username) => {
                           return (
-                            <div className={styles.userbadge}>
-                              {username[0]}
-                            </div>
+                            <div className={styles.userbadge}>{username}</div>
                           );
                         }
                       )}

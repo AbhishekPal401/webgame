@@ -67,6 +67,7 @@ const GamePlay = () => {
 
   useEffect(() => {
     const handleVotingDetails = (votesDetails) => {
+      console.log("votesDetails", votesDetails);
       if (!votesDetails) return;
 
       if (votesDetails.decisionDisplayType === PlayingStates.VotingInProgress) {
@@ -150,6 +151,8 @@ const GamePlay = () => {
       startedAt: startedAt.toString(),
       finishedAt: Math.floor(Date.now() / 1000).toString(),
       duration: "",
+      IsDeciderDecision: false,
+      IsAdminDecision: true,
       isAnswerDeligated:
         questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker,
       delegatedUserID: questionDetails?.data?.QuestionDetails

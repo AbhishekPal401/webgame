@@ -197,8 +197,9 @@ const UserHomePage = () => {
             <div className={styles.users}>
               {connectedUsers &&
                 Array.isArray(connectedUsers) &&
-                connectedUsers.map((userString, index) => {
-                  if (userString === credentials.data.userName) return null;
+                connectedUsers.map((userDetails, index) => {
+                  if (userDetails.userID === credentials.data.userID)
+                    return null;
                   return (
                     <motion.div
                       key={index}
@@ -208,7 +209,7 @@ const UserHomePage = () => {
                       transition={{ duration: 0.8, damping: 10 }}
                       className={styles.userbadge}
                     >
-                      {userString[0]}
+                      {userDetails.designation}
                     </motion.div>
                   );
                 })}

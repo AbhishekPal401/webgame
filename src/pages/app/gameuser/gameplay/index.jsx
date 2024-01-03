@@ -35,6 +35,8 @@ const GamePlay = () => {
 
   useEffect(() => {
     const handleVotingDetails = (votesDetails) => {
+      console.log("votesDetails", votesDetails);
+
       if (!votesDetails) return;
 
       if (votesDetails.decisionDisplayType === PlayingStates.VotingInProgress) {
@@ -116,44 +118,50 @@ const GamePlay = () => {
     }
   }, [callNextQuestion]);
 
-  const answerSubmit = useCallback(() => {
-    if (!selectedAnswer) {
-      toast.error("Please select an answer");
-      return;
-    }
+  const answerSubmit = useCallback(
+    (decider = false) => {
+      if (!selectedAnswer) {
+        toast.error("Please select an answer");
+        return;
+      }
 
-    const sessionData = JSON.parse(sessionDetails.data);
+      const sessionData = JSON.parse(sessionDetails.data);
 
-    const data = {
-      sessionID: sessionData.SessionID,
-      instanceID: sessionData.InstanceID,
-      scenarioID: sessionData.ScenarioID,
-      userID: credentials.data.userID,
-      questionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-      questionNo: questionDetails?.data?.QuestionDetails?.QuestionNo.toString(),
-      answerID: selectedAnswer?.AnswerID,
-      score: selectedAnswer?.Score,
-      startedAt: startedAt.toString(),
-      finishedAt: Math.floor(Date.now() / 1000).toString(),
-      duration: "",
-      isAnswerDeligated:
-        questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker,
-      delegatedUserID: questionDetails?.data?.QuestionDetails
-        ?.IsUserDecisionMaker
-        ? credentials.data.userID
-        : "",
-      isOptimal: selectedAnswer?.IsOptimalAnswer,
-      currentState: "InProgress",
-      requester: {
-        requestID: generateGUID(),
-        requesterID: credentials.data.userID,
-        requesterName: credentials.data.userName,
-        requesterType: credentials.data.role,
-      },
-    };
+      const data = {
+        sessionID: sessionData.SessionID,
+        instanceID: sessionData.InstanceID,
+        scenarioID: sessionData.ScenarioID,
+        userID: credentials.data.userID,
+        questionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+        questionNo:
+          questionDetails?.data?.QuestionDetails?.QuestionNo.toString(),
+        answerID: selectedAnswer?.AnswerID,
+        score: selectedAnswer?.Score,
+        startedAt: startedAt.toString(),
+        finishedAt: Math.floor(Date.now() / 1000).toString(),
+        duration: "",
+        IsDeciderDecision: decider ? true : false,
+        IsAdminDecision: false,
+        isAnswerDeligated:
+          questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker,
+        delegatedUserID: questionDetails?.data?.QuestionDetails
+          ?.IsUserDecisionMaker
+          ? credentials.data.userID
+          : "",
+        isOptimal: selectedAnswer?.IsOptimalAnswer,
+        currentState: "InProgress",
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
 
-    dispatch(submitAnswerDetails(data));
-  }, [credentials, questionDetails, selectedAnswer, startedAt, sessionDetails]);
+      dispatch(submitAnswerDetails(data));
+    },
+    [credentials, questionDetails, selectedAnswer, startedAt, sessionDetails]
+  );
 
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
@@ -197,6 +205,7 @@ const GamePlay = () => {
 
       setCurrentQuestionSubmitted(true);
       setSelectedAnswer(null);
+      setIsDecision(false);
     }
   }, [answerDetails, isDecision]);
 
@@ -270,10 +279,12 @@ const GamePlay = () => {
                   MediaType={questionDetails.data.QuestionDetails.MediaType}
                   selectedAnswer={selectedAnswer}
                   setSelectedAnswer={setSelectedAnswer}
-                  onAnswerSubmit={answerSubmit}
+                  onAnswerSubmit={() => {
+                    answerSubmit(false);
+                  }}
                   onDecisionSubmit={() => {
                     setIsDecision(true);
-                    answerSubmit();
+                    answerSubmit(true);
                   }}
                   CurrentState={currentState}
                   isCurrentQuestionVotted={currentQuestionSubmitted}
