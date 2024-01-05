@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./missioncompleted.module.css";
 import Button from "../../../../components/common/button";
 import Tree from "react-d3-tree";
+import { useCenteredTree } from "../../../../hooks/UseCenteredTree";
 
 const SelectTree = ({ clicked = 0 }) => {
   return (
@@ -134,6 +135,8 @@ const data = {
 };
 
 const MissionCompleted = () => {
+  const [translate, treeContainerRef] = useCenteredTree();
+
   return (
     <div className={styles.container}>
       <div className={styles.missionContainer}>
@@ -150,8 +153,12 @@ const MissionCompleted = () => {
         <div className={styles.treeContainer}>
           <SelectTree clicked={1} />
           <div className={styles.tree}>
-            <div>
-              <Tree data={orgChart} orientation="vertical" />
+            <div ref={treeContainerRef}>
+              <Tree
+                translate={translate}
+                data={orgChart}
+                orientation="vertical"
+              />
             </div>
             <div className={styles.right}>
               <div>Time Spent</div>
