@@ -9,4 +9,5 @@ export const dateFormats = {
  DATE_FORMAT_7 : 'DD Month YYYY h:mm:ss A',
  DATE_FORMAT_8 : 'DD-MM-YYYY',
  DATE_FORMAT_9 : 'MM-DD-YYYY',
+ DATE_FORMAT_10 : 'D/M/YYYY h:mm:ss A',
 }

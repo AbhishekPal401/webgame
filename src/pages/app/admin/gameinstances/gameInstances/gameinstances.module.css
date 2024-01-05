@@ -1,0 +1,142 @@
+.conatiner {
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+}
+.topContainer {
+  flex: 2;
+  width: 100%;
+  height: 14rem;
+  display: flex;
+  flex-direction: row;
+}
+.left {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.left label {
+  font-size: 4rem;
+  color: var(--label);
+  font-weight: bold;
+}
+.right {
+  flex: 1.5;
+  height: 100%;
+}
+
+/* Maine Contaienr */
+.mainContainer {
+  flex: 8;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.mainTopContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+.mainTopContainerRight Button {
+  font-size: 1.4rem;
+}
+.mainTopContainerLeft {
+  display: flex;
+  justify-content: start;
+  align-items: baseline;
+  gap: 2.4rem;
+}
+.mainTopContainerLeft label {
+  font-size: 2rem;
+  color: var(--black);
+  font-weight: bold;
+}
+.mainTopContainerLeft a {
+  font-size: 1.2rem;
+}
+.mainTableContainer {
+  width: 100%;
+  height: fit-content;
+  border: 0.1rem solid #707070;
+  border-radius: 0.6rem;
+  padding: 0.3rem;
+  max-height: 54rem;
+  overflow-y: auto;
+}
+.table_content {
+  border-collapse: collapse;
+  font-size: 1.2rem;
+  text-align: left;
+  width: 100%;
+}
+.table_content thead {
+  width: 100%;
+  background-color: var(--black);
+  /* position: sticky;
+  top: 0;
+  z-index: 1; */
+}
+.table_content thead tr {
+  font-size: 1.2rem;
+  height: 3.4rem;
+  font-weight: 600;
+}
+.table_content thead tr th {
+  color: var(--primary);
+  text-align: left;
+  padding-left: 0.5rem;
+}
+.table_content tbody {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+.table_content tbody tr {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #434343;
+  border-bottom: 1px solid #707070;
+}
+
+/* .table_content tbody tr:hover {
+  background-color: #d6d6d6;
+} */
+
+.table_content tbody tr td {
+  height: 3rem;
+  padding-left: 0.5rem;
+}
+
+/* for table head rounding */
+
+.table_content th:first-child {
+  border-radius: 0.6rem 0 0 0.6rem;
+}
+.table_content th:last-child {
+  border-radius: 0 0.6rem 0.6rem 0;
+}
+
+/* on game instances hover */
+.gameInstances:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+
+/* pagination */
+
+.paginationContainer {
+  width: 100%;
+  height: 3rem;
+  border-radius: 0rem 0rem 0.8rem 0.8rem;
+  background-color: #dedede;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.username:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

@@ -40,6 +40,6 @@ export const getSessionHistoryByType = (data) =>
     onFailed: failed.type,
   });
 
-export const resetUserState = () => async (dispatch) => {
+export const resetSessionState = () => async (dispatch) => {
   dispatch(reset());
 };

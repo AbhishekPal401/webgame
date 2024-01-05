@@ -18,6 +18,9 @@ import UpdateScenarios from "../../pages/app/admin/updatescenarios";
 import UploadQuestion from "../../pages/app/admin/questions/uploadquestions";
 import QuestionList from "../../pages/app/admin/questions/questionlist";
 import QuestionBuilder from "../../pages/app/admin/questions/questionbuilder";
+import GameInstances from "../../pages/app/admin/gameinstances/gameInstances";
+import CreateInstances from "../../pages/app/admin/gameinstances/createinstanaces";
+import UpdateInstances from "../../pages/app/admin/gameinstances/updateinstances";
 
 const Admin = () => {
   const location = useLocation();
@@ -69,6 +72,15 @@ const Admin = () => {
             <Route
               path="/questions/:scenarioID/questionbuilder/:questionID?"
               element={<QuestionBuilder />}
+            />
+            <Route path="/gameinstances" element={<GameInstances />} />
+            <Route
+              path="/gameinstances/createinstances"
+              element={<CreateInstances />}
+            />
+            <Route
+              path="/gameinstances/updateinstances/:instanceID?"
+              element={<UpdateInstances />}
             />
             <Route path="/profile/:userID?" element={<Profile />} />
             <Route path="/game/:instanceID?" element={<Gamelanding />} />

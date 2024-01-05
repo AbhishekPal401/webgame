@@ -1,0 +1,111 @@
+.topContainer {
+  flex: 2;
+  width: 100%;
+  height: 14rem;
+  display: flex;
+  flex-direction: row;
+}
+.left {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.left label {
+  font-size: 4rem;
+  color: var(--label);
+  font-weight: bold;
+}
+.right {
+}
+/* Maine Contaienr */
+.mainContainer {
+  flex: 8;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.instanceDetailsLabelContainer,
+.instancePlayersLabelContainer .innerLabel {
+  font-size: 1.6rem;
+  color: #f3f3f3;
+  font-weight: bold;
+  display: block;
+}
+.inputLabel {
+  font-size: 1.3rem;
+  color: var(--input_label);
+}
+.error {
+    color: var(--red);
+    margin-top: 0.5rem;
+  }
+/* Instance details container */
+.instanceDetailsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  transform: scaleY(-1);
+  width: 100%;
+}
+.instanceDetailsInputContainer {
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+}
+.instanceDetailsInputContainer > .firstRow {
+  display: flex;
+  gap: 2rem;
+  flex-direction: row;
+  align-items: baseline;
+}
+.instanceDetailsInputContainer > .firstRow > .field {
+  flex: 1;
+}
+.instanceDetailsInputContainer > .secondRow {
+  display: flex;
+  gap: 2rem;
+  flex-direction: row;
+  align-items: baseline;
+}
+.instanceDetailsInputContainer > .secondRow > .field {
+  flex: 1;
+}
+/* .field {
+    min-width: 32.5rem;
+    max-width: 32.5rem;
+  } */
+
+/* Instance Player container */
+.instancePlayersContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+.instancePlayersInputContainer > .instancePlayersInputRow {
+  display: flex;
+  gap: 2rem;
+  flex-direction: row;
+  align-items: baseline;
+}
+.instancePlayersInputContainer > .instancePlayersInputRow > .field {
+  flex: 1;
+}
+
+.noInstancePlayerContainer {
+  display: flex;
+  justify-content: center;
+}
+.noInstancePlayerContainer > p > label {
+  color: var(--primary);
+  font-size: 1.35rem;
+}
+
+/* Button contaienr */
+.buttonContainer {
+  display: flex;
+  gap: 1rem;
+  flex-direction: row;
+  justify-content: end;
+}

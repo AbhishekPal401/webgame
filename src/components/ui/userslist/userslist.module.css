@@ -1,0 +1,35 @@
+.userInnerContainer {
+  max-height: 30rem;
+  min-height: fit-content;
+  overflow-y: auto;
+  font-size: 1.35rem;
+  border-radius: 0.5rem;
+  border: 0.1rem solid var(--primary);
+  padding: 1.5rem;
+}
+.userRow {
+  display: flex;
+  flex-direction: row;
+  height: 3rem;
+  justify-content: space-between;
+}
+.userRow > :first-child {
+  flex: 9;
+}
+
+.userRow > :nth-child(2) {
+  flex: 1;
+}
+.userColumns img, svg {
+  width: 70%;
+  height: 70%;
+}
+.userColumns svg:hover {
+  width: 80%;
+  height: 80%;
+}
+.plusIconLg, .xMarkIcon{
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+}

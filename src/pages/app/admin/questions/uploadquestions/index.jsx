@@ -57,7 +57,7 @@ function UploadQuestion() {
 
     const onSubmit = async (event) => {
         event.preventDefault();
-
+        console.log("scenarioID :",scenarioID);
         let valid = true;
         let data = uploadQuestionsData;
 
@@ -113,6 +113,8 @@ function UploadQuestion() {
                 toast.error("Excel upload failed.");
                 console.log("not uploaded")
             }
+        } else {
+            toast.error("Please upload an excel file.")
         }
     }
 

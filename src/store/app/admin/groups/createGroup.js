@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { apiCallBegan } from "../../../../middleware/actions.js";
 
 const slice = createSlice({
-  name: "scenario-by-page",
+  name: "create-group",
   initialState: {
-    scenarioByPage: null,
+    createGroupResponse: null,
     loading: false,
   },
   reducers: {
@@ -12,15 +12,15 @@ const slice = createSlice({
       users.loading = true;
     },
     success: (users, action) => {
-      users.scenarioByPage = action.payload;
+      users.createGroupResponse = action.payload;
       users.loading = false;
     },
     failed: (users, action) => {
-      users.scenarioByPage = action.payload;
+      users.createGroupResponse = action.payload;
       users.loading = false;
     },
     reset: (users, action) => {
-      users.scenarioByPage = null;
+      users.createGroupResponse = null;
       users.loading = false;
     },
   },
@@ -30,9 +30,9 @@ const { requested, success, failed, reset } = slice.actions;
 
 export default slice.reducer;
 
-export const getScenarioByPage = (data) =>
+export const createGroup = (data) =>
   apiCallBegan({
-    url: "api/Scenario/ScenarioDetailByPage",
+    url: "api/User/CreateGroup", // TODO:: add path
     method: "POST",
     data,
     onStart: requested.type,
@@ -40,6 +40,6 @@ export const getScenarioByPage = (data) =>
     onFailed: failed.type,
   });
 
-export const resetScenarioByPageState = () => async (dispatch) => {
+export const resetCreateGroupState = () => async (dispatch) => {
   dispatch(reset());
 };

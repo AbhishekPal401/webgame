@@ -11,6 +11,7 @@ const Input = ({
   labelStyle = "",
   textAreaStyleClass,
   onChange = () => {},
+  ref,
   ...props
 }) => {
   return (
@@ -34,6 +35,7 @@ const Input = ({
           value={value}
           className={style.formControl}
           placeholder={label}
+          ref={ref}
           {...props}
           onChange={onChange}
         />

@@ -165,9 +165,6 @@
   gap: 0.5rem;
 }
 .scenarioContainer {
-}
-
-.scenarioContainer {
   display: flex;
   justify-content: space-between;
   align-items: end;
@@ -178,7 +175,7 @@
 .scenarioContainerLeft {
   display: flex;
   justify-content: start;
-  align-items: end;
+  align-items: baseline;
   gap: 2.4rem;
 }
 .scenarioContainerLeft h3 {
