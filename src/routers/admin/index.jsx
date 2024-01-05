@@ -14,6 +14,10 @@ import Intro from "../../pages/app/admin/introduction";
 import GamePlay from "../../pages/app/admin/gameplay";
 import UserNavbar from "../../components/ui/usernavbar";
 import MissionCompleted from "../../pages/app/admin/missioncompleted";
+import UpdateScenarios from "../../pages/app/admin/updatescenarios";
+import UploadQuestion from "../../pages/app/admin/questions/uploadquestions";
+import QuestionList from "../../pages/app/admin/questions/questionlist";
+import QuestionBuilder from "../../pages/app/admin/questions/questionbuilder";
 
 const Admin = () => {
   const location = useLocation();
@@ -49,7 +53,23 @@ const Admin = () => {
               element={<CreateUser />}
             />
             <Route path="/scenario" element={<Scenarios />} />
-            <Route path="/createscenarios" element={<CreateScenarios />} />
+            <Route
+              path="/scenario/createscenarios"
+              element={<CreateScenarios />}
+            />
+            <Route
+              path="/scenario/updatescenarios/:scenarioID?"
+              element={<UpdateScenarios />}
+            />
+            <Route
+              path="/questions/uploadquestions/:scenarioID?"
+              element={<UploadQuestion />}
+            />
+            <Route path="/questions/:scenarioID?" element={<QuestionList />} />
+            <Route
+              path="/questions/:scenarioID/questionbuilder/:questionID?"
+              element={<QuestionBuilder />}
+            />
             <Route path="/profile/:userID?" element={<Profile />} />
             <Route path="/game/:instanceID?" element={<Gamelanding />} />
             <Route path="/intro" element={<Intro />} />

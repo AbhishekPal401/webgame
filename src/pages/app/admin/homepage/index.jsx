@@ -11,6 +11,7 @@ import { generateGUID, isJSONString } from "../../../../utils/common.js";
 import { Link } from "react-router-dom";
 import { formatDateString } from "../../../../utils/helper.js";
 import { useNavigate } from "react-router-dom";
+import { dateFormats } from "../../../../constants/date.js";
 
 const Homepage = () => {
   const [pageCount, setPageCount] = useState(5);
@@ -74,7 +75,7 @@ const Homepage = () => {
   }, [scenarioByPage]);
 
   const navigateTo = () => {
-    navigate("/createscenarios");
+    navigate("/scenario/createscenarios");
   };
 
   return (
@@ -101,26 +102,35 @@ const Homepage = () => {
                     console.log("scenario", scenario);
                     return (
                       <div key={index} className={styles.sessionHistoryCard}>
-                        <h4>{scenario.InstanceName}</h4>
-                        <p>Scenario:{scenario.Description}</p>
-                        <p>Status: {scenario.Status}</p>
-                        <div className={styles.butonFlexContainer}>
-                          <div className={styles.updatedDate}>
+                        <div className={styles.cardTopContainer}>
+                          <div className={styles.cardTopContainerLeft}>
+                            <h4>{scenario.InstanceName}</h4>
+                            <p>Scenario:{scenario.Description}</p>
+                            <p>Status: {scenario.Status}</p>
+                          </div>
+                          <div className={styles.cardTopContainerRight}></div>
+                        </div>
+                        <div className={styles.cardBottomContainer}>
+                          <div className={styles.cardBottomContainerLeft}>
                             <p>
-                              Updated:{" "}
+                              Updated :
                               {formatDateString(
                                 scenario.UpdatedAt,
-                                "DD-MM-YYYY"
+                                dateFormats.DATE_FORMAT_8
                               )}
                             </p>
                           </div>
-                          <div>
+                          <div className={styles.cardBottomContainerRight}>
                             <Button
                               onClick={() => {
-                                navigate(`/game/${scenario.InstanceID}`);
+                                if (scenario.Status === "Create") {
+                                  navigate(`/game/${scenario.InstanceID}`);
+                                }
                               }}
                             >
-                              Start
+                              {scenario.Status === "Create"
+                                ? "Start"
+                                : "Report"}
                             </Button>
                           </div>
                         </div>
@@ -172,7 +182,16 @@ const Homepage = () => {
                               <Checkbox />
                             </td>
                             <td>{index + 1}</td>
-                            <td>{scenario.ScenarioName}</td>
+                            <td
+                              className={styles.scenarioName}
+                              onClick={() => {
+                                navigate(
+                                  `/scenario/updatescenarios/${scenario.ScenarioID}`
+                                );
+                              }}
+                            >
+                              {scenario.ScenarioName}
+                            </td>
                             <td>{scenario.Description}</td>
                             <td>{formatDateString(scenario.CreatedAt)}</td>
                             <td>{scenario.GamesPlayed}</td>

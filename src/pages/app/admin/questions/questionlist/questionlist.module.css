@@ -1,4 +1,10 @@
+.conatiner {
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+}
 .topContainer {
+  flex: 2;
   width: 100%;
   height: 14rem;
   display: flex;
@@ -27,11 +33,25 @@
 .right img {
   width: 80%;
   height: 100%;
+  object-fit: contain;
+  position: absolute;
+  top: 1.5rem; 
+  z-index: 1; 
 }
 .buttonContainer {
   position: absolute;
   bottom: 0;
-  right: 0.8rem;
+  right: 0;
+  display: flex;
+  gap: 1rem;
+  flex-direction: row;
+  z-index: 2;
+}
+
+/* Maine Contaienr */
+.mainContainer {
+  flex: 8;
+  z-index: 2;
 }
 .mainTableContainer {
   width: 100%;
@@ -47,13 +67,14 @@
   font-size: 1.2rem;
   text-align: left;
   width: 100%;
+  
 }
 .table_content thead {
   width: 100%;
   background-color: var(--black);
   /* position: sticky;
-    top: 0;
-    z-index: 1; */
+      top: 0;
+      z-index: 1; */
 }
 .table_content thead tr {
   font-size: 1.2rem;
@@ -79,15 +100,15 @@
 }
 
 /* .table_content tbody tr:hover {
-    background-color: #d6d6d6;
-  } */
+      background-color: #d6d6d6;
+    } */
 
 .table_content tbody tr td {
   height: 3rem;
   padding-left: 0.5rem;
 }
 
-.scenarioName:hover {
+.questions:hover {
   text-decoration: underline;
   cursor: pointer;
 }
@@ -105,17 +126,4 @@
 
 .table_content th:last-child {
   border-radius: 0 0.6rem 0.6rem 0;
-}
-
-/* pagination */
-
-.paginationContainer {
-  width: 100%;
-  height: 3rem;
-  border-radius: 0rem 0rem 0.8rem 0.8rem;
-  background-color: #dedede;
-  margin-top: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
