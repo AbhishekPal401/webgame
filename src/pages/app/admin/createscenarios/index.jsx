@@ -274,7 +274,7 @@ const CreateScenario = () => {
         </div>
         <div className={styles.right}>
           <img
-            src={"/images/create_scenario_bg_2.png"}
+            src={"/images/createscenario2.png"}
             alt="create scenario background 2"
           />
         </div>
