@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { apiCallBegan } from "../../../../middleware/actions.js";
 
 const slice = createSlice({
-  name: "scenario-by-page",
+  name: "update-game-instance",
   initialState: {
-    scenarioByPage: null,
+    updateGameInstanceResponse: null,
     loading: false,
   },
   reducers: {
@@ -12,15 +12,15 @@ const slice = createSlice({
       users.loading = true;
     },
     success: (users, action) => {
-      users.scenarioByPage = action.payload;
+      users.updateGameInstanceResponse = action.payload;
       users.loading = false;
     },
     failed: (users, action) => {
-      users.scenarioByPage = action.payload;
+      users.updateGameInstanceResponse = action.payload;
       users.loading = false;
     },
     reset: (users, action) => {
-      users.scenarioByPage = null;
+      users.updateGameInstanceResponse = null;
       users.loading = false;
     },
   },
@@ -30,16 +30,16 @@ const { requested, success, failed, reset } = slice.actions;
 
 export default slice.reducer;
 
-export const getScenarioByPage = (data) =>
+export const updateGameInstance = (data) =>
   apiCallBegan({
-    url: "api/Scenario/ScenarioDetailByPage",
-    method: "POST",
+    url: "api/Instance/UpdateGameInstance", 
+    method: "PUT",
     data,
     onStart: requested.type,
     onSuccess: success.type,
     onFailed: failed.type,
   });
 
-export const resetScenarioByPageState = () => async (dispatch) => {
+export const resetUpdateGameInstanceState = () => async (dispatch) => {
   dispatch(reset());
 };

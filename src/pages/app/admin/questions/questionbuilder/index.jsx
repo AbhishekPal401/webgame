@@ -96,7 +96,7 @@ function QuestionBuilder() {
         if (updateQuestionResponse?.success) {
             toast.success(updateQuestionResponse?.message);
             if (questionID && scenarioID) {
-
+                console.log("update success and ID's ae present:",)
                 const data = {
                     scenarioID: scenarioID,
                     questionID: questionID,
@@ -171,7 +171,22 @@ function QuestionBuilder() {
         }
     }, [questionID, scenarioID]);
 
-    // set hte updated data into Question state
+    // //DEBUG
+    //     // check the questionID & scenarioID are not present and reset else getQuestionDetailsByID
+    //     useEffect(() => {
+    //         if (questionID != null ||
+    //             questionID != undefined ||
+    //             scenarioID != null ||
+    //             scenarioID != undefined) {
+
+    //                 console.log("questionByIdDetails :",questionByIdDetails);
+    //                 const data = JSON.parse(questionByIdDetails?.data);
+    //                 console.log("questionByIdDetails data:",data);
+    //         }
+    //     }, [questionID, scenarioID]);
+
+
+    // set the updated data into Question state
     const setQuestionDetailState = useCallback(() => {
 
         // if (isJSONString(masters.data)) {
@@ -181,9 +196,7 @@ function QuestionBuilder() {
 
         if (isJSONString(questionByIdDetails.data)) {
             const data = JSON.parse(questionByIdDetails.data);
-            console.log(" data by id:", data);
-            console.log(" data by id Question:", data.Question);
-            console.log(" data by id Question DelegatedTo:", data.Question.DelegatedTo);
+            console.log("questionByIdDetails data:", data);
 
             // map answers from questionByIdDetails
             const answers = data.Answers.map((answer) => {
@@ -234,7 +247,7 @@ function QuestionBuilder() {
                 },
                 answers: answers,
             };
-
+            console.log("SupportFileDisplay:", data.Question.SupportFileDisplay);
             setSupportFileDisplayURL(data.Question.SupportFileDisplay);
             setSupportFileDefaultUrl((previous) => ({
                 ...previous,
@@ -250,9 +263,10 @@ function QuestionBuilder() {
     useEffect(() => {
         if (questionByIdDetails === null || questionByIdDetails === undefined) return;
 
-        if (!scenarioID) return;
+        if (!scenarioID && !questionID) return;
 
         setQuestionDetailState();
+        console.log("questionByIdDetails :", questionByIdDetails);
     }, [questionByIdDetails]);
 
 
@@ -386,7 +400,7 @@ function QuestionBuilder() {
             }
 
             if (answer.optimal.value === "") {
-                updatedAnswer.score.error = "Please select optimal.";
+                updatedAnswer.optimal.error = "Please select optimal.";
                 console.log("optimal:", answer.optimal);
                 valid = false;
             }
@@ -398,20 +412,20 @@ function QuestionBuilder() {
             }
 
             if (answer.nextQuestion.value === "") {
-                updatedAnswer.score.error = "Please select next question.";
+                updatedAnswer.nextQuestion.error = "Please select next question.";
                 console.log("nextQuestion:", answer.nextQuestion);
                 valid = false;
             }
 
             if (answer.consequence.value === "") {
-                updatedAnswer.score.error = "Please enter the consequence.";
+                updatedAnswer.consequence.error = "Please enter the consequence.";
                 console.log("consequence:", answer.consequence);
                 valid = false;
             }
 
             // TODO:: add choose narative file | not handled on backend
             // if (answer.narrative.value === "") {
-            //     updatedAnswer.score.error = "Please choose the narrative file.";
+            //     updatedAnswer.narrative.error = "Please choose the narrative file.";
             //     valid = false;
             // }
 
@@ -424,17 +438,20 @@ function QuestionBuilder() {
             answers: updatedAnswers,
         };
 
+        // TODO:: set the initial state to show errors
+
+
         if (valid) {
             let url = supportFIleDefaultUrl.url;
             let fileType = supportFIleDefaultUrl.type;
-
+            console.log("url  : "+url+" and fileType :"+fileType);
             console.log("questionData?.narrativeMedia?.value ", questionData?.narrativeMedia?.value)
 
             if (questionData?.narrativeMedia?.value) {
 
                 const formData = new FormData();
 
-                formData.append("Module", "questions");
+                formData.append("Module", "Question");
                 formData.append("ContentType", questionData.narrativeMedia.value.type);
                 formData.append("FormFile", questionData.narrativeMedia.value);
                 formData.append("ScenarioID", scenarioID);
@@ -453,16 +470,21 @@ function QuestionBuilder() {
                         },
                     }
                 );
-
+                console.log("response :",response);
                 if (response.data && response.data.success) {
                     const serializedData = JSON.parse(response.data.data);
 
                     console.log("upload success")
                     url = JSON.parse(serializedData.Data).URL;
-                }
-                console.log("upload error")
-            }
+                    console.log("uploaded file url :", url);
 
+                } else if(!response.data && !response.data.success){
+                    toast.error(response.data.message);
+                    console.log("upload error")
+                }
+                
+            }
+            console.log("2 url  : "+url+" and fileType :"+fileType);
             const data = {
                 questionID: questionID ? questionID : "",
                 scenarioID: scenarioID ? scenarioID : "",
@@ -494,7 +516,9 @@ function QuestionBuilder() {
             };
 
             console.log("data to update : ", data);
-            dispatch(updateQuestion(data)); 
+            dispatch(updateQuestion(data));
+        } else {
+            toast.error("Please fill all the details.")
         }
 
     };
@@ -733,7 +757,7 @@ function QuestionBuilder() {
                 {/* Button container:: start */}
                 <div className={styles.buttonContainer}>
                     <Button buttonType="cancel"
-                         onClick={onCancel}
+                        onClick={onCancel}
                     >
                         Cancel
                     </Button>

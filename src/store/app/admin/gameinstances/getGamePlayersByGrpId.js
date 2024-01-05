@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { apiCallBegan } from "../../../../middleware/actions.js";
 
 const slice = createSlice({
-  name: "scenario-by-page",
+  name: "get_game_players_by_group_id",
   initialState: {
-    scenarioByPage: null,
+    gamePlayersByGroupIdDetails: null,
     loading: false,
   },
   reducers: {
@@ -12,15 +12,15 @@ const slice = createSlice({
       users.loading = true;
     },
     success: (users, action) => {
-      users.scenarioByPage = action.payload;
+      users.gamePlayersByGroupIdDetails = action.payload;
       users.loading = false;
     },
     failed: (users, action) => {
-      users.scenarioByPage = action.payload;
+      users.gamePlayersByGroupIdDetails = action.payload;
       users.loading = false;
     },
     reset: (users, action) => {
-      users.scenarioByPage = null;
+      users.gamePlayersByGroupIdDetails = null;
       users.loading = false;
     },
   },
@@ -30,9 +30,9 @@ const { requested, success, failed, reset } = slice.actions;
 
 export default slice.reducer;
 
-export const getScenarioByPage = (data) =>
+export const getGamePlayerDetailsByGroupID = (data) =>
   apiCallBegan({
-    url: "api/Scenario/ScenarioDetailByPage",
+    url: "api/Instance/GetGamePlayersByGroupID",
     method: "POST",
     data,
     onStart: requested.type,
@@ -40,6 +40,6 @@ export const getScenarioByPage = (data) =>
     onFailed: failed.type,
   });
 
-export const resetScenarioByPageState = () => async (dispatch) => {
+export const resetGamePlayerDetailsByGroupIDState = () => async (dispatch) => {
   dispatch(reset());
 };

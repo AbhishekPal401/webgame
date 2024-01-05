@@ -115,6 +115,7 @@ const UpdateScenarios = () => {
                 dispatch(
                     getScenarioDetailsByID(data)
                 );
+                navigateTo(`/scenario`);
             } else {
                 introFileDisplay(null);
                 resetScenarioData();
@@ -170,9 +171,9 @@ const UpdateScenarios = () => {
     const setScenarioDetailState = useCallback(() => {
         if (isJSONString(scenarioByIdDetails.data)) {
             const data = JSON.parse(scenarioByIdDetails.data);
-            console.log("data.UpdatedAt :",data.UpdatedAt);
-            console.log("formatDateString data.UpdatedAt :",formatDateString(data.UpdatedAt));
-            
+            console.log("data:", data);
+            console.log("formatDateString data.UpdatedAt :", formatDateString(data.UpdatedAt));
+
             const newData = {
                 scenarioName: {
                     value: data.ScenarioName,
@@ -183,7 +184,7 @@ const UpdateScenarios = () => {
                     error: "",
                 },
                 gameIntroText: {
-                    value: "",
+                    value: data.GameIntro,
                     error: "",
                 },
                 gameIntroFile: {
@@ -317,28 +318,40 @@ const UpdateScenarios = () => {
                 formData.append("Requester.RequesterName", credentials.data.userName);
                 formData.append("Requester.RequesterType", credentials.data.role);
 
-                const response = await axios.post(
-                    `${baseUrl}/api/Storage/FileUpload`,
-                    formData,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        },
+                try {
+                    const response = await axios.post(
+                        `${baseUrl}/api/Storage/FileUpload`,
+                        formData,
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data",
+                            },
+                        }
+                    );
+
+                    if (response.data && response.data.success) {
+                        const serializedData = JSON.parse(response.data.data);
+
+                        url = JSON.parse(serializedData.Data).URL;
+
+
+
+                    } else if (response.data && !response.data.success) {
+                        toast.error(response.data.message);
+                        console.log("error message :", response.data.message)
                     }
-                );
-
-                if (response.data && response.data.success) {
-                    const serializedData = JSON.parse(response.data.data);
-
-                    url = JSON.parse(serializedData.Data).URL;
+                } catch (error) {
+                    toast.error("An error occurred while uploading the file.");
+                    console.error("Axios error:", error);
                 }
+
             }
 
             const data = {
                 scenarioID: scenarioID ? scenarioID : "",
                 scenarioName: scenarioData?.scenarioName?.value,
                 description: scenarioData?.scenarioDescription?.value,
-                //TODO :: not accepting :: gameIntroText: scenarioData.gameIntroText.value,
+                gameIntro: scenarioData?.gameIntroText?.value,
                 introFile: url,
                 introFileType: fileType,
                 status: "Create",
@@ -353,6 +366,11 @@ const UpdateScenarios = () => {
                 },
             };
             dispatch(updateScenario(data));
+
+
+
+        } else {
+            toast.error("Please fill all the details.")
         }
 
     };

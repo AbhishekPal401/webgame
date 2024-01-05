@@ -42,6 +42,15 @@ const AdminSidebar = () => {
       />
 
       <ButtonLink
+        linkTo="/gameinstances"
+        isActive={location.pathname.includes("/gameinstances")}
+        svgSrc="sprite.svg#homepage"
+        onClick={() => {
+          dispatch(setCurrentActive("gameinstances"));
+        }}
+      />
+
+      <ButtonLink
         linkTo="/scenario"
         isActive={location.pathname.includes("scenario")}
         svgSrc="sprite.svg#scenario"

@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { apiCallBegan } from "../../../../middleware/actions.js";
 
 const slice = createSlice({
-  name: "scenario-by-page",
+  name: "get_game_instance_by_id",
   initialState: {
-    scenarioByPage: null,
+    gameInstanceByIdDetails: null,
     loading: false,
   },
   reducers: {
@@ -12,15 +12,15 @@ const slice = createSlice({
       users.loading = true;
     },
     success: (users, action) => {
-      users.scenarioByPage = action.payload;
+      users.gameInstanceByIdDetails = action.payload;
       users.loading = false;
     },
     failed: (users, action) => {
-      users.scenarioByPage = action.payload;
+      users.gameInstanceByIdDetails = action.payload;
       users.loading = false;
     },
     reset: (users, action) => {
-      users.scenarioByPage = null;
+      users.gameInstanceByIdDetails = null;
       users.loading = false;
     },
   },
@@ -30,9 +30,9 @@ const { requested, success, failed, reset } = slice.actions;
 
 export default slice.reducer;
 
-export const getScenarioByPage = (data) =>
+export const getGameInstanceDetailsByID = (data) =>
   apiCallBegan({
-    url: "api/Scenario/ScenarioDetailByPage",
+    url: "api/Instance/GetInstanceDetailsByID",
     method: "POST",
     data,
     onStart: requested.type,
@@ -40,6 +40,6 @@ export const getScenarioByPage = (data) =>
     onFailed: failed.type,
   });
 
-export const resetScenarioByPageState = () => async (dispatch) => {
+export const resetGameInstanceDetailState = () => async (dispatch) => {
   dispatch(reset());
 };

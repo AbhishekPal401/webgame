@@ -74,12 +74,16 @@ const CreateScenario = () => {
           error: "",
         },
       });
+      setIntroFileDisplay(null);
+      console.log("createScenarioResponse :",createScenarioResponse);
+      console.log(" JSON.parse(createScenarioResponse?.data data:", JSON.parse(createScenarioResponse?.data));
+     
+      //navigate to upload questions excel
+      navigateTo(`/questions/uploadquestions/${JSON.parse(createScenarioResponse?.data)?.ScenarioID}`);
+
       setResetFile(!resetFile);
       dispatch(resetCreateScenarioState());
-      console.log("uploaded");
 
-      //navigate to upload questions excel
-      navigateTo(`/questions/uploadquestions/${createScenarioResponse.ScenarioID}`);
 
     } else if (!createScenarioResponse.success) {
       toast.error(createScenarioResponse.message);
@@ -173,49 +177,63 @@ const CreateScenario = () => {
       formData.append("Module", "scenario");
       formData.append("contentType", scenarioData.gameIntroVideo.value.type);
       formData.append("FormFile", scenarioData.gameIntroVideo.value);
-      formData.append("ScenarioID", ""); // TODO :: not implemented in backend
+      formData.append("ScenarioID", "file"); // TODO :: not implemented in backend
       formData.append("Requester.RequestID", generateGUID());
       formData.append("Requester.RequesterID", credentials.data.userID);
       formData.append("Requester.RequesterName", credentials.data.userName);
       formData.append("Requester.RequesterType", credentials.data.role);
 
-      const response = await axios.post(
-        `${baseUrl}/api/Storage/FileUpload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+      try {
+        const response = await axios.post(
+          `${baseUrl}/api/Storage/FileUpload`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        if (response.data && response.data.success) {
+          const serializedData = JSON.parse(response.data.data);
+
+          const url = JSON.parse(serializedData.Data).URL;
+
+          const data = {
+            scenarioName: scenarioData?.scenarioName?.value,
+            description: scenarioData?.scenarioDescription?.value,
+            gameIntro: scenarioData?.gameIntroText?.value,
+            introFile: url,
+            introFileType: scenarioData?.gameIntroVideo?.value?.type,
+            status: "Create",
+            version: "1",
+            baseVersionID: "1",
+            // handled by backend :: status, version, baseVersionID
+            requester: {
+              requestID: generateGUID(),
+              requesterID: credentials.data.userID,
+              requesterName: credentials.data.userName,
+              requesterType: credentials.data.role,
+            },
+          };
+
+          console.log("data sent to API :", data);
+          dispatch(createScenario(data));
+
+        } else if (response.data && !response.data.success) {
+          toast.error(response.data.message);
+          console.log("error message :", response.data.message)
+        } else {
+          console.log("error message :", response)
+          toast.error("File upload failed.")
         }
-      );
-
-      if (response.data && response.data.success) {
-        const serializedData = JSON.parse(response.data.data);
-
-        const url = JSON.parse(serializedData.Data).URL;
-
-        const data = {
-          scenarioName: scenarioData?.scenarioName?.value,
-          description: scenarioData?.scenarioDescription?.value,
-          // TODO :: not accepting gameIntroText: scenarioData.gameIntroText.value,
-          introFile: url,
-          introFileType: scenarioData?.gameIntroVideo?.value?.type,
-          status: "Create",
-          version: "1",
-          baseVersionID: "1",
-          // handled by backend :: status, version, baseVersionID
-          requester: {
-            requestID: generateGUID(),
-            requesterID: credentials.data.userID,
-            requesterName: credentials.data.userName,
-            requesterType: credentials.data.role,
-          },
-        };
-
-        console.log("data sent to API :", data);
-        dispatch(createScenario(data));
-
+      } catch (error) {
+        // Handle Axios or network errors
+        toast.error("An error occurred while uploading the file.");
+        console.error("Axios error:", error);
       }
+    } else {
+      toast.error("Please fill all the details.")
     }
   };
 

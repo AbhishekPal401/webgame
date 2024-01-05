@@ -11,6 +11,10 @@ export const formatDateString = (dateTimeString, formatType = 'default') => {
             regex: /^(\d{2})\/(\d{2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/
         },
         {
+            format: dateFormats.DATE_FORMAT_10,
+            regex: /^(\d{1})\/(\d{1})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/
+        },
+        {
             format: dateFormats.DATE_FORMAT_1,
             regex: /^(\d{2})\/(\d{2})\/(\d{4})$/
         },
@@ -33,6 +37,7 @@ export const formatDateString = (dateTimeString, formatType = 'default') => {
         const matches = dateTimeString.match(dateFormat.regex);
         if (matches) {
             parsedDate = createDateFromMatches(matches, dateFormat.format);
+            // console.log("parsedDate :",parsedDate);
             break;
         }
     }
@@ -108,10 +113,11 @@ const createDateFromMatches = (matches, format) => {
         }
 
         const date = new Date(year, month, day, hour, minute, second);
-
+        // console.log("date formated :",date);
         return date;
 
     } catch (error) {
+        console.log("date formated error:",error);
         return null;
     }
 };

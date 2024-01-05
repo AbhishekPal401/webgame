@@ -20,6 +20,15 @@ import updateQuestion from  "../app/admin/questions/updateQuestion.js";
 import getSession from "../app/user/session/getSession.js";
 import getNextQuestion from "../app/user/questions/getNextQuestion.js";
 import postAnswer from "../app/user/answers/postAnswer.js";
+import gameInstances from "../app/admin/gameinstances/gameInstances.js";
+import createGameInstance from "../app/admin/gameinstances/createGameInstance.js";
+import getGroupDetailsByOrgId from "../app/admin/gameinstances/getGroupDetailsByOrgId.js";
+import getScenarioNameAndId from "../app/admin/scenario/getScenarioNameAndId.js";
+import getGamePlayersByGrpId from "../app/admin/gameinstances/getGamePlayersByGrpId.js";
+import getGameInstanceById from "../app/admin/gameinstances/getGameInstanceById.js";
+import updateGameInstance from "../app/admin/gameinstances/updateGameInstance.js";
+import createGroup from "../app/admin/groups/createGroup.js";
+import createGroupUsers from "../app/admin/groups/createGroupUsers.js";
 
 const reducers = combineReducers({
   login,
@@ -40,6 +49,15 @@ const reducers = combineReducers({
   getQuestionsByScenarioId,
   getQuestionDetailsByid,
   updateQuestion,
+  gameInstances,
+  createGameInstance,
+  getGroupDetailsByOrgId,
+  getScenarioNameAndId,
+  getGamePlayersByGrpId,
+  getGameInstanceById,
+  updateGameInstance,
+  createGroup,
+  createGroupUsers,
 });
 
 const rootReducer = (state, action) => {
