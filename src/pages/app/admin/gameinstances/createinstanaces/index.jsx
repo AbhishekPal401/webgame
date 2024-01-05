@@ -192,11 +192,12 @@ const CreateInstances = () => {
             dispatch(resetScenarioNameAndIdDetailsState());
             dispatch(resetGamePlayerDetailsByGroupIDState());
 
-            navigateTo(`/gameinstances`);
+            navigateTo(`/instances`);
 
         } else if (!createGameInstanceResponse.success) {
-
-            toast.error(createGameInstanceResponse?.message);
+            console.log(" error : ",createGameInstanceResponse?.message)
+            // toast.error(createGameInstanceResponse?.message);
+            toast.error("An error occured while saving the instance.");
             dispatch(resetCreateGameInstanceState());
         } else {
             dispatch(resetCreateGameInstanceState());
@@ -877,7 +878,7 @@ const CreateInstances = () => {
                 description: "",
                 startTime: "",
                 organizationID: gameInstanceData?.organization?.value,
-                singleOrMultiplayer: "",
+                singleOrMultiplayer: gameInstanceData?.groupSize?.value,
                 timeToAppear: "",
                 instanceDuration: "",
                 endTime: "",
@@ -906,7 +907,7 @@ const CreateInstances = () => {
         resetGameInstanceData();
         console.log("on cancel gameInstacneData :", gameInstanceData)
 
-        navigateTo(`/gameinstances`);
+        navigateTo(`/instances`);
     };
 
 

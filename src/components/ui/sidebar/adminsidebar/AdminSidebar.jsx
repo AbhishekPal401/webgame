@@ -42,11 +42,11 @@ const AdminSidebar = () => {
       />
 
       <ButtonLink
-        linkTo="/gameinstances"
-        isActive={location.pathname.includes("/gameinstances")}
+        linkTo="/instances"
+        isActive={location.pathname.includes("/instances")}
         svgSrc="sprite.svg#homepage"
         onClick={() => {
-          dispatch(setCurrentActive("gameinstances"));
+          dispatch(setCurrentActive("instances"));
         }}
       />
 

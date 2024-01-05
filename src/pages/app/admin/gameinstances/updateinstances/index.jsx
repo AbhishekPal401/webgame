@@ -194,7 +194,7 @@ const UpdateInstances = () => {
                 dispatch(
                     getGameInstanceDetailsByID(data)
                 );
-                navigateTo(`/gameinstances`);
+                navigateTo(`/instances`);
             } else {
                 resetGameInstanceData();
             }
@@ -442,9 +442,9 @@ const UpdateInstances = () => {
     };
 
     const onOrganizationSelect = (event) => {
-        if(event.target.value === "" || event.target.value === undefined || event.target.value === null) {
-            console.log("onOrganizationSelect event.target.value :",event.target.value );
-            
+        if (event.target.value === "" || event.target.value === undefined || event.target.value === null) {
+            console.log("onOrganizationSelect event.target.value :", event.target.value);
+
             setGameInstanceData({
                 ...gameInstanceData,
                 organization: {
@@ -460,7 +460,7 @@ const UpdateInstances = () => {
 
             dispatch(resetGroupDetailsByOrgIDState());
             dispatch(resetGamePlayerDetailsByGroupIDState());
-            
+
             return;
         }
 
@@ -488,8 +488,8 @@ const UpdateInstances = () => {
     };
 
     const onGroupNameSelect = (event) => {
-        if(event.target.value === "" || event.target.value === undefined || event.target.value === null) {
-            console.log("onGroupNameSelect event.target.value :",event.target.value );
+        if (event.target.value === "" || event.target.value === undefined || event.target.value === null) {
+            console.log("onGroupNameSelect event.target.value :", event.target.value);
             resetGamePlayerDetailsByGroupIDState();
             setGameInstanceData({
                 ...gameInstanceData,
@@ -509,7 +509,7 @@ const UpdateInstances = () => {
                 error: "",
             },
         });
-        
+
         //dispatch a request to get the gaeme players by group ID
         const data = {
             groupID: event.target.value,
@@ -726,7 +726,7 @@ const UpdateInstances = () => {
         resetGameInstanceData();
         console.log("on cancel gameInstacneData :", gameInstanceData)
 
-        navigateTo(`/gameinstances`);
+        navigateTo(`/instances`);
     };
 
     return (
@@ -971,40 +971,30 @@ const UpdateInstances = () => {
 
                                             {/*Select Role  :: start */}
                                             <div className={styles.field}>
-                                                <Input
-                                                    labelStyle={styles.inputLabel}
-                                                    type="text"
-                                                    value={player.playerDesignationName.value}
-                                                    customStyle={{ margin: '0' }}
-                                                    name={"playerDesignationName"}
-                                                    placeholder="Assign Role"
-                                                    onChange={(e) => onPlayerChange(e, index, 'playerDesignationName')}
-                                                    disabled
-                                                />
-                                                {/* <div>
-                                                <select
-                                                    id="dropdown_player_role"
-                                                    value={player.playerRole.value}
-                                                    className="select_input"
-                                                    onChange={(e) => onPlayerChange(e, index, 'playerRole')}
-                                                    disabled
-                                                >
-                                                    <option value={""}>Assign Role</option>
+                                                <div>
+                                                    <select
+                                                        id="dropdown_player_designation"
+                                                        value={player.playerDesignation.value}
+                                                        className="select_input"
+                                                        placeholder="Assign Role"
+                                                        onChange={(e) => onPlayerChange(e, index, 'playerDesignation')}
+                                                    >
+                                                        <option value={""}>Assign Role</option>
 
-                                                    {masters &&
-                                                        masters.data &&
-                                                        isJSONString(masters.data) &&
-                                                        Array.isArray(JSON.parse(masters.data)) &&
-                                                        JSON.parse(masters.data).map((item, index) => {
-                                                            if (item.MasterType !== "Role") return;
-                                                            return (
-                                                                <option value={item.MasterID} key={index}>
-                                                                    {item.MasterDisplayName}
-                                                                </option>
-                                                            );
-                                                        })}
-                                                </select>
-                                            </div> */}
+                                                        {masters &&
+                                                            masters.data &&
+                                                            isJSONString(masters.data) &&
+                                                            Array.isArray(JSON.parse(masters.data)) &&
+                                                            JSON.parse(masters.data).map((item, index) => {
+                                                                if (item.MasterType !== "Designation") return;
+                                                                return (
+                                                                    <option value={item.MasterID} key={index}>
+                                                                        {item.MasterDisplayName}
+                                                                    </option>
+                                                                );
+                                                            })}
+                                                    </select>
+                                                </div>
                                             </div>
 
                                             {/*Select Role:: end */}
