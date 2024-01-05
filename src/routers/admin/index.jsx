@@ -73,13 +73,13 @@ const Admin = () => {
               path="/questions/:scenarioID/questionbuilder/:questionID?"
               element={<QuestionBuilder />}
             />
-            <Route path="/gameinstances" element={<GameInstances />} />
+            <Route path="/instances" element={<GameInstances />} />
             <Route
-              path="/gameinstances/createinstances"
+              path="/instances/createinstances"
               element={<CreateInstances />}
             />
             <Route
-              path="/gameinstances/updateinstances/:instanceID?"
+              path="/instances/updateinstances/:instanceID?"
               element={<UpdateInstances />}
             />
             <Route path="/profile/:userID?" element={<Profile />} />

@@ -111,6 +111,8 @@ function QuestionBuilder() {
                 dispatch(
                     getQuestionDetailsByID(data)
                 );
+
+                navigateTo(`/questions/${scenarioID}`);
             } else {
                 setSupportFileDisplayURL(null);
                 resetQuestionData();
@@ -444,7 +446,7 @@ function QuestionBuilder() {
         if (valid) {
             let url = supportFIleDefaultUrl.url;
             let fileType = supportFIleDefaultUrl.type;
-            console.log("url  : "+url+" and fileType :"+fileType);
+            console.log("url  : " + url + " and fileType :" + fileType);
             console.log("questionData?.narrativeMedia?.value ", questionData?.narrativeMedia?.value)
 
             if (questionData?.narrativeMedia?.value) {
@@ -470,7 +472,7 @@ function QuestionBuilder() {
                         },
                     }
                 );
-                console.log("response :",response);
+                console.log("response :", response);
                 if (response.data && response.data.success) {
                     const serializedData = JSON.parse(response.data.data);
 
@@ -478,13 +480,13 @@ function QuestionBuilder() {
                     url = JSON.parse(serializedData.Data).URL;
                     console.log("uploaded file url :", url);
 
-                } else if(!response.data && !response.data.success){
+                } else if (!response.data && !response.data.success) {
                     toast.error(response.data.message);
                     console.log("upload error")
                 }
-                
+
             }
-            console.log("2 url  : "+url+" and fileType :"+fileType);
+            console.log("2 url  : " + url + " and fileType :" + fileType);
             const data = {
                 questionID: questionID ? questionID : "",
                 scenarioID: scenarioID ? scenarioID : "",

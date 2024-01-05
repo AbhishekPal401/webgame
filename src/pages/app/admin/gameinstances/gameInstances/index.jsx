@@ -66,7 +66,7 @@ const GameInstances = () => {
     // }, [gameInstancesByPage]);
 
     const navigateTo = () => {
-        navigate(`/gameinstances/createinstances`);
+        navigate(`/instances/createinstances`);
     };
 
     return (
@@ -124,7 +124,7 @@ const GameInstances = () => {
                                                     <td
                                                         className={styles.gameInstances}
                                                     onClick={() => {
-                                                        navigate(`/gameinstances/updateinstances/${gameInstance.InstanceID}`);
+                                                        navigate(`/instances/updateinstances/${gameInstance.InstanceID}`);
                                                     }}
                                                     >
                                                         {gameInstance.InstanceName}
