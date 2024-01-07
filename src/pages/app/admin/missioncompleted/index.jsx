@@ -1,8 +1,7 @@
 import React from "react";
 import styles from "./missioncompleted.module.css";
 import Button from "../../../../components/common/button";
-import Tree from "react-d3-tree";
-import { useCenteredTree } from "../../../../hooks/UseCenteredTree";
+import MissionTree from "../../../../components/trees/mission";
 
 const SelectTree = ({ clicked = 0 }) => {
   return (
@@ -16,127 +15,77 @@ const SelectTree = ({ clicked = 0 }) => {
   );
 };
 
-const orgChart = {
-  name: "CEO",
-  children: [
-    {
-      name: "Manager",
-      attributes: {
-        department: "Production",
-      },
-      children: [
-        {
-          name: "Foreman",
-          attributes: {
-            department: "Fabrication",
-          },
-          children: [
-            {
-              name: "Worker",
-            },
-          ],
-        },
-        {
-          name: "Foreman",
-          attributes: {
-            department: "Assembly",
-          },
-          children: [
-            {
-              name: "Worker",
-            },
-          ],
-        },
-      ],
-    },
-  ],
-};
-
 const data = {
-  Name: "First Question",
-  Attributes: {
+  name: "First Question awdwawda dawd aw daw dawd aw dawdawda daw dawd ad ad awdaw da  awdawd awd awd awd aw",
+  attributes: {
     QuestionNo: 1,
     Isoptimal: false,
     IsQuestion: true,
     ToolTipTitle: "Title1",
     ToolTipDescr: "description",
   },
-  Children: [
+  children: [
     {
-      Name: "First Answer",
-      Attributes: {
+      name: "First Answer",
+      attributes: {
         QuestionNo: 2,
         Isoptimal: false,
         IsQuestion: false,
         ToolTipTitle: "Title1",
         ToolTipDescr: "description",
       },
-      Children: [
-        {
-          Name: "Second Question",
-          Attributes: {
-            QuestionNo: 2,
-            Isoptimal: false,
-            IsQuestion: true,
-            ToolTipTitle: "Title1",
-            ToolTipDescr: "description",
-          },
-          Children: [],
-        },
-      ],
+      children: [],
     },
     {
-      Name: "Second Answer",
-      Attributes: {
+      name: "Second Answer",
+      attributes: {
         QuestionNo: 3,
         Isoptimal: true,
         IsQuestion: false,
         ToolTipTitle: "Title1",
         ToolTipDescr: "description",
       },
-      Children: [
+      children: [
         {
-          Name: "Questionww",
-          Attributes: {
+          name: "Questionww",
+          attributes: {
             QuestionNo: 2,
             Isoptimal: false,
             IsQuestion: true,
             ToolTipTitle: "Title1",
             ToolTipDescr: "description",
           },
-          Children: [
+          children: [
             {
-              Name: "assdasda",
-              Attributes: {
+              name: "assdasda",
+              attributes: {
                 QuestionNo: 2,
-                Isoptimal: false,
+                Isoptimal: true,
                 IsQuestion: false,
                 ToolTipTitle: "Title1",
                 ToolTipDescr: "description",
               },
-              Children: [],
+              children: [],
             },
           ],
         },
       ],
     },
     {
-      Name: "Third Answer",
-      Attributes: {
+      name: "Third Answer",
+      attributes: {
         QuestionNo: 4,
-        Isoptimal: true,
+        Isoptimal: false,
         IsQuestion: false,
         ToolTipTitle: "Title1",
         ToolTipDescr: "description",
       },
-      Children: [],
+      children: [],
     },
   ],
 };
 
 const MissionCompleted = () => {
-  const [translate, treeContainerRef] = useCenteredTree();
-
   return (
     <div className={styles.container}>
       <div className={styles.missionContainer}>
@@ -153,20 +102,14 @@ const MissionCompleted = () => {
         <div className={styles.treeContainer}>
           <SelectTree clicked={1} />
           <div className={styles.tree}>
-            <div ref={treeContainerRef}>
-              <Tree
-                translate={translate}
-                data={orgChart}
-                orientation="vertical"
-              />
-            </div>
+            <MissionTree data={data} />
             <div className={styles.right}>
               <div>Time Spent</div>
-              <div>
+              <div className={styles.circle}>
                 23 <span>min</span>
               </div>
               <div>Score</div>
-              <div>128</div>
+              <div className={styles.circle}>128</div>
             </div>
           </div>
         </div>

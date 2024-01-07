@@ -112,9 +112,14 @@
   height: 40rem;
 }
 
+.tree > div:nth-child(1) svg {
+  width: 100% !important;
+  height: 100% !important;
+}
+
 .tree > div:nth-child(2) {
   width: 25%;
-  margin-left: 2rem;
+  margin-left: 4rem;
 }
 
 .right {
@@ -134,10 +139,9 @@
   margin: 1rem 0;
 }
 
-.right > div:nth-child(2),
-.right > div:nth-child(4) {
+.circle {
   margin: 1rem 0;
-
+  flex: none !important;
   width: 10rem;
   height: 10rem;
   border-radius: 10rem;
