@@ -7,7 +7,7 @@ const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
 
   return (
     <g transform={`translate(-150, 0)`}>
-      <foreignObject width={300} height={20 + 2 * padding}>
+      <foreignObject width={300} height={30 + 2 * padding}>
         <div className={styles.nodeContainer}>
           <div
             className={
@@ -57,6 +57,15 @@ const MissionTree = ({ data = {} }) => {
         parent.removeChild(element);
       });
 
+      const leafElements =
+        containerRef.current.querySelectorAll(`g.rd3t-leaf-node`);
+
+      leafElements.forEach((element) => {
+        const parent = element.parentElement;
+        parent.appendChild(element.cloneNode(true));
+        parent.removeChild(element);
+      });
+
       const { width, height } = containerRef.current.getBoundingClientRect();
       setTranslate({ x: width / 2, y: height * 0.1 });
     }
@@ -83,7 +92,7 @@ const MissionTree = ({ data = {} }) => {
         nodeSize={nodeSize}
         pathFunc={"step"}
         pathClassFunc={getDynamicPathClass}
-        separation={{ siblings: 1.5, nonSiblings: 2 }}
+        separation={{ siblings: 1.6, nonSiblings: 2 }}
         renderCustomNodeElement={(rd3tProps) => {
           return (
             <CustomNode

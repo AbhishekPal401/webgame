@@ -8,24 +8,30 @@
   background-color: var(--innerbackground);
   display: inline-block;
   border-radius: 0.2rem;
+  font-size: 1.3rem;
+  color: "helvetica 500";
 }
 .isOptimalNode {
   background-color: #4ead58;
   display: inline-block;
   border-radius: 0.2rem;
   color: var(--innerbackground);
+  font-size: 1.3rem;
+  color: "helvetica 500";
 }
 .isNotOptimalNode {
   background-color: #7d7d7d;
   display: inline-block;
   border-radius: 0.2rem;
   color: var(--innerbackground);
+  font-size: 1.3rem;
+  color: "helvetica 500";
 }
 
 .isOptimal {
   stroke: #4ead58 !important;
   stroke-width: 2 !important;
-  z-index: 1 !important;
+  z-index: 0 !important;
 }
 
 .isNotSelected {
