@@ -283,7 +283,10 @@ const CreateScenario = () => {
         {/* Create Scenario:: start */}
         <div className={styles.formContainer}>
           <div className={styles.createScenarioFormLeft}></div>
-          <div className={styles.createScenarioFormRight}>
+          <div
+            style={{ backgroundImage: 'url("./images/particles.png")' }}
+            className={styles.createScenarioFormRight}
+          >
             <div className={styles.createScenarioLeftInputs}>
               <Input
                 labelStyle={styles.inputLabel}
