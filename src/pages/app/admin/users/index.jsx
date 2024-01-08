@@ -104,7 +104,10 @@ const Users = () => {
         <div className={styles.left}>
           <label>Users</label>
         </div>
-        <div className={styles.right}>
+        <div
+          className={styles.right}
+          style={{ backgroundImage: 'url("./images/binary.png")' }}
+        >
           <img src="./images/scenario.png" />
           <div className={styles.buttonContainer}>
             <Button onClick={navigateTo}>Create New</Button>
