@@ -351,6 +351,11 @@ const CreateUser = () => {
         formData.append("Module", "ProfileImage");
         formData.append("contentType", userData.profileImage.value.type);
         formData.append("FormFile", userData.profileImage.value);
+        formData.append("ScenarioID", "file"); // TODO :: not implemented in backend
+        formData.append("Requester.RequestID", generateGUID());
+        formData.append("Requester.RequesterID", credentials.data.userID);
+        formData.append("Requester.RequesterName", credentials.data.userName);
+        formData.append("Requester.RequesterType", credentials.data.role);
 
         const response = await axios.post(
           `${baseUrl}/api/Storage/FileUpload`,
