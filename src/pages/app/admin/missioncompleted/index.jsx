@@ -16,7 +16,7 @@ const SelectTree = ({ clicked = 0 }) => {
 };
 
 const data = {
-  name: "First Question awdwawda dawd aw daw dawd aw dawdawda daw dawd ad ad awdaw da  awdawd awd awd awd aw",
+  name: "First Question awdwawda dawd aw daw dawd aw dawdawda daw dawd ad ad awdaw da  awdawd awd awd awd aw ad aw dawd aw dawd awd awd awda d wd  ad awd ad rrrr rrrr rrrrr rrrrr rr rrr rrr",
   attributes: {
     QuestionNo: 1,
     Isoptimal: false,

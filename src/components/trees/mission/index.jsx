@@ -2,8 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./mission.module.css";
 import Tree from "react-d3-tree";
 
+const trimTextWithEllipsis = (text, maxLength) => {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + "...";
+  }
+  return text;
+};
+
 const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
   const padding = 10;
+  const label = trimTextWithEllipsis(nodeDatum.name, 115);
 
   return (
     <g transform={`translate(-150, 0)`}>
@@ -19,7 +27,7 @@ const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
             }
             style={{ padding: `${padding * 0.5}px ${padding}px` }}
           >
-            {nodeDatum.name}
+            {label}
           </div>
         </div>
       </foreignObject>
