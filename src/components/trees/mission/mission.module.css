@@ -39,3 +39,14 @@
   stroke-width: 2 !important;
   z-index: -1 !important;
 }
+
+.tooltipContent > div:nth-child(1) {
+  font-size: 1rem;
+  color: var(--innerbackground);
+  font-family: "helvetica 500";
+}
+.tooltipContent > div:nth-child(2) {
+  font-size: 1rem;
+  color: var(--innerbackground);
+  font-family: "helvetica 400";
+}

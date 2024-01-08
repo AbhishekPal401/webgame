@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./mission.module.css";
 import Tree from "react-d3-tree";
+import { Tooltip } from "react-tooltip";
+import ReactDOMServer from "react-dom/server";
 
 const trimTextWithEllipsis = (text, maxLength) => {
   if (text.length > maxLength) {
@@ -25,6 +27,13 @@ const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
                 ? styles.isOptimalNode
                 : styles.isNotOptimalNode
             }
+            data-tooltip-id="my-tooltip"
+            data-tooltip-html={ReactDOMServer.renderToStaticMarkup(
+              <div className={styles.tooltipContent}>
+                <div>{nodeDatum.attributes.ToolTipTitle}</div>
+                <div>{nodeDatum.attributes.ToolTipDescr}</div>
+              </div>
+            )}
             style={{ padding: `${padding * 0.5}px ${padding}px` }}
           >
             {label}
@@ -110,10 +119,11 @@ const MissionTree = ({ data = {} }) => {
           );
         }}
         // scaleExtent={{ min: 0.01, max: 2 }}
-        zoom={0.65}
-        depthFactor={150}
+        zoom={0.6}
+        depthFactor={120}
         orientation="vertical"
       />
+      <Tooltip id="my-tooltip" place="right" />
     </div>
   );
 };

@@ -31,8 +31,8 @@ const data = {
         QuestionNo: 2,
         Isoptimal: false,
         IsQuestion: false,
-        ToolTipTitle: "Title1",
-        ToolTipDescr: "description",
+        ToolTipTitle: "Title1 adwa ",
+        ToolTipDescr: "description adw a",
       },
       children: [],
     },
@@ -60,7 +60,7 @@ const data = {
               name: "assdasda",
               attributes: {
                 QuestionNo: 2,
-                Isoptimal: true,
+                Isoptimal: false,
                 IsQuestion: false,
                 ToolTipTitle: "Title1",
                 ToolTipDescr: "description",
@@ -78,12 +78,80 @@ const data = {
               },
               children: [],
             },
+            {
+              name: "third option for assdasda",
+              attributes: {
+                QuestionNo: 2,
+                Isoptimal: true,
+                IsQuestion: false,
+                ToolTipTitle: "Title1",
+                ToolTipDescr: "description",
+              },
+              children: [
+                {
+                  name: "third Question for ada  lorem ispsum ",
+                  attributes: {
+                    QuestionNo: 2,
+                    Isoptimal: false,
+                    IsQuestion: true,
+                    ToolTipTitle: "Title1",
+                    ToolTipDescr: "description",
+                  },
+                  children: [
+                    {
+                      name: "First Option",
+                      attributes: {
+                        QuestionNo: 2,
+                        Isoptimal: true,
+                        IsQuestion: false,
+                        ToolTipTitle: "Title1",
+                        ToolTipDescr: "description",
+                      },
+                      children: [],
+                    },
+                    {
+                      name: "Second Option",
+                      attributes: {
+                        QuestionNo: 2,
+                        Isoptimal: false,
+                        IsQuestion: false,
+                        ToolTipTitle: "Title1",
+                        ToolTipDescr: "description",
+                      },
+                      children: [],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "fourth option for assdasda",
+              attributes: {
+                QuestionNo: 2,
+                Isoptimal: false,
+                IsQuestion: false,
+                ToolTipTitle: "Title1",
+                ToolTipDescr: "description",
+              },
+              children: [],
+            },
           ],
         },
       ],
     },
     {
       name: "Third Answer",
+      attributes: {
+        QuestionNo: 4,
+        Isoptimal: false,
+        IsQuestion: false,
+        ToolTipTitle: "Title1",
+        ToolTipDescr: "description",
+      },
+      children: [],
+    },
+    {
+      name: "fourth Answer",
       attributes: {
         QuestionNo: 4,
         Isoptimal: false,
