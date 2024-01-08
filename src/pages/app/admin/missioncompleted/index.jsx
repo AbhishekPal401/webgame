@@ -166,9 +166,15 @@ const data = {
 
 const MissionCompleted = () => {
   return (
-    <div className={styles.container}>
+    <div
+      className={styles.container}
+      style={{ backgroundImage: 'url("/images/user_background.png")' }}
+    >
       <div className={styles.missionContainer}>
-        <div className={styles.header}>
+        <div
+          className={styles.header}
+          style={{ backgroundImage: 'url("/images/particles2.png")' }}
+        >
           <div>Mission Accomplished!</div>
           <div>
             Thank You For Taking Part In This Game, We Hope You Have Enjoyed It.

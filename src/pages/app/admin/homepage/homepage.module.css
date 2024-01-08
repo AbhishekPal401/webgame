@@ -22,7 +22,6 @@
   align-items: flex-end;
   justify-content: flex-end;
   height: 100%;
-  background-image: url("./images/binary.png");
   background-size: cover;
   background-position: center;
   overflow: hidden;
@@ -54,7 +53,6 @@
   background: rgb(61, 61, 61);
   border-radius: 0.5rem;
   padding: 1rem 1rem;
-  background-image: url("/images/home1.png");
   background-repeat: no-repeat;
   background-size: cover;
   overflow: hidden;
@@ -74,7 +72,7 @@
   gap: 1rem;
   overflow-x: auto;
   white-space: nowrap;
-  padding-bottom: 1rem; 
+  padding-bottom: 1rem;
 }
 
 .sessionHistoryCard {
@@ -84,7 +82,7 @@
   min-width: 31rem;
 }
 
-.cardTopContainer{
+.cardTopContainer {
   display: flex;
   flex-direction: row;
   align-items: end;
@@ -139,7 +137,7 @@
   max-width: 70%;
 }
 
-.cardBottomContainerRight{
+.cardBottomContainerRight {
   flex: 3;
   max-width: 30%;
   text-align: center;

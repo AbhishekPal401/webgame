@@ -406,14 +406,20 @@ const UserProfile = () => {
         <div className={styles.left}>
           <label>User Profile</label>
         </div>
-        <div className={styles.right}>
+        <div
+          className={styles.right}
+          style={{ backgroundImage: 'url("./images/binary.png")' }}
+        >
           <img src="./images/scenario.png" />
         </div>
       </div>
       <div className={styles.mainContainer}>
         <div className={styles.formContainer}>
           <div className={styles.formLeft}></div>
-          <div className={styles.formRight}>
+          <div
+            className={styles.formRight}
+            style={{ backgroundImage: 'url("./images/particles.png")' }}
+          >
             <div className={styles.leftInputs}>
               <Input
                 labelStyle={styles.inputLabel}
