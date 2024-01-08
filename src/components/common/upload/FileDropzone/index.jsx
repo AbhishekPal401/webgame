@@ -37,7 +37,7 @@ const FileDropZone = ({
           setError(null);
         };
         reader.readAsDataURL(file);
-        toast.success("File upload successfull.")
+        // toast.success("File upload successfull.")
       } else {
         setError("Invalid file type. Please choose a valid file.");
         console.log("Invalid file type. Please choose a valid file.");

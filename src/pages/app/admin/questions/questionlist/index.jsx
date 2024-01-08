@@ -20,7 +20,7 @@ function QuestionList() {
     const navigate = useNavigate();
 
     console.log("scenarioID", scenarioID);
-
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         if (credentials) {
@@ -28,9 +28,23 @@ function QuestionList() {
                 scenarioID: scenarioID,
             };
 
-            dispatch(getQuestionsByScenarioId(data));
+            dispatch(getQuestionsByScenarioId(data))
+                .finally(() => setIsLoading(false));
         }
-    }, []);
+    }, [credentials, scenarioID, dispatch]);
+
+    useEffect(() => {
+        if (!questionsByScenarioIdDetails) return;
+
+        console.log("parsed questionsByScenarioIdDetails :", JSON.parse(questionsByScenarioIdDetails?.data));
+
+        const questionsData = JSON.parse(questionsByScenarioIdDetails?.data);
+
+        if (questionsData?.length <= 0 && !isLoading) {
+            navigate(`/questions/uploadquestions/${scenarioID}`);
+        }
+    }, [questionsByScenarioIdDetails, navigate, scenarioID, isLoading]);
+
 
     return (
         <PageContainer>
@@ -83,7 +97,7 @@ function QuestionList() {
                                                         className={styles.questions}
                                                         onClick={() => {
                                                             navigate(`/questions/${scenarioID}/questionbuilder/${question.QuestionID}`);
-                                                          }}
+                                                        }}
                                                     >
                                                         {question.QuestionText}
                                                     </td>
