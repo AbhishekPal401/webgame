@@ -95,7 +95,10 @@ const Intro = () => {
               </video>
             )}
 
-          <div className={styles.buttonContainer}>
+          <div
+            className={styles.buttonContainer}
+            style={{ backgroundImage: 'url("./images/grey_strip.png")' }}
+          >
             <Button onClick={handlePlay} customStyle={{ fontSize: "1.4rem" }}>
               Skip
             </Button>

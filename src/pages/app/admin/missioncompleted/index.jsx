@@ -16,7 +16,7 @@ const SelectTree = ({ clicked = 0 }) => {
 };
 
 const data = {
-  name: "First Question awdwawda dawd aw daw dawd aw dawdawda daw dawd ad ad awdaw da  awdawd awd awd awd aw",
+  name: "First Question awdwawda dawd aw daw dawd aw dawdawda daw dawd ad ad awdaw da  awdawd awd awd awd aw ad aw dawd aw dawd awd awd awda d wd  ad awd ad rrrr rrrr rrrrr rrrrr rr rrr rrr",
   attributes: {
     QuestionNo: 1,
     Isoptimal: false,
@@ -31,8 +31,8 @@ const data = {
         QuestionNo: 2,
         Isoptimal: false,
         IsQuestion: false,
-        ToolTipTitle: "Title1",
-        ToolTipDescr: "description",
+        ToolTipTitle: "Title1 adwa ",
+        ToolTipDescr: "description adw a",
       },
       children: [],
     },
@@ -60,7 +60,7 @@ const data = {
               name: "assdasda",
               attributes: {
                 QuestionNo: 2,
-                Isoptimal: true,
+                Isoptimal: false,
                 IsQuestion: false,
                 ToolTipTitle: "Title1",
                 ToolTipDescr: "description",
@@ -69,6 +69,63 @@ const data = {
             },
             {
               name: "lrem ipsum ad a asda  awd",
+              attributes: {
+                QuestionNo: 2,
+                Isoptimal: false,
+                IsQuestion: false,
+                ToolTipTitle: "Title1",
+                ToolTipDescr: "description",
+              },
+              children: [],
+            },
+            {
+              name: "third option for assdasda",
+              attributes: {
+                QuestionNo: 2,
+                Isoptimal: true,
+                IsQuestion: false,
+                ToolTipTitle: "Title1",
+                ToolTipDescr: "description",
+              },
+              children: [
+                {
+                  name: "third Question for ada  lorem ispsum ",
+                  attributes: {
+                    QuestionNo: 2,
+                    Isoptimal: false,
+                    IsQuestion: true,
+                    ToolTipTitle: "Title1",
+                    ToolTipDescr: "description",
+                  },
+                  children: [
+                    {
+                      name: "First Option",
+                      attributes: {
+                        QuestionNo: 2,
+                        Isoptimal: true,
+                        IsQuestion: false,
+                        ToolTipTitle: "Title1",
+                        ToolTipDescr: "description",
+                      },
+                      children: [],
+                    },
+                    {
+                      name: "Second Option",
+                      attributes: {
+                        QuestionNo: 2,
+                        Isoptimal: false,
+                        IsQuestion: false,
+                        ToolTipTitle: "Title1",
+                        ToolTipDescr: "description",
+                      },
+                      children: [],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "fourth option for assdasda",
               attributes: {
                 QuestionNo: 2,
                 Isoptimal: false,
@@ -93,14 +150,31 @@ const data = {
       },
       children: [],
     },
+    {
+      name: "fourth Answer",
+      attributes: {
+        QuestionNo: 4,
+        Isoptimal: false,
+        IsQuestion: false,
+        ToolTipTitle: "Title1",
+        ToolTipDescr: "description",
+      },
+      children: [],
+    },
   ],
 };
 
 const MissionCompleted = () => {
   return (
-    <div className={styles.container}>
+    <div
+      className={styles.container}
+      style={{ backgroundImage: 'url("/images/user_background.png")' }}
+    >
       <div className={styles.missionContainer}>
-        <div className={styles.header}>
+        <div
+          className={styles.header}
+          style={{ backgroundImage: 'url("/images/particles2.png")' }}
+        >
           <div>Mission Accomplished!</div>
           <div>
             Thank You For Taking Part In This Game, We Hope You Have Enjoyed It.

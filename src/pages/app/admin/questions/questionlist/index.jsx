@@ -8,123 +8,123 @@ import { useParams } from "react-router-dom";
 import { getQuestionsByScenarioId } from "../../../../../store/app/admin/questions/getQuestionsByScenarioId.js";
 import { useNavigate } from "react-router-dom";
 
-
 function QuestionList() {
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch();
+  const { credentials } = useSelector((state) => state.login);
+  const { questionsByScenarioIdDetails } = useSelector(
+    (state) => state.getQuestionsByScenarioId
+  );
 
-    const { credentials } = useSelector((state) => state.login);
-    const { questionsByScenarioIdDetails } = useSelector((state) => state.getQuestionsByScenarioId);
+  const { scenarioID } = useParams();
+  const navigate = useNavigate();
 
-    const { scenarioID } = useParams();
-    const navigate = useNavigate();
+  console.log("scenarioID", scenarioID);
+  const [isLoading, setIsLoading] = useState(true);
 
-    console.log("scenarioID", scenarioID);
-    const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    if (credentials) {
+      const data = {
+        scenarioID: scenarioID,
+      };
 
-    useEffect(() => {
-        if (credentials) {
-            const data = {
-                scenarioID: scenarioID,
-            };
+      dispatch(getQuestionsByScenarioId(data)).finally(() =>
+        setIsLoading(false)
+      );
+    }
+  }, [credentials, scenarioID, dispatch]);
 
-            dispatch(getQuestionsByScenarioId(data))
-                .finally(() => setIsLoading(false));
-        }
-    }, [credentials, scenarioID, dispatch]);
+  useEffect(() => {
+    if (!questionsByScenarioIdDetails) return;
 
-    useEffect(() => {
-        if (!questionsByScenarioIdDetails) return;
-
-        console.log("parsed questionsByScenarioIdDetails :", JSON.parse(questionsByScenarioIdDetails?.data));
-
-        const questionsData = JSON.parse(questionsByScenarioIdDetails?.data);
-
-        if (questionsData?.length <= 0 && !isLoading) {
-            navigate(`/questions/uploadquestions/${scenarioID}`);
-        }
-    }, [questionsByScenarioIdDetails, navigate, scenarioID, isLoading]);
-
-
-    return (
-        <PageContainer>
-            <div className={styles.conatiner}>
-                <div className={styles.topContainer}>
-                    <div className={styles.left}>
-                        <label>Question List</label>
-                    </div>
-                    <div className={styles.right}>
-                        <img src="./images/questions.png" />
-                        <div className={styles.buttonContainer}>
-                            <Button
-                                buttonType="cancel"
-                            >
-                                Upload Questions
-                            </Button>
-                            <Button >Download Template</Button>
-                        </div>
-                    </div>
-                </div>
-                {/* Questions Table:: start */}
-                <div className={styles.mainContainer}>
-                    <div className={styles.mainTableContainer}>
-                        <table className={styles.table_content}>
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>#</th>
-                                    <th>Questions</th>
-                                    <th>Level</th>
-                                    <th>Answers</th>
-                                    <th>Decision maker</th>
-                                    <th>Narrative Media</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {questionsByScenarioIdDetails &&
-                                    questionsByScenarioIdDetails.success &&
-                                    questionsByScenarioIdDetails.data &&
-                                    JSON.parse(questionsByScenarioIdDetails?.data).map(
-                                        (question, index) => {
-                                            return (
-                                                <tr key={index}>
-                                                    <td>
-                                                        <Checkbox />
-                                                    </td>
-                                                    <td>{index + 1}</td>
-                                                    <td
-                                                        className={styles.questions}
-                                                        onClick={() => {
-                                                            navigate(`/questions/${scenarioID}/questionbuilder/${question.QuestionID}`);
-                                                        }}
-                                                    >
-                                                        {question.QuestionText}
-                                                    </td>
-                                                    <td
-                                                        className={styles.scenarioDescription}
-
-                                                    >
-                                                        Levels{/* TODO :: get levels */}
-                                                    </td>
-                                                    <td>{question.Answers}</td>
-                                                    <td>{question.DelegatedTo}</td>
-                                                    <td>{question.NarativeMedia}</td>
-                                                    <td></td>
-                                                </tr>
-                                            );
-                                        }
-                                    )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {/* Questions Table:: end */}
-            </div>
-        </PageContainer>
-
+    console.log(
+      "parsed questionsByScenarioIdDetails :",
+      JSON.parse(questionsByScenarioIdDetails?.data)
     );
+
+    const questionsData = JSON.parse(questionsByScenarioIdDetails?.data);
+
+    if (questionsData?.length <= 0 && !isLoading) {
+      navigate(`/questions/uploadquestions/${scenarioID}`);
+    }
+  }, [questionsByScenarioIdDetails, navigate, scenarioID, isLoading]);
+
+  return (
+    <PageContainer>
+      <div className={styles.conatiner}>
+        <div className={styles.topContainer}>
+          <div className={styles.left}>
+            <label>Question List</label>
+          </div>
+          <div
+            className={styles.right}
+            style={{ backgroundImage: 'url("/images/binary.png")' }}
+          >
+            <img src="./images/questions.png" />
+            <div className={styles.buttonContainer}>
+              <Button buttonType="cancel">Upload Questions</Button>
+              <Button>Download Template</Button>
+            </div>
+          </div>
+        </div>
+        {/* Questions Table:: start */}
+        <div className={styles.mainContainer}>
+          <div className={styles.mainTableContainer}>
+            <table className={styles.table_content}>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>#</th>
+                  <th>Questions</th>
+                  <th>Level</th>
+                  <th>Answers</th>
+                  <th>Decision maker</th>
+                  <th>Narrative Media</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {questionsByScenarioIdDetails &&
+                  questionsByScenarioIdDetails.success &&
+                  questionsByScenarioIdDetails.data &&
+                  JSON.parse(questionsByScenarioIdDetails?.data).map(
+                    (question, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>
+                            <Checkbox />
+                          </td>
+                          <td>{index + 1}</td>
+                          <td
+                            className={styles.questions}
+                            onClick={() => {
+                              navigate(
+                                `/questions/${scenarioID}/questionbuilder/${question.QuestionID}`
+                              );
+                            }}
+                          >
+                            {question.QuestionText}
+                          </td>
+                          <td className={styles.scenarioDescription}>
+                            Levels{/* TODO :: get levels */}
+                          </td>
+                          <td>{question.Answers}</td>
+                          <td>{question.DelegatedTo}</td>
+                          <td>{question.NarativeMedia}</td>
+                          <td></td>
+                        </tr>
+                      );
+                    }
+                  )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Questions Table:: end */}
+      </div>
+    </PageContainer>
+  );
 }
 
 export default QuestionList;

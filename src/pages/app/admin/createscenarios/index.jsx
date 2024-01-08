@@ -283,7 +283,10 @@ const CreateScenario = () => {
         {/* Create Scenario:: start */}
         <div className={styles.formContainer}>
           <div className={styles.createScenarioFormLeft}></div>
-          <div className={styles.createScenarioFormRight}>
+          <div
+            style={{ backgroundImage: 'url("./images/particles.png")' }}
+            className={styles.createScenarioFormRight}
+          >
             <div className={styles.createScenarioLeftInputs}>
               <Input
                 labelStyle={styles.inputLabel}
@@ -314,7 +317,10 @@ const CreateScenario = () => {
         {/* Game Introdution:: start */}
         <div className={styles.formContainer}>
           <div className={styles.gameIntroductionFormLeft}></div>
-          <div className={styles.gameIntroductionFormRight}>
+          <div
+            style={{ backgroundImage: 'url("./images/particles.png")' }}
+            className={styles.gameIntroductionFormRight}
+          >
             <div className={styles.gameIntroductionLeftInputs}>
               <label>Game Introduction</label>
               {/*TODO:: Rich Text Editor */}

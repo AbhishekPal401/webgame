@@ -109,7 +109,7 @@ const CreateUser = () => {
 
   useEffect(() => {
     if (createUserResponse === null) return;
-    
+
     if (createUserResponse?.success) {
       toast.success(createUserResponse.message);
       if (userID) {
@@ -351,6 +351,11 @@ const CreateUser = () => {
         formData.append("Module", "ProfileImage");
         formData.append("contentType", userData.profileImage.value.type);
         formData.append("FormFile", userData.profileImage.value);
+        formData.append("ScenarioID", "file"); // TODO :: not implemented in backend
+        formData.append("Requester.RequestID", generateGUID());
+        formData.append("Requester.RequesterID", credentials.data.userID);
+        formData.append("Requester.RequesterName", credentials.data.userName);
+        formData.append("Requester.RequesterType", credentials.data.role);
 
         const response = await axios.post(
           `${baseUrl}/api/Storage/FileUpload`,
@@ -410,14 +415,20 @@ const CreateUser = () => {
         <div className={styles.left}>
           <label> {userID ? "Update User" : "Create User"}</label>
         </div>
-        <div className={styles.right}>
+        <div
+          className={styles.right}
+          style={{ backgroundImage: 'url("./images/binary.png")' }}
+        >
           <img src="./images/scenario.png" />
         </div>
       </div>
       <div className={styles.mainContainer}>
         <div className={styles.formContainer}>
           <div className={styles.formLeft}></div>
-          <div className={styles.formRight}>
+          <div
+            className={styles.formRight}
+            style={{ backgroundImage: 'url("./images/particles.png")' }}
+          >
             <div className={styles.leftInputs}>
               <Input
                 labelStyle={styles.inputLabel}

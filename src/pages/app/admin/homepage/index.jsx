@@ -85,13 +85,19 @@ const Homepage = () => {
           <div className={styles.left}>
             <label>Welcome Admin</label>
           </div>
-          <div className={styles.right}>
+          <div
+            className={styles.right}
+            style={{ backgroundImage: 'url("./images/binary.png")' }}
+          >
             <img src="./images/home.png" alt="Home page background png" />
           </div>
         </div>
         <div className={styles.mainContainer}>
           {/* Session History:: start */}
-          <div className={styles.sessionHistoryContainer}>
+          <div
+            className={styles.sessionHistoryContainer}
+            style={{ backgroundImage: 'url("/images/home1.png")' }}
+          >
             <h3>Session History</h3>
             <div className={styles.sessionHistoryCardContainer}>
               {sessionsHistoryByType &&

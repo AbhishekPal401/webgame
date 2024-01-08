@@ -26,7 +26,6 @@
   flex: 1.5;
   height: 100%;
   position: relative;
-  background-image: url("./images/binary.png");
   background-size: cover;
   background-position: center;
 }
@@ -35,8 +34,8 @@
   height: 100%;
   object-fit: contain;
   position: absolute;
-  top: 1.5rem; 
-  z-index: 1; 
+  top: 1.5rem;
+  z-index: 1;
 }
 .buttonContainer {
   position: absolute;
@@ -67,7 +66,6 @@
   font-size: 1.2rem;
   text-align: left;
   width: 100%;
-  
 }
 .table_content thead {
   width: 100%;

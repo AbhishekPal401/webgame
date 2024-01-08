@@ -53,7 +53,6 @@
   flex: 1;
   height: 100%;
   background: #474747 0% 0% no-repeat padding-box;
-  background-image: url("./images/particles.png");
   background-repeat: no-repeat;
   background-size: contain;
   background-position: right;
@@ -61,10 +60,9 @@
   flex-direction: row;
   gap: 5rem;
   padding: 1.5rem 1rem;
-  
+
   /* Rotate the background image */
   transform: scaleY(-1);
-
 }
 
 .createScenarioLeftInputs,
@@ -105,7 +103,6 @@
   flex: 1;
   height: 100%;
   background: #474747 0% 0% no-repeat padding-box;
-  background-image: url("./images/particles.png");
   background-repeat: no-repeat;
   background-size: contain;
   background-position: right;

@@ -58,7 +58,10 @@ const Scenarios = () => {
         <div className={styles.left}>
           <label>Scenarios</label>
         </div>
-        <div className={styles.right}>
+        <div
+          className={styles.right}
+          style={{ backgroundImage: 'url("/images/binary.png")' }}
+        >
           <img src="./images/scenario.png" />
           <div className={styles.buttonContainer}>
             <Button onClick={navigateTo}>Create New</Button>
@@ -95,16 +98,18 @@ const Scenarios = () => {
                       <td
                         className={styles.scenarioName}
                         onClick={() => {
-                          navigate(`/scenario/updatescenarios/${scenario.ScenarioID}`); 
+                          navigate(
+                            `/scenario/updatescenarios/${scenario.ScenarioID}`
+                          );
                         }}
                       >
                         {scenario.ScenarioName}
                       </td>
-                      <td 
+                      <td
                         className={styles.scenarioDescription}
                         onClick={() => {
-                          navigate(`/questions/${scenario.ScenarioID}`); 
-                        }}  
+                          navigate(`/questions/${scenario.ScenarioID}`);
+                        }}
                       >
                         {scenario.Description}
                       </td>

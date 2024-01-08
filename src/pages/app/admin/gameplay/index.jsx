@@ -266,7 +266,10 @@ const GamePlay = () => {
           <div>Objectives</div>
           <div>Cyber security game</div>
         </div>
-        <div className={styles.header_middle}>
+        <div
+          className={styles.header_middle}
+          style={{ backgroundImage: 'url("/images/gameplay_header.png")' }}
+        >
           <svg className={styles.strip1} onClick={() => {}}>
             <use xlinkHref={"sprite.svg#gameplay-header-1"} />
           </svg>
@@ -291,7 +294,10 @@ const GamePlay = () => {
           </div>
         </div>
       </div>
-      <div className={styles.mainContent}>
+      <div
+        className={styles.mainContent}
+        style={{ backgroundImage: 'url("/images/user_background.png")' }}
+      >
         <div className={styles.left}>
           <div></div>
           <div></div>

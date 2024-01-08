@@ -37,7 +37,6 @@
   width: 46%;
   height: 100%;
   background-color: var(--innerbackground);
-  background-image: url("/images/gameplay_header.png");
   background-repeat: no-repeat;
   background-position: bottom center;
   background-size: 65% 80%;
@@ -122,7 +121,6 @@
 .mainContent {
   width: 100%;
   height: calc(100vh - 17rem);
-  background-image: url("/images/user_background.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-color: #2d2d2d;
