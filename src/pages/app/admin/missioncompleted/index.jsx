@@ -47,7 +47,7 @@ const data = {
       },
       children: [
         {
-          name: "Questionww",
+          name: "This is the second question for the table top",
           attributes: {
             QuestionNo: 2,
             Isoptimal: false,
@@ -61,6 +61,17 @@ const data = {
               attributes: {
                 QuestionNo: 2,
                 Isoptimal: true,
+                IsQuestion: false,
+                ToolTipTitle: "Title1",
+                ToolTipDescr: "description",
+              },
+              children: [],
+            },
+            {
+              name: "lrem ipsum ad a asda  awd",
+              attributes: {
+                QuestionNo: 2,
+                Isoptimal: false,
                 IsQuestion: false,
                 ToolTipTitle: "Title1",
                 ToolTipDescr: "description",

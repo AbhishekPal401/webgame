@@ -67,7 +67,7 @@ const MissionTree = ({ data = {} }) => {
       });
 
       const { width, height } = containerRef.current.getBoundingClientRect();
-      setTranslate({ x: width / 2, y: height * 0.1 });
+      setTranslate({ x: width / 2, y: 0 });
     }
   }, [containerRef]);
 
@@ -102,8 +102,8 @@ const MissionTree = ({ data = {} }) => {
           );
         }}
         // scaleExtent={{ min: 0.01, max: 2 }}
-        zoom={0.8}
-        depthFactor={140}
+        zoom={0.65}
+        depthFactor={150}
         orientation="vertical"
       />
     </div>
