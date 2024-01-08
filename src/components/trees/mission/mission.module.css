@@ -9,7 +9,7 @@
   display: inline-block;
   border-radius: 0.2rem;
   font-size: 1.3rem;
-  color: "helvetica 500";
+  font-family: "helvetica 500";
 }
 .isOptimalNode {
   background-color: #4ead58;
@@ -17,13 +17,13 @@
   border-radius: 0.2rem;
   color: var(--innerbackground);
   font-size: 1.3rem;
-  color: "helvetica 500";
+  font-family: "helvetica 500";
 }
 .isNotOptimalNode {
   background-color: #7d7d7d;
   display: inline-block;
   border-radius: 0.2rem;
-  color: var(--innerbackground);
+  font-family: var(--innerbackground);
   font-size: 1.3rem;
   color: "helvetica 500";
 }
