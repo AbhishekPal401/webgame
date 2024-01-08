@@ -92,7 +92,7 @@ const MissionTree = ({ data = {} }) => {
         nodeSize={nodeSize}
         pathFunc={"step"}
         pathClassFunc={getDynamicPathClass}
-        separation={{ siblings: 1.6, nonSiblings: 2 }}
+        separation={{ siblings: 1.6, nonSiblings: 1.6 }}
         renderCustomNodeElement={(rd3tProps) => {
           return (
             <CustomNode
