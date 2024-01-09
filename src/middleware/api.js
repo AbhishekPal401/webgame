@@ -37,7 +37,7 @@ const api =
       if (credentials && credentials.data && credentials.data.token) {
         headers = {
           "Content-Type": "application/json",
-          token: credentials && credentials.data && credentials.data.token,
+          Authorization: `Bearer ${credentials.data.token}`,
         };
       }
 

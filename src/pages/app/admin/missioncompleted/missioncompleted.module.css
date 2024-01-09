@@ -57,6 +57,10 @@
   font-family: "helvetica 500";
 }
 
+.header span {
+  text-transform: capitalize;
+}
+
 .selectTree {
   display: flex;
   flex-direction: column;

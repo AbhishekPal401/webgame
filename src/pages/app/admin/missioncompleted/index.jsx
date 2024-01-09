@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styles from "./missioncompleted.module.css";
 import Button from "../../../../components/common/button";
-import MissionTree from "../../../../components/trees/mission";
+import OptimalTree from "../../../../components/trees/mission";
 import { getInstanceSummaryById } from "../../../../store/app/admin/gameinstances/instanceSummary";
 import { useDispatch, useSelector } from "react-redux";
 import { generateGUID } from "../../../../utils/common";
+import SelectedTree from "../../../../components/trees/selectedTree";
 
-const SelectTree = ({ clicked = 0, onSelect = () => {} }) => {
+const SelectTree = ({ clicked = 1, onSelect = () => {} }) => {
   return (
     <div className={styles.selectTree}>
       <div className={styles.selectButtonContainer}>
@@ -528,7 +529,10 @@ const MissionCompleted = () => {
             Here's A Summary Of How You Did.
           </div>
           <div>
-            Player Name <span>CTO</span>
+            Player Name{" "}
+            <span>
+              {credentials?.data?.userName ? credentials.data.userName : ""}
+            </span>
           </div>
         </div>
         <div className={styles.treeContainer}>
@@ -542,9 +546,9 @@ const MissionCompleted = () => {
             {instanceSummary && instanceSummary.data && (
               <>
                 {currentTab === 0 ? (
-                  <MissionTree data={instanceSummary.data} />
+                  <SelectedTree data={instanceSummary.data} userType="admin" />
                 ) : (
-                  <MissionTree data={instanceSummary.data} />
+                  <OptimalTree data={instanceSummary.data} />
                 )}
               </>
             )}
