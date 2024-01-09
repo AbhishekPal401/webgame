@@ -52,7 +52,7 @@ const AdminSidebar = () => {
 
       <ButtonLink
         linkTo="/masters"
-        isActive={location.pathname.includes("masters")}
+        isActive={location.pathname.includes("/masters")}
         svgSrc="sprite.svg#masters"
         onClick={() => {
           dispatch(setCurrentActive("masters"));

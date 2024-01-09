@@ -678,7 +678,6 @@ const CreateInstances = () => {
     // on add Group details
     const onAddGroup = () => {
         console.log("add group")
-        event.preventDefault();
         console.log("onAddGroup");
 
         let valid = true;
