@@ -105,7 +105,6 @@ const Homepage = () => {
                 sessionsHistoryByType.data &&
                 JSON.parse(sessionsHistoryByType.data)?.InstanceDetails.map(
                   (scenario, index) => {
-                    console.log("scenario", scenario);
                     return (
                       <div key={index} className={styles.sessionHistoryCard}>
                         <div className={styles.cardTopContainer}>
