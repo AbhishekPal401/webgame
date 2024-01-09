@@ -32,7 +32,7 @@ const Admin = () => {
         ) ||
         location.pathname.includes("/gameplay") ||
         location.pathname.includes("/missioncompleted") ? (
-        <UserNavbar role="Player" />
+        <UserNavbar role="Admin" />
       ) : (
         <Navbar />
       )}

@@ -119,11 +119,11 @@ const MissionTree = ({ data = {} }) => {
           );
         }}
         scaleExtent={{ min: 0.2, max: 3 }}
-        zoom={0.6}
+        zoom={0.1}
         depthFactor={120}
         orientation="vertical"
       />
-      <Tooltip id="my-tooltip" place="right" />
+      {/* <Tooltip id="my-tooltip" place="right" /> */}
     </div>
   );
 };

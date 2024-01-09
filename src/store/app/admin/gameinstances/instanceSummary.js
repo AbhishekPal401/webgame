@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { apiCallBegan } from "../../../../middleware/actions.js";
+import { isJSONString } from "../../../../utils/common.js";
 
 const slice = createSlice({
   name: "get_instance_summary",
@@ -12,8 +13,20 @@ const slice = createSlice({
       instance.loading = true;
     },
     success: (instance, action) => {
-      instance.instanceSummary = action.payload;
-      instance.loading = false;
+      if (isJSONString(action.payload.data)) {
+        const data = JSON.parse(action.payload.data);
+
+        const newData = {
+          ...action.payload,
+          data: data,
+        };
+
+        instance.instanceSummary = newData;
+        instance.loading = false;
+      } else {
+        instance.instanceSummary = action.payload;
+        instance.loading = false;
+      }
     },
     failed: (instance, action) => {
       instance.instanceSummary = action.payload;
@@ -32,7 +45,7 @@ export default slice.reducer;
 
 export const getInstanceSummaryById = (data) =>
   apiCallBegan({
-    url: "api/Instance/GroupNameByOrgIDs",
+    url: "/api/Instance/GetInstanceSummary",
     method: "POST",
     data,
     onStart: requested.type,

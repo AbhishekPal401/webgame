@@ -1,14 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./missioncompleted.module.css";
 import Button from "../../../../components/common/button";
 import MissionTree from "../../../../components/trees/mission";
+import { getInstanceSummaryById } from "../../../../store/app/admin/gameinstances/instanceSummary";
+import { useDispatch, useSelector } from "react-redux";
+import { generateGUID } from "../../../../utils/common";
 
-const SelectTree = ({ clicked = 0 }) => {
+const SelectTree = ({ clicked = 0, onSelect = () => {} }) => {
   return (
     <div className={styles.selectTree}>
       <div className={styles.selectButtonContainer}>
-        <div className={clicked === 0 ? styles.selected : ""}>Selected</div>
-        <div className={clicked === 1 ? styles.selected : ""}>Optimal</div>
+        <div
+          className={clicked === 0 ? styles.selected : ""}
+          onClick={() => {
+            onSelect(0);
+          }}
+        >
+          Selected
+        </div>
+        <div
+          className={clicked === 1 ? styles.selected : ""}
+          onClick={() => {
+            onSelect(1);
+          }}
+        >
+          Optimal
+        </div>
       </div>
       <div className={styles.line}></div>
     </div>
@@ -465,6 +482,36 @@ const data2 = {
 };
 
 const MissionCompleted = () => {
+  const [currentTab, setCurrentTab] = useState(0);
+
+  const { sessionDetails } = useSelector((state) => state.getSession);
+  const { credentials } = useSelector((state) => state.login);
+  const { instanceSummary } = useSelector((state) => state.instanceSummary);
+
+  console.log("instanceSummary", instanceSummary);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    if (sessionData && credentials) {
+      const data = {
+        instanceID: sessionData.InstanceID,
+        userID: credentials.data.userID,
+        isAdmin: true,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      dispatch(getInstanceSummaryById(data));
+    }
+  }, []);
+
   return (
     <div
       className={styles.container}
@@ -485,9 +532,22 @@ const MissionCompleted = () => {
           </div>
         </div>
         <div className={styles.treeContainer}>
-          <SelectTree clicked={1} />
+          <SelectTree
+            clicked={currentTab}
+            onSelect={(value) => {
+              setCurrentTab(value);
+            }}
+          />
           <div className={styles.tree}>
-            <MissionTree data={data2} />
+            {instanceSummary && instanceSummary.data && (
+              <>
+                {currentTab === 0 ? (
+                  <MissionTree data={instanceSummary.data} />
+                ) : (
+                  <MissionTree data={instanceSummary.data} />
+                )}
+              </>
+            )}
             <div className={styles.right}>
               <div>Time Spent</div>
               <div className={styles.circle}>
