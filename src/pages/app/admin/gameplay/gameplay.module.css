@@ -143,6 +143,10 @@
   border-radius: 5rem;
   background-color: var(--innerbackground);
   margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .middle {
   width: 100%;
@@ -216,4 +220,14 @@
   justify-content: space-between;
   align-items: center;
   font-family: "helvetica 300";
+}
+.pause {
+  fill: var(--black);
+  width: 2rem;
+  height: 2rem;
+}
+.tree {
+  fill: var(--black);
+  width: 2rem;
+  height: 2rem;
 }
