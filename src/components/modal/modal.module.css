@@ -9,4 +9,5 @@
   align-items: center;
   background-color: rgba(109, 109, 109, 0.5);
   z-index: 9999;
+  backdrop-filter: blur(0.8rem);
 }
