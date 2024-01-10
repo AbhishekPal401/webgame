@@ -124,7 +124,7 @@ const MasterList = () => {
     try {
       if (valid) {
         const data = {
-          masterID: "6", //TODO:: not implemented at backend
+          masterID: "", //TODO:: not implemented at backend
           masterName: (activeTab === 'Designation' ?
             addMasterData?.designation?.value :
             addMasterData?.organization?.value),

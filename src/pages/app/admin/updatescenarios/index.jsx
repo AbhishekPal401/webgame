@@ -58,8 +58,10 @@ const UpdateScenarios = () => {
   const [introFileDisplay, setIntroFileDisplay] = useState(null);
 
   const { credentials } = useSelector((state) => state.login);
+
   const { scenarioByIdDetails, loading: scenarioByIdDetailsLoading } =
     useSelector((state) => state.getScenarioById);
+
   const { updateScenarioResponse } = useSelector(
     (state) => state.updateScenario
   );
@@ -242,7 +244,7 @@ const UpdateScenarios = () => {
     let data = scenarioData;
     console.log("scenarioData data:", data);
 
-    if (scenarioData?.scenarioName?.value === "") {
+    if (scenarioData?.scenarioName?.value?.trim() === "") {
       console.log("scenarioName:", data.scenarioName);
       data = {
         ...data,
@@ -255,7 +257,7 @@ const UpdateScenarios = () => {
       valid = false;
     }
 
-    if (scenarioData?.scenarioDescription?.value === "") {
+    if (scenarioData?.scenarioDescription?.value?.trim() === "") {
       console.log("scenarioDescription:", data.scenarioDescription);
       data = {
         ...data,
@@ -268,7 +270,7 @@ const UpdateScenarios = () => {
       valid = false;
     }
 
-    if (scenarioData?.gameIntroText?.value === "") {
+    if (scenarioData?.gameIntroText?.value?.trim() === "") {
       console.log("gameIntroText:", data.gameIntroText);
       data = {
         ...data,

@@ -57,7 +57,7 @@ const AdminSidebar = () => {
         onClick={() => {
           dispatch(setCurrentActive("masters"));
         }}
-      />
+      /> 
 
       <ButtonLink
         linkTo="/scenario"

@@ -127,7 +127,7 @@ const CreateScenario = () => {
     let valid = true;
     let data = scenarioData;
 
-    if (scenarioData?.scenarioName?.value === "") {
+    if (scenarioData?.scenarioName?.value?.trim() === "") {
       data = {
         ...data,
         scenarioName: {
@@ -139,7 +139,7 @@ const CreateScenario = () => {
       valid = false;
     }
 
-    if (scenarioData?.scenarioDescription?.value === "") {
+    if (scenarioData?.scenarioDescription?.value?.trim() === "") {
       data = {
         ...data,
         scenarioDescription: {
@@ -151,7 +151,7 @@ const CreateScenario = () => {
       valid = false;
     }
 
-    if (scenarioData?.gameIntroText?.value === "") {
+    if (scenarioData?.gameIntroText?.value?.trim() === "") {
       data = {
         ...data,
         gameIntroText: {
