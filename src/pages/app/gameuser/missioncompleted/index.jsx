@@ -111,10 +111,18 @@ const MissionCompleted = () => {
             <div className={styles.right}>
               <div>Time Spent</div>
               <div className={styles.circle}>
-                23 <span>min</span>
+                {instanceSummary?.data?.TimeTaken
+                  ? instanceSummary?.data?.TimeTaken
+                  : ""}{" "}
+                <span>min</span>
               </div>
               <div>Score</div>
-              <div className={styles.circle}>128</div>
+              <div className={styles.circle}>
+                {" "}
+                {instanceSummary?.data?.IndividualScore
+                  ? instanceSummary?.data?.IndividualScore
+                  : ""}
+              </div>
             </div>
           </div>
         </div>

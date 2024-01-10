@@ -43,18 +43,6 @@
   font-size: 1.4rem;
 }
 .mainTopContainerLeft {
-  display: flex;
-  justify-content: start;
-  align-items: baseline;
-  gap: 2.4rem;
-}
-.mainTopContainerLeft label {
-  font-size: 2rem;
-  color: var(--black);
-  font-weight: bold;
-}
-.mainTopContainerLeft a {
-  font-size: 1.2rem;
 }
 .mainTableContainer {
   width: 100%;

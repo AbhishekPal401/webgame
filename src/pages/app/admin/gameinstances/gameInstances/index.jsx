@@ -83,12 +83,6 @@ const GameInstances = () => {
                 <div className={styles.mainContainer}>
                     <div className={styles.mainTopContainer}>
                         <div className={styles.mainTopContainerLeft}>
-                            <div>
-                                <label>Users</label>
-                            </div>
-                            <div>
-                                <Link>See All</Link>
-                            </div>
                         </div>
                         <div className={styles.mainTopContainerRight}>
                             <Button onClick={navigateTo} >Create New Instance</Button>
