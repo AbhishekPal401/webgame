@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import PageContainer from "../../../../../components/ui/pagecontainer";
 import styles from "./masterlist.module.css";
 import Button from "../../../../../components/common/button/index.jsx";
@@ -10,137 +10,252 @@ import { useSelector, useDispatch } from "react-redux";
 import { generateGUID, isJSONString } from "../../../../../utils/common.js";
 import { formatDateString } from "../../../../../utils/helper.js";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import ButtonLink from "../../../../../components/common/ButtonLink/index.jsx";
 import {
   getMastersByType,
   resetMastersByTypeState
 } from "../../../../../store/app/admin/masters/mastersByType.js";
 import {
-  getDesignationsbyPage,
-  resetDesignationState
-} from "../../../../../store/app/admin/masters/designations.js";
-import {
-  getOrganizationsbyPage,
-  resetOrganizationState
-} from "../../../../../store/app/admin/masters/organizations.js";
+  createMaster,
+  resetCreateMasterState
+} from "../../../../../store/app/admin/masters/createMaster.js";
+
+// const DesignationForm = ({
+//   designation,
+//   description,
+//   onDesignationChange = () => { },
+//   onDescriptionChange = () => { },
+//   ...props
+// }) => {
+//   return (
+//     <div className={styles.formGroup}>
+//       <input
+//         type="text"
+//         className={styles.formControl}
+//         value={designation}
+//         onChange={onDesignationChange}
+//         {...props}
+//       />
+
+//       <textarea
+//         className={`${styles.formControl} ${styles.textAreaStyleClass}`}
+//         style={{ marginTop: '1rem' }}
+//         value={description}
+//         onChange={onDescriptionChange}
+//         {...props}
+//       />
+//     </div>
+
+//   )
+// };
+
 
 const MasterList = () => {
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [addMasterData, setAddMasterData] = useState({
-    designation: {
-      value: "",
-      error: "",
-    },
-    description: {
-      value: "",
-      error: "",
-    },
-    organization: {
-      value: "",
-      error: "",
-    },
+    designation: { value: '', error: '' },
+    description: { value: '', error: '' },
+    organization: { value: '', error: '' },
   });
 
   const [addDesignationData, setAddDesignationData] = useState({
-    designation: {
-      value: "",
-      error: "",
-    },
-    description: {
-      value: "",
-      error: "",
-    },
+    designation: { value: '', error: '' },
+    description: { value: '', error: '' },
   });
 
   const [addOrganizationData, setAddOrganizationData] = useState({
-    organization: {
-      value: "",
-      error: "",
-    },
+    organization: { value: '', error: '' },
   });
 
   const [activeTab, setActiveTab] = useState('Designation');
   const [showModal, setShowModal] = useState(false);
 
-  const [pageCount, setPageCount] = useState(10);
-  const [pageNumber, setPageNumber] = useState(1);
+  const { mastersByType, loading: masterLoading } = useSelector((state) => state.mastersByType);
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const { mastersByType, loading: masterLoading } = useSelector(
-    (state) => state.mastersByType
-  );
+  const { createMasterResponse, loading: createMasterResponseLoading } =
+    useSelector((state) => state.createMaster);
 
   const { credentials } = useSelector((state) => state.login);
-  const { designationsByPage } = useSelector((state) => state.designations);
-  const { organizationsByPage } = useSelector((state) => state.organizations);
 
-  const resetAddDesignationData = () => {
+  const resetAddMasterData = useCallback(() => {
+    setAddMasterData({
+      designation: { value: '', error: '' },
+      description: { value: '', error: '' },
+      organization: { value: '', error: '' },
+    });
+  }, []);
+
+  const resetAddDesignationData = useCallback(() => {
     setAddDesignationData({
-      designation: {
-        value: "",
-        error: "",
-      },
-      description: {
-        value: "",
-        error: "",
-      },
-    })
-  };
+      designation: { value: '', error: '' },
+      description: { value: '', error: '' },
+    });
+  }, []);
 
-  const resetAddOrganizationData = () => {
+  const resetAddOrganizationData = useCallback(() => {
     setAddOrganizationData({
-      organization: {
-        value: "",
-        error: "",
-      },
-    })
-  };
+      organization: { value: '', error: '' },
+    });
+  }, []);
 
-  // fetch the masters based on the activeTab 
+
+  const onMasterDataChange = useCallback(
+    (event) => {
+      const { name, value } = event.target;
+      setAddMasterData((prevData) => ({
+        ...prevData,
+        [name]: { value, error: '' },
+      }));
+    },
+    [setAddMasterData]
+  );
+
+  const onDesignationChange = useCallback(
+    (event) => {
+      const { name, value } = event.target;
+      setAddDesignationData((prevData) => ({
+        ...prevData,
+        [name]: { value, error: '' },
+      }));
+    },
+    [setAddDesignationData]
+  );
+
+  const onOrganizationChange = useCallback(
+    (event) => {
+      const { name, value } = event.target;
+      setAddOrganizationData((prevData) => ({
+        ...prevData,
+        [name]: { value, error: '' },
+      }));
+    },
+    [setAddOrganizationData]
+  );
+
+  const handleTabClick = useCallback(
+    (tab) => {
+      setActiveTab(tab);
+    },
+    [setActiveTab]
+  );
+
+  // on add Group details
+  // const onAddMasterData = () => {
+  //   console.log("onAddMasterData")
+
+  //   let valid = true;
+  //   let data = { ...addMasterData };
+
+  //   if (activeTab === 'Designation') {
+
+  //     // validate the designation fields
+  //     if (!addMasterData?.designation?.value?.trim()) {
+  //       console.log("designation:", data.designation);
+  //       data = {
+  //         ...data,
+  //         designation: {
+  //           ...data.designation,
+  //           error: "Please enter designation name",
+  //         },
+  //       };
+
+  //       valid = false;
+  //     }
+
+  //     if (!addMasterData?.description?.value?.trim()) {
+  //       console.log("description:", data.description);
+  //       data = {
+  //         ...data,
+  //         description: {
+  //           ...data.description,
+  //           error: "Please enter description ",
+  //         },
+  //       };
+
+  //       valid = false;
+  //     }
+
+  //   } else if (activeTab === 'Organization') {
+  //     if (!addMasterData?.organization?.value?.trim()) {
+  //       console.log("organization:", data.organization);
+  //       data = {
+  //         ...data,
+  //         organization: {
+  //           ...data.organization,
+  //           error: "Please enter organization ",
+  //         },
+  //       };
+
+  //       valid = false;
+  //     }
+  //   }
+
+  //   // If all validations pass
+  //   try {
+  //     if (valid && activeTab === 'Designation') {
+  //       const data = {
+  //         groupName: addGroupData?.groupName?.value,
+  //         groupDescription: "",
+  //         organizationID: addGroupData?.organizationId?.value,
+  //         requester: {
+  //           requestID: generateGUID(),
+  //           requesterID: credentials.data.userID,
+  //           requesterName: credentials.data.userName,
+  //           requesterType: credentials.data.role,
+  //         },
+  //       };
+  //       const groupByOrgIdData = {
+  //         organizationID: addGroupData?.organizationId?.value,
+  //       }
+
+  //       console.log("data to update : ", data);
+
+  //       // dispatch a request to create user and get group details by org id so the group names will be updated
+  //       dispatch(createGroup(data));
+  //       dispatch(getGroupDetailsByOrgID(groupByOrgIdData));
+
+
+  //     } else {
+  //       toast.error("Please fill all the details.");
+  //     }
+  //   } catch (error) {
+  //     toast.error("An error occurred while saving the master data.");
+  //     console.error("Saving master data error:", error);
+  //   }
+  // }
+
   useEffect(() => {
     if (credentials) {
       const data = {
-        masterType: (activeTab === 'Designation' ? 'Designation' : 'Organization'),
+        masterType: activeTab === 'Designation' ? 'Designation' : 'Organization',
       };
-      console.log("mastertype to dispatch : ", data);
       dispatch(getMastersByType(data));
     }
-  }, [activeTab]);
+  }, [activeTab, dispatch, credentials]);
 
   useEffect(() => {
-    if (mastersByType && isJSONString(mastersByType?.data)) {
-      console.log("JSON.parse(mastersByType.data) :", JSON.parse(mastersByType.data));
+    if (createMasterResponse === null || createMasterResponse === undefined) return;
+
+    if (createMasterResponse?.success) {
+      toast.success(createMasterResponse?.message);
+      resetAddMasterData();
+
+      dispatch(resetCreateMasterState());
+
+    } else if (!createMasterResponse.success) {
+      console.log(" error : ", createMasterResponse?.message)
+      // toast.error(createMasterResponse?.message);
+      toast.error("An error occured while saving the master data.");
+      dispatch(resetCreateMasterState());
+    } else {
+      dispatch(resetCreateMasterState());
     }
-  }, [mastersByType]);
+  }, [createMasterResponse]);
 
-  const onDesignationChange = (event) => {
-    console.log("onDesignationChange name : " + event.target.name + ", value : " + event.target.value)
-    setAddDesignationData({
-      ...addDesignationData,
-      [event.target.name]: {
-        value: event.target.value,
-        error: "",
-      },
-    });
-  };
-
-  const onOrganizationChange = (event) => {
-    console.log("onOrganizationChange name : " + event.target.name + ", value : " + event.target.value)
-    setAddOrganizationData({
-      ...addOrganizationData,
-      [event.target.name]: {
-        value: event.target.value,
-        error: "",
-      },
-    });
-  };
-
-  const handleTabClick = (tab) => {
-    console.log("active tan :", tab);
-    setActiveTab(tab);
-  };
 
   return (
     <PageContainer>
@@ -207,6 +322,7 @@ const MasterList = () => {
           <div className={styles.mainTopRight}>
             <Button
               onClick={() => {
+                console.log("show modal")
                 setShowModal(true);
               }}
             >
@@ -332,7 +448,7 @@ const MasterList = () => {
                   className="modal_crossIcon"
                   onClick={() => {
                     setShowModal(false);
-                    // resetAddGroupData();
+                    resetAddMasterData();
                   }}
                 >
                   <use xlinkHref={"sprite.svg#crossIcon"} />
@@ -383,7 +499,7 @@ const MasterList = () => {
                 buttonType={"cancel"}
                 onClick={() => {
                   setShowModal(false);
-                  // resetAddGroupData();
+                  resetAddMasterData();
                 }}
               >
                 Cancel

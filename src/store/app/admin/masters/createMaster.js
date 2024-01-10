@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { apiCallBegan } from "../../../../middleware/actions.js";
 
 const slice = createSlice({
-  name: "designation-all",
+  name: "create-master-by-type",
   initialState: {
-    designationsByPage: null,
+    createMasterResponse: null,
     loading: false,
   },
   reducers: {
@@ -12,15 +12,15 @@ const slice = createSlice({
       users.loading = true;
     },
     success: (users, action) => {
-      users.designationsByPage = action.payload;
+      users.createMasterResponse = action.payload;
       users.loading = false;
     },
     failed: (users, action) => {
-      users.designationsByPage = action.payload;
+      users.createMasterResponse = action.payload;
       users.loading = false;
     },
     reset: (users, action) => {
-      users.designationsByPage = null;
+      users.createMasterResponse = null;
       users.loading = false;
     },
   },
@@ -30,9 +30,9 @@ const { requested, success, failed, reset } = slice.actions;
 
 export default slice.reducer;
 
-export const getDesignationsbyPage = (data) =>
+export const createMaster = (data) =>
   apiCallBegan({
-    url: "", // TODO:: add path
+    url: "api/User/CreateUser",
     method: "POST",
     data,
     onStart: requested.type,
@@ -40,6 +40,6 @@ export const getDesignationsbyPage = (data) =>
     onFailed: failed.type,
   });
 
-export const resetDesignationState = () => async (dispatch) => {
+export const resetCreateMasterState = () => async (dispatch) => {
   dispatch(reset());
 };

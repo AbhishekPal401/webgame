@@ -1,27 +1,40 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef, useLayoutEffect } from "react";
+import { createPortal } from "react-dom";
 import ReactDOM from "react-dom";
 import styles from "./modal.module.css";
 
-const ModalContainer = ({ children, autoFocusInput }) => {
-  const modalRoot = document.getElementById("modal-root");
-  const modalElement = document.createElement("div");
+// const ModalContainer = ({ children }) => {
+//   const modalRoot = document.getElementById("modal-root");
+//   const modalElement = document.createElement("div");
 
-  modalRoot.appendChild(modalElement);
+//   modalRoot.appendChild(modalElement);
 
-  const modalRef = useRef(null);
+//   return ReactDOM.createPortal(
+//     <div className={styles.container}>{children}</div>,
+//     modalElement
+//   );
+// };
 
-  useEffect(() => {
-    if (modalRef.current && autoFocusInput) {
-      modalRef.current.focus();
-    }
-  }, [autoFocusInput]);
+const ModalContainer = ({ children }) => {
+  console.log("modal container")
+  const element = useRef()  
+  // here the element is created only once
+  if (!element.current) {
+    element.current = document.createElement('div');
+    element.current.classList.add(styles.container);
+  } 
 
-  return ReactDOM.createPortal(
-    <div className={styles.container} ref={modalRef} tabIndex="-1">
-      {children}
-    </div>,
-    modalElement
-  );
-};
+  useLayoutEffect(() => {
+      const target = document.getElementById('modal-root')
+      // element is attached to the target only once
+      target.appendChild(element.current)
+      return () => {
+          // remove your created element on unmount
+          target.removeChild(element.current)
+      }
+  }, [])
+
+  return createPortal(children, element.current)
+}
 
 export default ModalContainer;

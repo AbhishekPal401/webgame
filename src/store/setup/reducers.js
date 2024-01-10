@@ -29,9 +29,8 @@ import getGameInstanceById from "../app/admin/gameinstances/getGameInstanceById.
 import updateGameInstance from "../app/admin/gameinstances/updateGameInstance.js";
 import createGroup from "../app/admin/groups/createGroup.js";
 import createGroupUsers from "../app/admin/groups/createGroupUsers.js";
-import designations from "../app/admin/masters/designations.js";
-import organizations from "../app/admin/masters/organizations.js";
 import mastersByType from "../app/admin/masters/mastersByType.js";
+import createMaster from "../app/admin/masters/createMaster.js";
 
 const reducers = combineReducers({
   login,
@@ -62,8 +61,7 @@ const reducers = combineReducers({
   createGroup,
   createGroupUsers,
   mastersByType,
-  designations,
-  organizations,
+  createMaster,
 });
 
 const rootReducer = (state, action) => {

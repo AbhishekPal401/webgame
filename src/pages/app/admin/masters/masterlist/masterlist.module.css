@@ -189,10 +189,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 2.4rem; 
-  height: 2.4rem; 
+  width: 2.4rem;
+  height: 2.4rem;
   border-radius: 50%;
-  background-color: #FFECBD;
+  background-color: #ffecbd;
 }
 .circleSvg svg {
   cursor: pointer;
@@ -219,4 +219,50 @@
   width: 100%;
   height: 10rem;
   overflow: hidden;
+}
+
+/* Input */
+.formGroup {
+  margin: 1rem 0 0.5rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.8rem;
+  font-size: 1.35rem;
+  font-family: "Helvetica 500";
+}
+
+/* Input style */
+.formControl {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  height: 3.6rem;
+  font-size: 1.3rem;
+  color: #495057;
+  background-color: #fff;
+  border: 1px solid #d7d7d7;
+  border-radius: 0.7rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.formControl::placeholder {
+  color: #b0b0b0;
+}
+
+.formControl:focus {
+  outline: none;
+  border: 1px solid var(--primary);
+  box-shadow: 0 0 0 0.2rem var(--primary-light);
+}
+
+.formControl:disabled {
+  background-color: #dedede;
+  cursor: not-allowed;
+}
+
+.formControl:disabled:focus {
+  outline: none;
+  box-shadow: none;
 }
