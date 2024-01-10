@@ -762,7 +762,7 @@ const UpdateInstances = () => {
                                     <Input
                                         labelStyle={styles.inputLabel}
                                         type="text"
-                                        value={gameInstanceData.instanceName.value}
+                                        value={gameInstanceData?.instanceName?.value}
                                         customStyle={{ margin: '0' }}
                                         name={"instanceName"}
                                         placeholder="Instance Name"
@@ -774,17 +774,17 @@ const UpdateInstances = () => {
                                     <div>
                                         <select
                                             id="dropdown_organization"
-                                            value={gameInstanceData.organization.value}
+                                            value={gameInstanceData?.organization?.value}
                                             className="select_input"
                                             onChange={onOrganizationSelect}
                                         >
                                             <option value={""}>Select Organization</option>
 
                                             {masters &&
-                                                masters.data &&
-                                                isJSONString(masters.data) &&
-                                                Array.isArray(JSON.parse(masters.data)) &&
-                                                JSON.parse(masters.data).map((item, index) => {
+                                                masters?.data &&
+                                                isJSONString(masters?.data) &&
+                                                Array.isArray(JSON.parse(masters?.data)) &&
+                                                JSON.parse(masters?.data).map((item, index) => {
                                                     if (item.MasterType !== "Organization") return;
                                                     return (
                                                         <option value={item.MasterID} key={index}>
@@ -804,17 +804,17 @@ const UpdateInstances = () => {
                                     <div>
                                         <select
                                             id="dropdown_group_name"
-                                            value={gameInstanceData.groupName.value}
+                                            value={gameInstanceData?.groupName?.value}
                                             className="select_input"
                                             onChange={onGroupNameSelect}
                                         >
                                             <option value={""}>Group Name</option>
 
                                             {groupByOrgIdDetails &&
-                                                groupByOrgIdDetails.data &&
-                                                isJSONString(groupByOrgIdDetails.data) &&
-                                                Array.isArray(JSON.parse(groupByOrgIdDetails.data)) &&
-                                                JSON.parse(groupByOrgIdDetails.data).map((item, index) => {
+                                                groupByOrgIdDetails?.data &&
+                                                isJSONString(groupByOrgIdDetails?.data) &&
+                                                Array.isArray(JSON.parse(groupByOrgIdDetails?.data)) &&
+                                                JSON.parse(groupByOrgIdDetails?.data).map((item, index) => {
                                                     if (!item.GroupID && !item.GroupName) return;
                                                     return (
                                                         <option value={item.GroupID} key={index}>
@@ -831,7 +831,7 @@ const UpdateInstances = () => {
                                     <div>
                                         <select
                                             id="dropdown_group_size"
-                                            value={gameInstanceData.groupSize.value}
+                                            value={gameInstanceData?.groupSize?.value}
                                             className="select_input"
                                             onChange={onGroupSizeSelect}
                                         >
@@ -852,17 +852,17 @@ const UpdateInstances = () => {
                                     <div>
                                         <select
                                             id="dropdown_scenario_name"
-                                            value={gameInstanceData.scenarioName.value}
+                                            value={gameInstanceData?.scenarioName?.value}
                                             className="select_input"
                                             onChange={onScenarioNameSelect}
                                         >
                                             <option value={""}>Select Scenario</option>
 
                                             {scenarioNameAndIdDetails &&
-                                                scenarioNameAndIdDetails.data &&
-                                                isJSONString(scenarioNameAndIdDetails.data) &&
-                                                Array.isArray(JSON.parse(scenarioNameAndIdDetails.data)) &&
-                                                JSON.parse(scenarioNameAndIdDetails.data).map((item, index) => {
+                                                scenarioNameAndIdDetails?.data &&
+                                                isJSONString(scenarioNameAndIdDetails?.data) &&
+                                                Array.isArray(JSON.parse(scenarioNameAndIdDetails?.data)) &&
+                                                JSON.parse(scenarioNameAndIdDetails?.data).map((item, index) => {
                                                     if (!item.ScenarioID && !item.ScenarioName) return;
                                                     return (
                                                         <option value={item.ScenarioID} key={index}>
@@ -879,7 +879,7 @@ const UpdateInstances = () => {
                                     <div>
                                         <select
                                             id="dropdown_level"
-                                            value={gameInstanceData.level.value}
+                                            value={gameInstanceData?.level?.value}
                                             className="select_input"
                                             onChange={onLevelSelect}
                                         >
@@ -912,16 +912,17 @@ const UpdateInstances = () => {
                             <label className={styles.innerLabel}>Instance Players</label>
                         </div>
                         <div className={styles.instancePlayersInputContainer}>
-                            {
-                                gameInstanceData.instancePlayers &&
-                                    gameInstanceData.instancePlayers.length > 0 ? (
-                                    gameInstanceData.instancePlayers.map((player, index) => (
+                            {   
+                            gameInstanceData &&
+                                gameInstanceData?.instancePlayers &&
+                                    gameInstanceData?.instancePlayers?.length > 0 ? (
+                                    gameInstanceData?.instancePlayers?.map((player, index) => (
                                         <div key={index} className={styles.instancePlayersInputRow}>
                                             <div className={styles.field}>
                                                 <Input
                                                     labelStyle={styles.inputLabel}
                                                     type="text"
-                                                    value={player.playerName.value}
+                                                    value={player?.playerName?.value}
                                                     customStyle={{ margin: '0' }}
                                                     name={"playerName"}
                                                     placeholder="Player Name"
@@ -935,7 +936,7 @@ const UpdateInstances = () => {
                                                 <Input
                                                     labelStyle={styles.inputLabel}
                                                     type="text"
-                                                    value={player.playerGroupName.value}
+                                                    value={player?.playerGroupName?.value}
                                                     customStyle={{ margin: '0' }}
                                                     name={"playerGroupName"}
                                                     placeholder="Assign Group"
@@ -974,7 +975,7 @@ const UpdateInstances = () => {
                                                 <div>
                                                     <select
                                                         id="dropdown_player_designation"
-                                                        value={player.playerDesignation.value}
+                                                        value={player?.playerDesignation?.value}
                                                         className="select_input"
                                                         placeholder="Assign Role"
                                                         onChange={(e) => onPlayerChange(e, index, 'playerDesignation')}
@@ -982,10 +983,10 @@ const UpdateInstances = () => {
                                                         <option value={""}>Assign Role</option>
 
                                                         {masters &&
-                                                            masters.data &&
-                                                            isJSONString(masters.data) &&
-                                                            Array.isArray(JSON.parse(masters.data)) &&
-                                                            JSON.parse(masters.data).map((item, index) => {
+                                                            masters?.data &&
+                                                            isJSONString(masters?.data) &&
+                                                            Array.isArray(JSON.parse(masters?.data)) &&
+                                                            JSON.parse(masters?.data).map((item, index) => {
                                                                 if (item.MasterType !== "Designation") return;
                                                                 return (
                                                                     <option value={item.MasterID} key={index}>

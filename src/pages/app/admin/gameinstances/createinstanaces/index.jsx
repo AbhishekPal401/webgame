@@ -678,7 +678,6 @@ const CreateInstances = () => {
     // on add Group details
     const onAddGroup = () => {
         console.log("add group")
-        event.preventDefault();
         console.log("onAddGroup");
 
         let valid = true;
@@ -1247,6 +1246,7 @@ const CreateInstances = () => {
                                     onClick={() => {
                                         setShowAddGroupModal(null);
                                         resetAddGroupData();
+                                        clearSearch();
                                     }}
                                 >
                                     <use xlinkHref={"sprite.svg#crossIcon"} />
@@ -1264,7 +1264,7 @@ const CreateInstances = () => {
                                     value={addGroupData.groupName.value}
                                     placeholder="Group Name"
                                     onChange={onAddGroupChange}
-                                    autoFocus={!searchValue}
+                                    // autoFocus={!searchValue}
                                 />
                             </div>
                             <div className={styles.searchContainer}>
@@ -1294,6 +1294,7 @@ const CreateInstances = () => {
                                 onClick={() => {
                                     setShowAddGroupModal(null);
                                     resetAddGroupData();
+                                    clearSearch();
                                 }}
                             >
                                 Cancel

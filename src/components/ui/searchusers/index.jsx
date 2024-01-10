@@ -17,7 +17,7 @@ const SearchUsers = ({
             placeholder="Search Users"
             value={value}
             onChange={onChange}
-            autoFocus={searchValue}
+            // autoFocus={searchValue}
         />
         <div className={styles.iconsContainer}>
             {value && (

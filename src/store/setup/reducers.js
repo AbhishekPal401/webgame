@@ -29,6 +29,8 @@ import getGameInstanceById from "../app/admin/gameinstances/getGameInstanceById.
 import updateGameInstance from "../app/admin/gameinstances/updateGameInstance.js";
 import createGroup from "../app/admin/groups/createGroup.js";
 import createGroupUsers from "../app/admin/groups/createGroupUsers.js";
+import mastersByType from "../app/admin/masters/mastersByType.js";
+import createMaster from "../app/admin/masters/createMaster.js";
 
 import instanceSummary from "../app/admin/gameinstances/instanceSummary.js";
 
@@ -60,6 +62,8 @@ const reducers = combineReducers({
   updateGameInstance,
   createGroup,
   createGroupUsers,
+  mastersByType,
+  createMaster,
   instanceSummary,
 });
 
