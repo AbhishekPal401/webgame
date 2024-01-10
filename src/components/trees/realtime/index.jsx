@@ -20,14 +20,10 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
   if (nodeDatum.attributes.isQuestion) {
     nodeClassName = styles.node;
   } else {
-    if (nodeDatum.attributes.isAdminOptimal && nodeDatum.attributes.isOptimal) {
-      nodeClassName = styles.correct;
-    } else if (nodeDatum.attributes.isAdminOptimal) {
+    if (nodeDatum.attributes.isAdminOptimal) {
       nodeClassName = styles.selected;
-    } else if (nodeDatum.attributes.isOptimal) {
-      nodeClassName = styles.isOptimalNode;
     } else {
-      nodeClassName = styles.isNotOptimalNode;
+      nodeClassName = styles.isNotSelected;
     }
   }
 
@@ -66,27 +62,15 @@ const RealTimeTree = ({ data = {}, userType = "admin" }) => {
 
   useEffect(() => {
     if (containerRef.current) {
-      if (userType === "admin") {
-        const optimalElements = containerRef.current.querySelectorAll(
-          `path.${styles.selectedEdge}`
-        );
+      const optimalElements = containerRef.current.querySelectorAll(
+        `path.${styles.selectedEdge}`
+      );
 
-        optimalElements.forEach((element) => {
-          const parent = element.parentElement;
-          parent.appendChild(element.cloneNode(true));
-          parent.removeChild(element);
-        });
-      } else {
-        const optimalElements = containerRef.current.querySelectorAll(
-          `path.${styles.selectedEdge}`
-        );
-
-        optimalElements.forEach((element) => {
-          const parent = element.parentElement;
-          parent.appendChild(element.cloneNode(true));
-          parent.removeChild(element);
-        });
-      }
+      optimalElements.forEach((element) => {
+        const parent = element.parentElement;
+        parent.appendChild(element.cloneNode(true));
+        parent.removeChild(element);
+      });
 
       const gElements = containerRef.current.querySelectorAll(`g.rd3t-node`);
 
@@ -106,7 +90,7 @@ const RealTimeTree = ({ data = {}, userType = "admin" }) => {
       });
 
       const { width, height } = containerRef.current.getBoundingClientRect();
-      setTranslate({ x: width / 2, y: 0 });
+      setTranslate({ x: width * 0.5, y: 0 });
     }
   }, [containerRef]);
 
@@ -114,14 +98,7 @@ const RealTimeTree = ({ data = {}, userType = "admin" }) => {
     if (target.data.attributes.isQuestion) {
       return styles.selectedEdge;
     } else {
-      if (
-        target.data.attributes.isOptimal &&
-        target.data.attributes.isAdminOptimal
-      ) {
-        return styles.selectedEdge;
-      } else if (target.data.attributes.isOptimal) {
-        return styles.isNotSelected;
-      } else if (target.data.attributes.isAdminOptimal) {
+      if (target.data.attributes.isAdminOptimal) {
         return styles.selectedEdge;
       } else {
         return styles.isNotSelected;
@@ -130,7 +107,7 @@ const RealTimeTree = ({ data = {}, userType = "admin" }) => {
   };
 
   return (
-    <div ref={containerRef}>
+    <div ref={containerRef} style={{ width: "100%", height: "100%" }}>
       <Tree
         data={data}
         translate={translate}
@@ -148,7 +125,7 @@ const RealTimeTree = ({ data = {}, userType = "admin" }) => {
           );
         }}
         scaleExtent={{ min: 0.2, max: 3 }}
-        zoom={0.6}
+        zoom={0.7}
         depthFactor={120}
         orientation="vertical"
       />

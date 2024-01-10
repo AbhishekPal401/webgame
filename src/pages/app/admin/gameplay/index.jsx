@@ -60,11 +60,17 @@ const DecisionTree = ({ onCancel = () => {} }) => {
           </svg>
         </div>
       </div>
-      {/* <div className={"modal_description"}>
-        Are you sure you want to logout ?
-      </div> */}
+      <div className={"modal_description"} style={{ marginBottom: "2rem" }}>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+        mollit anim id est laborum.
+      </div>
 
-      <div style={{ height: "80vh" }}>
+      <div style={{ height: "72vh" }}>
         {!loading &&
         instanceSummary &&
         instanceSummary.data &&
