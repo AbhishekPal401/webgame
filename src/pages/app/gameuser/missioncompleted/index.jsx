@@ -94,15 +94,20 @@ const MissionCompleted = () => {
             }}
           />
           <div className={styles.tree}>
-            {instanceSummary && instanceSummary.data && (
-              <>
-                {currentTab === 0 ? (
-                  <SelectedTree data={instanceSummary.data} userType="normal" />
-                ) : (
-                  <OptimalTree data={instanceSummary.data} />
-                )}
-              </>
-            )}
+            {instanceSummary &&
+              instanceSummary.data &&
+              instanceSummary.data.Summary && (
+                <>
+                  {currentTab === 0 ? (
+                    <SelectedTree
+                      data={instanceSummary.data.Summary}
+                      userType="normal"
+                    />
+                  ) : (
+                    <OptimalTree data={instanceSummary.data.Summary} />
+                  )}
+                </>
+              )}
             <div className={styles.right}>
               <div>Time Spent</div>
               <div className={styles.circle}>

@@ -21,6 +21,7 @@ import QuestionBuilder from "../../pages/app/admin/questions/questionbuilder";
 import GameInstances from "../../pages/app/admin/gameinstances/gameInstances";
 import CreateInstances from "../../pages/app/admin/gameinstances/createinstanaces";
 import UpdateInstances from "../../pages/app/admin/gameinstances/updateinstances";
+import NotFound from "../../pages/app/common/notfound";
 
 const Admin = () => {
   const location = useLocation();
@@ -87,6 +88,7 @@ const Admin = () => {
             <Route path="/intro" element={<Intro />} />
             <Route path="/gameplay" element={<GamePlay />} />
             <Route path="/missioncompleted" element={<MissionCompleted />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       </div>
