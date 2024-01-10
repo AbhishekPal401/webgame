@@ -228,6 +228,11 @@
 }
 .tree {
   fill: var(--black);
-  width: 2rem;
-  height: 2rem;
+  width: 5rem;
+  height: 5rem;
+}
+
+.tree:hover,
+.pause:hover {
+  cursor: pointer;
 }
