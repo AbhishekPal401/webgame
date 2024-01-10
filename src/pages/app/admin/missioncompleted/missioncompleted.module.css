@@ -58,7 +58,7 @@
 }
 
 .header span {
-  text-transform: capitalize;
+  text-transform: uppercase;
 }
 
 .selectTree {

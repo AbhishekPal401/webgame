@@ -12,6 +12,80 @@ import { PlayingStates } from "../../../../constants/playingStates";
 import DecisionLoader from "../../../../components/loader/decisionloader";
 import { getNextQuestionDetails } from "../../../../store/app/user/questions/getNextQuestion";
 import { useNavigate } from "react-router-dom";
+import {
+  getInstanceSummaryById,
+  resetInstanceSummaryByIDState,
+} from "../../../../store/app/admin/gameinstances/instanceSummary";
+import RealTimeTree from "../../../../components/trees/realtime";
+import Loader from "../../../../components/loader";
+import ModalContainer from "../../../../components/modal";
+
+const DecisionTree = ({ onCancel = () => {} }) => {
+  const { sessionDetails } = useSelector((state) => state.getSession);
+  const { credentials } = useSelector((state) => state.login);
+  const { instanceSummary, loading } = useSelector(
+    (state) => state.instanceSummary
+  );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isJSONString(sessionDetails.data)) {
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      if (sessionData && credentials) {
+        const data = {
+          instanceID: sessionData.InstanceID,
+          userID: credentials.data.userID,
+          isAdmin: true,
+          requester: {
+            requestID: generateGUID(),
+            requesterID: credentials.data.userID,
+            requesterName: credentials.data.userName,
+            requesterType: credentials.data.role,
+          },
+        };
+
+        dispatch(getInstanceSummaryById(data));
+      }
+    }
+  }, []);
+
+  return (
+    <div className={"modal_content"} style={{ width: "80vw" }}>
+      <div className={"modal_header"}>
+        <div>Decision Tree</div>
+        <div>
+          <svg className="modal_crossIcon" onClick={onCancel}>
+            <use xlinkHref={"sprite.svg#crossIcon"} />
+          </svg>
+        </div>
+      </div>
+      <div className={"modal_description"} style={{ marginBottom: "2rem" }}>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+        mollit anim id est laborum.
+      </div>
+
+      <div style={{ height: "72vh" }}>
+        {!loading &&
+        instanceSummary &&
+        instanceSummary.data &&
+        instanceSummary.data.Summary ? (
+          <RealTimeTree data={instanceSummary.data.Summary} userType="normal" />
+        ) : (
+          <div className={styles.loaderContainer}>
+            <Loader />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const GamePlay = () => {
   const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
@@ -24,6 +98,8 @@ const GamePlay = () => {
   const [isDecision, setIsDecision] = useState(false);
   const [nextQuestionFetched, setNextQuestionFetched] = useState(false);
   const [callNextQuestion, setCallNextQuestion] = useState(false);
+
+  const [showDecisionTree, setShowDecisionTree] = useState(false);
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -255,8 +331,21 @@ const GamePlay = () => {
         style={{ backgroundImage: 'url("/images/user_background.png")' }}
       >
         <div className={styles.left}>
-          <div></div>
-          <div></div>
+          <div>
+            <svg className={styles.pause}>
+              <use xlinkHref={"sprite.svg#pause"} />
+            </svg>
+          </div>
+          <div>
+            <svg
+              className={styles.tree}
+              onClick={() => {
+                setShowDecisionTree(true);
+              }}
+            >
+              <use xlinkHref={"sprite.svg#tree"} />
+            </svg>
+          </div>
         </div>
         <div className={styles.middle}>
           <div className={styles.questionContainer}>
@@ -338,6 +427,17 @@ const GamePlay = () => {
             HeaderText={` Waiting for ${questionDetails?.data?.QuestionDetails?.DelegatedTo}'s Final Decision... `}
           />
         )}
+
+      {showDecisionTree && (
+        <ModalContainer>
+          <DecisionTree
+            onCancel={() => {
+              setShowDecisionTree(false);
+              dispatch(resetInstanceSummaryByIDState());
+            }}
+          />
+        </ModalContainer>
+      )}
     </motion.div>
   );
 };

@@ -217,3 +217,15 @@
   align-items: center;
   font-family: "helvetica 300";
 }
+
+.tree,
+.pause {
+  fill: var(--black);
+  width: 5rem;
+  height: 5rem;
+}
+
+.tree:hover,
+.pause:hover {
+  cursor: pointer;
+}

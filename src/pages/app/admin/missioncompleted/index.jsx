@@ -82,7 +82,9 @@ const MissionCompleted = () => {
           <div>
             Player Name{" "}
             <span>
-              {credentials?.data?.userName ? credentials.data.userName : ""}
+              {credentials?.data?.designation
+                ? credentials.data.designation
+                : ""}
             </span>
           </div>
         </div>

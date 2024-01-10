@@ -17,13 +17,25 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
 
   let nodeClassName = styles.node;
 
-  if (nodeDatum.attributes.isQuestion) {
-    nodeClassName = styles.node;
-  } else {
-    if (nodeDatum.attributes.isAdminOptimal) {
-      nodeClassName = styles.selected;
+  if (userType === "admin") {
+    if (nodeDatum.attributes.isQuestion) {
+      nodeClassName = styles.node;
     } else {
-      nodeClassName = styles.isNotSelected;
+      if (nodeDatum.attributes.isAdminOptimal) {
+        nodeClassName = styles.selected;
+      } else {
+        nodeClassName = styles.isNotSelected;
+      }
+    }
+  } else {
+    if (nodeDatum.attributes.isQuestion) {
+      nodeClassName = styles.node;
+    } else {
+      if (nodeDatum.attributes.isUserSubmitedAnswer) {
+        nodeClassName = styles.selected;
+      } else {
+        nodeClassName = styles.isNotSelected;
+      }
     }
   }
 
@@ -95,13 +107,25 @@ const RealTimeTree = ({ data = {}, userType = "admin" }) => {
   }, [containerRef]);
 
   const getDynamicPathClass = ({ source, target }, orientation) => {
-    if (target.data.attributes.isQuestion) {
-      return styles.selectedEdge;
-    } else {
-      if (target.data.attributes.isAdminOptimal) {
+    if (userType === "admin") {
+      if (target.data.attributes.isQuestion) {
         return styles.selectedEdge;
       } else {
-        return styles.isNotSelected;
+        if (target.data.attributes.isAdminOptimal) {
+          return styles.selectedEdge;
+        } else {
+          return styles.isNotSelected;
+        }
+      }
+    } else {
+      if (target.data.attributes.isQuestion) {
+        return styles.selectedEdge;
+      } else {
+        if (target.data.attributes.isUserSubmitedAnswer) {
+          return styles.selectedEdge;
+        } else {
+          return styles.isNotSelected;
+        }
       }
     }
   };
