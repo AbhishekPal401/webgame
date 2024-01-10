@@ -32,7 +32,7 @@ export default slice.reducer;
 
 export const createMaster = (data) =>
   apiCallBegan({
-    url: "api/User/CreateUser",
+    url: "api/User/CreateMasters",
     method: "POST",
     data,
     onStart: requested.type,

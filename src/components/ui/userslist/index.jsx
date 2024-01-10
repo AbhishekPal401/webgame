@@ -19,8 +19,8 @@ const UsersList = ({
                                 <svg
                                     className={styles.xMarkIcon}
                                     onClick={() => onToggleUser(user)}
-                                    width="13"
-                                    height="16"
+                                    width="16"
+                                    height="20"
                                 >
                                     <use xlinkHref={"sprite.svg#x_mark_icon"} />
                                 </svg>
@@ -30,8 +30,8 @@ const UsersList = ({
                                 <svg
                                     className={styles.plusIconLg}
                                     onClick={() => onToggleUser(user)}
-                                    width="13"
-                                    height="16"
+                                    width="16"
+                                    height="20"
                                 >
                                     <use xlinkHref={"sprite.svg#plus_icon_lg"} />
                                 </svg>

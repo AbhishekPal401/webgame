@@ -16,7 +16,6 @@ import styles from "./modal.module.css";
 // };
 
 const ModalContainer = ({ children }) => {
-  console.log("modal container")
   const element = useRef()  
   // here the element is created only once
   if (!element.current) {

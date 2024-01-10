@@ -21,35 +21,6 @@ import {
   resetCreateMasterState
 } from "../../../../../store/app/admin/masters/createMaster.js";
 
-// const DesignationForm = ({
-//   designation,
-//   description,
-//   onDesignationChange = () => { },
-//   onDescriptionChange = () => { },
-//   ...props
-// }) => {
-//   return (
-//     <div className={styles.formGroup}>
-//       <input
-//         type="text"
-//         className={styles.formControl}
-//         value={designation}
-//         onChange={onDesignationChange}
-//         {...props}
-//       />
-
-//       <textarea
-//         className={`${styles.formControl} ${styles.textAreaStyleClass}`}
-//         style={{ marginTop: '1rem' }}
-//         value={description}
-//         onChange={onDescriptionChange}
-//         {...props}
-//       />
-//     </div>
-
-//   )
-// };
-
 
 const MasterList = () => {
 
@@ -59,15 +30,6 @@ const MasterList = () => {
   const [addMasterData, setAddMasterData] = useState({
     designation: { value: '', error: '' },
     description: { value: '', error: '' },
-    organization: { value: '', error: '' },
-  });
-
-  const [addDesignationData, setAddDesignationData] = useState({
-    designation: { value: '', error: '' },
-    description: { value: '', error: '' },
-  });
-
-  const [addOrganizationData, setAddOrganizationData] = useState({
     organization: { value: '', error: '' },
   });
 
@@ -89,20 +51,6 @@ const MasterList = () => {
     });
   }, []);
 
-  const resetAddDesignationData = useCallback(() => {
-    setAddDesignationData({
-      designation: { value: '', error: '' },
-      description: { value: '', error: '' },
-    });
-  }, []);
-
-  const resetAddOrganizationData = useCallback(() => {
-    setAddOrganizationData({
-      organization: { value: '', error: '' },
-    });
-  }, []);
-
-
   const onMasterDataChange = useCallback(
     (event) => {
       const { name, value } = event.target;
@@ -114,28 +62,6 @@ const MasterList = () => {
     [setAddMasterData]
   );
 
-  const onDesignationChange = useCallback(
-    (event) => {
-      const { name, value } = event.target;
-      setAddDesignationData((prevData) => ({
-        ...prevData,
-        [name]: { value, error: '' },
-      }));
-    },
-    [setAddDesignationData]
-  );
-
-  const onOrganizationChange = useCallback(
-    (event) => {
-      const { name, value } = event.target;
-      setAddOrganizationData((prevData) => ({
-        ...prevData,
-        [name]: { value, error: '' },
-      }));
-    },
-    [setAddOrganizationData]
-  );
-
   const handleTabClick = useCallback(
     (tab) => {
       setActiveTab(tab);
@@ -144,89 +70,86 @@ const MasterList = () => {
   );
 
   // on add Group details
-  // const onAddMasterData = () => {
-  //   console.log("onAddMasterData")
+  const onAddMasterData = () => {
+    console.log("onAddMasterData")
 
-  //   let valid = true;
-  //   let data = { ...addMasterData };
+    let valid = true;
+    let data = { ...addMasterData };
 
-  //   if (activeTab === 'Designation') {
+    if (activeTab === 'Designation') {
 
-  //     // validate the designation fields
-  //     if (!addMasterData?.designation?.value?.trim()) {
-  //       console.log("designation:", data.designation);
-  //       data = {
-  //         ...data,
-  //         designation: {
-  //           ...data.designation,
-  //           error: "Please enter designation name",
-  //         },
-  //       };
+      // validate the designation fields
+      if (addMasterData?.designation?.value?.trim() === "") {
+        console.log("designation:", data.designation);
+        data = {
+          ...data,
+          designation: {
+            ...data.designation,
+            error: "Please enter designation name",
+          },
+        };
 
-  //       valid = false;
-  //     }
+        valid = false;
+      }
 
-  //     if (!addMasterData?.description?.value?.trim()) {
-  //       console.log("description:", data.description);
-  //       data = {
-  //         ...data,
-  //         description: {
-  //           ...data.description,
-  //           error: "Please enter description ",
-  //         },
-  //       };
+      if (addMasterData?.description?.value?.trim() === "") {
+        console.log("description:", data.description);
+        data = {
+          ...data,
+          description: {
+            ...data.description,
+            error: "Please enter description ",
+          },
+        };
 
-  //       valid = false;
-  //     }
+        valid = false;
+      }
 
-  //   } else if (activeTab === 'Organization') {
-  //     if (!addMasterData?.organization?.value?.trim()) {
-  //       console.log("organization:", data.organization);
-  //       data = {
-  //         ...data,
-  //         organization: {
-  //           ...data.organization,
-  //           error: "Please enter organization ",
-  //         },
-  //       };
+    } else if (activeTab === 'Organization') {
+      if (addMasterData?.organization?.value?.trim() === "") {
+        console.log("organization:", data.organization);
+        data = {
+          ...data,
+          organization: {
+            ...data.organization,
+            error: "Please enter organization ",
+          },
+        };
 
-  //       valid = false;
-  //     }
-  //   }
+        valid = false;
+      }
+    }
 
-  //   // If all validations pass
-  //   try {
-  //     if (valid && activeTab === 'Designation') {
-  //       const data = {
-  //         groupName: addGroupData?.groupName?.value,
-  //         groupDescription: "",
-  //         organizationID: addGroupData?.organizationId?.value,
-  //         requester: {
-  //           requestID: generateGUID(),
-  //           requesterID: credentials.data.userID,
-  //           requesterName: credentials.data.userName,
-  //           requesterType: credentials.data.role,
-  //         },
-  //       };
-  //       const groupByOrgIdData = {
-  //         organizationID: addGroupData?.organizationId?.value,
-  //       }
+    // If all validations pass
+    try {
+      if (valid) {
+        const data = {
+          masterID: "6", //TODO:: not implemented at backend
+          masterName: (activeTab === 'Designation' ?
+            addMasterData?.designation?.value :
+            addMasterData?.organization?.value),
+          masterType: (activeTab === 'Designation' ? 'Designation' : 'Organization'),
+          isActive: "true",
+          requester: {
+            requestID: generateGUID(),
+            requesterID: credentials.data.userID,
+            requesterName: credentials.data.userName,
+            requesterType: credentials.data.role,
+          },
+        };
 
-  //       console.log("data to update : ", data);
+        console.log("data to update : ", data);
 
-  //       // dispatch a request to create user and get group details by org id so the group names will be updated
-  //       dispatch(createGroup(data));
-  //       dispatch(getGroupDetailsByOrgID(groupByOrgIdData));
+        dispatch(createMaster(data));
 
-
-  //     } else {
-  //       toast.error("Please fill all the details.");
-  //     }
-  //   } catch (error) {
-  //     toast.error("An error occurred while saving the master data.");
-  //     console.error("Saving master data error:", error);
-  //   }
-  // }
+      } else {
+        toast.error("Please fill all the details.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while saving the master data.");
+      console.error("Saving master data error:", error);
+    }
+  }
 
   useEffect(() => {
     if (credentials) {
@@ -241,9 +164,16 @@ const MasterList = () => {
     if (createMasterResponse === null || createMasterResponse === undefined) return;
 
     if (createMasterResponse?.success) {
-      toast.success(createMasterResponse?.message);
-      resetAddMasterData();
+      console.log("Master created")
+      toast.success("Add master data successfull");
 
+      const fetchMasterData = {
+        masterType: activeTab === 'Designation' ? 'Designation' : 'Organization',
+      };
+      dispatch(getMastersByType(fetchMasterData));
+
+      resetAddMasterData();
+      setShowModal(false);
       dispatch(resetCreateMasterState());
 
     } else if (!createMasterResponse.success) {
@@ -255,7 +185,6 @@ const MasterList = () => {
       dispatch(resetCreateMasterState());
     }
   }, [createMasterResponse]);
-
 
   return (
     <PageContainer>
@@ -365,9 +294,9 @@ const MasterList = () => {
                 {activeTab === 'Designation' ?
                   (
                     mastersByType &&
-                    mastersByType.success &&
-                    mastersByType.data &&
-                    JSON.parse(mastersByType.data)?.map((master, index) => (
+                    mastersByType?.success &&
+                    mastersByType?.data &&
+                    JSON.parse(mastersByType?.data)?.map((master, index) => (
                       <tr key={index}>
                         <td>
                           <Checkbox />
@@ -379,7 +308,7 @@ const MasterList = () => {
                         <td>5</td>
                         <td>Active</td>
                         <td>
-                          <div className={styles.actions}>
+                          {/* <div className={styles.actions}>
                             <div className={styles.circleSvg}>
                               <svg>
                                 <use xlinkHref="sprite.svg#edit_icon" />
@@ -390,15 +319,15 @@ const MasterList = () => {
                                 <use xlinkHref="sprite.svg#delete_icon" />
                               </svg>
                             </div>
-                          </div>
+                          </div> */}
                         </td>
                       </tr>
                     ))
                   ) : (
                     mastersByType &&
-                    mastersByType.success &&
-                    mastersByType.data &&
-                    JSON.parse(mastersByType.data)?.map((master, index) => (
+                    mastersByType?.success &&
+                    mastersByType?.data &&
+                    JSON.parse(mastersByType?.data)?.map((master, index) => (
                       <tr key={index}>
                         <td>
                           <Checkbox />
@@ -410,7 +339,7 @@ const MasterList = () => {
                         <td>5</td>
                         <td>Active</td>
                         <td>
-                          <div className={styles.actions}>
+                          {/* <div className={styles.actions}>
                             <div className={styles.circleSvg}>
                               <svg>
                                 <use xlinkHref="sprite.svg#edit_icon" />
@@ -421,7 +350,7 @@ const MasterList = () => {
                                 <use xlinkHref="sprite.svg#delete_icon" />
                               </svg>
                             </div>
-                          </div>
+                          </div> */}
                         </td>
                       </tr>
                     ))
@@ -462,19 +391,19 @@ const MasterList = () => {
                     <Input
                       type="text"
                       customStyle={{ marginTop: '1rem', }}
-                      value={addDesignationData.designation.value}
+                      value={addMasterData?.designation?.value}
                       name={"designation"}
                       placeholder="Designation Name"
-                      onChange={onDesignationChange}
+                      onChange={onMasterDataChange}
                     />
                     <Input
                       type="text"
                       customStyle={{ marginTop: '1rem', }}
-                      value={addDesignationData.description.value}
+                      value={addMasterData?.description?.value}
                       name={"description"}
                       placeholder="Description"
                       textAreaStyleClass={styles.textAreaStyleClass}
-                      onChange={onDesignationChange}
+                      onChange={onMasterDataChange}
                       textArea
                     />
                   </div>
@@ -483,10 +412,10 @@ const MasterList = () => {
                     <Input
                       type="text"
                       customStyle={{ marginTop: '1rem', }}
-                      value={addOrganizationData.organization.value}
+                      value={addMasterData?.organization?.value}
                       name={"organization"}
                       placeholder="Organization Name"
-                      onChange={onOrganizationChange}
+                      onChange={onMasterDataChange}
                     />
                   </div>
                 )
@@ -508,7 +437,7 @@ const MasterList = () => {
                 customStyle={{
                   marginLeft: "1rem",
                 }}
-              // onClick={onAddGroup}
+                onClick={onAddMasterData}
               >
                 Add
               </Button>
