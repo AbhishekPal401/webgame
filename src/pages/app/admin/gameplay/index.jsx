@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { PlayingStates } from "../../../../constants/playingStates";
 import { getNextQuestionDetails } from "../../../../store/app/user/questions/getNextQuestion";
 import { useNavigate } from "react-router-dom";
+import ModalContainer from "../../../../components/modal";
 
 const GamePlay = () => {
   const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
@@ -23,6 +24,7 @@ const GamePlay = () => {
   const [adminState, setAdminState] = useState("MakeDecision");
   const [showVotes, setShowVotes] = useState(false);
   const [callNextQuestion, setCallNextQuestion] = useState(false);
+  const [showDecisionTree, setShowDecisionTree] = useState(false);
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -368,6 +370,8 @@ const GamePlay = () => {
           </div>
         </div>
       </div>
+
+      {showDecisionTree && <ModalContainer></ModalContainer>}
     </motion.div>
   );
 };

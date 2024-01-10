@@ -221,12 +221,9 @@
   align-items: center;
   font-family: "helvetica 300";
 }
+
+.tree,
 .pause {
-  fill: var(--black);
-  width: 2rem;
-  height: 2rem;
-}
-.tree {
   fill: var(--black);
   width: 5rem;
   height: 5rem;
