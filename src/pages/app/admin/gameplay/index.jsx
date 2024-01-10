@@ -12,6 +12,73 @@ import { PlayingStates } from "../../../../constants/playingStates";
 import { getNextQuestionDetails } from "../../../../store/app/user/questions/getNextQuestion";
 import { useNavigate } from "react-router-dom";
 import ModalContainer from "../../../../components/modal";
+import RealTimeTree from "../../../../components/trees/realtime";
+import Loader from "../../../../components/loader/index.jsx";
+import {
+  getInstanceSummaryById,
+  resetInstanceSummaryByIDState,
+} from "../../../../store/app/admin/gameinstances/instanceSummary";
+
+const DecisionTree = ({ onCancel = () => {} }) => {
+  const { sessionDetails } = useSelector((state) => state.getSession);
+  const { credentials } = useSelector((state) => state.login);
+  const { instanceSummary, loading } = useSelector(
+    (state) => state.instanceSummary
+  );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isJSONString(sessionDetails.data)) {
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      if (sessionData && credentials) {
+        const data = {
+          instanceID: sessionData.InstanceID,
+          userID: credentials.data.userID,
+          isAdmin: true,
+          requester: {
+            requestID: generateGUID(),
+            requesterID: credentials.data.userID,
+            requesterName: credentials.data.userName,
+            requesterType: credentials.data.role,
+          },
+        };
+
+        dispatch(getInstanceSummaryById(data));
+      }
+    }
+  }, []);
+
+  return (
+    <div className={"modal_content"} style={{ width: "80vw" }}>
+      <div className={"modal_header"}>
+        <div>Decision Tree</div>
+        <div>
+          <svg className="modal_crossIcon" onClick={onCancel}>
+            <use xlinkHref={"sprite.svg#crossIcon"} />
+          </svg>
+        </div>
+      </div>
+      {/* <div className={"modal_description"}>
+        Are you sure you want to logout ?
+      </div> */}
+
+      <div style={{ height: "80vh" }}>
+        {!loading &&
+        instanceSummary &&
+        instanceSummary.data &&
+        instanceSummary.data.Summary ? (
+          <RealTimeTree data={instanceSummary.data.Summary} />
+        ) : (
+          <div className={styles.loaderContainer}>
+            <Loader />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const GamePlay = () => {
   const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
@@ -34,38 +101,6 @@ const GamePlay = () => {
   const navigate = useNavigate();
 
   const { answerDetails, loading } = useSelector((state) => state.postAnswer);
-
-  // console.log("questionDetails", questionDetails);
-
-  // const fetchNextQuestion = useCallback(() => {
-  //   const sessionData = JSON.parse(sessionDetails.data);
-
-  //   const data = {
-  //     sessionID: sessionData.SessionID,
-  //     scenarioID: sessionData.ScenarioID,
-  //     currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-  //     currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
-  //     currentStatus: "InProgress",
-  //     userID: credentials.data.userID,
-  //     currentTotalScore: 0,
-  //     requester: {
-  //       requestID: generateGUID(),
-  //       requesterID: credentials.data.userID,
-  //       requesterName: credentials.data.userName,
-  //       requesterType: credentials.data.role,
-  //     },
-  //   };
-
-  //   console.log("get next question data", data);
-
-  //   dispatch(getNextQuestionDetails(data));
-  // }, [
-  //   questionDetails,
-  //   credentials,
-  //   sessionDetails,
-  //   dispatch,
-  //   callNextQuestion,
-  // ]);
 
   useEffect(() => {
     const handleVotingDetails = (votesDetails) => {
@@ -307,7 +342,12 @@ const GamePlay = () => {
             </svg>
           </div>
           <div>
-            <svg className={styles.tree}>
+            <svg
+              className={styles.tree}
+              onClick={() => {
+                setShowDecisionTree(true);
+              }}
+            >
               <use xlinkHref={"sprite.svg#tree"} />
             </svg>
           </div>
@@ -371,7 +411,16 @@ const GamePlay = () => {
         </div>
       </div>
 
-      {showDecisionTree && <ModalContainer></ModalContainer>}
+      {showDecisionTree && (
+        <ModalContainer>
+          <DecisionTree
+            onCancel={() => {
+              setShowDecisionTree(false);
+              dispatch(resetInstanceSummaryByIDState());
+            }}
+          />
+        </ModalContainer>
+      )}
     </motion.div>
   );
 };

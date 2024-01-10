@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { resetLoginState } from "../store/auth/login.js";
 import { AnimatePresence, motion } from "framer-motion";
 import Loader from "../components/loader/index.jsx";
+import ModalContainer from "../components/modal";
 
 const Routers = () => {
   const [isAuthorised, setIsAuthorised] = useState(false);
@@ -83,7 +84,11 @@ const Routers = () => {
   };
 
   if (isLoading) {
-    return <Loader />;
+    return (
+      <ModalContainer>
+        <Loader />
+      </ModalContainer>
+    );
   }
 
   return (
