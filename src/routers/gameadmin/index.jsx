@@ -5,6 +5,7 @@ import Sidebar from "../../components/ui/sidebar/gameadminsidebar";
 import styles from "./gameadmin.module.css";
 import Homepage from "../../pages/app/gameadmin/homepage";
 import Profile from "../../pages/app/common/profile";
+import NotFound from "../../pages/app/common/notfound";
 
 const GameAdmin = () => {
   return (
@@ -18,6 +19,7 @@ const GameAdmin = () => {
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/profile/:userID?" element={<Profile />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       </div>

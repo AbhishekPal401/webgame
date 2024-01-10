@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import styles from "./mission.module.css";
+import styles from "./selectedTree.module.css";
 import Tree from "react-d3-tree";
 import { Tooltip } from "react-tooltip";
 import ReactDOMServer from "react-dom/server";
@@ -11,22 +11,54 @@ const trimTextWithEllipsis = (text, maxLength) => {
   return text;
 };
 
-const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
+const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
   const padding = 10;
   const label = trimTextWithEllipsis(nodeDatum.name, 115);
+
+  let nodeClassName = styles.node;
+
+  if (userType === "admin") {
+    if (nodeDatum.attributes.isQuestion) {
+      nodeClassName = styles.node;
+    } else {
+      if (
+        nodeDatum.attributes.isAdminOptimal &&
+        nodeDatum.attributes.isOptimal
+      ) {
+        nodeClassName = styles.correct;
+      } else if (nodeDatum.attributes.isAdminOptimal) {
+        nodeClassName = styles.selected;
+      } else if (nodeDatum.attributes.isOptimal) {
+        nodeClassName = styles.isOptimalNode;
+      } else {
+        nodeClassName = styles.isNotOptimalNode;
+      }
+    }
+  } else {
+    if (nodeDatum.attributes.isQuestion) {
+      nodeClassName = styles.node;
+    } else {
+      if (
+        nodeDatum.attributes.isUserSubmitedAnswer &&
+        nodeDatum.attributes.isOptimal
+      ) {
+        nodeClassName = styles.correct;
+      } else if (nodeDatum.attributes.isUserSubmitedAnswer) {
+        nodeClassName = styles.selected;
+      } else if (nodeDatum.attributes.isOptimal) {
+        nodeClassName = styles.isOptimalNode;
+      } else {
+        nodeClassName = styles.isNotOptimalNode;
+      }
+    }
+  }
 
   return (
     <g transform={`translate(-150, 0)`}>
       <foreignObject width={300} height={30 + 2 * padding}>
         <div className={styles.nodeContainer}>
           <div
-            className={
-              nodeDatum.attributes.isQuestion
-                ? styles.node
-                : nodeDatum.attributes.isOptimal
-                ? styles.isOptimalNode
-                : styles.isNotOptimalNode
-            }
+            className={nodeClassName}
             data-tooltip-id="my-tooltip"
             data-tooltip-html={ReactDOMServer.renderToStaticMarkup(
               <div className={styles.tooltipContent}>
@@ -44,7 +76,7 @@ const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
   );
 };
 
-const OptimalTree = ({ data = {} }) => {
+const SelectedTree = ({ data = {}, userType = "admin" }) => {
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
 
   const containerRef = useRef();
@@ -95,7 +127,9 @@ const OptimalTree = ({ data = {} }) => {
     ) {
       return styles.isOptimal;
     } else if (target.data.attributes.isQuestion) {
-      return styles.isOptimal;
+      return styles.isNotSelected;
+    } else if (target.data.attributes.isUserSubmitedAnswer) {
+      return styles.selectedEdge;
     } else {
       return styles.isNotSelected;
     }
@@ -115,6 +149,7 @@ const OptimalTree = ({ data = {} }) => {
             <CustomNode
               {...rd3tProps}
               foreignObjectProps={foreignObjectProps}
+              userType={userType}
             />
           );
         }}
@@ -128,4 +163,4 @@ const OptimalTree = ({ data = {} }) => {
   );
 };
 
-export default OptimalTree;
+export default SelectedTree;

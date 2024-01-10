@@ -20,7 +20,12 @@
 .userRow > :nth-child(2) {
   flex: 1;
 }
-.userColumns img, svg {
+.userColumns img {
+  width: 70%;
+  height: 70%;
+}
+
+.xMarkIcon {
   width: 70%;
   height: 70%;
 }
@@ -28,7 +33,8 @@
   width: 80%;
   height: 80%;
 }
-.plusIconLg, .xMarkIcon{
+.plusIconLg,
+.xMarkIcon {
   display: flex;
   justify-content: flex-end;
   cursor: pointer;

@@ -299,8 +299,16 @@ const GamePlay = () => {
         style={{ backgroundImage: 'url("/images/user_background.png")' }}
       >
         <div className={styles.left}>
-          <div></div>
-          <div></div>
+          <div>
+            <svg className={styles.pause}>
+              <use xlinkHref={"sprite.svg#pause"} />
+            </svg>
+          </div>
+          <div>
+            <svg className={styles.tree}>
+              <use xlinkHref={"sprite.svg#tree"} />
+            </svg>
+          </div>
         </div>
         <div className={styles.middle}>
           <div className={styles.questionContainer}>

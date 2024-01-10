@@ -71,7 +71,7 @@ const CreateUser = () => {
     useSelector((state) => state.createUser);
 
   const dispatch = useDispatch();
-  const naigateTo = useNavigate();
+  const navigateTo = useNavigate();
 
   const resetUserData = () => {
     setUserData({
@@ -122,7 +122,7 @@ const CreateUser = () => {
         setImageURl(null);
         resetUserData();
       }
-
+       navigateTo("/users");
       dispatch(resetCreateUserState());
       dispatch(resetUserDetailState());
     } else if (!createUserResponse.success) {
@@ -399,14 +399,14 @@ const CreateUser = () => {
   const onCancel = () => {
     if (userID) {
       setUserDetailState();
-      naigateTo("/users");
+      navigateTo("/users");
       return;
     } else {
       resetUserData();
       setImageURl(null);
     }
 
-    naigateTo("/users");
+    navigateTo("/users");
   };
 
   return (

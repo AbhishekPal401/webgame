@@ -1,7 +1,6 @@
 .container {
   width: 100%;
-  height: 100vh;
-  background-image: url("./images/user_background.png");
+  height: calc(100vh - 5rem);
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-color: #2d2d2d;
@@ -10,8 +9,196 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
 }
 .missionContainer {
   width: 100%;
-  height: 10%;
+  border: 0.4rem solid var(--primary);
+  border-radius: 2.4rem;
+  overflow: hidden;
+  background-color: #474747;
+}
+
+.header {
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-color: #474747;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 0rem;
+}
+.header > div:nth-child(1) {
+  font-size: 4rem;
+  color: var(--primary);
+  font-family: "helvetica 700";
+}
+
+.header > div:nth-child(2) {
+  width: 48%;
+  margin-top: 1rem;
+  font-size: 1.6rem;
+  color: var(--innerbackground);
+  font-family: "helvetica 500";
+  text-align: center;
+}
+
+.header > div:nth-child(3) {
+  margin-top: 1rem;
+  font-size: 1.6rem;
+  color: var(--primary);
+  font-family: "helvetica 700";
+  text-align: center;
+}
+
+.header > div:nth-child(3) span {
+  color: var(--innerbackground);
+  font-family: "helvetica 500";
+}
+
+.header span {
+  text-transform: capitalize;
+}
+
+.selectTree {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  margin-left: 8rem;
+  margin-right: 30%;
+}
+
+.selectButtonContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.selectButtonContainer div {
+  color: var(--innerbackground);
+  font-size: 1.7rem;
+  font-family: "helvetica 500";
+  border-color: var(--innerbackground);
+  border-bottom: 0.2rem solid var(--innerbackground);
+  padding: 0 1rem;
+  z-index: 1;
+}
+
+.selectButtonContainer div:hover {
+  cursor: pointer;
+}
+
+.selected {
+  color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  border-bottom: 0.2rem solid var(--primary) !important;
+  z-index: 1;
+}
+.line {
+  border-color: #7d7d7d;
+  border-bottom: 0.2rem solid #7d7d7d;
+  margin-top: -0.15rem;
+  margin-bottom: 1rem;
+}
+.tree {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tree > div:nth-child(1) {
+  width: 75%;
+  height: 40rem;
+}
+
+.tree > div:nth-child(1) svg {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.tree > div:nth-child(2) {
+  width: 25%;
+  margin-left: 4rem;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-color: #7d7d7d;
+  border-left: 0.2rem solid #7d7d7d;
+  padding: 2rem 0;
+}
+.right > div:nth-child(1),
+.right > div:nth-child(3) {
+  color: var(--primary);
+  font-size: 1.6rem;
+  font-family: "helvetica 500";
+  margin: 1rem 0;
+}
+
+.circle {
+  margin: 1rem 0;
+  flex: none !important;
+  width: 10rem;
+  height: 10rem;
+  border-radius: 10rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border: 0.4rem dotted var(--primary);
+  border-color: var(--primary);
+  color: var(--innerbackground);
+  font-size: 2.6rem;
+  font-family: "helvetica 700";
+  padding-top: 0.2rem;
+}
+.right span {
+  font-size: 2rem;
+  font-family: "helvetica 500";
+}
+
+.buttonContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+  padding-right: 4rem;
+}
+.export {
+  display: inline-block;
+  font-weight: 500;
+  text-align: center;
+  border: 0.1rem solid transparent;
+  padding: 0.5rem 2.5rem;
+  font-size: 1.2rem;
+  font-family: "helvetica 500";
+  padding-top: 0.7rem;
+  line-height: 1.5;
+  border-radius: 0.5rem;
+  margin: 0.5rem 0;
+  background-color: var(--active);
+  color: var(--black);
+}
+.end {
+  display: inline-block;
+  font-weight: 500;
+  text-align: center;
+  border: 0.1rem solid transparent;
+  padding: 0.5rem 2.5rem;
+  font-size: 1.2rem;
+  font-family: "helvetica 500";
+  padding-top: 0.7rem;
+  line-height: 1.5;
+  border-radius: 0.5rem;
+  margin: 0.5rem 0;
+  background-color: var(--primary);
+  color: var(--black);
+  margin-left: 2rem;
 }

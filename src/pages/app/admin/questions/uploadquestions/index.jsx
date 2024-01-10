@@ -99,7 +99,8 @@ function UploadQuestion() {
         const data = JSON.parse(serializedData.Data);
         console.log("response data : ", data);
         toast.success("Excel uploaded successfully.");
-        navigateTo("/scenario");
+        // navigateTo("/scenario");
+        navigateTo(`/questions/${scenarioID}`);
       }
       // else if(response.data && !response.data.success) {
       //     toast.error(response.data.message);
