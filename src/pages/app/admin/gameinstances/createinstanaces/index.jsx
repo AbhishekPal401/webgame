@@ -911,237 +911,87 @@ const CreateInstances = () => {
 
     return (
         <PageContainer>
-            {/* Top container:: start */}
-            <div className={styles.topContainer}>
-                <div className={styles.left}>
-                    <label>Create New Instances</label>
+            <div className={styles.container}>
+
+                {/* Top container:: start */}
+                <div className={styles.topContainer}>
+                    <div className={styles.left}>
+                        <label>Create New Instances</label>
+                    </div>
+                    <div className={styles.right}>
+                    </div>
                 </div>
-                <div className={styles.right}>
-                </div>
-            </div>
-            {/* Top container:: end */}
+                {/* Top container:: end */}
 
-            {/* Create game instances input main container:: start */}
-            <div className={styles.mainContainer}>
+                {/* Create game instances input main container:: start */}
+                <div className={styles.mainContainer}>
 
-                {/* Instance details:: start */}
-                <InputDataContainer
-                    customRightContainerStyles={{
-                        transform: "scaleY(-1)",
-                        backgroundPosition: 'bottom right',
-                        padding: ' 3rem 1.5rem'
-                    }}
-                >
-                    <div className={styles.instanceDetailsContainer} >
-                        <div className={styles.instanceDetailsLabelContainer}>
-                            <label className={styles.innerLabel}>Instance Details</label>
-                        </div>
-                        <div className={styles.instanceDetailsInputContainer}>
-                            <div className={styles.firstRow}>
-                                <div className={styles.field}>
-                                    <Input
-                                        labelStyle={styles.inputLabel}
-                                        type="text"
-                                        value={gameInstanceData.instanceName.value}
-                                        customStyle={{ margin: '0' }}
-                                        name={"instanceName"}
-                                        placeholder="Instance Name"
-                                        onChange={onChange}
-                                    />
-                                </div>
-                                <div className={styles.field}>
-                                    {/*Select Organization :: start */}
-                                    <div>
-                                        <select
-                                            id="dropdown_organization"
-                                            value={gameInstanceData.organization.value}
-                                            className="select_input"
-                                            onChange={onOrganizationSelect}
-                                        >
-                                            <option value={""}>Select Organization</option>
-
-                                            {masters &&
-                                                masters.data &&
-                                                isJSONString(masters.data) &&
-                                                Array.isArray(JSON.parse(masters.data)) &&
-                                                JSON.parse(masters.data).map((item, index) => {
-                                                    if (item.MasterType !== "Organization") return;
-                                                    return (
-                                                        <option value={item.MasterID} key={index}>
-                                                            {/* change item.MasterID to 
-                                                            MasterDisplayName inorder to
-                                                             send the name insed of id to backend */}
-                                                            {item.MasterDisplayName}
-                                                        </option>
-                                                    );
-                                                })}
-                                        </select>
+                    {/* Instance details:: start */}
+                    <InputDataContainer
+                        customRightContainerStyles={{
+                            transform: "scaleY(-1)",
+                            backgroundPosition: 'bottom right',
+                            padding: ' 3rem 1.5rem'
+                        }}
+                    >
+                        <div className={styles.instanceDetailsContainer} >
+                            <div className={styles.instanceDetailsLabelContainer}>
+                                <label className={styles.innerLabel}>Instance Details</label>
+                            </div>
+                            <div className={styles.instanceDetailsInputContainer}>
+                                <div className={styles.firstRow}>
+                                    <div className={styles.field}>
+                                        <Input
+                                            labelStyle={styles.inputLabel}
+                                            type="text"
+                                            value={gameInstanceData.instanceName.value}
+                                            customStyle={{ margin: '0' }}
+                                            name={"instanceName"}
+                                            placeholder="Instance Name"
+                                            onChange={onChange}
+                                        />
                                     </div>
-                                    {/*Select Organization :: end */}
-                                </div>
-                                <div className={styles.field}>
-                                    <div className={styles.groupContainer}>
-                                        {/*Select Group Name :: start */}
+                                    <div className={styles.field}>
+                                        {/*Select Organization :: start */}
                                         <div>
                                             <select
-                                                id="dropdown_group_name"
-                                                value={gameInstanceData.groupName.value}
+                                                id="dropdown_organization"
+                                                value={gameInstanceData.organization.value}
                                                 className="select_input"
-                                                onChange={onGroupNameSelect}
+                                                onChange={onOrganizationSelect}
                                             >
-                                                <option value={""}>Group Name</option>
+                                                <option value={""}>Select Organization</option>
 
-                                                {groupByOrgIdDetails &&
-                                                    groupByOrgIdDetails.data &&
-                                                    isJSONString(groupByOrgIdDetails.data) &&
-                                                    Array.isArray(JSON.parse(groupByOrgIdDetails.data)) &&
-                                                    JSON.parse(groupByOrgIdDetails.data).map((item, index) => {
-                                                        if (!item.GroupID && !item.GroupName) return;
+                                                {masters &&
+                                                    masters.data &&
+                                                    isJSONString(masters.data) &&
+                                                    Array.isArray(JSON.parse(masters.data)) &&
+                                                    JSON.parse(masters.data).map((item, index) => {
+                                                        if (item.MasterType !== "Organization") return;
                                                         return (
-                                                            <option value={item.GroupID} key={index}>
-                                                                {item.GroupName}
+                                                            <option value={item.MasterID} key={index}>
+                                                                {/* change item.MasterID to 
+                                                                MasterDisplayName inorder to
+                                                                send the name insed of id to backend */}
+                                                                {item.MasterDisplayName}
                                                             </option>
                                                         );
                                                     })}
                                             </select>
                                         </div>
-                                        {/*Select Group Name :: end */}
-
-                                        {/*Add Group Name :: start */}
-                                        <div className={styles.addGroup}>
-                                            <p href=""
-                                                onClick={() => { onAddGroupLinkClick(gameInstanceData.organization.value) }}
-                                            >+Add Group</p>
-                                        </div>
-                                        {/*Add Group Name :: start */}
+                                        {/*Select Organization :: end */}
                                     </div>
-
-                                </div>
-                                <div className={styles.field}>
-                                    {/*Select Group Size :: start */}
-                                    <div>
-                                        <select
-                                            id="dropdown_group_size"
-                                            value={gameInstanceData.groupSize.value}
-                                            className="select_input"
-                                            onChange={onGroupSizeSelect}
-                                        >
-                                            <option value={""}>Group Size</option>
-                                            {[...Array(6)].map((_, index) => (
-                                                <option key={index + 1} value={index + 1}>
-                                                    {index + 1}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    {/*Select Group Size :: end */}
-                                </div>
-                            </div>
-                            <div className={styles.secondRow}>
-                                <div className={styles.field}>
-                                    {/*Select Sceanrio Name :: start */}
-                                    <div>
-                                        <select
-                                            id="dropdown_scenario_name"
-                                            value={gameInstanceData.scenarioName.value}
-                                            className="select_input"
-                                            onChange={onScenarioNameSelect}
-                                        >
-                                            <option value={""}>Select Scenario</option>
-
-                                            {scenarioNameAndIdDetails &&
-                                                scenarioNameAndIdDetails.data &&
-                                                isJSONString(scenarioNameAndIdDetails.data) &&
-                                                Array.isArray(JSON.parse(scenarioNameAndIdDetails.data)) &&
-                                                JSON.parse(scenarioNameAndIdDetails.data).map((item, index) => {
-                                                    if (!item.ScenarioID && !item.ScenarioName) return;
-                                                    return (
-                                                        <option value={item.ScenarioID} key={index}>
-                                                            {item.ScenarioName}
-                                                        </option>
-                                                    );
-                                                })}
-                                        </select>
-                                    </div>
-                                    {/*Select Sceanrio Name :: end */}
-                                </div>
-                                <div className={styles.field}>
-                                    {/*Select Group Size :: start */}
-                                    <div>
-                                        <select
-                                            id="dropdown_level"
-                                            value={gameInstanceData.level.value}
-                                            className="select_input"
-                                            onChange={onLevelSelect}
-                                        >
-                                            <option value={""}>Select Level</option>
-                                            {levels.map((level, index) => (
-                                                <option key={index} value={level}>
-                                                    {level}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    {/*Select Group Size :: end */}
-                                </div>
-                                <div></div>
-                                <div></div>
-                            </div>
-                        </div>
-                    </div>
-                </InputDataContainer>
-                {/* Instance details:: end */}
-
-                {/* Instance players:: start */}
-                <InputDataContainer
-                    customRightContainerStyles={{
-                        backgroundSize: 'cover'
-                    }}
-                >
-                    <div className={styles.instancePlayersContainer} >
-                        <div className={styles.instancePlayersLabelContainer}>
-                            <label className={styles.innerLabel}>Instance Players</label>
-                        </div>
-                        <div className={styles.instancePlayersInputContainer}>
-                            {
-                                gameInstanceData.instancePlayers &&
-                                    gameInstanceData.instancePlayers.length > 0 ? (
-                                    gameInstanceData.instancePlayers.map((player, index) => (
-                                        <div key={index} className={styles.instancePlayersInputRow}>
-                                            <div className={styles.field}>
-                                                <Input
-                                                    labelStyle={styles.inputLabel}
-                                                    type="text"
-                                                    value={player.playerName.value}
-                                                    customStyle={{ margin: '0' }}
-                                                    name={"playerName"}
-                                                    placeholder="Player Name"
-                                                    onChange={(e) => onPlayerChange(e, index, 'playerName')}
-                                                    disabled
-                                                />
-
-                                            </div>
-
+                                    <div className={styles.field}>
+                                        <div className={styles.groupContainer}>
                                             {/*Select Group Name :: start */}
-                                            <div className={styles.field}>
-                                                <Input
-                                                    labelStyle={styles.inputLabel}
-                                                    type="text"
-                                                    value={player.playerGroupName.value}
-                                                    customStyle={{ margin: '0' }}
-                                                    name={"playerGroupName"}
-                                                    placeholder="Assign Group"
-                                                    onChange={(e) => onPlayerChange(e, index, 'playerGroupName')}
-                                                    disabled
-                                                />
-                                                {/* <div>
+                                            <div>
                                                 <select
-                                                    id="dropdown_player_group_name"
-                                                    value={player.playerGroupName.value}
+                                                    id="dropdown_group_name"
+                                                    value={gameInstanceData.groupName.value}
                                                     className="select_input"
-                                                    onChange={(e) => onPlayerChange(e, index, 'playerGroupName')}
+                                                    onChange={onGroupNameSelect}
                                                 >
-                                                    <option value={""}>Assign Group</option>
+                                                    <option value={""}>Group Name</option>
 
                                                     {groupByOrgIdDetails &&
                                                         groupByOrgIdDetails.data &&
@@ -1156,163 +1006,315 @@ const CreateInstances = () => {
                                                             );
                                                         })}
                                                 </select>
-                                            </div> */}
                                             </div>
                                             {/*Select Group Name :: end */}
 
-                                            {/*Select Role  :: start */}
-                                            <div className={styles.field}>
-                                                {/* <Input
-                                                    labelStyle={styles.inputLabel}
-                                                    type="text"
-                                                    // value={player.playerRole.value}
-                                                    value="CTO"
-                                                    customStyle={{ margin: '0' }}
-                                                    name={"playerRole"}
-                                                    placeholder="Assign Role"
-                                                    onChange={(e) => onPlayerChange(e, index, 'playerRole')}
-                                                    disabled
-                                                /> */}
-                                                <div>
-                                                    <select
-                                                        id="dropdown_player_designation"
-                                                        value={player.playerDesignation.value}
-                                                        className="select_input"
-                                                        placeholder="Assign Role"
-                                                        onChange={(e) => onPlayerChange(e, index, 'playerDesignation')}
-                                                    >
-                                                        <option value={""}>Assign Role</option>
+                                            {/*Add Group Name :: start */}
+                                            <div className={styles.addGroup}>
+                                                <p href=""
+                                                    onClick={() => { onAddGroupLinkClick(gameInstanceData.organization.value) }}
+                                                >+Add Group</p>
+                                            </div>
+                                            {/*Add Group Name :: start */}
+                                        </div>
 
-                                                        {masters &&
-                                                            masters.data &&
-                                                            isJSONString(masters.data) &&
-                                                            Array.isArray(JSON.parse(masters.data)) &&
-                                                            JSON.parse(masters.data).map((item, index) => {
-                                                                if (item.MasterType !== "Designation") return;
+                                    </div>
+                                    <div className={styles.field}>
+                                        {/*Select Group Size :: start */}
+                                        <div>
+                                            <select
+                                                id="dropdown_group_size"
+                                                value={gameInstanceData.groupSize.value}
+                                                className="select_input"
+                                                onChange={onGroupSizeSelect}
+                                            >
+                                                <option value={""}>Group Size</option>
+                                                {[...Array(6)].map((_, index) => (
+                                                    <option key={index + 1} value={index + 1}>
+                                                        {index + 1}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        {/*Select Group Size :: end */}
+                                    </div>
+                                </div>
+                                <div className={styles.secondRow}>
+                                    <div className={styles.field}>
+                                        {/*Select Sceanrio Name :: start */}
+                                        <div>
+                                            <select
+                                                id="dropdown_scenario_name"
+                                                value={gameInstanceData.scenarioName.value}
+                                                className="select_input"
+                                                onChange={onScenarioNameSelect}
+                                            >
+                                                <option value={""}>Select Scenario</option>
+
+                                                {scenarioNameAndIdDetails &&
+                                                    scenarioNameAndIdDetails.data &&
+                                                    isJSONString(scenarioNameAndIdDetails.data) &&
+                                                    Array.isArray(JSON.parse(scenarioNameAndIdDetails.data)) &&
+                                                    JSON.parse(scenarioNameAndIdDetails.data).map((item, index) => {
+                                                        if (!item.ScenarioID && !item.ScenarioName) return;
+                                                        return (
+                                                            <option value={item.ScenarioID} key={index}>
+                                                                {item.ScenarioName}
+                                                            </option>
+                                                        );
+                                                    })}
+                                            </select>
+                                        </div>
+                                        {/*Select Sceanrio Name :: end */}
+                                    </div>
+                                    <div className={styles.field}>
+                                        {/*Select Group Size :: start */}
+                                        <div>
+                                            <select
+                                                id="dropdown_level"
+                                                value={gameInstanceData.level.value}
+                                                className="select_input"
+                                                onChange={onLevelSelect}
+                                            >
+                                                <option value={""}>Select Level</option>
+                                                {levels.map((level, index) => (
+                                                    <option key={index} value={level}>
+                                                        {level}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        {/*Select Group Size :: end */}
+                                    </div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </InputDataContainer>
+                    {/* Instance details:: end */}
+
+                    {/* Instance players:: start */}
+                    <InputDataContainer
+                        customRightContainerStyles={{
+                            backgroundSize: 'cover'
+                        }}
+                    >
+                        <div className={styles.instancePlayersContainer} >
+                            <div className={styles.instancePlayersLabelContainer}>
+                                <label className={styles.innerLabel}>Instance Players</label>
+                            </div>
+                            <div className={styles.instancePlayersInputContainer}>
+                                {
+                                    gameInstanceData.instancePlayers &&
+                                        gameInstanceData.instancePlayers.length > 0 ? (
+                                        gameInstanceData.instancePlayers.map((player, index) => (
+                                            <div key={index} className={styles.instancePlayersInputRow}>
+                                                <div className={styles.field}>
+                                                    <Input
+                                                        labelStyle={styles.inputLabel}
+                                                        type="text"
+                                                        value={player.playerName.value}
+                                                        customStyle={{ margin: '0' }}
+                                                        name={"playerName"}
+                                                        placeholder="Player Name"
+                                                        onChange={(e) => onPlayerChange(e, index, 'playerName')}
+                                                        disabled
+                                                    />
+
+                                                </div>
+
+                                                {/*Select Group Name :: start */}
+                                                <div className={styles.field}>
+                                                    <Input
+                                                        labelStyle={styles.inputLabel}
+                                                        type="text"
+                                                        value={player.playerGroupName.value}
+                                                        customStyle={{ margin: '0' }}
+                                                        name={"playerGroupName"}
+                                                        placeholder="Assign Group"
+                                                        onChange={(e) => onPlayerChange(e, index, 'playerGroupName')}
+                                                        disabled
+                                                    />
+                                                    {/* <div>
+                                                    <select
+                                                        id="dropdown_player_group_name"
+                                                        value={player.playerGroupName.value}
+                                                        className="select_input"
+                                                        onChange={(e) => onPlayerChange(e, index, 'playerGroupName')}
+                                                    >
+                                                        <option value={""}>Assign Group</option>
+
+                                                        {groupByOrgIdDetails &&
+                                                            groupByOrgIdDetails.data &&
+                                                            isJSONString(groupByOrgIdDetails.data) &&
+                                                            Array.isArray(JSON.parse(groupByOrgIdDetails.data)) &&
+                                                            JSON.parse(groupByOrgIdDetails.data).map((item, index) => {
+                                                                if (!item.GroupID && !item.GroupName) return;
                                                                 return (
-                                                                    <option value={item.MasterID} key={index}>
-                                                                        {item.MasterDisplayName}
+                                                                    <option value={item.GroupID} key={index}>
+                                                                        {item.GroupName}
                                                                     </option>
                                                                 );
                                                             })}
                                                     </select>
+                                                </div> */}
                                                 </div>
+                                                {/*Select Group Name :: end */}
+
+                                                {/*Select Role  :: start */}
+                                                <div className={styles.field}>
+                                                    {/* <Input
+                                                        labelStyle={styles.inputLabel}
+                                                        type="text"
+                                                        // value={player.playerRole.value}
+                                                        value="CTO"
+                                                        customStyle={{ margin: '0' }}
+                                                        name={"playerRole"}
+                                                        placeholder="Assign Role"
+                                                        onChange={(e) => onPlayerChange(e, index, 'playerRole')}
+                                                        disabled
+                                                    /> */}
+                                                    <div>
+                                                        <select
+                                                            id="dropdown_player_designation"
+                                                            value={player.playerDesignation.value}
+                                                            className="select_input"
+                                                            placeholder="Assign Role"
+                                                            onChange={(e) => onPlayerChange(e, index, 'playerDesignation')}
+                                                        >
+                                                            <option value={""}>Assign Role</option>
+
+                                                            {masters &&
+                                                                masters.data &&
+                                                                isJSONString(masters.data) &&
+                                                                Array.isArray(JSON.parse(masters.data)) &&
+                                                                JSON.parse(masters.data).map((item, index) => {
+                                                                    if (item.MasterType !== "Designation") return;
+                                                                    return (
+                                                                        <option value={item.MasterID} key={index}>
+                                                                            {item.MasterDisplayName}
+                                                                        </option>
+                                                                    );
+                                                                })}
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                {/*Select Role:: end */}
+                                                <div className={styles.field}></div>
                                             </div>
-
-                                            {/*Select Role:: end */}
-                                            <div className={styles.field}></div>
+                                        ))
+                                    ) : (
+                                        <div className={styles.noInstancePlayerContainer}>
+                                            <p>
+                                                <label>Please select a group to load players</label>
+                                            </p>
                                         </div>
-                                    ))
-                                ) : (
-                                    <div className={styles.noInstancePlayerContainer}>
-                                        <p>
-                                            <label>Please select a group to load players</label>
-                                        </p>
-                                    </div>
-                                )}
+                                    )}
 
+                            </div>
                         </div>
-                    </div>
-                </InputDataContainer>
-                {/* Instance players:: start */}
+                    </InputDataContainer>
+                    {/* Instance players:: start */}
 
-            </div>
-            {/* Create game instances input main container:: end */}
+                </div>
+                {/* Create game instances input main container:: end */}
 
-            {/* Button container:: start */}
-            <div className={styles.buttonContainer}>
-                <Button buttonType="cancel"
-                    onClick={onCancel}
-                >
-                    Cancel
-                </Button>
-                <Button onClick={onSubmit}>
-                    Save
-                </Button>
-            </div>
-            {/* Button container:: end */}
+                {/* Button container:: start */}
+                <div className={styles.buttonContainer}>
+                    <Button buttonType="cancel"
+                        onClick={onCancel}
+                    >
+                        Cancel
+                    </Button>
+                    <Button onClick={onSubmit}>
+                        Save
+                    </Button>
+                </div>
+                {/* Button container:: end */}
 
-            {/* Modal Container :: start*/}
+                {/* Modal Container :: start*/}
 
-            {showAddGroupModal && (
-                <ModalContainer>
-                    <div className="modal_content">
-                        <div className="modal_header">
-                            <div>Add Group</div>
-                            <div>
-                                <svg
-                                    className="modal_crossIcon"
+                {showAddGroupModal && (
+                    <ModalContainer>
+                        <div className="modal_content">
+                            <div className="modal_header">
+                                <div>Add Group</div>
+                                <div>
+                                    <svg
+                                        className="modal_crossIcon"
+                                        onClick={() => {
+                                            setShowAddGroupModal(null);
+                                            resetAddGroupData();
+                                            clearSearch();
+                                        }}
+                                    >
+                                        <use xlinkHref={"sprite.svg#crossIcon"} />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div className={styles.modalInputContainer}>
+                                <div>
+                                    <Input
+                                        labelStyle={styles.modalInputLabel}
+                                        label="Group Name"
+                                        type="text"
+                                        customStyle={{ marginTop: '1rem', }}
+                                        name={"groupName"}
+                                        value={addGroupData.groupName.value}
+                                        placeholder="Group Name"
+                                        onChange={onAddGroupChange}
+                                        // autoFocus={!searchValue}
+                                    />
+                                </div>
+                                <div className={styles.searchContainer}>
+                                    <SearchUsers
+                                        value={searchValue}
+                                        onChange={onSearchChange}
+                                        clearSearch={clearSearch}
+                                        searchValue={searchValue}
+                                    />
+                                    <UsersList
+                                        users={
+                                            searchValue
+                                                ? addGroupData.users.filter((user) =>
+                                                    user.userEmail.value.includes(searchValue)
+                                                )
+                                                : addGroupData.users
+                                        }
+                                        onToggleUser={onToggleUser}
+                                    />
+                                </div>
+
+                            </div>
+
+                            <div className="modal_buttonContainer">
+                                <Button
+                                    buttonType={"cancel"}
                                     onClick={() => {
                                         setShowAddGroupModal(null);
                                         resetAddGroupData();
                                         clearSearch();
                                     }}
                                 >
-                                    <use xlinkHref={"sprite.svg#crossIcon"} />
-                                </svg>
+                                    Cancel
+                                </Button>
+                                <Button
+                                    customStyle={{
+                                        marginLeft: "1rem",
+                                    }}
+                                    onClick={onAddGroup}
+                                >
+                                    Add
+                                </Button>
                             </div>
                         </div>
-                        <div className={styles.modalInputContainer}>
-                            <div>
-                                <Input
-                                    labelStyle={styles.modalInputLabel}
-                                    label="Group Name"
-                                    type="text"
-                                    customStyle={{ marginTop: '1rem', }}
-                                    name={"groupName"}
-                                    value={addGroupData.groupName.value}
-                                    placeholder="Group Name"
-                                    onChange={onAddGroupChange}
-                                    // autoFocus={!searchValue}
-                                />
-                            </div>
-                            <div className={styles.searchContainer}>
-                                <SearchUsers
-                                    value={searchValue}
-                                    onChange={onSearchChange}
-                                    clearSearch={clearSearch}
-                                    searchValue={searchValue}
-                                />
-                                <UsersList
-                                    users={
-                                        searchValue
-                                            ? addGroupData.users.filter((user) =>
-                                                user.userEmail.value.includes(searchValue)
-                                            )
-                                            : addGroupData.users
-                                    }
-                                    onToggleUser={onToggleUser}
-                                />
-                            </div>
+                    </ModalContainer>
+                )}
 
-                        </div>
-
-                        <div className="modal_buttonContainer">
-                            <Button
-                                buttonType={"cancel"}
-                                onClick={() => {
-                                    setShowAddGroupModal(null);
-                                    resetAddGroupData();
-                                    clearSearch();
-                                }}
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                customStyle={{
-                                    marginLeft: "1rem",
-                                }}
-                                onClick={onAddGroup}
-                            >
-                                Add
-                            </Button>
-                        </div>
-                    </div>
-                </ModalContainer>
-            )}
-
-            {/* Modal Container :: end*/}
-
+                {/* Modal Container :: end*/}
+            </div>                 
         </PageContainer>
     );
 }

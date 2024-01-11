@@ -71,6 +71,7 @@ const UserProfile = () => {
     useSelector((state) => state.createUser);
 
   const dispatch = useDispatch();
+  const navigateTo = useNavigate();
 
   const resetUserData = () => {
     setUserData({
@@ -121,6 +122,8 @@ const UserProfile = () => {
         setImageURl(null);
         resetUserData();
       }
+
+      navigateTo("/users");
 
       dispatch(resetCreateUserState());
       dispatch(resetUserDetailState());
@@ -393,11 +396,14 @@ const UserProfile = () => {
   const onCancel = () => {
     if (userID) {
       setUserDetailState();
+      navigateTo("/users");
       return;
     } else {
       resetUserData();
       setImageURl(null);
     }
+    navigateTo("/users");
+
   };
 
   return (

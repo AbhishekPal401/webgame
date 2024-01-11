@@ -378,111 +378,113 @@ const UpdateScenarios = () => {
 
   return (
     <PageContainer>
-      <div className={styles.topContainer}>
-        <div className={styles.left}>
-          <div>
-            <label>Update Scenario</label>
-          </div>
-          <div className={styles.lastEditedOn}>
-            Last edited on {formatDateString(scenarioData?.updateAt?.value)}
-          </div>
-          {/*TODO:: Last edited On */}
-        </div>
-        <div className={styles.right}>
-          <img src={bg_2} alt="create scenario background 2" />
-        </div>
-      </div>
-      <div className={styles.mainContainer}>
-        {/* Create Scenario:: start */}
-        <div className={styles.formContainer}>
-          <div className={styles.createScenarioFormLeft}></div>
-          <div
-            className={styles.createScenarioFormRight}
-            style={{ backgroundImage: 'url("/images/particles.png")' }}
-          >
-            <div className={styles.createScenarioLeftInputs}>
-              <Input
-                labelStyle={styles.inputLabel}
-                type="text"
-                name={"scenarioName"}
-                value={scenarioData?.scenarioName?.value}
-                placeholder="Scenario Name"
-                onChange={onChange}
-              />
-              {/*TODO:: Rich Text Editor */}
-              <Input
-                value={scenarioData?.scenarioDescription?.value}
-                labelStyle={styles.inputLabel}
-                customStyle={{ height: "70%" }}
-                name={"scenarioDescription"}
-                placeholder="Scenario Description"
-                textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
-                onChange={onChange}
-                textArea
-              />
+      <div className={styles.container}>
+        <div className={styles.topContainer}>
+          <div className={styles.left}>
+            <div>
+              <label>Update Scenario</label>
             </div>
-            <div className={styles.verticalLine}></div>
-            <div className={styles.createScenarioRightInputs}></div>
+            <div className={styles.lastEditedOn}>
+              Last edited on {formatDateString(scenarioData?.updateAt?.value)}
+            </div>
+            {/*TODO:: Last edited On */}
+          </div>
+          <div className={styles.right}>
+            <img src={bg_2} alt="create scenario background 2" />
           </div>
         </div>
-        {/* Create Scenario:: end */}
-
-        {/* Game Introdution:: start */}
-        <div className={styles.formContainer}>
-          <div className={styles.gameIntroductionFormLeft}></div>
-          <div
-            className={styles.gameIntroductionFormRight}
-            style={{ backgroundImage: 'url("/images/particles.png")' }}
-          >
-            <div className={styles.gameIntroductionLeftInputs}>
-              <label>Game Introduction</label>
-              {/*TODO:: Rich Text Editor */}
-              <Input
-                value={scenarioData?.gameIntroText?.value}
-                labelStyle={styles.inputLabel}
-                customStyle={{ height: "80%" }}
-                name={"gameIntroText"}
-                placeholder="Add Game Intro Text"
-                textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
-                onChange={onChange}
-                textArea
-              />
-            </div>
-            <div className={styles.verticalLine}></div>
-            <div className={styles.gameIntroductionRightInputs}>
-              <div className={styles.imageDropZoneContainerLeft}>
-                <FileDropZone
-                  customstyle={{ marginTop: "1rem" }}
-                  label="Upload Game Intro Video"
-                  hint="Eligible Formats: MP4 and MP3"
-                  allowedFileTypes={[
-                    fileTypes.AUDIO_EXTENSION,
-                    fileTypes.VIDEO_EXTENSION,
-                    fileTypes.MIME_AUDIO_1,
-                    fileTypes.MIME_AUDIO_2,
-                    fileTypes.MIME_VIDEO,
-                  ]}
-                  onUpload={onUpload}
-                  fileSrc={introFileDisplay}
-                  setUrl={(file) => {
-                    setIntroFileDisplay(file);
-                  }}
-                  fileSrcType={
-                    introFileDisplay && extractFileType(introFileDisplay)
-                  }
+        <div className={styles.mainContainer}>
+          {/* Create Scenario:: start */}
+          <div className={styles.formContainer}>
+            <div className={styles.createScenarioFormLeft}></div>
+            <div
+              className={styles.createScenarioFormRight}
+              style={{ backgroundImage: 'url("/images/particles.png")' }}
+            >
+              <div className={styles.createScenarioLeftInputs}>
+                <Input
+                  labelStyle={styles.inputLabel}
+                  type="text"
+                  name={"scenarioName"}
+                  value={scenarioData?.scenarioName?.value}
+                  placeholder="Scenario Name"
+                  onChange={onChange}
+                />
+                {/*TODO:: Rich Text Editor */}
+                <Input
+                  value={scenarioData?.scenarioDescription?.value}
+                  labelStyle={styles.inputLabel}
+                  customStyle={{ height: "70%" }}
+                  name={"scenarioDescription"}
+                  placeholder="Scenario Description"
+                  textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
+                  onChange={onChange}
+                  textArea
                 />
               </div>
-              <div className={styles.imageDropZoneContainerRight}></div>
+              <div className={styles.verticalLine}></div>
+              <div className={styles.createScenarioRightInputs}></div>
             </div>
           </div>
+          {/* Create Scenario:: end */}
+
+          {/* Game Introdution:: start */}
+          <div className={styles.formContainer}>
+            <div className={styles.gameIntroductionFormLeft}></div>
+            <div
+              className={styles.gameIntroductionFormRight}
+              style={{ backgroundImage: 'url("/images/particles.png")' }}
+            >
+              <div className={styles.gameIntroductionLeftInputs}>
+                <label>Game Introduction</label>
+                {/*TODO:: Rich Text Editor */}
+                <Input
+                  value={scenarioData?.gameIntroText?.value}
+                  labelStyle={styles.inputLabel}
+                  customStyle={{ height: "80%" }}
+                  name={"gameIntroText"}
+                  placeholder="Add Game Intro Text"
+                  textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
+                  onChange={onChange}
+                  textArea
+                />
+              </div>
+              <div className={styles.verticalLine}></div>
+              <div className={styles.gameIntroductionRightInputs}>
+                <div className={styles.imageDropZoneContainerLeft}>
+                  <FileDropZone
+                    customstyle={{ marginTop: "1rem" }}
+                    label="Upload Game Intro Video"
+                    hint="Eligible Formats: MP4 and MP3"
+                    allowedFileTypes={[
+                      fileTypes.AUDIO_EXTENSION,
+                      fileTypes.VIDEO_EXTENSION,
+                      fileTypes.MIME_AUDIO_1,
+                      fileTypes.MIME_AUDIO_2,
+                      fileTypes.MIME_VIDEO,
+                    ]}
+                    onUpload={onUpload}
+                    fileSrc={introFileDisplay}
+                    setUrl={(file) => {
+                      setIntroFileDisplay(file);
+                    }}
+                    fileSrcType={
+                      introFileDisplay && extractFileType(introFileDisplay)
+                    }
+                  />
+                </div>
+                <div className={styles.imageDropZoneContainerRight}></div>
+              </div>
+            </div>
+          </div>
+          {/* Game Introdution:: end */}
         </div>
-        {/* Game Introdution:: end */}
-      </div>
-      <div className={styles.buttonContainer}>
-        <Button buttonType="cancel" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button onClick={onSubmit}>Update Scenario</Button>
+        <div className={styles.buttonContainer}>
+          <Button buttonType="cancel" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button onClick={onSubmit}>Update Scenario</Button>
+        </div>
       </div>
     </PageContainer>
   );
