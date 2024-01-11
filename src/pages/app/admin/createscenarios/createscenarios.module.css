@@ -1,9 +1,3 @@
-.container {
-  background: url("./images/particles-yellow.png");
-  background-size: 80%;
-  background-position: top right;
-  background-repeat: no-repeat;
-}
 .topContainer {
   width: 100%;
   height: 12rem;
