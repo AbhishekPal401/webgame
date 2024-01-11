@@ -1,9 +1,8 @@
 .container {
   background: url("./images/particles-yellow.png");
-  background-size: contain;
-  background-position: top; 
+  background-size: 80%;
+  background-position: top right;
   background-repeat: no-repeat;
-  background-color: transparent;
 }
 .topContainer {
   width: 100%;
@@ -62,7 +61,7 @@
   background: #474747 0% 0% no-repeat padding-box;
   background-repeat: no-repeat;
   background-size: contain;
-  background-position: bottom;
+  background-position: bottom right;
   display: flex;
   flex-direction: row;
   gap: 5rem;
@@ -112,7 +111,7 @@
   background: #474747 0% 0% no-repeat padding-box;
   background-repeat: no-repeat;
   background-size: contain;
-  background-position: bottom;
+  background-position: bottom right;
   display: flex;
   flex-direction: row;
   gap: 5rem;

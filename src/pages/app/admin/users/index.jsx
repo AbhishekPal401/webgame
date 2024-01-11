@@ -100,140 +100,142 @@ const Users = () => {
 
   return (
     <PageContainer>
-      <div className={styles.topContainer}>
-        <div className={styles.left}>
-          <label>Users</label>
-        </div>
-        <div
-          className={styles.right}
-          style={{ backgroundImage: 'url("./images/binary.png")' }}
-        >
-          <img src="./images/scenario.png" />
-          <div className={styles.buttonContainer}>
-            <Button onClick={navigateTo}>Create New</Button>
+      <div className={styles.container}>
+
+        <div className={styles.topContainer}>
+          <div className={styles.left}>
+            <label>Users</label>
+          </div>
+          <div
+            className={styles.right}
+          >
+            <img src="./images/scenario.png" />
+            <div className={styles.buttonContainer}>
+              <Button onClick={navigateTo}>Create New</Button>
+            </div>
           </div>
         </div>
-      </div>
-      <div className={styles.mainContainer}>
-        <table className={styles.table_content}>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Username</th>
-              <th>EmailId</th>
-              <th>Designation</th>
-              <th>Organization</th>
-              <th>Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            {usersByPage &&
-              usersByPage.success &&
-              usersByPage.data &&
-              isJSONString(usersByPage.data) &&
-              JSON.parse(usersByPage.data)?.UserDetails.map((user, index) => {
-                return (
-                  <tr key={index}>
-                    <td>{index + pageCount * (pageNumber - 1) + 1}</td>
-                    <td
-                      onClick={() => {
-                        navigate(`/users/createandedit/${user.UserID}`);
-                      }}
-                      className={styles.username}
-                    >
-                      {user.UserName}
-                    </td>
-                    <td>{user.Email}</td>
-                    <td>{user.Designation}</td>
-                    <td>{user.OrganizationName}</td>
-                    <td>
-                      <Button
-                        customStyle={{
-                          paddingTop: "0.2rem",
-                          paddingBottom: "0.2rem",
-                        }}
-                        buttonType="cancel"
+        <div className={styles.mainContainer}>
+          <table className={styles.table_content}>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>EmailId</th>
+                <th>Designation</th>
+                <th>Organization</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {usersByPage &&
+                usersByPage.success &&
+                usersByPage.data &&
+                isJSONString(usersByPage.data) &&
+                JSON.parse(usersByPage.data)?.UserDetails.map((user, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>{index + pageCount * (pageNumber - 1) + 1}</td>
+                      <td
                         onClick={() => {
-                          setShowDeleteModal(user);
+                          navigate(`/users/createandedit/${user.UserID}`);
                         }}
+                        className={styles.username}
                       >
-                        Delete
-                      </Button>
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
-        {usersByPage &&
-          usersByPage.success &&
-          usersByPage.data &&
-          isJSONString(usersByPage.data) && (
-            <div className={styles.paginationContainer}>
-              <Pagination
-                totalCount={JSON.parse(usersByPage.data)?.TotalCount}
-                pageNumber={pageNumber}
-                countPerPage={pageCount}
-                onPageChange={(pageNumber) => {
-                  const data = {
-                    pageNumber: pageNumber,
-                    pageCount: pageCount,
-                    requester: {
-                      requestID: generateGUID(),
-                      requesterID: credentials.data.userID,
-                      requesterName: credentials.data.userName,
-                      requesterType: credentials.data.role,
-                    },
-                  };
+                        {user.UserName}
+                      </td>
+                      <td>{user.Email}</td>
+                      <td>{user.Designation}</td>
+                      <td>{user.OrganizationName}</td>
+                      <td>
+                        <Button
+                          customStyle={{
+                            paddingTop: "0.2rem",
+                            paddingBottom: "0.2rem",
+                          }}
+                          buttonType="cancel"
+                          onClick={() => {
+                            setShowDeleteModal(user);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+          {usersByPage &&
+            usersByPage.success &&
+            usersByPage.data &&
+            isJSONString(usersByPage.data) && (
+              <div className={styles.paginationContainer}>
+                <Pagination
+                  totalCount={JSON.parse(usersByPage.data)?.TotalCount}
+                  pageNumber={pageNumber}
+                  countPerPage={pageCount}
+                  onPageChange={(pageNumber) => {
+                    const data = {
+                      pageNumber: pageNumber,
+                      pageCount: pageCount,
+                      requester: {
+                        requestID: generateGUID(),
+                        requesterID: credentials.data.userID,
+                        requesterName: credentials.data.userName,
+                        requesterType: credentials.data.role,
+                      },
+                    };
 
-                  dispatch(getUsersbyPage(data));
-                }}
-              />
-            </div>
-          )}
-      </div>
+                    dispatch(getUsersbyPage(data));
+                  }}
+                />
+              </div>
+            )}
+        </div>
 
-      {showDeleteModal && (
-        <ModalContainer>
-          <div className="modal_content">
-            <div className="modal_header">
-              <div>Delete User</div>
-              <div>
-                <svg
-                  className="modal_crossIcon"
+        {showDeleteModal && (
+          <ModalContainer>
+            <div className="modal_content">
+              <div className="modal_header">
+                <div>Delete User</div>
+                <div>
+                  <svg
+                    className="modal_crossIcon"
+                    onClick={() => {
+                      setShowDeleteModal(null);
+                    }}
+                  >
+                    <use xlinkHref={"sprite.svg#crossIcon"} />
+                  </svg>
+                </div>
+              </div>
+              <div className="modal_description">
+                Are you sure you want to delete this user ?
+              </div>
+
+              <div className="modal_buttonContainer">
+                <Button
+                  buttonType={"cancel"}
                   onClick={() => {
                     setShowDeleteModal(null);
                   }}
                 >
-                  <use xlinkHref={"sprite.svg#crossIcon"} />
-                </svg>
+                  Cancel
+                </Button>
+                <Button
+                  customStyle={{
+                    marginLeft: "1rem",
+                  }}
+                  onClick={onDeleteUser}
+                >
+                  Delete
+                </Button>
               </div>
             </div>
-            <div className="modal_description">
-              Are you sure you want to delete this user ?
-            </div>
-
-            <div className="modal_buttonContainer">
-              <Button
-                buttonType={"cancel"}
-                onClick={() => {
-                  setShowDeleteModal(null);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                customStyle={{
-                  marginLeft: "1rem",
-                }}
-                onClick={onDeleteUser}
-              >
-                Delete
-              </Button>
-            </div>
-          </div>
-        </ModalContainer>
-      )}
+          </ModalContainer>
+        )}
+      </div>
     </PageContainer>
   );
 };

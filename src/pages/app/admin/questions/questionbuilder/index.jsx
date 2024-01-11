@@ -526,234 +526,236 @@ function QuestionBuilder() {
 
   return (
     <PageContainer>
-      {/* Top container:: start */}
-      <div className={styles.topContainer}>
-        <div className={styles.left}>
-          <label>Question Builder</label>
+      <div className={styles.container}>
+        {/* Top container:: start */}
+        <div className={styles.topContainer}>
+          <div className={styles.left}>
+            <label>Question Builder</label>
+          </div>
+          <div className={styles.right}>
+            <img src="./images/questions1.png" />
+          </div>
         </div>
-        <div className={styles.right}>
-          <img src="./images/questions1.png" />
-        </div>
-      </div>
-      {/* Top container:: end */}
+        {/* Top container:: end */}
 
-      {/* Question builder input:: start */}
-      <div className={styles.mainContainer}>
-        <InputDataContainer
-          customRightContainerStyles={{
-            transform: "scaleY(-1)",
-            backgroundPosition: "bottom right",
-          }}
-        >
-          <div className={styles.mainInputContainer}>
-            <div className={styles.questionContainer}>
-              <label className={styles.innerLabel}>Question</label>
-              <div className={styles.questionInputContainer}>
-                <div className={styles.questionInputLeft}>
-                  <Input
-                    label="Question"
-                    labelStyle={styles.inputLabel}
-                    customStyle={{ margin: "0" }}
-                    name={"question"}
-                    value={questionData.question.value}
-                    placeholder="Add question"
-                    textAreaStyleClass={styles.questionTextarea}
-                    onChange={onChange}
-                    textArea
-                  />
-                </div>
-                <div className={styles.questionInputRight}>
-                  {/* Decisin Maker :: start */}
-                  <div>
-                    <label
-                      htmlFor="dropdown_decision_maker"
-                      className="select_label"
-                    >
-                      Decision Maker
-                    </label>
-                    <select
-                      id="dropdown_decision_maker"
-                      value={questionData.decisionMaker.value}
-                      className="select_input"
-                      onChange={onDecisionMakerSelect}
-                    >
-                      <option value={""}>Decision Maker</option>
-
-                      {masters &&
-                        masters.data &&
-                        isJSONString(masters.data) &&
-                        Array.isArray(JSON.parse(masters.data)) &&
-                        JSON.parse(masters.data).map((item, index) => {
-                          if (item.MasterType !== "Designation") return;
-                          return (
-                            <option value={item.MasterDisplayName} key={index}>
-                              {/* change item.MasterID to 
-                                                            MasterDisplayName inorder to
-                                                             send the name insed of id to backend */}
-                              {item.MasterDisplayName}
-                            </option>
-                          );
-                        })}
-                    </select>
-                  </div>
-                  {/* Decisin Maker :: end */}
-
-                  {/* Narative Media :: start */}
-                  <div className={styles.fileDropZone}>
-                    <FileDropZone
-                      label="Narative Media"
-                      customstyle={{}}
-                      customContainerClass={styles.customFileContianer}
-                      hint="Eligible Formats: Mp4, Image and PDF"
-                      customHintClass={styles.hint}
-                      allowedFileTypes={[
-                        fileTypes.AUDIO_EXTENSION,
-                        fileTypes.MIME_AUDIO_1,
-                        fileTypes.MIME_AUDIO_2,
-                        fileTypes.VIDEO_EXTENSION,
-                        fileTypes.MIME_VIDEO,
-                      ]}
-                      onUpload={onUpload}
-                      fileSrc={supportFileDisplayURL}
-                      fileSrcType={
-                        supportFileDisplayURL &&
-                        extractFileType(supportFileDisplayURL)
-                      }
-                      setUrl={(file) => {
-                        setSupportFileDisplayURL(file);
-                      }}
+        {/* Question builder input:: start */}
+        <div className={styles.mainContainer}>
+          <InputDataContainer
+            customRightContainerStyles={{
+              transform: "scaleY(-1)",
+              backgroundPosition: "bottom right",
+            }}
+          >
+            <div className={styles.mainInputContainer}>
+              <div className={styles.questionContainer}>
+                <label className={styles.innerLabel}>Question</label>
+                <div className={styles.questionInputContainer}>
+                  <div className={styles.questionInputLeft}>
+                    <Input
+                      label="Question"
+                      labelStyle={styles.inputLabel}
+                      customStyle={{ margin: "0" }}
+                      name={"question"}
+                      value={questionData.question.value}
+                      placeholder="Add question"
+                      textAreaStyleClass={styles.questionTextarea}
+                      onChange={onChange}
+                      textArea
                     />
                   </div>
-                  {/* Narative Media :: end */}
-                </div>
-                <div className={styles.questionInputEmptyRight}></div>
-              </div>
-            </div>
-            <div className={styles.answersContainer}>
-              <label className={styles.innerLabel}>Answers</label>
-              <div className={styles.answerInputContainer}>
-                <div className={styles.answerInputLeft}>
-                  <div className={styles.answerInputLabels}>
-                    <label>Options</label>
-                    <label>Optimal</label>
-                    <label>Score</label>
-                    <label>Next Question</label>
-                    <label>Consequence</label>
-                    <label>Narrative</label>
+                  <div className={styles.questionInputRight}>
+                    {/* Decisin Maker :: start */}
+                    <div>
+                      <label
+                        htmlFor="dropdown_decision_maker"
+                        className="select_label"
+                      >
+                        Decision Maker
+                      </label>
+                      <select
+                        id="dropdown_decision_maker"
+                        value={questionData.decisionMaker.value}
+                        className="select_input"
+                        onChange={onDecisionMakerSelect}
+                      >
+                        <option value={""}>Decision Maker</option>
+
+                        {masters &&
+                          masters.data &&
+                          isJSONString(masters.data) &&
+                          Array.isArray(JSON.parse(masters.data)) &&
+                          JSON.parse(masters.data).map((item, index) => {
+                            if (item.MasterType !== "Designation") return;
+                            return (
+                              <option value={item.MasterDisplayName} key={index}>
+                                {/* change item.MasterID to 
+                                                            MasterDisplayName inorder to
+                                                             send the name insed of id to backend */}
+                                {item.MasterDisplayName}
+                              </option>
+                            );
+                          })}
+                      </select>
+                    </div>
+                    {/* Decisin Maker :: end */}
+
+                    {/* Narative Media :: start */}
+                    <div className={styles.fileDropZone}>
+                      <FileDropZone
+                        label="Narative Media"
+                        customstyle={{}}
+                        customContainerClass={styles.customFileContianer}
+                        hint="Eligible Formats: Mp4, Image and PDF"
+                        customHintClass={styles.hint}
+                        allowedFileTypes={[
+                          fileTypes.AUDIO_EXTENSION,
+                          fileTypes.MIME_AUDIO_1,
+                          fileTypes.MIME_AUDIO_2,
+                          fileTypes.VIDEO_EXTENSION,
+                          fileTypes.MIME_VIDEO,
+                        ]}
+                        onUpload={onUpload}
+                        fileSrc={supportFileDisplayURL}
+                        fileSrcType={
+                          supportFileDisplayURL &&
+                          extractFileType(supportFileDisplayURL)
+                        }
+                        setUrl={(file) => {
+                          setSupportFileDisplayURL(file);
+                        }}
+                      />
+                    </div>
+                    {/* Narative Media :: end */}
                   </div>
-                  {questionData.answers.map((answer, index) => (
-                    <div key={index} className={styles.answerInputFields}>
-                      {/* Option :: start */}
-                      <div>
-                        <Input
-                          labelStyle={styles.inputLabel}
-                          customStyle={{}}
-                          name={`option-${index}`}
-                          value={answer.option.value}
-                          onChange={(e) => onAnswerChange(e, index, "option")}
-                          placeholder={`Option ${index + 1}`}
-                        />
-                      </div>
-                      {/* Option :: end */}
-
-                      {/* Optimal :: start */}
-                      <div>
-                        <div>
-                          <select
-                            id={`dropdown_optimal-${index}`}
-                            value={answer.optimal.value}
-                            className="select_input"
-                            name={`optimal-${index}`}
-                            onChange={(e) =>
-                              onAnswerChange(e, index, "optimal")
-                            }
-                          >
-                            {/* <option value={""}>Optimal</option> */}
-                            {answer.optimal.value === false ? (
-                              <>
-                                <option value={false}>No</option>
-                                <option value={true}>Yes</option>
-                              </>
-                            ) : (
-                              <>
-                                <option value={true}>Yes</option>
-                                <option value={false}>No</option>
-                              </>
-                            )}
-                          </select>
-                        </div>
-                      </div>
-                      {/* Optimal :: end  */}
-
-                      {/* Score :: start  */}
-                      <div>
-                        <Input
-                          labelStyle={styles.inputLabel}
-                          customStyle={{}}
-                          name={`score-${index}`}
-                          value={answer.score.value}
-                          onChange={(e) => onAnswerChange(e, index, "score")}
-                          placeholder={`Score ${index + 1}`}
-                        />
-                      </div>
-                      {/* Score :: end  */}
-
-                      {/* Next Question :: start  */}
-                      <div>
+                  <div className={styles.questionInputEmptyRight}></div>
+                </div>
+              </div>
+              <div className={styles.answersContainer}>
+                <label className={styles.innerLabel}>Answers</label>
+                <div className={styles.answerInputContainer}>
+                  <div className={styles.answerInputLeft}>
+                    <div className={styles.answerInputLabels}>
+                      <label>Options</label>
+                      <label>Optimal</label>
+                      <label>Score</label>
+                      <label>Next Question</label>
+                      <label>Consequence</label>
+                      <label>Narrative</label>
+                    </div>
+                    {questionData.answers.map((answer, index) => (
+                      <div key={index} className={styles.answerInputFields}>
+                        {/* Option :: start */}
                         <div>
                           <Input
                             labelStyle={styles.inputLabel}
                             customStyle={{}}
-                            name={`nextQuestion-${index}`}
-                            value={answer.nextQuestion.value}
-                            onChange={(e) =>
-                              onAnswerChange(e, index, "nextQuestion")
-                            }
-                            placeholder={`Next Question ${index + 1}`}
+                            name={`option-${index}`}
+                            value={answer.option.value}
+                            onChange={(e) => onAnswerChange(e, index, "option")}
+                            placeholder={`Option ${index + 1}`}
                           />
                         </div>
-                      </div>
-                      {/* Next Question :: end  */}
+                        {/* Option :: end */}
 
-                      {/* Consequence :: start  */}
-                      <div>
-                        <Input
-                          labelStyle={styles.inputLabel}
-                          customStyle={{}}
-                          name={`consequence-${index}`}
-                          value={answer.consequence.value}
-                          onChange={(e) =>
-                            onAnswerChange(e, index, "consequence")
-                          }
-                          placeholder={`Consequence ${index + 1}`}
-                        />
-                      </div>
-                      {/* Consequence :: end  */}
+                        {/* Optimal :: start */}
+                        <div>
+                          <div>
+                            <select
+                              id={`dropdown_optimal-${index}`}
+                              value={answer.optimal.value}
+                              className="select_input"
+                              name={`optimal-${index}`}
+                              onChange={(e) =>
+                                onAnswerChange(e, index, "optimal")
+                              }
+                            >
+                              {/* <option value={""}>Optimal</option> */}
+                              {answer.optimal.value === false ? (
+                                <>
+                                  <option value={false}>No</option>
+                                  <option value={true}>Yes</option>
+                                </>
+                              ) : (
+                                <>
+                                  <option value={true}>Yes</option>
+                                  <option value={false}>No</option>
+                                </>
+                              )}
+                            </select>
+                          </div>
+                        </div>
+                        {/* Optimal :: end  */}
 
-                      {/* Narrative :: start  */}
-                      <div className={styles.narrative}>
-                        <p>Choose File</p>
+                        {/* Score :: start  */}
+                        <div>
+                          <Input
+                            labelStyle={styles.inputLabel}
+                            customStyle={{}}
+                            name={`score-${index}`}
+                            value={answer.score.value}
+                            onChange={(e) => onAnswerChange(e, index, "score")}
+                            placeholder={`Score ${index + 1}`}
+                          />
+                        </div>
+                        {/* Score :: end  */}
+
+                        {/* Next Question :: start  */}
+                        <div>
+                          <div>
+                            <Input
+                              labelStyle={styles.inputLabel}
+                              customStyle={{}}
+                              name={`nextQuestion-${index}`}
+                              value={answer.nextQuestion.value}
+                              onChange={(e) =>
+                                onAnswerChange(e, index, "nextQuestion")
+                              }
+                              placeholder={`Next Question ${index + 1}`}
+                            />
+                          </div>
+                        </div>
+                        {/* Next Question :: end  */}
+
+                        {/* Consequence :: start  */}
+                        <div>
+                          <Input
+                            labelStyle={styles.inputLabel}
+                            customStyle={{}}
+                            name={`consequence-${index}`}
+                            value={answer.consequence.value}
+                            onChange={(e) =>
+                              onAnswerChange(e, index, "consequence")
+                            }
+                            placeholder={`Consequence ${index + 1}`}
+                          />
+                        </div>
+                        {/* Consequence :: end  */}
+
+                        {/* Narrative :: start  */}
+                        <div className={styles.narrative}>
+                          <p>Choose File</p>
+                        </div>
+                        {/* Narrative :: end  */}
                       </div>
-                      {/* Narrative :: end  */}
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                  <div className={styles.answerInputEmptyRight}></div>
                 </div>
-                <div className={styles.answerInputEmptyRight}></div>
               </div>
             </div>
-          </div>
-        </InputDataContainer>
+          </InputDataContainer>
 
-        {/* Button container:: start */}
-        <div className={styles.buttonContainer}>
-          <Button buttonType="cancel" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button onClick={onSubmit}>Save</Button>
+          {/* Button container:: start */}
+          <div className={styles.buttonContainer}>
+            <Button buttonType="cancel" onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button onClick={onSubmit}>Save</Button>
+          </div>
+          {/* Button container:: end */}
         </div>
-        {/* Button container:: end */}
+        {/* Question builder input:: end */}
       </div>
-      {/* Question builder input:: end */}
     </PageContainer>
   );
 }
