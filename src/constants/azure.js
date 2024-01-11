@@ -6,3 +6,13 @@ export const azureConfig = {
     import.meta.env.VITE_REACT_APP_AZURE_TENANT_ID
   }`,
 };
+
+//pwc
+// export const azureConfig = {
+//   appId: import.meta.env.VITE_REACT_APP_AZURE_CLIENT_ID,
+//   redirectURL: "https://ipziqnguaswa001.azurewebsites.net",
+//   scopes: ["user.read"],
+//   authority: `https://login.microsoftonline.com/${
+//     import.meta.env.VITE_REACT_APP_AZURE_TENANT_ID
+//   }`,
+// };
