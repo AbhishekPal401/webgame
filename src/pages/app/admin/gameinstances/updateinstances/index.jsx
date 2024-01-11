@@ -572,7 +572,7 @@ const UpdateInstances = () => {
         let updatedPlayers = [...gameInstanceData.instancePlayers];
 
         // validate the gameInstanceData fields
-        if (gameInstanceData?.instanceName?.value === "") {
+        if (gameInstanceData?.instanceName?.value?.trim() === "") {
             console.log("instanceName:", data.instanceName);
             data = {
                 ...data,
@@ -585,7 +585,7 @@ const UpdateInstances = () => {
             valid = false;
         }
 
-        if (gameInstanceData?.organization?.value === "") {
+        if (gameInstanceData?.organization?.value?.trim() === "") {
             console.log("organization:", data.organization);
             data = {
                 ...data,
@@ -598,7 +598,7 @@ const UpdateInstances = () => {
             valid = false;
         }
 
-        if (gameInstanceData?.groupName?.value === "") {
+        if (gameInstanceData?.groupName?.value?.trim() === "") {
             console.log("groupName:", data.groupName);
             data = {
                 ...data,
@@ -611,7 +611,7 @@ const UpdateInstances = () => {
             valid = false;
         }
 
-        if (gameInstanceData?.groupSize?.value === "") {
+        if (gameInstanceData?.groupSize?.value?.trim() === "") {
             console.log("groupSize:", data.groupSize);
             data = {
                 ...data,
@@ -624,7 +624,7 @@ const UpdateInstances = () => {
             valid = false;
         }
 
-        if (gameInstanceData?.scenarioName?.value === "") {
+        if (gameInstanceData?.scenarioName?.value?.trim() === "") {
             console.log("scenarioName:", data.scenarioName);
             data = {
                 ...data,
@@ -637,7 +637,7 @@ const UpdateInstances = () => {
             valid = false;
         }
 
-        if (gameInstanceData?.level?.value === "") {
+        if (gameInstanceData?.level?.value?.trim() === "") {
             console.log("level:", data.level);
             data = {
                 ...data,
@@ -656,19 +656,19 @@ const UpdateInstances = () => {
 
             // Perform validation checks on each field of the player object
 
-            if (player.playerName.value === "") {
+            if (player?.playerName?.value?.trim() === "") {
                 updatedPlayer.playerName.error = "Please enter the player name.";
                 console.log("playerName:", player.playerName);
                 valid = false;
             }
 
-            if (player.playerGroupName.value === "") {
+            if (player?.playerGroupName?.value?.trim() === "") {
                 updatedPlayer.playerGroupName.error = "Please enter the player group name.";
                 console.log("playerGroupName:", player.playerGroupName);
                 valid = false;
             }
 
-            if (player.playerRole.value === "") {
+            if (player?.playerRole?.value?.trim() === "") {
                 updatedPlayer.playerRole.error = "Please select next question.";
                 console.log("playerRole:", player.playerRole);
                 valid = false;

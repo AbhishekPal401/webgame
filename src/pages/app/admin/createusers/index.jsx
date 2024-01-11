@@ -122,7 +122,7 @@ const CreateUser = () => {
         setImageURl(null);
         resetUserData();
       }
-       navigateTo("/users");
+      navigateTo("/users");
       dispatch(resetCreateUserState());
       dispatch(resetUserDetailState());
     } else if (!createUserResponse.success) {
@@ -258,7 +258,7 @@ const CreateUser = () => {
     let valid = true;
     let data = userData;
 
-    if (userData.username.value === "") {
+    if (userData?.username?.value?.trim() === "") {
       data = {
         ...data,
         username: {
@@ -270,7 +270,7 @@ const CreateUser = () => {
       valid = false;
     }
 
-    if (userData.email.value === "") {
+    if (userData?.email?.value?.trim() === "") {
       data = {
         ...data,
         email: {
@@ -294,7 +294,7 @@ const CreateUser = () => {
       valid = false;
     }
 
-    if (userData.role.value === "") {
+    if (userData?.role?.value?.trim() === "") {
       data = {
         ...data,
         role: {
@@ -306,7 +306,7 @@ const CreateUser = () => {
       valid = false;
     }
 
-    if (userData.designation.value === "") {
+    if (userData?.designation?.value?.trim() === "") {
       data = {
         ...data,
         designation: {
@@ -318,7 +318,7 @@ const CreateUser = () => {
       valid = false;
     }
 
-    if (userData.organizationName.value === "") {
+    if (userData?.organizationName?.value?.trim() === "") {
       data = {
         ...data,
         organizationName: {
@@ -345,7 +345,7 @@ const CreateUser = () => {
     if (valid) {
       let url = defaultUrl;
 
-      if (userData.profileImage.value) {
+      if (userData?.profileImage?.value) {
         const formData = new FormData();
 
         formData.append("Module", "ProfileImage");
@@ -393,6 +393,8 @@ const CreateUser = () => {
       };
 
       dispatch(createUser(data));
+    } else {
+      toast.error("Please fill all the details.")
     }
   };
 

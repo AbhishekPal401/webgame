@@ -124,7 +124,7 @@ const MasterList = () => {
     try {
       if (valid) {
         const data = {
-          masterID: "6", //TODO:: not implemented at backend
+          masterID: "", //TODO:: not implemented at backend
           masterName: (activeTab === 'Designation' ?
             addMasterData?.designation?.value :
             addMasterData?.organization?.value),
@@ -192,13 +192,18 @@ const MasterList = () => {
         <div className={styles.left}>
           <label>Master List</label>
         </div>
-        <div className={styles.right}>
+        <div 
+          style={{ backgroundImage: `url("./images/binary.png") `}}
+          className={styles.right}
+        >
           <img src="./images/scenario.png" />
         </div>
       </div>
 
       <div className={styles.mainContainer}>
-        <div className={styles.mainTopContainer}>
+        <div
+          style={{  backgroundImage: `url("./images/particles.png")` }} 
+          className={styles.mainTopContainer}>
           <div className={styles.mainTopLeft}>
             <div className={styles.designationsContainer}>
               <div className={styles.designationsTop}

@@ -217,7 +217,6 @@ const CreateInstances = () => {
                 console.log("createGroupResponse :", JSON.parse(createGroupResponse.data))
                 const createdGroupData = JSON.parse(createGroupResponse.data);
                 console.log("createdGroupData :", createdGroupData)
-                console.log("createdGroupData?.GroupID :", createdGroupData?.GroupID)
                 console.log("addGroupData?.addedUsers :", addGroupData?.addedUsers)
 
                 if (createdGroupData?.GroupID) {
@@ -291,8 +290,8 @@ const CreateInstances = () => {
         if (gamePlayersByGroupIdDetails === null ||
             gamePlayersByGroupIdDetails === undefined) return;
 
-        if (isJSONString(gamePlayersByGroupIdDetails.data)) {
-            const data = JSON.parse(gamePlayersByGroupIdDetails.data);
+        if (isJSONString(gamePlayersByGroupIdDetails?.data)) {
+            const data = JSON.parse(gamePlayersByGroupIdDetails?.data);
 
             // map answers from questionByIdDetails
             const players = data?.map((player) => {
@@ -333,7 +332,7 @@ const CreateInstances = () => {
         if (gamePlayersByGroupIdDetails === null ||
             gamePlayersByGroupIdDetails === undefined) return;
 
-            console.log("gamePlayersByGroupIdDetails :", JSON.parse(gamePlayersByGroupIdDetails.data));
+            console.log("gamePlayersByGroupIdDetails data:", JSON.parse(gamePlayersByGroupIdDetails.data));
 
         setGameInstanceDetailState();
     }, [gamePlayersByGroupIdDetails]);
@@ -684,7 +683,7 @@ const CreateInstances = () => {
         let data = { ...addGroupData };
 
         // validate the addGroupData fields
-        if (addGroupData?.groupName?.value === "") {
+        if (addGroupData?.groupName?.value?.trim() === "") {
             console.log("groupName:", data.groupName);
             data = {
                 ...data,
@@ -748,7 +747,7 @@ const CreateInstances = () => {
         let updatedPlayers = [...gameInstanceData.instancePlayers];
 
         // validate the gameInstanceData fields
-        if (gameInstanceData?.instanceName?.value === "") {
+        if (gameInstanceData?.instanceName?.value?.trim() === "") {
             console.log("instanceName:", data.instanceName);
             data = {
                 ...data,
@@ -761,7 +760,7 @@ const CreateInstances = () => {
             valid = false;
         }
 
-        if (gameInstanceData?.organization?.value === "") {
+        if (gameInstanceData?.organization?.value?.trim() === "") {
             console.log("organization:", data.organization);
             data = {
                 ...data,
@@ -774,7 +773,7 @@ const CreateInstances = () => {
             valid = false;
         }
 
-        if (gameInstanceData?.groupName?.value === "") {
+        if (gameInstanceData?.groupName?.value?.trim() === "") {
             console.log("groupName:", data.groupName);
             data = {
                 ...data,
@@ -787,7 +786,7 @@ const CreateInstances = () => {
             valid = false;
         }
 
-        if (gameInstanceData?.groupSize?.value === "") {
+        if (gameInstanceData?.groupSize?.value?.trim() === "") {
             console.log("groupSize:", data.groupSize);
             data = {
                 ...data,
@@ -800,7 +799,7 @@ const CreateInstances = () => {
             valid = false;
         }
 
-        if (gameInstanceData?.scenarioName?.value === "") {
+        if (gameInstanceData?.scenarioName?.value?.trim() === "") {
             console.log("scenarioName:", data.scenarioName);
             data = {
                 ...data,
@@ -813,7 +812,7 @@ const CreateInstances = () => {
             valid = false;
         }
 
-        if (gameInstanceData?.level?.value === "") {
+        if (gameInstanceData?.level?.value?.trim() === "") {
             console.log("level:", data.level);
             data = {
                 ...data,
@@ -832,19 +831,19 @@ const CreateInstances = () => {
 
             // Perform validation checks on each field of the player object
 
-            if (player.playerName.value === "") {
+            if (player?.playerName?.value?.trim() === "") {
                 updatedPlayer.playerName.error = "Please enter the player name.";
                 console.log("playerName:", player.playerName);
                 valid = false;
             }
 
-            if (player.playerGroupName.value === "") {
+            if (player?.playerGroupName?.value?.trim() === "") {
                 updatedPlayer.playerGroupName.error = "Please enter the player group name.";
                 console.log("playerGroupName:", player.playerGroupName);
                 valid = false;
             }
 
-            if (player.playerRole.value === "") {
+            if (player?.playerRole?.value?.trim() === "") {
                 updatedPlayer.playerRole.error = "Please select next question.";
                 console.log("playerRole:", player.playerRole);
                 valid = false;

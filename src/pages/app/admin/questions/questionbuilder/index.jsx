@@ -338,7 +338,7 @@ function QuestionBuilder() {
     let updatedAnswers = [...questionData.answers];
 
     // validate the question fields
-    if (questionData?.question?.value === "") {
+    if (questionData?.question?.value?.trim() === "") {
       console.log("question:", data.question);
       data = {
         ...data,
@@ -351,7 +351,7 @@ function QuestionBuilder() {
       valid = false;
     }
 
-    if (questionData?.decisionMaker?.value === "") {
+    if (questionData?.decisionMaker?.value?.trim() === "") {
       console.log("decisionMaker:", data.decisionMaker);
       data = {
         ...data,
@@ -364,11 +364,9 @@ function QuestionBuilder() {
       valid = false;
     }
 
-    if (
-      !scenarioID &&
-      !questionID &&
-      questionData?.narrativeMedia?.value === ""
-    ) {
+    if ((supportFileDisplayURL === null ||
+      supportFileDisplayURL === undefined) &&
+      questionData?.narrativeMedia?.value === "") {
       console.log("narrativeMedia:", data.narrativeMedia);
       data = {
         ...data,
@@ -387,31 +385,31 @@ function QuestionBuilder() {
 
       // Perform validation checks on each field of the answer object
 
-      if (answer.option.value === "") {
+      if (answer?.option?.value?.trim() === "") {
         updatedAnswer.option.error = "Please enter the answer text.";
         console.log("option:", answer.option);
         valid = false;
       }
 
-      if (answer.optimal.value === "") {
+      if (answer?.optimal?.value === "") {
         updatedAnswer.optimal.error = "Please select optimal.";
         console.log("optimal:", answer.optimal);
         valid = false;
       }
 
-      if (answer.score.value === "") {
+      if (answer?.score?.value?.trim() === "") {
         updatedAnswer.score.error = "Please enter the score.";
         console.log("score:", answer.score);
         valid = false;
       }
 
-      if (answer.nextQuestion.value === "") {
+      if (answer?.nextQuestion?.value === "") {
         updatedAnswer.nextQuestion.error = "Please select next question.";
         console.log("nextQuestion:", answer.nextQuestion);
         valid = false;
       }
 
-      if (answer.consequence.value === "") {
+      if (answer?.consequence?.value?.trim() === "") {
         updatedAnswer.consequence.error = "Please enter the consequence.";
         console.log("consequence:", answer.consequence);
         valid = false;

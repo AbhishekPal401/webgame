@@ -23,7 +23,7 @@
   align-items: flex-end;
   justify-content: flex-end;
   position: relative;
-  background-image: url("./images/binary.png");
+  /* background-image: url("./images/binary.png"); */
   background-size: cover;
   background-position: center;
 }
@@ -44,7 +44,7 @@
   height: 100%;
   width: 100%;
   background: #474747 0% 0% no-repeat padding-box;
-  background-image: url("./images/particles.png");
+  /* background-image: url("./images/particles.png"); */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: right;
