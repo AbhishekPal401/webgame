@@ -731,7 +731,11 @@ const UpdateInstances = () => {
 
     return (
         <PageContainer>
-            <div className={styles.container}>
+            <div
+                style={{
+                    background: 'url("./images/particles-yellow.png") top right no-repeat',
+                    backgroundSize: '80%',
+                }}>
 
                 {/* Top container:: start */}
                 <div className={styles.topContainer}>
@@ -914,9 +918,9 @@ const UpdateInstances = () => {
                                 <label className={styles.innerLabel}>Instance Players</label>
                             </div>
                             <div className={styles.instancePlayersInputContainer}>
-                                {   
-                                gameInstanceData &&
-                                    gameInstanceData?.instancePlayers &&
+                                {
+                                    gameInstanceData &&
+                                        gameInstanceData?.instancePlayers &&
                                         gameInstanceData?.instancePlayers?.length > 0 ? (
                                         gameInstanceData?.instancePlayers?.map((player, index) => (
                                             <div key={index} className={styles.instancePlayersInputRow}>
