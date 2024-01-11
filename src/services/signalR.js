@@ -122,6 +122,14 @@ class SignalRService {
     }
   }
 
+  async MissionCompletedInvoke(data) {
+    try {
+      await this.hubConnection.invoke("MissionCompleted", data);
+    } catch (error) {
+      console.error("Error while sending to MissionCompleted:", error);
+    }
+  }
+
   async ProceedToNextQuestionListener(callback = () => {}) {
     try {
       // isFinal --> Yes || No

@@ -7,6 +7,7 @@ import { getInstanceProgressyById } from "../../../../store/app/admin/gameinstan
 import { useDispatch, useSelector } from "react-redux";
 import { generateGUID } from "../../../../utils/common";
 import SelectedTree from "../../../../components/trees/selectedTree";
+import { signalRService } from "../../../../services/signalR";
 
 const SelectTree = ({ clicked = 1, onSelect = () => {} }) => {
   return (
@@ -64,6 +65,8 @@ const MissionCompleted = () => {
           requesterType: credentials.data.role,
         },
       };
+
+      signalRService.MissionCompletedInvoke(sessionData.InstanceID);
 
       dispatch(getInstanceProgressyById(data));
       dispatch(getInstanceSummaryById(data));
