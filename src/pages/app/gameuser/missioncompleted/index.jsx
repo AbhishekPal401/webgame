@@ -4,6 +4,7 @@ import Button from "../../../../components/common/button";
 import OptimalTree from "../../../../components/trees/mission";
 import SelectedTree from "../../../../components/trees/selectedTree";
 import { getInstanceSummaryById } from "../../../../store/app/admin/gameinstances/instanceSummary";
+import { getInstanceProgressyById } from "../../../../store/app/admin/gameinstances/getInstanceProgress";
 import { useDispatch, useSelector } from "react-redux";
 import { generateGUID } from "../../../../utils/common";
 
@@ -39,6 +40,9 @@ const MissionCompleted = () => {
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { credentials } = useSelector((state) => state.login);
   const { instanceSummary } = useSelector((state) => state.instanceSummary);
+  const { instanceProgress } = useSelector(
+    (state) => state.getInstanceProgress
+  );
 
   console.log("instanceSummary", instanceSummary);
 
@@ -59,6 +63,8 @@ const MissionCompleted = () => {
           requesterType: credentials.data.role,
         },
       };
+
+      dispatch(getInstanceProgressyById(data));
 
       dispatch(getInstanceSummaryById(data));
     }
@@ -82,7 +88,9 @@ const MissionCompleted = () => {
           <div>
             Player Name{" "}
             <span>
-              {credentials?.data?.userName ? credentials.data.userName : ""}
+              {credentials?.data?.designation
+                ? credentials.data.designation
+                : ""}
             </span>
           </div>
         </div>
@@ -96,11 +104,14 @@ const MissionCompleted = () => {
           <div className={styles.tree}>
             {instanceSummary &&
               instanceSummary.data &&
-              instanceSummary.data.Summary && (
+              instanceSummary.data.Summary &&
+              instanceProgress &&
+              instanceProgress.data &&
+              instanceProgress.data.Summary && (
                 <>
                   {currentTab === 0 ? (
                     <SelectedTree
-                      data={instanceSummary.data.Summary}
+                      data={instanceProgress.data.Summary}
                       userType="normal"
                     />
                   ) : (
@@ -111,10 +122,18 @@ const MissionCompleted = () => {
             <div className={styles.right}>
               <div>Time Spent</div>
               <div className={styles.circle}>
-                23 <span>min</span>
+                {instanceSummary?.data?.TimeTaken
+                  ? instanceSummary?.data?.TimeTaken
+                  : ""}{" "}
+                <span>min</span>
               </div>
               <div>Score</div>
-              <div className={styles.circle}>128</div>
+              <div className={styles.circle}>
+                {" "}
+                {instanceSummary?.data?.IndividualScore
+                  ? instanceSummary?.data?.IndividualScore
+                  : ""}
+              </div>
             </div>
           </div>
         </div>

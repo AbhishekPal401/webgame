@@ -3,6 +3,7 @@ import styles from "./missioncompleted.module.css";
 import Button from "../../../../components/common/button";
 import OptimalTree from "../../../../components/trees/mission";
 import { getInstanceSummaryById } from "../../../../store/app/admin/gameinstances/instanceSummary";
+import { getInstanceProgressyById } from "../../../../store/app/admin/gameinstances/getInstanceProgress";
 import { useDispatch, useSelector } from "react-redux";
 import { generateGUID } from "../../../../utils/common";
 import SelectedTree from "../../../../components/trees/selectedTree";
@@ -33,463 +34,18 @@ const SelectTree = ({ clicked = 1, onSelect = () => {} }) => {
   );
 };
 
-const data = {
-  name: "First Question awdwawda dawd aw daw dawd aw dawdawda daw dawd ad ad awdaw da  awdawd awd awd awd aw ad aw dawd aw dawd awd awd awda d wd  ad awd ad rrrr rrrr rrrrr rrrrr rr rrr rrr",
-  attributes: {
-    QuestionNo: 1,
-    Isoptimal: false,
-    IsQuestion: true,
-    ToolTipTitle: "Title1",
-    ToolTipDescr: "description",
-  },
-  children: [
-    {
-      name: "First Answer",
-      attributes: {
-        QuestionNo: 2,
-        Isoptimal: false,
-        IsQuestion: false,
-        ToolTipTitle: "Title1 adwa ",
-        ToolTipDescr: "description adw a",
-      },
-      children: [],
-    },
-    {
-      name: "Second Answer",
-      attributes: {
-        QuestionNo: 3,
-        Isoptimal: true,
-        IsQuestion: false,
-        ToolTipTitle: "Title1",
-        ToolTipDescr: "description",
-      },
-      children: [
-        {
-          name: "This is the second question for the table top",
-          attributes: {
-            QuestionNo: 2,
-            Isoptimal: false,
-            IsQuestion: true,
-            ToolTipTitle: "Title1",
-            ToolTipDescr: "description",
-          },
-          children: [
-            {
-              name: "assdasda",
-              attributes: {
-                QuestionNo: 2,
-                Isoptimal: false,
-                IsQuestion: false,
-                ToolTipTitle: "Title1",
-                ToolTipDescr: "description",
-              },
-              children: [],
-            },
-            {
-              name: "lrem ipsum ad a asda  awd",
-              attributes: {
-                QuestionNo: 2,
-                Isoptimal: false,
-                IsQuestion: false,
-                ToolTipTitle: "Title1",
-                ToolTipDescr: "description",
-              },
-              children: [],
-            },
-            {
-              name: "third option for assdasda",
-              attributes: {
-                QuestionNo: 2,
-                Isoptimal: true,
-                IsQuestion: false,
-                ToolTipTitle: "Title1",
-                ToolTipDescr: "description",
-              },
-              children: [
-                {
-                  name: "third Question for ada  lorem ispsum ",
-                  attributes: {
-                    QuestionNo: 2,
-                    Isoptimal: false,
-                    IsQuestion: true,
-                    ToolTipTitle: "Title1",
-                    ToolTipDescr: "description",
-                  },
-                  children: [
-                    {
-                      name: "First Option",
-                      attributes: {
-                        QuestionNo: 2,
-                        Isoptimal: true,
-                        IsQuestion: false,
-                        ToolTipTitle: "Title1",
-                        ToolTipDescr: "description",
-                      },
-                      children: [],
-                    },
-                    {
-                      name: "Second Option",
-                      attributes: {
-                        QuestionNo: 2,
-                        Isoptimal: false,
-                        IsQuestion: false,
-                        ToolTipTitle: "Title1",
-                        ToolTipDescr: "description",
-                      },
-                      children: [],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              name: "fourth option for assdasda",
-              attributes: {
-                QuestionNo: 2,
-                Isoptimal: false,
-                IsQuestion: false,
-                ToolTipTitle: "Title1",
-                ToolTipDescr: "description",
-              },
-              children: [],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: "Third Answer",
-      attributes: {
-        QuestionNo: 4,
-        Isoptimal: false,
-        IsQuestion: false,
-        ToolTipTitle: "Title1",
-        ToolTipDescr: "description",
-      },
-      children: [],
-    },
-    {
-      name: "fourth Answer",
-      attributes: {
-        QuestionNo: 4,
-        Isoptimal: false,
-        IsQuestion: false,
-        ToolTipTitle: "Title1",
-        ToolTipDescr: "description",
-      },
-      children: [],
-    },
-  ],
-};
-
-const data2 = {
-  name: "Q1",
-  attributes: {
-    questionNo: 0,
-    isOptimal: false,
-    isAdminOptimal: false,
-    isQuestion: true,
-    toolTipTitle: null,
-    toolTipDescr: null,
-  },
-  children: [
-    {
-      name: "3Ans",
-      attributes: {
-        questionNo: 0,
-        isOptimal: false,
-        isAdminOptimal: false,
-        isQuestion: false,
-        toolTipTitle: null,
-        toolTipDescr: null,
-      },
-      children: [],
-    },
-    {
-      name: "1 Ans",
-      attributes: {
-        questionNo: 0,
-        isOptimal: true,
-        isAdminOptimal: false,
-        isQuestion: false,
-        toolTipTitle: null,
-        toolTipDescr: null,
-      },
-      children: [
-        {
-          name: "Q2",
-          attributes: {
-            questionNo: 0,
-            isOptimal: false,
-            isAdminOptimal: false,
-            isQuestion: true,
-            toolTipTitle: null,
-            toolTipDescr: null,
-          },
-          children: [
-            {
-              name: "5Ans",
-              attributes: {
-                questionNo: 0,
-                isOptimal: false,
-                isAdminOptimal: false,
-                isQuestion: false,
-                toolTipTitle: null,
-                toolTipDescr: null,
-              },
-              children: [],
-            },
-            {
-              name: "6Ans",
-              attributes: {
-                questionNo: 0,
-                isOptimal: false,
-                isAdminOptimal: false,
-                isQuestion: false,
-                toolTipTitle: null,
-                toolTipDescr: null,
-              },
-              children: [],
-            },
-            {
-              name: "4Ans",
-              attributes: {
-                questionNo: 0,
-                isOptimal: true,
-                isAdminOptimal: false,
-                isQuestion: false,
-                toolTipTitle: null,
-                toolTipDescr: null,
-              },
-              children: [
-                {
-                  name: "Q3",
-                  attributes: {
-                    questionNo: 0,
-                    isOptimal: false,
-                    isAdminOptimal: false,
-                    isQuestion: true,
-                    toolTipTitle: null,
-                    toolTipDescr: null,
-                  },
-                  children: [
-                    {
-                      name: "8Ans",
-                      attributes: {
-                        questionNo: 0,
-                        isOptimal: false,
-                        isAdminOptimal: false,
-                        isQuestion: false,
-                        toolTipTitle: null,
-                        toolTipDescr: null,
-                      },
-                      children: [],
-                    },
-                    {
-                      name: "9Ans",
-                      attributes: {
-                        questionNo: 0,
-                        isOptimal: false,
-                        isAdminOptimal: false,
-                        isQuestion: false,
-                        toolTipTitle: null,
-                        toolTipDescr: null,
-                      },
-                      children: [],
-                    },
-                    {
-                      name: "7Ans",
-                      attributes: {
-                        questionNo: 0,
-                        isOptimal: true,
-                        isAdminOptimal: false,
-                        isQuestion: false,
-                        toolTipTitle: null,
-                        toolTipDescr: null,
-                      },
-                      children: [
-                        {
-                          name: "Q4",
-                          attributes: {
-                            questionNo: 0,
-                            isOptimal: false,
-                            isAdminOptimal: false,
-                            isQuestion: true,
-                            toolTipTitle: null,
-                            toolTipDescr: null,
-                          },
-                          children: [
-                            {
-                              name: "11Ans",
-                              attributes: {
-                                questionNo: 0,
-                                isOptimal: false,
-                                isAdminOptimal: false,
-                                isQuestion: false,
-                                toolTipTitle: null,
-                                toolTipDescr: null,
-                              },
-                              children: [],
-                            },
-                            {
-                              name: "10Ans",
-                              attributes: {
-                                questionNo: 0,
-                                isOptimal: true,
-                                isAdminOptimal: false,
-                                isQuestion: false,
-                                toolTipTitle: null,
-                                toolTipDescr: null,
-                              },
-                              children: [],
-                            },
-                            {
-                              name: "12Ans",
-                              attributes: {
-                                questionNo: 0,
-                                isOptimal: false,
-                                isAdminOptimal: false,
-                                isQuestion: false,
-                                toolTipTitle: null,
-                                toolTipDescr: null,
-                              },
-                              children: [],
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: "2Ans",
-      attributes: {
-        questionNo: 0,
-        isOptimal: false,
-        isAdminOptimal: false,
-        isQuestion: false,
-        toolTipTitle: null,
-        toolTipDescr: null,
-      },
-      children: [
-        {
-          name: "Q5",
-          attributes: {
-            questionNo: 0,
-            isOptimal: false,
-            isAdminOptimal: false,
-            isQuestion: true,
-            toolTipTitle: null,
-            toolTipDescr: null,
-          },
-          children: [
-            {
-              name: "13Ans",
-              attributes: {
-                questionNo: 0,
-                isOptimal: false,
-                isAdminOptimal: false,
-                isQuestion: false,
-                toolTipTitle: null,
-                toolTipDescr: null,
-              },
-              children: [],
-            },
-            {
-              name: "15Ans",
-              attributes: {
-                questionNo: 0,
-                isOptimal: false,
-                isAdminOptimal: false,
-                isQuestion: false,
-                toolTipTitle: null,
-                toolTipDescr: null,
-              },
-              children: [],
-            },
-            {
-              name: "14Ans",
-              attributes: {
-                questionNo: 0,
-                isOptimal: false,
-                isAdminOptimal: false,
-                isQuestion: false,
-                toolTipTitle: null,
-                toolTipDescr: null,
-              },
-              children: [
-                {
-                  name: "Q6",
-                  attributes: {
-                    questionNo: 0,
-                    isOptimal: false,
-                    isAdminOptimal: false,
-                    isQuestion: true,
-                    toolTipTitle: null,
-                    toolTipDescr: null,
-                  },
-                  children: [
-                    {
-                      name: "17Ans",
-                      attributes: {
-                        questionNo: 0,
-                        isOptimal: false,
-                        isAdminOptimal: false,
-                        isQuestion: false,
-                        toolTipTitle: null,
-                        toolTipDescr: null,
-                      },
-                      children: [],
-                    },
-                    {
-                      name: "16Ans",
-                      attributes: {
-                        questionNo: 0,
-                        isOptimal: false,
-                        isAdminOptimal: false,
-                        isQuestion: false,
-                        toolTipTitle: null,
-                        toolTipDescr: null,
-                      },
-                      children: [],
-                    },
-                    {
-                      name: "18Ans",
-                      attributes: {
-                        questionNo: 0,
-                        isOptimal: false,
-                        isAdminOptimal: false,
-                        isQuestion: false,
-                        toolTipTitle: null,
-                        toolTipDescr: null,
-                      },
-                      children: [],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ],
-};
-
 const MissionCompleted = () => {
   const [currentTab, setCurrentTab] = useState(0);
 
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { credentials } = useSelector((state) => state.login);
   const { instanceSummary } = useSelector((state) => state.instanceSummary);
+  const { instanceProgress } = useSelector(
+    (state) => state.getInstanceProgress
+  );
 
   console.log("instanceSummary", instanceSummary);
+  console.log("instanceProgress", instanceProgress);
 
   const dispatch = useDispatch();
 
@@ -509,6 +65,7 @@ const MissionCompleted = () => {
         },
       };
 
+      dispatch(getInstanceProgressyById(data));
       dispatch(getInstanceSummaryById(data));
     }
   }, []);
@@ -531,7 +88,9 @@ const MissionCompleted = () => {
           <div>
             Player Name{" "}
             <span>
-              {credentials?.data?.userName ? credentials.data.userName : ""}
+              {credentials?.data?.designation
+                ? credentials.data.designation
+                : ""}
             </span>
           </div>
         </div>
@@ -545,11 +104,14 @@ const MissionCompleted = () => {
           <div className={styles.tree}>
             {instanceSummary &&
               instanceSummary.data &&
-              instanceSummary.data.Summary && (
+              instanceSummary.data.Summary &&
+              instanceProgress &&
+              instanceProgress.data &&
+              instanceProgress.data.Summary && (
                 <>
                   {currentTab === 0 ? (
                     <SelectedTree
-                      data={instanceSummary.data.Summary}
+                      data={instanceProgress.data.Summary}
                       userType="admin"
                     />
                   ) : (
@@ -560,10 +122,18 @@ const MissionCompleted = () => {
             <div className={styles.right}>
               <div>Time Spent</div>
               <div className={styles.circle}>
-                23 <span>min</span>
+                {instanceSummary?.data?.TimeTaken
+                  ? instanceSummary?.data?.TimeTaken
+                  : ""}{" "}
+                <span>min</span>
               </div>
               <div>Score</div>
-              <div className={styles.circle}>128</div>
+              <div className={styles.circle}>
+                {" "}
+                {instanceSummary?.data?.GroupScore
+                  ? instanceSummary?.data?.GroupScore
+                  : ""}
+              </div>
             </div>
           </div>
         </div>

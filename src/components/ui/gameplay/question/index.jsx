@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import styles from "./question.module.css";
 import SmallCountDown from "../smallcountdown";
 import Button from "../../../common/button";
@@ -57,6 +57,7 @@ const Question = ({
   setShowVotes = () => {},
 }) => {
   const [showMedia, setShowMedia] = useState(true);
+  const [duration, setDuration] = useState(Duration);
 
   let CustomButtonRender = null;
 
@@ -229,29 +230,32 @@ const Question = ({
     [Votes]
   );
 
+  useEffect(() => {
+    if (Duration) {
+      setDuration(Duration);
+    }
+  }, [Duration, QuestionText, QuestionNo]);
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <div>Make a decision</div>
         <div>
-          {Duration && (
-            <div className={styles.smallCountContainer}>
-              <div></div>
-              <SmallCountDown
-                height={16}
-                width={16}
-                duration={Duration}
-                loops={1}
-                reverse={true}
-                inverse={false}
-              />
-            </div>
-          )}
-          {Duration && (
-            <div className={styles.timer}>
-              Time Left to Vote <CountDown duration={Duration} /> min
-            </div>
-          )}
+          <div className={styles.smallCountContainer}>
+            <div></div>
+            <SmallCountDown
+              height={16}
+              width={16}
+              duration={duration}
+              loops={1}
+              reverse={true}
+              inverse={false}
+            />
+          </div>
+
+          <div className={styles.timer}>
+            Time Left to Vote <CountDown duration={duration} /> min
+          </div>
         </div>
       </div>
       <div className={styles.questionContainer}>

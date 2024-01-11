@@ -88,15 +88,27 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
 
   useEffect(() => {
     if (containerRef.current) {
-      const optimalElements = containerRef.current.querySelectorAll(
-        `path.${styles.isOptimal}`
-      );
+      if (userType === "admin") {
+        const optimalElements = containerRef.current.querySelectorAll(
+          `path.${styles.selectedEdge}`
+        );
 
-      optimalElements.forEach((element) => {
-        const parent = element.parentElement;
-        parent.appendChild(element.cloneNode(true));
-        parent.removeChild(element);
-      });
+        optimalElements.forEach((element) => {
+          const parent = element.parentElement;
+          parent.appendChild(element.cloneNode(true));
+          parent.removeChild(element);
+        });
+      } else {
+        const optimalElements = containerRef.current.querySelectorAll(
+          `path.${styles.selectedEdge}`
+        );
+
+        optimalElements.forEach((element) => {
+          const parent = element.parentElement;
+          parent.appendChild(element.cloneNode(true));
+          parent.removeChild(element);
+        });
+      }
 
       const gElements = containerRef.current.querySelectorAll(`g.rd3t-node`);
 
@@ -121,18 +133,54 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
   }, [containerRef]);
 
   const getDynamicPathClass = ({ source, target }, orientation) => {
-    if (
-      !target.data.attributes.isQuestion &&
-      target.data.attributes.isOptimal
-    ) {
-      return styles.isOptimal;
-    } else if (target.data.attributes.isQuestion) {
-      return styles.isNotSelected;
-    } else if (target.data.attributes.isUserSubmitedAnswer) {
-      return styles.selectedEdge;
+    if (userType === "admin") {
+      if (target.data.attributes.isQuestion) {
+        return styles.selectedEdge;
+      } else {
+        if (
+          target.data.attributes.isOptimal &&
+          target.data.attributes.isAdminOptimal
+        ) {
+          return styles.selectedEdge;
+        } else if (target.data.attributes.isOptimal) {
+          return styles.isNotSelected;
+        } else if (target.data.attributes.isAdminOptimal) {
+          return styles.selectedEdge;
+        } else {
+          return styles.isNotSelected;
+        }
+      }
     } else {
-      return styles.isNotSelected;
+      if (target.data.attributes.isQuestion) {
+        return styles.selectedEdge;
+      } else {
+        if (
+          target.data.attributes.isOptimal &&
+          target.data.attributes.isUserSubmitedAnswer
+        ) {
+          return styles.selectedEdge;
+        } else if (target.data.attributes.isOptimal) {
+          return styles.isNotSelected;
+        } else if (target.data.attributes.isUserSubmitedAnswer) {
+          return styles.selectedEdge;
+        } else {
+          return styles.isNotSelected;
+        }
+      }
     }
+
+    // if (
+    //   !target.data.attributes.isQuestion &&
+    //   target.data.attributes.isOptimal
+    // ) {
+    //   return styles.isOptimal;
+    // } else if (target.data.attributes.isUserSubmitedAnswer) {
+    //   return styles.selectedEdge;
+    // } else if (target.data.attributes.isQuestion) {
+    //   return styles.selectedEdge;
+    // } else {
+    //   return styles.isNotSelected;
+    // }
   };
 
   return (
