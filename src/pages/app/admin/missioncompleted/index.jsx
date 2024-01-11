@@ -3,6 +3,7 @@ import styles from "./missioncompleted.module.css";
 import Button from "../../../../components/common/button";
 import OptimalTree from "../../../../components/trees/mission";
 import { getInstanceSummaryById } from "../../../../store/app/admin/gameinstances/instanceSummary";
+import { getInstanceProgressyById } from "../../../../store/app/admin/gameinstances/getInstanceProgress";
 import { useDispatch, useSelector } from "react-redux";
 import { generateGUID } from "../../../../utils/common";
 import SelectedTree from "../../../../components/trees/selectedTree";
@@ -39,8 +40,12 @@ const MissionCompleted = () => {
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { credentials } = useSelector((state) => state.login);
   const { instanceSummary } = useSelector((state) => state.instanceSummary);
+  const { instanceProgress } = useSelector(
+    (state) => state.getInstanceProgress
+  );
 
   console.log("instanceSummary", instanceSummary);
+  console.log("instanceProgress", instanceProgress);
 
   const dispatch = useDispatch();
 
@@ -60,6 +65,7 @@ const MissionCompleted = () => {
         },
       };
 
+      dispatch(getInstanceProgressyById(data));
       dispatch(getInstanceSummaryById(data));
     }
   }, []);
@@ -98,11 +104,14 @@ const MissionCompleted = () => {
           <div className={styles.tree}>
             {instanceSummary &&
               instanceSummary.data &&
-              instanceSummary.data.Summary && (
+              instanceSummary.data.Summary &&
+              instanceProgress &&
+              instanceProgress.data &&
+              instanceProgress.data.Summary && (
                 <>
                   {currentTab === 0 ? (
                     <SelectedTree
-                      data={instanceSummary.data.Summary}
+                      data={instanceProgress.data.Summary}
                       userType="admin"
                     />
                   ) : (

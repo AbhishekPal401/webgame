@@ -33,6 +33,7 @@ import mastersByType from "../app/admin/masters/mastersByType.js";
 import createMaster from "../app/admin/masters/createMaster.js";
 
 import instanceSummary from "../app/admin/gameinstances/instanceSummary.js";
+import getInstanceProgress from "../app/admin/gameinstances/getInstanceProgress.js";
 
 const reducers = combineReducers({
   login,
@@ -65,6 +66,7 @@ const reducers = combineReducers({
   mastersByType,
   createMaster,
   instanceSummary,
+  getInstanceProgress,
 });
 
 const rootReducer = (state, action) => {

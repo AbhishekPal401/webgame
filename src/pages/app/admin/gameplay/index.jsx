@@ -14,16 +14,17 @@ import { useNavigate } from "react-router-dom";
 import ModalContainer from "../../../../components/modal";
 import RealTimeTree from "../../../../components/trees/realtime";
 import Loader from "../../../../components/loader/index.jsx";
+
 import {
-  getInstanceSummaryById,
-  resetInstanceSummaryByIDState,
-} from "../../../../store/app/admin/gameinstances/instanceSummary";
+  getInstanceProgressyById,
+  resetInstanceProgressByIDState,
+} from "../../../../store/app/admin/gameinstances/getInstanceProgress.js";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { credentials } = useSelector((state) => state.login);
-  const { instanceSummary, loading } = useSelector(
-    (state) => state.instanceSummary
+  const { instanceProgress, loading } = useSelector(
+    (state) => state.getInstanceProgress
   );
 
   const dispatch = useDispatch();
@@ -45,7 +46,7 @@ const DecisionTree = ({ onCancel = () => {} }) => {
           },
         };
 
-        dispatch(getInstanceSummaryById(data));
+        dispatch(getInstanceProgressyById(data));
       }
     }
   }, []);
@@ -72,10 +73,10 @@ const DecisionTree = ({ onCancel = () => {} }) => {
 
       <div style={{ height: "72vh" }}>
         {!loading &&
-        instanceSummary &&
-        instanceSummary.data &&
-        instanceSummary.data.Summary ? (
-          <RealTimeTree data={instanceSummary.data.Summary} />
+        instanceProgress &&
+        instanceProgress.data &&
+        instanceProgress.data.Summary ? (
+          <RealTimeTree data={instanceProgress.data.Summary} />
         ) : (
           <div className={styles.loaderContainer}>
             <Loader />
@@ -422,7 +423,7 @@ const GamePlay = () => {
           <DecisionTree
             onCancel={() => {
               setShowDecisionTree(false);
-              dispatch(resetInstanceSummaryByIDState());
+              dispatch(resetInstanceProgressByIDState());
             }}
           />
         </ModalContainer>

@@ -12,10 +12,11 @@ import { PlayingStates } from "../../../../constants/playingStates";
 import DecisionLoader from "../../../../components/loader/decisionloader";
 import { getNextQuestionDetails } from "../../../../store/app/user/questions/getNextQuestion";
 import { useNavigate } from "react-router-dom";
+
 import {
-  getInstanceSummaryById,
-  resetInstanceSummaryByIDState,
-} from "../../../../store/app/admin/gameinstances/instanceSummary";
+  getInstanceProgressyById,
+  resetInstanceProgressByIDState,
+} from "../../../../store/app/admin/gameinstances/getInstanceProgress";
 import RealTimeTree from "../../../../components/trees/realtime";
 import Loader from "../../../../components/loader";
 import ModalContainer from "../../../../components/modal";
@@ -23,8 +24,8 @@ import ModalContainer from "../../../../components/modal";
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { credentials } = useSelector((state) => state.login);
-  const { instanceSummary, loading } = useSelector(
-    (state) => state.instanceSummary
+  const { instanceProgress, loading } = useSelector(
+    (state) => state.getInstanceProgress
   );
 
   const dispatch = useDispatch();
@@ -46,7 +47,7 @@ const DecisionTree = ({ onCancel = () => {} }) => {
           },
         };
 
-        dispatch(getInstanceSummaryById(data));
+        dispatch(getInstanceProgressyById(data));
       }
     }
   }, []);
@@ -73,10 +74,13 @@ const DecisionTree = ({ onCancel = () => {} }) => {
 
       <div style={{ height: "72vh" }}>
         {!loading &&
-        instanceSummary &&
-        instanceSummary.data &&
-        instanceSummary.data.Summary ? (
-          <RealTimeTree data={instanceSummary.data.Summary} userType="normal" />
+        instanceProgress &&
+        instanceProgress.data &&
+        instanceProgress.data.Summary ? (
+          <RealTimeTree
+            data={instanceProgress.data.Summary}
+            userType="normal"
+          />
         ) : (
           <div className={styles.loaderContainer}>
             <Loader />
@@ -433,7 +437,7 @@ const GamePlay = () => {
           <DecisionTree
             onCancel={() => {
               setShowDecisionTree(false);
-              dispatch(resetInstanceSummaryByIDState());
+              dispatch(resetInstanceProgressByIDState());
             }}
           />
         </ModalContainer>

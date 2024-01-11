@@ -152,7 +152,7 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
       }
     } else {
       if (target.data.attributes.isQuestion) {
-        return styles.isNotSelected;
+        return styles.selectedEdge;
       } else {
         if (
           target.data.attributes.isOptimal &&

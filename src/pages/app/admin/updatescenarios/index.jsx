@@ -3,7 +3,7 @@ import styles from "./updatescenarios.module.css";
 import bg_2 from "/images/createscenario2.png";
 import PageContainer from "../../../../components/ui/pagecontainer";
 import Input from "../../../../components/common/input";
-import FileDropZone from "../../../../components/common/upload/FileDropZone";
+import FileDropZone from "../../../../components/common/upload/FileDropzone";
 import Button from "../../../../components/common/button";
 import { useDispatch, useSelector } from "react-redux";
 import { baseUrl } from "../../../../middleware/url";

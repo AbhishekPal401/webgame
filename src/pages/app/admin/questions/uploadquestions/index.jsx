@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./uploadquestions.module.css";
 import PageContainer from "../../../../../components/ui/pagecontainer";
 import Button from "../../../../../components/common/button";
-import FileDropZone from "../../../../../components/common/upload/FileDropZone";
+import FileDropZone from "../../../../../components/common/upload/FileDropzone";
 import { baseUrl } from "../../../../../middleware/url.js";
 import { generateGUID } from "../../../../../utils/common.js";
 import axios from "axios";
