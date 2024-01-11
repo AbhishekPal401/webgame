@@ -1,28 +1,52 @@
 import { dateFormats } from "../constants/date";
 
 export const formatDateString = (dateTimeString, formatType = 'default') => {
+    // const formats = [
+    //     {
+    //         format: dateFormats.DATE_FORMAT_3,
+    //         regex: /^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})$/
+    //     },
+    //     {
+    //         format: dateFormats.DATE_FORMAT_5,
+    //         regex: /^(\d{2})\/(\d{2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/
+    //     },
+    //     {
+    //         format: dateFormats.DATE_FORMAT_10,
+    //         regex: /^(\d{1})\/(\d{1})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/
+    //     },
+    //     {
+    //         format: dateFormats.DATE_FORMAT_1,
+    //         regex: /^(\d{2})\/(\d{2})\/(\d{4})$/
+    //     },
+    //     {
+    //         format: dateFormats.DATE_FORMAT_2,
+    //         regex: /^(\d{2})\/(\d{2})\/(\d{4})$/
+    //     },
+    // ];
+
     const formats = [
         {
             format: dateFormats.DATE_FORMAT_3,
-            regex: /^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})$/
+            regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2})$/
         },
         {
             format: dateFormats.DATE_FORMAT_5,
-            regex: /^(\d{2})\/(\d{2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/
+            regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/
         },
         {
             format: dateFormats.DATE_FORMAT_10,
-            regex: /^(\d{1})\/(\d{1})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/
+            regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/
         },
         {
             format: dateFormats.DATE_FORMAT_1,
-            regex: /^(\d{2})\/(\d{2})\/(\d{4})$/
+            regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/
         },
         {
             format: dateFormats.DATE_FORMAT_2,
-            regex: /^(\d{2})\/(\d{2})\/(\d{4})$/
+            regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/
         },
     ];
+
 
     const months = [
         'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -117,7 +141,7 @@ const createDateFromMatches = (matches, format) => {
         return date;
 
     } catch (error) {
-        console.log("date formated error:",error);
+        console.log("date formated error:", error);
         return null;
     }
 };
@@ -142,30 +166,29 @@ const createDateFromMatches = (matches, format) => {
 
 export const extractFileType = (fileSrc) => {
     if (fileSrc.startsWith('data:')) {
-      // For data URL
-      const semicolonIndex = fileSrc.indexOf(';');
-      const mimeType = fileSrc.substring(5, semicolonIndex);
+        // For data URL
+        const semicolonIndex = fileSrc.indexOf(';');
+        const mimeType = fileSrc.substring(5, semicolonIndex);
 
-      console.log("fileExtension :",mimeType)
-      return mimeType;
+        console.log("fileExtension :", mimeType)
+        return mimeType;
 
     } else if (fileSrc.startsWith('https')) {
-      // For URLs starting with 'https'
-      const urlParts = fileSrc.split('/');
-      const filename = urlParts[urlParts.length - 1];
-      const queryParamIndex = filename.indexOf('?');
-      const filenameToParse = queryParamIndex !== -1 ? filename.substring(0, queryParamIndex) : filename;
-      const dotIndex = filenameToParse.lastIndexOf('.');
-      if (dotIndex !== -1) {
-        const fileExtension = filenameToParse.substring(dotIndex + 1);
-        // Return the file extension directly
-        console.log("fileExtension :",fileExtension)
-        return fileExtension;
-      }
-      return 'unknown'; // Return 'unknown' if no extension found
+        // For URLs starting with 'https'
+        const urlParts = fileSrc.split('/');
+        const filename = urlParts[urlParts.length - 1];
+        const queryParamIndex = filename.indexOf('?');
+        const filenameToParse = queryParamIndex !== -1 ? filename.substring(0, queryParamIndex) : filename;
+        const dotIndex = filenameToParse.lastIndexOf('.');
+        if (dotIndex !== -1) {
+            const fileExtension = filenameToParse.substring(dotIndex + 1);
+            // Return the file extension directly
+            console.log("fileExtension :", fileExtension)
+            return fileExtension;
+        }
+        return 'unknown'; // Return 'unknown' if no extension found
     } else {
-      return 'unknown'; // Handle other cases or return a default type if needed
+        return 'unknown'; // Handle other cases or return a default type if needed
     }
-  };
-  
-  
+};
+
