@@ -45,8 +45,8 @@ const MissionCompleted = () => {
     (state) => state.getInstanceProgress
   );
 
-  console.log("instanceSummary", instanceSummary);
-  console.log("instanceProgress", instanceProgress);
+  // console.log("instanceSummary", instanceSummary);
+  // console.log("instanceProgress", instanceProgress);
 
   const dispatch = useDispatch();
 
@@ -88,14 +88,31 @@ const MissionCompleted = () => {
             Thank You For Taking Part In This Game, We Hope You Have Enjoyed It.
             Here's A Summary Of How You Did.
           </div>
-          <div>
+          <div className={styles.details_row}>
+            <div>
+              {instanceSummary?.data?.GameInstance
+                ? instanceSummary?.data?.GameInstance
+                : ""}
+            </div>
+            <div>
+              {instanceSummary?.data?.OrganizationName
+                ? instanceSummary?.data?.OrganizationName
+                : ""}
+            </div>
+            <div>
+              {instanceSummary?.data?.GameScenario
+                ? instanceSummary?.data?.GameScenario
+                : ""}
+            </div>
+          </div>
+          {/* <div>
             Player Name{" "}
             <span>
               {credentials?.data?.designation
                 ? credentials.data.designation
                 : ""}
             </span>
-          </div>
+          </div> */}
         </div>
         <div className={styles.treeContainer}>
           <SelectTree

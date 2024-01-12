@@ -6,10 +6,16 @@ import Question from "../../../../components/ui/gameplay/question";
 import { useDispatch, useSelector } from "react-redux";
 import { signalRService } from "../../../../services/signalR";
 import { generateGUID, isJSONString } from "../../../../utils/common";
-import { submitAnswerDetails } from "../../../../store/app/user/answers/postAnswer";
+import {
+  submitAnswerDetails,
+  resetAnswerDetailsState,
+} from "../../../../store/app/user/answers/postAnswer";
 import { toast } from "react-toastify";
 import { PlayingStates } from "../../../../constants/playingStates";
-import { getNextQuestionDetails } from "../../../../store/app/user/questions/getNextQuestion";
+import {
+  getNextQuestionDetails,
+  resetNextQuestionDetailsState,
+} from "../../../../store/app/user/questions/getNextQuestion";
 import { useNavigate } from "react-router-dom";
 import ModalContainer from "../../../../components/modal";
 import RealTimeTree from "../../../../components/trees/realtime";
@@ -219,7 +225,7 @@ const GamePlay = () => {
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
-    if (questionDetails.success) {
+    if (questionDetails.success && callNextQuestion) {
       setNextQuestionFetched(true);
       setSelectedAnswer(null);
       setAdminState("MakeDecision");
@@ -255,7 +261,7 @@ const GamePlay = () => {
 
       dispatch(getNextQuestionDetails(data));
     }
-  }, [callNextQuestion]);
+  }, [callNextQuestion, callNextQuestion]);
 
   const NextQuestionInvoke = useCallback(() => {
     if (!isJSONString(sessionDetails.data)) return;
@@ -290,6 +296,8 @@ const GamePlay = () => {
         };
 
         console.log(data);
+        dispatch(resetAnswerDetailsState());
+
         signalRService.ProceedToNextQuestionInvoke(data);
       } else {
         setAdminState("RevealDecision");

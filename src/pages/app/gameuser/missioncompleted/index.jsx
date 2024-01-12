@@ -21,14 +21,14 @@ const SelectTree = ({ clicked = 0, onSelect = () => {} }) => {
         >
           Selected
         </div>
-        <div
+        {/* <div
           className={clicked === 1 ? styles.selected : ""}
           onClick={() => {
             onSelect(1);
           }}
         >
           Optimal
-        </div>
+        </div> */}
       </div>
       <div className={styles.line}></div>
     </div>
@@ -88,13 +88,22 @@ const MissionCompleted = () => {
             Thank You For Taking Part In This Game, We Hope You Have Enjoyed It.
             Here's A Summary Of How You Did.
           </div>
-          <div>
-            Player Name{" "}
-            <span>
-              {credentials?.data?.designation
-                ? credentials.data.designation
+          <div className={styles.details_row}>
+            <div>
+              {instanceSummary?.data?.GameInstance
+                ? instanceSummary?.data?.GameInstance
                 : ""}
-            </span>
+            </div>
+            <div>
+              {instanceSummary?.data?.OrganizationName
+                ? instanceSummary?.data?.OrganizationName
+                : ""}
+            </div>
+            <div>
+              {instanceSummary?.data?.GameScenario
+                ? instanceSummary?.data?.GameScenario
+                : ""}
+            </div>
           </div>
         </div>
         <div className={styles.treeContainer}>

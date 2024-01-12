@@ -6,11 +6,17 @@ import Question from "../../../../components/ui/gameplay/question";
 import { useDispatch, useSelector } from "react-redux";
 import { signalRService } from "../../../../services/signalR";
 import { generateGUID, isJSONString } from "../../../../utils/common";
-import { submitAnswerDetails } from "../../../../store/app/user/answers/postAnswer";
+import {
+  resetAnswerDetailsState,
+  submitAnswerDetails,
+} from "../../../../store/app/user/answers/postAnswer";
 import { toast } from "react-toastify";
 import { PlayingStates } from "../../../../constants/playingStates";
 import DecisionLoader from "../../../../components/loader/decisionloader";
-import { getNextQuestionDetails } from "../../../../store/app/user/questions/getNextQuestion";
+import {
+  getNextQuestionDetails,
+  resetNextQuestionDetailsState,
+} from "../../../../store/app/user/questions/getNextQuestion";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -246,7 +252,7 @@ const GamePlay = () => {
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
-    if (questionDetails.success) {
+    if (questionDetails.success && callNextQuestion) {
       setNextQuestionFetched(true);
       setSelectedAnswer(null);
       setStartedAt(Math.floor(Date.now() / 1000));
@@ -256,7 +262,7 @@ const GamePlay = () => {
       setIsDecision(false);
       setCallNextQuestion(false);
     }
-  }, [questionDetails]);
+  }, [questionDetails, callNextQuestion]);
 
   useEffect(() => {
     if (answerDetails === null || answerDetails === undefined) return;
@@ -286,6 +292,7 @@ const GamePlay = () => {
       setCurrentQuestionSubmitted(true);
       setSelectedAnswer(null);
       setIsDecision(false);
+      dispatch(resetAnswerDetailsState());
     }
   }, [answerDetails, isDecision]);
 

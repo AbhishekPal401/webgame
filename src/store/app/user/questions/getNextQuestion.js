@@ -7,7 +7,6 @@ const slice = createSlice({
   initialState: {
     questionDetails: null,
     loading: false,
-    isBlocked: false,
   },
   reducers: {
     requested: (users, action) => {
@@ -36,36 +35,18 @@ const slice = createSlice({
       users.questionDetails = null;
       users.loading = false;
     },
-    block: (users) => {
-      users.isBlocked = true;
-    },
-    unblock: (users) => {
-      users.isBlocked = false;
-    },
   },
 });
 
-const { requested, success, failed, reset, block, unblock } = slice.actions;
+const { requested, success, failed, reset } = slice.actions;
 
 export default slice.reducer;
-
-// export const getNextQuestionDetails = (data) =>
-//   apiCallBegan({
-//     url: "api/Question/GetNextQuestionDetails",
-//     method: "POST",
-//     data,
-//     onStart: requested.type,
-//     onSuccess: success.type,
-//     onFailed: failed.type,
-//   });
 
 export const resetNextQuestionDetailsState = () => async (dispatch) => {
   dispatch(reset());
 };
 
 export const getNextQuestionDetails = (data) => (dispatch, getState) => {
-  const { isBlocked } = getState().getNextQuestion;
-
   dispatch(
     apiCallBegan({
       url: "api/Question/GetNextQuestionDetails",
@@ -76,22 +57,4 @@ export const getNextQuestionDetails = (data) => (dispatch, getState) => {
       onFailed: failed.type,
     })
   );
-
-  // if (!isBlocked) {
-  //   dispatch(
-  //     apiCallBegan({
-  //       url: "api/Question/GetNextQuestionDetails",
-  //       method: "POST",
-  //       data,
-  //       onStart: requested.type,
-  //       onSuccess: success.type,
-  //       onFailed: failed.type,
-  //     })
-  //   );
-
-  //   dispatch(block());
-  //   setTimeout(() => {
-  //     dispatch(unblock());
-  //   }, 800);
-  // }
 };
