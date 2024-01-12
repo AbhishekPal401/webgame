@@ -408,63 +408,99 @@ const UserProfile = () => {
 
   return (
     <PageContainer>
-      <div className={styles.topContainer}>
-        <div className={styles.left}>
-          <label>User Profile</label>
-        </div>
-        <div
-          className={styles.right}
-          style={{ backgroundImage: 'url("./images/binary.png")' }}
-        >
-          <img src="./images/scenario.png" />
-        </div>
-      </div>
-      <div className={styles.mainContainer}>
-        <div className={styles.formContainer}>
-          <div className={styles.formLeft}></div>
+      <div
+        style={{
+          background: 'url("./images/particles-yellow.png") top right no-repeat',
+          backgroundSize: '80%',
+        }}>
+
+        <div className={styles.topContainer}>
+          <div className={styles.left}>
+            <label>User Profile</label>
+          </div>
           <div
-            className={styles.formRight}
-            style={{ backgroundImage: 'url("./images/particles.png")' }}
+            className={styles.right}
           >
-            <div className={styles.leftInputs}>
-              <Input
-                labelStyle={styles.inputLabel}
-                type="text"
-                value={userData.username.value}
-                name={"username"}
-                label="Username"
-                onChange={onChange}
-                disabled={credentials.data.role === "3"}
-              />
-              <Input
-                labelStyle={styles.inputLabel}
-                type="text"
-                value={userData.email.value}
-                name={"email"}
-                label="Email"
-                disabled={true}
-                onChange={onChange}
-              />
-              {credentials?.data?.role === "1" ||
-              credentials?.data?.role === "2" ? (
+            <img
+              src={"/images/createscenario2.png"}
+              alt="Update user profile background"
+            />
+          </div>
+        </div>
+        <div className={styles.mainContainer}>
+          <div className={styles.formContainer}>
+            <div className={styles.formLeft}></div>
+            <div
+              className={styles.formRight}
+              style={{ backgroundImage: 'url("./images/particles.png")' }}
+            >
+              <div className={styles.leftInputs}>
+                <Input
+                  labelStyle={styles.inputLabel}
+                  type="text"
+                  value={userData.username.value}
+                  name={"username"}
+                  label="Username"
+                  onChange={onChange}
+                  disabled={credentials.data.role === "3"}
+                />
+                <Input
+                  labelStyle={styles.inputLabel}
+                  type="text"
+                  value={userData.email.value}
+                  name={"email"}
+                  label="Email"
+                  disabled={true}
+                  onChange={onChange}
+                />
+                {credentials?.data?.role === "1" ||
+                  credentials?.data?.role === "2" ? (
+                  <div>
+                    <label htmlFor="dropdown_role" className="select_label">
+                      Role:
+                    </label>
+                    <select
+                      id="dropdown_role"
+                      value={userData.role.value}
+                      className="select_input"
+                      onChange={onRoleSelect}
+                    >
+                      <option value={""}>Select Roles</option>
+
+                      {masters &&
+                        masters.data &&
+                        isJSONString(masters.data) &&
+                        Array.isArray(JSON.parse(masters.data)) &&
+                        JSON.parse(masters.data).map((item, index) => {
+                          if (item.MasterType !== "Role") return;
+                          return (
+                            <option value={item.MasterID} key={index}>
+                              {item.MasterDisplayName}
+                            </option>
+                          );
+                        })}
+                    </select>
+                  </div>
+                ) : null}
+
                 <div>
-                  <label htmlFor="dropdown_role" className="select_label">
-                    Role:
+                  <label htmlFor="dropdown_designation" className="select_label">
+                    Designation:
                   </label>
                   <select
-                    id="dropdown_role"
-                    value={userData.role.value}
+                    disabled={credentials.data.role === "3"}
+                    id="dropdown_designation"
+                    value={userData.designation.value}
                     className="select_input"
-                    onChange={onRoleSelect}
+                    onChange={onDesignationSelect}
                   >
-                    <option value={""}>Select Roles</option>
-
+                    <option value="">Select Designation</option>
                     {masters &&
                       masters.data &&
                       isJSONString(masters.data) &&
                       Array.isArray(JSON.parse(masters.data)) &&
                       JSON.parse(masters.data).map((item, index) => {
-                        if (item.MasterType !== "Role") return;
+                        if (item.MasterType !== "Designation") return;
                         return (
                           <option value={item.MasterID} key={index}>
                             {item.MasterDisplayName}
@@ -473,80 +509,54 @@ const UserProfile = () => {
                       })}
                   </select>
                 </div>
-              ) : null}
-
-              <div>
-                <label htmlFor="dropdown_designation" className="select_label">
-                  Designation:
-                </label>
-                <select
-                  disabled={credentials.data.role === "3"}
-                  id="dropdown_designation"
-                  value={userData.designation.value}
-                  className="select_input"
-                  onChange={onDesignationSelect}
-                >
-                  <option value="">Select Designation</option>
-                  {masters &&
-                    masters.data &&
-                    isJSONString(masters.data) &&
-                    Array.isArray(JSON.parse(masters.data)) &&
-                    JSON.parse(masters.data).map((item, index) => {
-                      if (item.MasterType !== "Designation") return;
-                      return (
-                        <option value={item.MasterID} key={index}>
-                          {item.MasterDisplayName}
-                        </option>
-                      );
-                    })}
-                </select>
               </div>
-            </div>
-            <div className={styles.rightInputs}>
-              <div>
-                <label htmlFor="dropdown_Organisation" className="select_label">
-                  Organisation:
-                </label>
-                <select
-                  id="dropdown_Organisation"
-                  value={userData.organizationName.value}
-                  className="select_input"
-                  onChange={onOrganisationSelect}
-                >
-                  <option value="">Select Organisation</option>
-                  {masters &&
-                    masters.data &&
-                    isJSONString(masters.data) &&
-                    Array.isArray(JSON.parse(masters.data)) &&
-                    JSON.parse(masters.data).map((item, index) => {
-                      if (item.MasterType !== "Organization") return;
-                      return (
-                        <option value={item.MasterID} key={index}>
-                          {item.MasterDisplayName}
-                        </option>
-                      );
-                    })}
-                </select>
-              </div>
+              <div className={styles.rightInputs}>
+                <div>
+                  <label htmlFor="dropdown_Organisation" className="select_label">
+                    Organisation:
+                  </label>
+                  <select
+                    id="dropdown_Organisation"
+                    value={userData.organizationName.value}
+                    className="select_input"
+                    onChange={onOrganisationSelect}
+                  >
+                    <option value="">Select Organisation</option>
+                    {masters &&
+                      masters.data &&
+                      isJSONString(masters.data) &&
+                      Array.isArray(JSON.parse(masters.data)) &&
+                      JSON.parse(masters.data).map((item, index) => {
+                        if (item.MasterType !== "Organization") return;
+                        return (
+                          <option value={item.MasterID} key={index}>
+                            {item.MasterDisplayName}
+                          </option>
+                        );
+                      })}
+                  </select>
+                </div>
 
-              <ImageDropZone
-                customstyle={{ marginTop: "1rem" }}
-                label="Upload Profile Pic"
-                onUpload={onUpload}
-                imageSrc={imageURl}
-                setUrl={(file) => {
-                  setImageURl(file);
-                }}
-              />
+                <ImageDropZone
+                  customstyle={{ marginTop: "1rem" }}
+                  label="Upload Profile Pic"
+                  onUpload={onUpload}
+                  imageSrc={imageURl}
+                  setUrl={(file) => {
+                    setImageURl(file);
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className={styles.buttonContainer}>
-        <Button buttonType="cancel" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button onClick={onSubmit}>Update</Button>
+        <div className={styles.buttonContainer}>
+          <Button buttonType="cancel" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button onClick={onSubmit}>Update</Button>
+        </div>
+
       </div>
     </PageContainer>
   );

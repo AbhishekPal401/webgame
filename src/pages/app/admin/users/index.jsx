@@ -100,7 +100,12 @@ const Users = () => {
 
   return (
     <PageContainer>
-      <div className={styles.container}>
+      <div
+        style={{
+          background: 'url("./images/particles-yellow.png") top right no-repeat',
+          backgroundSize: '80%',
+        }}
+      >
 
         <div className={styles.topContainer}>
           <div className={styles.left}>
