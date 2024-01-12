@@ -33,54 +33,40 @@ const AdminSidebar = () => {
       />
 
       <ButtonLink
-        linkTo="/users"
-        isActive={location.pathname.includes("/users")}
-        svgSrc="sprite.svg#homepage"
-        onClick={() => {
-          dispatch(setCurrentActive("users"));
-        }}
-      />
-
-      <ButtonLink
-        linkTo="/instances"
-        isActive={location.pathname.includes("/instances")}
-        svgSrc="sprite.svg#homepage"
-        onClick={() => {
-          dispatch(setCurrentActive("instances"));
-        }}
-      />
-
-      <ButtonLink
         linkTo="/masters"
         isActive={location.pathname.includes("/masters")}
         svgSrc="sprite.svg#masters"
         onClick={() => {
           dispatch(setCurrentActive("masters"));
         }}
-      /> 
+      />
 
       <ButtonLink
         linkTo="/scenario"
-        isActive={location.pathname.includes("scenario")}
+        isActive={location.pathname.includes("scenario") || 
+          location.pathname.includes("questions")
+        }
         svgSrc="sprite.svg#scenario"
         onClick={() => {
           dispatch(setCurrentActive("scenario"));
         }}
       />
+
       <ButtonLink
-        linkTo="/questionbuilder"
-        isActive={location.pathname.includes("questionbuilder")}
-        svgSrc="sprite.svg#questionBuilder"
+        linkTo="/instances"
+        isActive={location.pathname.includes("instances")}
+        svgSrc="sprite.svg#instances"
         onClick={() => {
-          dispatch(setCurrentActive("questionbuilder"));
+          dispatch(setCurrentActive("instances"));
         }}
       />
+
       <ButtonLink
-        linkTo="/decisiontree"
-        isActive={location.pathname.includes("decisiontree")}
-        svgSrc="sprite.svg#decisionTree"
+        linkTo="/users"
+        isActive={location.pathname.includes("users")}
+        svgSrc="sprite.svg#users"
         onClick={() => {
-          dispatch(setCurrentActive("decisiontree"));
+          dispatch(setCurrentActive("users"));
         }}
       />
 

@@ -9,6 +9,7 @@ const Input = ({
   disabled = false,
   value = "",
   labelStyle = "",
+  customLabelStyle,
   textAreaStyleClass,
   onChange = () => {},
   ref,
@@ -16,7 +17,7 @@ const Input = ({
 }) => {
   return (
     <div style={customStyle} className={style.formGroup}>
-      <label className={labelStyle}>{label}</label>
+      <label style={customLabelStyle} className={labelStyle}>{label}</label>
       {textArea ? (
         <textarea
           disabled={disabled}

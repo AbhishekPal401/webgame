@@ -56,6 +56,15 @@ const Users = () => {
     }
   }, [usersByPage]);
 
+  //DEBG:: start
+  useEffect(() => {
+    if (!usersByPage) {
+      return;
+    }
+    console.log("usersByPage :",JSON.parse(usersByPage.data))
+  }, [usersByPage]);
+  //DEBG:: end
+
   useEffect(() => {
     if (deleteUserResponse === null || deleteUserResponse === undefined) return;
 
@@ -109,7 +118,7 @@ const Users = () => {
 
         <div className={styles.topContainer}>
           <div className={styles.left}>
-            <label>Users</label>
+            <label>User Management</label>
           </div>
           <div
             className={styles.right}

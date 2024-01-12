@@ -12,8 +12,9 @@
 }
 
 .left label {
-  font-size: 5rem;
+  font-size: 4rem;
   color: var(--label);
+  font-weight: bold;
 }
 .right {
   flex: 1.5;
@@ -56,22 +57,30 @@
   display: flex;
   flex-direction: row;
   transform: scaleY(-1);
+  padding: 3rem 2rem;
 }
 
-.inputLabel {
+/* .inputLabel {
   color: var(--input_label);
+} */
+.labelNone {
+  display: none;
 }
-
 .leftInputs {
   width: 30%;
-  margin-left: 2rem;
   transform: scaleY(-1);
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
 }
 
 .rightInputs {
   width: 30%;
-  margin-left: 10rem;
+  margin-left: 5rem;
   transform: scaleY(-1);
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
 }
 
 .buttonContainer {

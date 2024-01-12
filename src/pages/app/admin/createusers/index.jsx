@@ -10,7 +10,7 @@ import {
   resetUserDetailState,
 } from "../../../../store/app/admin/users/getUserbyId.js";
 import { useDispatch, useSelector } from "react-redux";
-import { validateEmail } from "../../../../utils/validators";
+import { validateEmail, validatePhone, validatePassword } from "../../../../utils/validators";
 import { baseUrl } from "../../../../middleware/url";
 import { toast } from "react-toastify";
 import {
@@ -30,6 +30,10 @@ const CreateUser = () => {
       error: "",
     },
     email: {
+      value: "",
+      error: "",
+    },
+    mobile: {
       value: "",
       error: "",
     },
@@ -80,6 +84,10 @@ const CreateUser = () => {
         error: "",
       },
       email: {
+        value: "",
+        error: "",
+      },
+      mobile: {
         value: "",
         error: "",
       },
@@ -156,7 +164,7 @@ const CreateUser = () => {
   const setUserDetailState = useCallback(() => {
     if (isJSONString(userByIdDetails.data)) {
       const data = JSON.parse(userByIdDetails.data);
-
+      console.log(" userByIdDetails data ", data)
       const newData = {
         username: {
           value: data.UserName,
@@ -164,6 +172,10 @@ const CreateUser = () => {
         },
         email: {
           value: data.Email,
+          error: "",
+        },
+        mobile: {
+          value: data.Mobile,
           error: "",
         },
         role: {
@@ -208,6 +220,19 @@ const CreateUser = () => {
       },
     });
   };
+
+  // const onMobileChange = (event) => {
+  //   // Use regular expression to allow only digits
+  //   const sanitizedValue = event.target.value.replace(/\D/g, '');
+
+  //   setUserData({
+  //     ...userData,
+  //     mobile: {
+  //       value: sanitizedValue,
+  //       error: "",
+  //     },
+  //   });
+  // };
 
   const onRoleSelect = (event) => {
     setUserData({
@@ -294,6 +319,32 @@ const CreateUser = () => {
       valid = false;
     }
 
+    // Validate mobile number
+    if (userData?.mobile?.value?.trim() === "") {
+      console.log("Please enter mobile number");
+
+      data = {
+        ...data,
+        mobile: {
+          ...data.mobile,
+          error: "Please enter mobile number",
+        },
+      };
+      valid = false;
+    } else if (!validatePhone(userData.mobile.value)) {
+      console.log("Invalid mobile number");
+
+      data = {
+        ...data,
+        mobile: {
+          ...data.mobile,
+          error: "Invalid mobile number",
+        },
+      };
+      valid = false;
+    }
+
+
     if (userData?.role?.value?.trim() === "") {
       data = {
         ...data,
@@ -338,64 +389,72 @@ const CreateUser = () => {
           error: "Please select profile image",
         },
       };
-
-      valid = false;
+      console.log("profile image is not uploaded")
+      // valid = false;
     }
 
-    if (valid) {
-      let url = defaultUrl;
+    try {
 
-      if (userData?.profileImage?.value) {
-        const formData = new FormData();
+      if (valid) {
+        let url = defaultUrl;
 
-        formData.append("Module", "ProfileImage");
-        formData.append("contentType", userData.profileImage.value.type);
-        formData.append("FormFile", userData.profileImage.value);
-        formData.append("ScenarioID", "file"); // TODO :: not implemented in backend
-        formData.append("Requester.RequestID", generateGUID());
-        formData.append("Requester.RequesterID", credentials.data.userID);
-        formData.append("Requester.RequesterName", credentials.data.userName);
-        formData.append("Requester.RequesterType", credentials.data.role);
+        if (userData?.profileImage?.value) {
+          const formData = new FormData();
 
-        const response = await axios.post(
-          `${baseUrl}/api/Storage/FileUpload`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
+          formData.append("Module", "ProfileImage");
+          formData.append("contentType", userData.profileImage.value.type);
+          formData.append("FormFile", userData.profileImage.value);
+          formData.append("ScenarioID", "file"); // TODO :: not implemented in backend
+          formData.append("Requester.RequestID", generateGUID());
+          formData.append("Requester.RequesterID", credentials.data.userID);
+          formData.append("Requester.RequesterName", credentials.data.userName);
+          formData.append("Requester.RequesterType", credentials.data.role);
+
+          const response = await axios.post(
+            `${baseUrl}/api/Storage/FileUpload`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+
+          if (response.data && response.data.success) {
+            const serializedData = JSON.parse(response.data.data);
+
+            url = JSON.parse(serializedData.Data).URL;
           }
-        );
-
-        if (response.data && response.data.success) {
-          const serializedData = JSON.parse(response.data.data);
-
-          url = JSON.parse(serializedData.Data).URL;
         }
+
+        const data = {
+          userID: userID ? userID : "",
+          userName: userData.username.value,
+          password: "",
+          role: userData.role.value,
+          email: userData.email.value,
+          mobile: userData.mobile.value,
+          designation: userData.designation.value,
+          organizationName: userData.organizationName.value,
+          profileImage: url,
+          requester: {
+            requestID: generateGUID(),
+            requesterID: credentials.data.userID,
+            requesterName: credentials.data.userName,
+            requesterType: credentials.data.role,
+          },
+        };
+        console.log("dispatch data:", data)
+        dispatch(createUser(data));
+      } else {
+        console.log("user empty data:", userData)
+        toast.error("Please fill all the details properly.")
       }
-
-      const data = {
-        userID: userID ? userID : "",
-        userName: userData.username.value,
-        password: "",
-        role: userData.role.value,
-        email: userData.email.value,
-        mobile: "",
-        designation: userData.designation.value,
-        organizationName: userData.organizationName.value,
-        profileImage: url,
-        requester: {
-          requestID: generateGUID(),
-          requesterID: credentials.data.userID,
-          requesterName: credentials.data.userName,
-          requesterType: credentials.data.role,
-        },
-      };
-
-      dispatch(createUser(data));
-    } else {
-      toast.error("Please fill all the details.")
+    } catch (error) {
+      toast.error("An error ocurred while saving the user.")
+      console.log("error :", error);
     }
+
   };
 
   const onCancel = () => {
@@ -421,13 +480,13 @@ const CreateUser = () => {
 
         <div className={styles.topContainer}>
           <div className={styles.left}>
-            <label> {userID ? "Update User" : "Create User"}</label>
+            <label> {userID ? "Update User" : "Create New User"}</label>
           </div>
           <div className={styles.right}>
             <img
               src={"/images/createscenario2.png"}
               alt="Update user background "
-            />          
+            />
           </div>
         </div>
         <div className={styles.mainContainer}>
@@ -439,32 +498,78 @@ const CreateUser = () => {
             >
               <div className={styles.leftInputs}>
                 <Input
-                  labelStyle={styles.inputLabel}
+                  customStyle={{ margin: '0rem' }}
+                  customLabelStyle={{ display: 'none' }}
                   type="text"
                   value={userData.username.value}
                   name={"username"}
-                  label="Username"
-                  onChange={onChange}
-                />
-                <Input
-                  labelStyle={styles.inputLabel}
-                  type="text"
-                  value={userData.email.value}
-                  name={"email"}
-                  label="Email"
+                  placeholder="User Name"
                   onChange={onChange}
                 />
                 <div>
-                  <label htmlFor="dropdown_role" className="select_label">
-                    Role:
+                  {/* <label htmlFor="dropdown_Organisation" className="select_label">
+                    Organisation:
+                  </label> */}
+                  <select
+                    id="dropdown_Organisation"
+                    value={userData.organizationName.value}
+                    className="select_input"
+                    onChange={onOrganisationSelect}
+                  >
+                    <option value="">Organisation</option>
+                    {masters &&
+                      masters.data &&
+                      isJSONString(masters.data) &&
+                      Array.isArray(JSON.parse(masters.data)) &&
+                      JSON.parse(masters.data).map((item, index) => {
+                        if (item.MasterType !== "Organization") return;
+                        return (
+                          <option value={item.MasterID} key={index}>
+                            {item.MasterDisplayName}
+                          </option>
+                        );
+                      })}
+                  </select>
+                </div>
+
+
+                <div>
+                  <label style={{ marginTop: '0rem' }} htmlFor="dropdown_designation" className="select_label">
+                    Decision Maker:
                   </label>
+                  <select
+                    id="dropdown_designation"
+                    value={userData.designation.value}
+                    className="select_input"
+                    onChange={onDesignationSelect}
+                  >
+                    <option value="">Decision Maker</option>
+                    {masters &&
+                      masters.data &&
+                      isJSONString(masters.data) &&
+                      Array.isArray(JSON.parse(masters.data)) &&
+                      JSON.parse(masters.data).map((item, index) => {
+                        if (item.MasterType !== "Designation") return;
+                        return (
+                          <option value={item.MasterID} key={index}>
+                            {item.MasterDisplayName}
+                          </option>
+                        );
+                      })}
+                  </select>
+                </div>
+
+                <div>
+                  {/* <label htmlFor="dropdown_role" className="select_label">
+                    Role:
+                  </label> */}
                   <select
                     id="dropdown_role"
                     value={userData.role.value}
                     className="select_input"
                     onChange={onRoleSelect}
                   >
-                    <option value={""}>Select Roles</option>
+                    <option value={""}>Roles</option>
 
                     {masters &&
                       masters.data &&
@@ -481,67 +586,37 @@ const CreateUser = () => {
                   </select>
                 </div>
 
-                <div>
-                  <label htmlFor="dropdown_designation" className="select_label">
-                    Designation:
-                  </label>
-                  <select
-                    id="dropdown_designation"
-                    value={userData.designation.value}
-                    className="select_input"
-                    onChange={onDesignationSelect}
-                  >
-                    <option value="">Select Designation</option>
-                    {masters &&
-                      masters.data &&
-                      isJSONString(masters.data) &&
-                      Array.isArray(JSON.parse(masters.data)) &&
-                      JSON.parse(masters.data).map((item, index) => {
-                        if (item.MasterType !== "Designation") return;
-                        return (
-                          <option value={item.MasterID} key={index}>
-                            {item.MasterDisplayName}
-                          </option>
-                        );
-                      })}
-                  </select>
-                </div>
               </div>
               <div className={styles.rightInputs}>
-                <div>
-                  <label htmlFor="dropdown_Organisation" className="select_label">
-                    Organisation:
-                  </label>
-                  <select
-                    id="dropdown_Organisation"
-                    value={userData.organizationName.value}
-                    className="select_input"
-                    onChange={onOrganisationSelect}
-                  >
-                    <option value="">Select Organisation</option>
-                    {masters &&
-                      masters.data &&
-                      isJSONString(masters.data) &&
-                      Array.isArray(JSON.parse(masters.data)) &&
-                      JSON.parse(masters.data).map((item, index) => {
-                        if (item.MasterType !== "Organization") return;
-                        return (
-                          <option value={item.MasterID} key={index}>
-                            {item.MasterDisplayName}
-                          </option>
-                        );
-                      })}
-                  </select>
-                </div>
-                <ImageDropZone
-                  customstyle={{ marginTop: "1rem" }}
-                  label="Upload Profile Pic"
-                  onUpload={onUpload}
-                  imageSrc={imageURl}
-                  setUrl={(file) => {
-                    setImageURl(file);
-                  }}
+                <Input
+                  customStyle={{ margin: '0rem' }}
+                  customLabelStyle={{ display: 'none' }}
+                  type="text"
+                  value={userData.email.value}
+                  name={"email"}
+                  placeholder="Email"
+                  onChange={onChange}
                 />
+                <Input
+                  customStyle={{ margin: '0rem' }}
+                  customLabelStyle={{ display: 'none' }}
+                  type="tel"
+                  value={userData.mobile.value}
+                  name="mobile"
+                  placeholder="Mobile No."
+                  onChange={onChange}
+                />
+                <div>
+                  <ImageDropZone
+                    customstyle={{ marginTop: "0rem" }}
+                    label="Upload Profile Pic"
+                    onUpload={onUpload}
+                    imageSrc={imageURl}
+                    setUrl={(file) => {
+                      setImageURl(file);
+                    }}
+                  />
+                </div>
               </div>
             </div>
           </div>
