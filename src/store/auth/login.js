@@ -95,7 +95,7 @@ export const resetLoginState = () => async (dispatch) => {
   dispatch(reset());
 };
 
-export const azurelogin = (data) => async (dispatch) => {
+export const pwclogin = (data) => async (dispatch) => {
   try {
     dispatch(requested());
 
@@ -110,7 +110,7 @@ export const azurelogin = (data) => async (dispatch) => {
     });
 
     dispatch(success(response.data));
-    dispatch(loginType("azure"));
+    dispatch(loginType("pwc"));
   } catch (err) {
     dispatch(
       failed(
@@ -125,7 +125,7 @@ export const logoutUser = () => async (dispatch, getState) => {
     login: { loginType },
   } = getState();
 
-  if (loginType === "azure") {
+  if (loginType === "pwc") {
     // const { success } = await azureService.azureLogout(dispatch);
     // if (success) {
     //   dispatch(logout());

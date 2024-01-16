@@ -4,41 +4,35 @@ import { azureConfig } from "../../../constants/azure.js";
 import Button from "../../../components/common/button/index.jsx";
 import styles from "./azure.module.css";
 
-import { azurelogin } from "../../../store/auth/login.js";
+import { pwclogin } from "../../../store/auth/login.js";
 import { useDispatch } from "react-redux";
 import { azureService } from "../../../services/azure.js";
 import { toast } from "react-toastify";
+import { useAuth, UserManager } from "oidc-react";
 
 const azure = () => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    azureService.azureInit();
-  }, []);
+  const authInfo = useAuth();
 
-  const login = async () => {
-    try {
-      const { email } = await azureService.azureLogin();
+  const openIdLogin = async () => {
+    const config1 = new UserManager(authInfo.userManager.settings);
 
-      if (email) {
-        dispatch(azurelogin({ emailID: email }));
-      }
-    } catch (error) {
-      toast.error("Azure AD login error:", JSON.stringify(error));
-
-      if (
-        error.errorMessage &&
-        error.errorMessage.includes("consent_required")
-      ) {
-        toast.error(
-          "Insufficient permissions. Please grant the required permissions."
-        );
-      }
-    }
+    config1
+      .signinPopup()
+      .then((response) => {
+        console.log("response", response);
+        if (response && response.profile && response.profile.email) {
+          dispatch(pwclogin({ email: response.profile.email }));
+        }
+      })
+      .catch((e) => {
+        toast.error(`Unable to login ${e?.message} `);
+      });
   };
 
   return (
-    <Button customClassName={styles.microsoftLoginButton} onClick={login}>
+    <Button customClassName={styles.microsoftLoginButton} onClick={openIdLogin}>
       Login with PWC
     </Button>
   );
