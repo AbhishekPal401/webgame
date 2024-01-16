@@ -139,7 +139,7 @@ const Users = () => {
                 <th>Email</th>
                 <th>Mobile</th>
                 <th>Organization</th> 
-                <th>Data Updated</th>
+                {/* <th>Data Updated</th> */}
                 <th>Role Played</th>   
                 <th>Playtime</th>
                 <th>Status</th>   
@@ -166,7 +166,7 @@ const Users = () => {
                       <td>{user.Email}</td>
                       <td>{user.Mobile}</td>
                       <td>{user.OrganizationName}</td>
-                      <td>{formatDateString(user.UpdatedAt)}</td>
+                      {/* <td>{formatDateString(user.UpdatedAt)}</td> */}
                       <td>{user.Designation}</td>
                       <td>{formatTime(user.Duration)}</td>
                       <td>{(user.Status) ? "Active" : "Inactive"}</td>
