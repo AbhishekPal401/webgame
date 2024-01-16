@@ -22,10 +22,13 @@
   position: relative;
   background-size: cover;
   background-position: center;
+  display: flex;
+  align-items: flex-end; 
+  justify-content: flex-start; 
 }
 .right img {
-  width: 80%;
-  height: 100%;
+  max-width: 80%;
+  max-height: 80%;
 }
 .buttonContainer {
   position: absolute;
@@ -40,6 +43,7 @@
   padding: 0.3rem;
   max-height: 54rem;
   overflow-y: auto;
+  background-color: var(--innerbackground);
 }
 .table_content {
   border-collapse: collapse;

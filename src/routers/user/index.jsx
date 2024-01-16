@@ -8,6 +8,7 @@ import Profile from "../../pages/app/common/profile";
 import Intro from "../../pages/app/gameuser/introduction";
 import GamePlay from "../../pages/app/gameuser/gameplay";
 import MissionCompleted from "../../pages/app/gameuser/missioncompleted";
+import NotFound from "../../pages/app/common/notfound";
 
 const User = () => {
   const location = useLocation();
@@ -24,6 +25,7 @@ const User = () => {
           <Route path="/intro" element={<Intro />} />
           <Route path="/gameplay" element={<GamePlay />} />
           <Route path="/missioncompleted" element={<MissionCompleted />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>

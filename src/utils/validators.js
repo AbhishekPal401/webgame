@@ -4,8 +4,8 @@ export const validateOnlyChacters = (name) => {
 };
 
 export const validatePassword = (password) => {
-  const re =
-    /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}/;
+  const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&].{7,}$/;
+
   return re.test(password);
 };
 

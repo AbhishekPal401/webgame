@@ -6,6 +6,7 @@ class SignalRService {
       .withUrl(import.meta.env.VITE_WEBSOCKET_URL, {
         withCredentials: false,
       })
+      .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
@@ -119,6 +120,14 @@ class SignalRService {
     } catch (error) {
       console.error("Error while sending to ProceedToNextQuestion:", error);
       throw error;
+    }
+  }
+
+  async MissionCompletedInvoke(data) {
+    try {
+      await this.hubConnection.invoke("MissionCompleted", data);
+    } catch (error) {
+      console.error("Error while sending to MissionCompleted:", error);
     }
   }
 

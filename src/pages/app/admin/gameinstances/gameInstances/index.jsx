@@ -96,7 +96,7 @@ const GameInstances = () => {
                                     <th></th>
                                     <th>#</th>
                                     <th>Instance Name</th>
-                                    <th>Version</th>
+                                    {/* <th>Version</th> */}
                                     <th>Scenario Name</th>
                                     <th>Date Created</th>
                                     <th>Status</th>
@@ -123,12 +123,12 @@ const GameInstances = () => {
                                                     >
                                                         {gameInstance.InstanceName}
                                                     </td>
-                                                    <td
+                                                    {/* <td
                                                         className={styles.scenarioDescription}
 
                                                     >
                                                         Version
-                                                    </td>
+                                                    </td> */}
                                                     <td>{gameInstance.ScenarioName}</td>
                                                     <td>{formatDateString(gameInstance.CreatedAt)}</td>
                                                     <td>{gameInstance.Status}</td>

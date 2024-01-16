@@ -21,9 +21,9 @@ const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
         <div className={styles.nodeContainer}>
           <div
             className={
-              nodeDatum.attributes.IsQuestion
+              nodeDatum.attributes.isQuestion
                 ? styles.node
-                : nodeDatum.attributes.Isoptimal
+                : nodeDatum.attributes.isOptimal
                 ? styles.isOptimalNode
                 : styles.isNotOptimalNode
             }
@@ -44,7 +44,7 @@ const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
   );
 };
 
-const MissionTree = ({ data = {} }) => {
+const OptimalTree = ({ data = {} }) => {
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
 
   const containerRef = useRef();
@@ -90,11 +90,11 @@ const MissionTree = ({ data = {} }) => {
 
   const getDynamicPathClass = ({ source, target }, orientation) => {
     if (
-      !target.data.attributes.IsQuestion &&
-      target.data.attributes.Isoptimal
+      !target.data.attributes.isQuestion &&
+      target.data.attributes.isOptimal
     ) {
       return styles.isOptimal;
-    } else if (target.data.attributes.IsQuestion) {
+    } else if (target.data.attributes.isQuestion) {
       return styles.isOptimal;
     } else {
       return styles.isNotSelected;
@@ -118,14 +118,14 @@ const MissionTree = ({ data = {} }) => {
             />
           );
         }}
-        // scaleExtent={{ min: 0.01, max: 2 }}
+        scaleExtent={{ min: 0.2, max: 3 }}
         zoom={0.6}
         depthFactor={120}
         orientation="vertical"
       />
-      <Tooltip id="my-tooltip" place="right" />
+      {/* <Tooltip id="my-tooltip" place="right" /> */}
     </div>
   );
 };
 
-export default MissionTree;
+export default OptimalTree;

@@ -1,170 +1,78 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./missioncompleted.module.css";
 import Button from "../../../../components/common/button";
-import MissionTree from "../../../../components/trees/mission";
+import OptimalTree from "../../../../components/trees/mission";
+import { getInstanceSummaryById } from "../../../../store/app/admin/gameinstances/instanceSummary";
+import { getInstanceProgressyById } from "../../../../store/app/admin/gameinstances/getInstanceProgress";
+import { useDispatch, useSelector } from "react-redux";
+import { generateGUID } from "../../../../utils/common";
+import SelectedTree from "../../../../components/trees/selectedTree";
+import { signalRService } from "../../../../services/signalR";
 
-const SelectTree = ({ clicked = 0 }) => {
+const SelectTree = ({ clicked = 1, onSelect = () => {} }) => {
   return (
     <div className={styles.selectTree}>
       <div className={styles.selectButtonContainer}>
-        <div className={clicked === 0 ? styles.selected : ""}>Selected</div>
-        <div className={clicked === 1 ? styles.selected : ""}>Optimal</div>
+        <div
+          className={clicked === 0 ? styles.selected : ""}
+          onClick={() => {
+            onSelect(0);
+          }}
+        >
+          Selected
+        </div>
+        <div
+          className={clicked === 1 ? styles.selected : ""}
+          onClick={() => {
+            onSelect(1);
+          }}
+        >
+          Optimal
+        </div>
       </div>
       <div className={styles.line}></div>
     </div>
   );
 };
 
-const data = {
-  name: "First Question awdwawda dawd aw daw dawd aw dawdawda daw dawd ad ad awdaw da  awdawd awd awd awd aw ad aw dawd aw dawd awd awd awda d wd  ad awd ad rrrr rrrr rrrrr rrrrr rr rrr rrr",
-  attributes: {
-    QuestionNo: 1,
-    Isoptimal: false,
-    IsQuestion: true,
-    ToolTipTitle: "Title1",
-    ToolTipDescr: "description",
-  },
-  children: [
-    {
-      name: "First Answer",
-      attributes: {
-        QuestionNo: 2,
-        Isoptimal: false,
-        IsQuestion: false,
-        ToolTipTitle: "Title1 adwa ",
-        ToolTipDescr: "description adw a",
-      },
-      children: [],
-    },
-    {
-      name: "Second Answer",
-      attributes: {
-        QuestionNo: 3,
-        Isoptimal: true,
-        IsQuestion: false,
-        ToolTipTitle: "Title1",
-        ToolTipDescr: "description",
-      },
-      children: [
-        {
-          name: "This is the second question for the table top",
-          attributes: {
-            QuestionNo: 2,
-            Isoptimal: false,
-            IsQuestion: true,
-            ToolTipTitle: "Title1",
-            ToolTipDescr: "description",
-          },
-          children: [
-            {
-              name: "assdasda",
-              attributes: {
-                QuestionNo: 2,
-                Isoptimal: false,
-                IsQuestion: false,
-                ToolTipTitle: "Title1",
-                ToolTipDescr: "description",
-              },
-              children: [],
-            },
-            {
-              name: "lrem ipsum ad a asda  awd",
-              attributes: {
-                QuestionNo: 2,
-                Isoptimal: false,
-                IsQuestion: false,
-                ToolTipTitle: "Title1",
-                ToolTipDescr: "description",
-              },
-              children: [],
-            },
-            {
-              name: "third option for assdasda",
-              attributes: {
-                QuestionNo: 2,
-                Isoptimal: true,
-                IsQuestion: false,
-                ToolTipTitle: "Title1",
-                ToolTipDescr: "description",
-              },
-              children: [
-                {
-                  name: "third Question for ada  lorem ispsum ",
-                  attributes: {
-                    QuestionNo: 2,
-                    Isoptimal: false,
-                    IsQuestion: true,
-                    ToolTipTitle: "Title1",
-                    ToolTipDescr: "description",
-                  },
-                  children: [
-                    {
-                      name: "First Option",
-                      attributes: {
-                        QuestionNo: 2,
-                        Isoptimal: true,
-                        IsQuestion: false,
-                        ToolTipTitle: "Title1",
-                        ToolTipDescr: "description",
-                      },
-                      children: [],
-                    },
-                    {
-                      name: "Second Option",
-                      attributes: {
-                        QuestionNo: 2,
-                        Isoptimal: false,
-                        IsQuestion: false,
-                        ToolTipTitle: "Title1",
-                        ToolTipDescr: "description",
-                      },
-                      children: [],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              name: "fourth option for assdasda",
-              attributes: {
-                QuestionNo: 2,
-                Isoptimal: false,
-                IsQuestion: false,
-                ToolTipTitle: "Title1",
-                ToolTipDescr: "description",
-              },
-              children: [],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: "Third Answer",
-      attributes: {
-        QuestionNo: 4,
-        Isoptimal: false,
-        IsQuestion: false,
-        ToolTipTitle: "Title1",
-        ToolTipDescr: "description",
-      },
-      children: [],
-    },
-    {
-      name: "fourth Answer",
-      attributes: {
-        QuestionNo: 4,
-        Isoptimal: false,
-        IsQuestion: false,
-        ToolTipTitle: "Title1",
-        ToolTipDescr: "description",
-      },
-      children: [],
-    },
-  ],
-};
-
 const MissionCompleted = () => {
+  const [currentTab, setCurrentTab] = useState(0);
+
+  const { sessionDetails } = useSelector((state) => state.getSession);
+  const { credentials } = useSelector((state) => state.login);
+  const { instanceSummary } = useSelector((state) => state.instanceSummary);
+  const { instanceProgress } = useSelector(
+    (state) => state.getInstanceProgress
+  );
+
+  // console.log("instanceSummary", instanceSummary);
+  // console.log("instanceProgress", instanceProgress);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    if (sessionData && credentials) {
+      const data = {
+        instanceID: sessionData.InstanceID,
+        userID: credentials.data.userID,
+        isAdmin: true,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      signalRService.MissionCompletedInvoke(sessionData.InstanceID);
+
+      dispatch(getInstanceProgressyById(data));
+      dispatch(getInstanceSummaryById(data));
+    }
+  }, []);
+
   return (
     <div
       className={styles.container}
@@ -180,21 +88,72 @@ const MissionCompleted = () => {
             Thank You For Taking Part In This Game, We Hope You Have Enjoyed It.
             Here's A Summary Of How You Did.
           </div>
-          <div>
-            Player Name <span>CTO</span>
+          <div className={styles.details_row}>
+            <div>
+              {instanceSummary?.data?.GameInstance
+                ? instanceSummary?.data?.GameInstance
+                : ""}
+            </div>
+            <div>
+              {instanceSummary?.data?.OrganizationName
+                ? instanceSummary?.data?.OrganizationName
+                : ""}
+            </div>
+            <div>
+              {instanceSummary?.data?.GameScenario
+                ? instanceSummary?.data?.GameScenario
+                : ""}
+            </div>
           </div>
+          {/* <div>
+            Player Name{" "}
+            <span>
+              {credentials?.data?.designation
+                ? credentials.data.designation
+                : ""}
+            </span>
+          </div> */}
         </div>
         <div className={styles.treeContainer}>
-          <SelectTree clicked={1} />
+          <SelectTree
+            clicked={currentTab}
+            onSelect={(value) => {
+              setCurrentTab(value);
+            }}
+          />
           <div className={styles.tree}>
-            <MissionTree data={data} />
+            {instanceSummary &&
+              instanceSummary.data &&
+              instanceSummary.data.Summary &&
+              instanceProgress &&
+              instanceProgress.data &&
+              instanceProgress.data.Summary && (
+                <>
+                  {currentTab === 0 ? (
+                    <SelectedTree
+                      data={instanceProgress.data.Summary}
+                      userType="admin"
+                    />
+                  ) : (
+                    <OptimalTree data={instanceSummary.data.Summary} />
+                  )}
+                </>
+              )}
             <div className={styles.right}>
               <div>Time Spent</div>
               <div className={styles.circle}>
-                23 <span>min</span>
+                {instanceSummary?.data?.TimeTaken
+                  ? instanceSummary?.data?.TimeTaken
+                  : ""}{" "}
+                <span>min</span>
               </div>
               <div>Score</div>
-              <div className={styles.circle}>128</div>
+              <div className={styles.circle}>
+                {" "}
+                {instanceSummary?.data?.GroupScore
+                  ? instanceSummary?.data?.GroupScore
+                  : ""}
+              </div>
             </div>
           </div>
         </div>

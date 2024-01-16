@@ -110,7 +110,7 @@ const Homepage = () => {
                         <div className={styles.cardTopContainer}>
                           <div className={styles.cardTopContainerLeft}>
                             <h4>{scenario.InstanceName}</h4>
-                            <p>Scenario:{scenario.Description}</p>
+                            <p>Scenario:{scenario.ScenarioName}</p>
                             <p>Status: {scenario.Status}</p>
                           </div>
                           <div className={styles.cardTopContainerRight}></div>

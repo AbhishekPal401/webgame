@@ -190,6 +190,7 @@
   border: 0.1rem solid #707070;
   border-radius: 0.6rem;
   padding: 0.3rem;
+  background-color: var(--innerbackground);
 }
 .table_content {
   border-collapse: collapse;

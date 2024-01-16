@@ -8,6 +8,7 @@
   padding-left: 2.4rem;
   padding-right: 2.4rem;
   box-shadow: 0px 0.3rem 0.6rem #00000029;
+  position: relative;
 }
 .pwcLogo {
   width: 4.2rem;

@@ -36,12 +36,13 @@
 }
 
 .header > div:nth-child(2) {
-  width: 48%;
+  width: 100%;
   margin-top: 1rem;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   color: var(--innerbackground);
   font-family: "helvetica 500";
   text-align: center;
+  margin: 0.5rem 0;
 }
 
 .header > div:nth-child(3) {
@@ -55,6 +56,10 @@
 .header > div:nth-child(3) span {
   color: var(--innerbackground);
   font-family: "helvetica 500";
+}
+
+.header span {
+  text-transform: uppercase;
 }
 
 .selectTree {
@@ -197,4 +202,19 @@
   background-color: var(--primary);
   color: var(--black);
   margin-left: 2rem;
+}
+
+.details_row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.details_row div {
+  font-size: 2rem;
+  font-family: "helvetica 500";
+  color: var(--primary);
 }

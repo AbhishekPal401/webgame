@@ -61,7 +61,7 @@
   background: #474747 0% 0% no-repeat padding-box;
   background-repeat: no-repeat;
   background-size: contain;
-  background-position: right;
+  background-position: right bottom;
   display: flex;
   flex-direction: row;
   gap: 5rem;
@@ -111,7 +111,7 @@
   background: #474747 0% 0% no-repeat padding-box;
   background-repeat: no-repeat;
   background-size: contain;
-  background-position: right;
+  background-position: right bottom;
   display: flex;
   flex-direction: row;
   gap: 5rem;

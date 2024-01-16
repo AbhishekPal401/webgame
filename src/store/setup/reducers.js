@@ -16,7 +16,7 @@ import sessionHistory from "../app/admin/session/session.js";
 import getScenarioById from "../app/admin/scenario/getScenarioById.js";
 import getQuestionsByScenarioId from "../app/admin/questions/getQuestionsByScenarioId.js";
 import getQuestionDetailsByid from "../app/admin/questions/getQuestionDetailsById.js";
-import updateQuestion from  "../app/admin/questions/updateQuestion.js";
+import updateQuestion from "../app/admin/questions/updateQuestion.js";
 import getSession from "../app/user/session/getSession.js";
 import getNextQuestion from "../app/user/questions/getNextQuestion.js";
 import postAnswer from "../app/user/answers/postAnswer.js";
@@ -29,6 +29,11 @@ import getGameInstanceById from "../app/admin/gameinstances/getGameInstanceById.
 import updateGameInstance from "../app/admin/gameinstances/updateGameInstance.js";
 import createGroup from "../app/admin/groups/createGroup.js";
 import createGroupUsers from "../app/admin/groups/createGroupUsers.js";
+import mastersByType from "../app/admin/masters/mastersByType.js";
+import createMaster from "../app/admin/masters/createMaster.js";
+
+import instanceSummary from "../app/admin/gameinstances/instanceSummary.js";
+import getInstanceProgress from "../app/admin/gameinstances/getInstanceProgress.js";
 
 const reducers = combineReducers({
   login,
@@ -58,6 +63,10 @@ const reducers = combineReducers({
   updateGameInstance,
   createGroup,
   createGroupUsers,
+  mastersByType,
+  createMaster,
+  instanceSummary,
+  getInstanceProgress,
 });
 
 const rootReducer = (state, action) => {

@@ -6,11 +6,92 @@ import Question from "../../../../components/ui/gameplay/question";
 import { useDispatch, useSelector } from "react-redux";
 import { signalRService } from "../../../../services/signalR";
 import { generateGUID, isJSONString } from "../../../../utils/common";
-import { submitAnswerDetails } from "../../../../store/app/user/answers/postAnswer";
+import {
+  submitAnswerDetails,
+  resetAnswerDetailsState,
+} from "../../../../store/app/user/answers/postAnswer";
 import { toast } from "react-toastify";
 import { PlayingStates } from "../../../../constants/playingStates";
-import { getNextQuestionDetails } from "../../../../store/app/user/questions/getNextQuestion";
+import {
+  getNextQuestionDetails,
+  resetNextQuestionDetailsState,
+} from "../../../../store/app/user/questions/getNextQuestion";
 import { useNavigate } from "react-router-dom";
+import ModalContainer from "../../../../components/modal";
+import RealTimeTree from "../../../../components/trees/realtime";
+import Loader from "../../../../components/loader/index.jsx";
+
+import {
+  getInstanceProgressyById,
+  resetInstanceProgressByIDState,
+} from "../../../../store/app/admin/gameinstances/getInstanceProgress.js";
+
+const DecisionTree = ({ onCancel = () => {} }) => {
+  const { sessionDetails } = useSelector((state) => state.getSession);
+  const { credentials } = useSelector((state) => state.login);
+  const { instanceProgress, loading } = useSelector(
+    (state) => state.getInstanceProgress
+  );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isJSONString(sessionDetails.data)) {
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      if (sessionData && credentials) {
+        const data = {
+          instanceID: sessionData.InstanceID,
+          userID: credentials.data.userID,
+          isAdmin: true,
+          requester: {
+            requestID: generateGUID(),
+            requesterID: credentials.data.userID,
+            requesterName: credentials.data.userName,
+            requesterType: credentials.data.role,
+          },
+        };
+
+        dispatch(getInstanceProgressyById(data));
+      }
+    }
+  }, []);
+
+  return (
+    <div className={"modal_content"} style={{ width: "80vw" }}>
+      <div className={"modal_header"}>
+        <div>Decision Tree</div>
+        <div>
+          <svg className="modal_crossIcon" onClick={onCancel}>
+            <use xlinkHref={"sprite.svg#crossIcon"} />
+          </svg>
+        </div>
+      </div>
+      <div className={"modal_description"} style={{ marginBottom: "2rem" }}>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+        mollit anim id est laborum.
+      </div>
+
+      <div style={{ height: "72vh" }}>
+        {!loading &&
+        instanceProgress &&
+        instanceProgress.data &&
+        instanceProgress.data.Summary ? (
+          <RealTimeTree data={instanceProgress.data.Summary} />
+        ) : (
+          <div className={styles.loaderContainer}>
+            <Loader />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const GamePlay = () => {
   const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
@@ -23,6 +104,7 @@ const GamePlay = () => {
   const [adminState, setAdminState] = useState("MakeDecision");
   const [showVotes, setShowVotes] = useState(false);
   const [callNextQuestion, setCallNextQuestion] = useState(false);
+  const [showDecisionTree, setShowDecisionTree] = useState(false);
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -32,38 +114,6 @@ const GamePlay = () => {
   const navigate = useNavigate();
 
   const { answerDetails, loading } = useSelector((state) => state.postAnswer);
-
-  // console.log("questionDetails", questionDetails);
-
-  // const fetchNextQuestion = useCallback(() => {
-  //   const sessionData = JSON.parse(sessionDetails.data);
-
-  //   const data = {
-  //     sessionID: sessionData.SessionID,
-  //     scenarioID: sessionData.ScenarioID,
-  //     currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-  //     currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
-  //     currentStatus: "InProgress",
-  //     userID: credentials.data.userID,
-  //     currentTotalScore: 0,
-  //     requester: {
-  //       requestID: generateGUID(),
-  //       requesterID: credentials.data.userID,
-  //       requesterName: credentials.data.userName,
-  //       requesterType: credentials.data.role,
-  //     },
-  //   };
-
-  //   console.log("get next question data", data);
-
-  //   dispatch(getNextQuestionDetails(data));
-  // }, [
-  //   questionDetails,
-  //   credentials,
-  //   sessionDetails,
-  //   dispatch,
-  //   callNextQuestion,
-  // ]);
 
   useEffect(() => {
     const handleVotingDetails = (votesDetails) => {
@@ -175,7 +225,7 @@ const GamePlay = () => {
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
-    if (questionDetails.success) {
+    if (questionDetails.success && callNextQuestion) {
       setNextQuestionFetched(true);
       setSelectedAnswer(null);
       setAdminState("MakeDecision");
@@ -211,7 +261,7 @@ const GamePlay = () => {
 
       dispatch(getNextQuestionDetails(data));
     }
-  }, [callNextQuestion]);
+  }, [callNextQuestion, callNextQuestion]);
 
   const NextQuestionInvoke = useCallback(() => {
     if (!isJSONString(sessionDetails.data)) return;
@@ -246,6 +296,8 @@ const GamePlay = () => {
         };
 
         console.log(data);
+        dispatch(resetAnswerDetailsState());
+
         signalRService.ProceedToNextQuestionInvoke(data);
       } else {
         setAdminState("RevealDecision");
@@ -299,8 +351,21 @@ const GamePlay = () => {
         style={{ backgroundImage: 'url("/images/user_background.png")' }}
       >
         <div className={styles.left}>
-          <div></div>
-          <div></div>
+          <div>
+            <svg className={styles.pause}>
+              <use xlinkHref={"sprite.svg#pause"} />
+            </svg>
+          </div>
+          <div>
+            <svg
+              className={styles.tree}
+              onClick={() => {
+                setShowDecisionTree(true);
+              }}
+            >
+              <use xlinkHref={"sprite.svg#tree"} />
+            </svg>
+          </div>
         </div>
         <div className={styles.middle}>
           <div className={styles.questionContainer}>
@@ -360,6 +425,17 @@ const GamePlay = () => {
           </div>
         </div>
       </div>
+
+      {showDecisionTree && (
+        <ModalContainer>
+          <DecisionTree
+            onCancel={() => {
+              setShowDecisionTree(false);
+              dispatch(resetInstanceProgressByIDState());
+            }}
+          />
+        </ModalContainer>
+      )}
     </motion.div>
   );
 };

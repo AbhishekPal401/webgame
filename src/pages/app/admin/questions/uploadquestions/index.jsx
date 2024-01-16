@@ -5,13 +5,14 @@ import { useNavigate } from "react-router-dom";
 import styles from "./uploadquestions.module.css";
 import PageContainer from "../../../../../components/ui/pagecontainer";
 import Button from "../../../../../components/common/button";
-import FileDropZone from "../../../../../components/common/upload/FileDropzone/index.jsx";
+import FileDropZone from "../../../../../components/common/upload/FileDropzone";
 import { baseUrl } from "../../../../../middleware/url.js";
 import { generateGUID } from "../../../../../utils/common.js";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { fileTypes } from "../../../../../constants/filetypes.js";
 import { extractFileType } from "../../../../../utils/helper";
+import { isJSONString } from "../../../../../utils/common.js";
 
 function UploadQuestion() {
   const [uploadQuestionsData, setUploadQuestionsData] = useState({
@@ -49,6 +50,47 @@ function UploadQuestion() {
     },
     [uploadQuestionsData]
   );
+
+  const handleDownload = async () => {
+    try {
+      if(!scenarioID || !credentials) 
+        return;
+
+      const formData = new FormData();
+      formData.append("TemplateType", "QuestionTemplate");
+
+      const response = await axios.post(
+        `${baseUrl}/api/Storage/GetFileTemplate`,
+        formData
+      );
+
+      if (response.data && response.data.success) {
+        const responseData = JSON.parse(response.data.data);
+        console.log("responseData :", responseData)
+
+        const data = JSON.parse(responseData.Data);
+        console.log("data :", data)
+
+        const downloadURL = data.DownloadURL;
+        console.log("downloadURL :", downloadURL)
+
+        // Create a link
+        const link = document.createElement('a');
+        link.href = downloadURL;
+        link.setAttribute('download', 'QuestionTemplate.xlsx');
+
+        // Trigger a click event
+        link.click();
+
+        // Remove the link
+        document.body.removeChild(link);
+      } else {
+        console.log("Download failed:", response.data.message || "Unknown error");
+      }
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
+  };
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -131,7 +173,7 @@ function UploadQuestion() {
               <Button onClick={onSubmit} buttonType="cancel">
                 Upload Questions
               </Button>
-              <Button>Download Template</Button>
+              <Button onClick={handleDownload}>Download Template</Button>
             </div>
           </div>
         </div>

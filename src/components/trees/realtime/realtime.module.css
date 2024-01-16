@@ -1,0 +1,53 @@
+.nodeContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.node {
+  background-color: var(--innerbackground);
+  display: inline-block;
+  border-radius: 0.2rem;
+  font-size: 1.3rem;
+  font-family: "helvetica 400";
+  border: 0.2rem solid #707070;
+}
+
+.selected {
+  background-color: var(--primary);
+  display: inline-block;
+  border-radius: 0.2rem;
+  color: var(--black);
+  font-size: 1.3rem;
+  font-family: "helvetica 500";
+}
+
+.isNotSelected {
+  background-color: #7d7d7d;
+  display: inline-block;
+  border-radius: 0.2rem;
+  font-size: 1.3rem;
+  color: var(--innerbackground);
+  font-family: "helvetica 500";
+}
+
+.isNotSelected {
+  stroke: #e0e0e0 !important;
+  stroke-width: 2 !important;
+}
+
+.selectedEdge {
+  stroke: #707070 !important;
+  stroke-width: 2 !important;
+}
+
+.tooltipContent > div:nth-child(1) {
+  font-size: 1rem;
+  color: var(--innerbackground);
+  font-family: "helvetica 500";
+}
+.tooltipContent > div:nth-child(2) {
+  font-size: 1rem;
+  color: var(--innerbackground);
+  font-family: "helvetica 400";
+}

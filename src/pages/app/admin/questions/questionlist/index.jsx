@@ -7,6 +7,8 @@ import Checkbox from "../../../../../components/ui/checkbox";
 import { useParams } from "react-router-dom";
 import { getQuestionsByScenarioId } from "../../../../../store/app/admin/questions/getQuestionsByScenarioId.js";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { baseUrl } from "../../../../../middleware/url.js";
 
 function QuestionList() {
   const dispatch = useDispatch();
@@ -49,6 +51,47 @@ function QuestionList() {
     }
   }, [questionsByScenarioIdDetails, navigate, scenarioID, isLoading]);
 
+  const handleDownload = async () => {
+    try {
+      if (!scenarioID || !credentials)
+        return;
+
+      const formData = new FormData();
+      formData.append("TemplateType", "QuestionTemplate");
+
+      const response = await axios.post(
+        `${baseUrl}/api/Storage/GetFileTemplate`,
+        formData
+      );
+
+      if (response.data && response.data.success) {
+        const responseData = JSON.parse(response.data.data);
+        console.log("responseData :", responseData)
+
+        const data = JSON.parse(responseData.Data);
+        console.log("data :", data)
+
+        const downloadURL = data.DownloadURL;
+        console.log("downloadURL :", downloadURL)
+
+        // Create a link
+        const link = document.createElement('a');
+        link.href = downloadURL;
+        link.setAttribute('download', 'QuestionTemplate.xlsx');
+
+        // Trigger a click event
+        link.click();
+
+        // Remove the link
+        document.body.removeChild(link);
+      } else {
+        console.log("Download failed:", response.data.message || "Unknown error");
+      }
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
+  };
+
   return (
     <PageContainer>
       <div className={styles.conatiner}>
@@ -63,7 +106,7 @@ function QuestionList() {
             <img src="./images/questions.png" />
             <div className={styles.buttonContainer}>
               <Button buttonType="cancel">Upload Questions</Button>
-              <Button>Download Template</Button>
+              <Button onClick={handleDownload}>Download Template</Button>
             </div>
           </div>
         </div>
