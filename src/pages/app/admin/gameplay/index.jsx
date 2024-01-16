@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./gameplay.module.css";
 import { motion } from "framer-motion";
 import CountDown from "../../../../components/ui/countdown";
@@ -105,6 +105,7 @@ const GamePlay = () => {
   const [showVotes, setShowVotes] = useState(false);
   const [callNextQuestion, setCallNextQuestion] = useState(false);
   const [showDecisionTree, setShowDecisionTree] = useState(false);
+  const [position, setPosition] = useState(0);
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -112,6 +113,7 @@ const GamePlay = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const alerRef = useRef();
 
   const { answerDetails, loading } = useSelector((state) => state.postAnswer);
 
@@ -152,6 +154,14 @@ const GamePlay = () => {
     return () => {
       signalRService.GetVotingDetailsOff(handleVotingDetails);
     };
+  }, []);
+
+  useEffect(() => {
+    if (alerRef.current) {
+      const divRect = alerRef.current.getBoundingClientRect();
+      const topPosition = divRect.bottom + window.scrollY - 40;
+      setPosition(topPosition);
+    }
   }, []);
 
   useEffect(() => {
@@ -407,8 +417,20 @@ const GamePlay = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.notification}>
-            <div>
-              <svg onClick={() => {}}>
+            <div ref={alerRef}>
+              <svg
+                id="alert_messages"
+                onClick={() => {
+                  // toast.success("Alert message", {
+                  //   containerId: "alert_messages",
+                  //   position: "top-right",
+                  //   style: {
+                  //     top: `${position}px`,
+                  //   },
+                  //   icon,
+                  // });
+                }}
+              >
                 <use xlinkHref={"sprite.svg#notifcation"} />
               </svg>
             </div>
