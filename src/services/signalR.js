@@ -6,6 +6,7 @@ class SignalRService {
       .withUrl(import.meta.env.VITE_WEBSOCKET_URL, {
         withCredentials: false,
       })
+      .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
