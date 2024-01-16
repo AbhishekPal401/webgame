@@ -16,6 +16,7 @@ import {
   resetDeleteUserState,
 } from "../../../../store/app/admin/users/deleteUser.js";
 import { toast } from "react-toastify";
+import { formatDateString, formatTime } from "../../../../utils/helper.js";
 
 const Users = () => {
   const [pageCount, setPageCount] = useState(10);
@@ -55,6 +56,15 @@ const Users = () => {
       }
     }
   }, [usersByPage]);
+
+  //DEBG:: start
+  useEffect(() => {
+    if (!usersByPage) {
+      return;
+    }
+    console.log("usersByPage :",JSON.parse(usersByPage.data))
+  }, [usersByPage]);
+  //DEBG:: end
 
   useEffect(() => {
     if (deleteUserResponse === null || deleteUserResponse === undefined) return;
@@ -100,11 +110,16 @@ const Users = () => {
 
   return (
     <PageContainer>
-      <div className={styles.container}>
+      <div
+        style={{
+          background: 'url("./images/particles-yellow.png") top right no-repeat',
+          backgroundSize: '80%',
+        }}
+      >
 
         <div className={styles.topContainer}>
           <div className={styles.left}>
-            <label>Users</label>
+            <label>User Management</label>
           </div>
           <div
             className={styles.right}
@@ -121,10 +136,14 @@ const Users = () => {
               <tr>
                 <th>#</th>
                 <th>Username</th>
-                <th>EmailId</th>
-                <th>Designation</th>
-                <th>Organization</th>
-                <th>Delete</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Organization</th> 
+                <th>Data Updated</th>
+                <th>Role Played</th>   
+                <th>Playtime</th>
+                <th>Status</th>   
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -145,8 +164,13 @@ const Users = () => {
                         {user.UserName}
                       </td>
                       <td>{user.Email}</td>
-                      <td>{user.Designation}</td>
+                      <td>{user.Mobile}</td>
                       <td>{user.OrganizationName}</td>
+                      <td>{formatDateString(user.UpdatedAt)}</td>
+                      <td>{user.Designation}</td>
+                      <td>{formatTime(user.Duration)}</td>
+                      <td>{(user.Status) ? "Active" : "Inactive"}</td>
+
                       <td>
                         <Button
                           customStyle={{
