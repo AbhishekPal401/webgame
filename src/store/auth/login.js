@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { baseUrl } from "../../middleware/url.js";
-import { azureService } from "../../services/azure.js";
 import { signalRService } from "../../services/signalR.js";
 
 //api calling type 2
