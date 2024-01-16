@@ -16,6 +16,7 @@ import {
   resetDeleteUserState,
 } from "../../../../store/app/admin/users/deleteUser.js";
 import { toast } from "react-toastify";
+import { formatDateString, formatTime } from "../../../../utils/helper.js";
 
 const Users = () => {
   const [pageCount, setPageCount] = useState(10);
@@ -135,10 +136,14 @@ const Users = () => {
               <tr>
                 <th>#</th>
                 <th>Username</th>
-                <th>EmailId</th>
-                <th>Designation</th>
-                <th>Organization</th>
-                <th>Delete</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Organization</th> 
+                <th>Data Updated</th>
+                <th>Role Played</th>   
+                <th>Playtime</th>
+                <th>Status</th>   
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -159,8 +164,13 @@ const Users = () => {
                         {user.UserName}
                       </td>
                       <td>{user.Email}</td>
-                      <td>{user.Designation}</td>
+                      <td>{user.Mobile}</td>
                       <td>{user.OrganizationName}</td>
+                      <td>{formatDateString(user.UpdatedAt)}</td>
+                      <td>{user.Designation}</td>
+                      <td>{formatTime(user.Duration)}</td>
+                      <td>{(user.Status) ? "Active" : "Inactive"}</td>
+
                       <td>
                         <Button
                           customStyle={{

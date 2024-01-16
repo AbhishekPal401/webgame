@@ -436,7 +436,7 @@ const CreateUser = () => {
           mobile: userData.mobile.value,
           designation: userData.designation.value,
           organizationName: userData.organizationName.value,
-          profileImage: url,
+          profileImage: (url != null && url != undefined && url != "") ? url : "file",
           requester: {
             requestID: generateGUID(),
             requesterID: credentials.data.userID,

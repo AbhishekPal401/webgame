@@ -22,6 +22,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { isJSONString } from "../../../../utils/common.js";
 import { useNavigate } from "react-router-dom";
+import { formatDateString } from "../../../../utils/helper.js";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState({
@@ -34,6 +35,14 @@ const UserProfile = () => {
       error: "",
     },
     mobile: {
+      value: "",
+      error: "",
+    },
+    password: {
+      value: "",
+      error: "",
+    },
+    updatedAt: {
       value: "",
       error: "",
     },
@@ -88,6 +97,14 @@ const UserProfile = () => {
         error: "",
       },
       mobile: {
+        value: "",
+        error: "",
+      },
+      password: {
+        value: "",
+        error: "",
+      },
+      updatedAt: {
         value: "",
         error: "",
       },
@@ -193,6 +210,14 @@ const UserProfile = () => {
         },
         mobile: {
           value: data.Mobile,
+          error: "",
+        },
+        password: {
+          value: "", // TODO:: password to be set
+          error: "",
+        },
+        updatedAt: {
+          value: (data.UpdatedAt != null && data.UpdatedAt != undefined) ? data.UpdatedAt : "",
           error: "",
         },
         role: {
@@ -384,6 +409,33 @@ const UserProfile = () => {
       valid = false;
     }
 
+    // Validate password
+    if (userData?.password?.value?.trim() === "") {
+      console.log("Please enter password");
+
+      data = {
+        ...data,
+        mobile: {
+          ...data.mobile,
+          error: "Please enter password",
+        },
+      };
+      // valid = false; password here can be empty
+    } else if (!validatePassword(userData?.password?.value?.trim())) {
+      console.log("Invalid password");
+
+      data = {
+        ...data,
+        mobile: {
+          ...data.mobile,
+          error: "Invalid password",
+        },
+      };
+      // valid = false;
+    }
+
+    console.log(" password validation "+validatePassword(userData?.password?.value?.trim())+" passwprd: "+userData.password.value)
+    
     if (!userID && userData.profileImage.value === "") {
       data = {
         ...data,
@@ -427,7 +479,7 @@ const UserProfile = () => {
         const data = {
           userID: userID ? userID : "",
           userName: userData.username.value,
-          password: "",
+          password: userData.password.value ? userData.password.value : "",
           role: userData.role.value,
           email: userData.email.value,
           mobile: userData.mobile.value,
@@ -441,7 +493,7 @@ const UserProfile = () => {
             requesterType: credentials.data.role,
           },
         };
-
+        console.log("data to be created :",data)
         dispatch(createUser(data));
       }
     } catch (error) {
@@ -567,7 +619,13 @@ const UserProfile = () => {
                       })}
                   </select>
                 </div>
-
+                <div>
+                  <label 
+                    className={styles.inputLabel}
+                  >
+                    Last edited on {formatDateString(userData?.updatedAt?.value)}
+                  </label>
+                </div>
               </div>
               <div className={styles.rightInputs}>
                 <Input
@@ -580,16 +638,19 @@ const UserProfile = () => {
                   disabled={true}
                   onChange={onChange}
                 />
-                {/* <Input
+                <Input
                   type="password"
-                  value={userData.username.value}
+                  value={userData.password.value}
                   labelStyle={styles.inputLabel}
-                  customStyle={{ margin: '0' }}
+                  customStyle={{
+                    margin: '0',
+                    marginTop: '-2.5rem'
+                  }}
                   name={"password"}
                   label="Password"
                   placeholder="Password"
-                  disabled
-                /> */}
+                  onChange={onChange}
+                />
                 <div>
                   {/* <label htmlFor="dropdown_designation" className="select_label">
                     Designation:
@@ -619,7 +680,7 @@ const UserProfile = () => {
 
                 <div>
                   <ImageDropZone
-                    customstyle={{ marginTop: "1rem" }}
+                    customstyle={{ marginTop: "0rem" }}
                     label="Upload Profile Pic"
                     onUpload={onUpload}
                     imageSrc={imageURl}

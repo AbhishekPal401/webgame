@@ -1,5 +1,19 @@
 import { dateFormats } from "../constants/date";
 
+export const formatTime = (value) => {
+    if (value >= 60) {
+        const hours = Math.floor(value / 60);
+        const minutes = value % 60;
+        if (minutes === 0) {
+            return `${hours}hr`;
+        } else {
+            return `${hours}.${minutes}hr`;
+        }
+    } else {
+        return `${value}min`;
+    }
+}
+
 export const formatDateString = (dateTimeString, formatType = 'default') => {
     // const formats = [
     //     {
