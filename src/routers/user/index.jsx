@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useRoutes } from "react-router-dom";
 import UserNavBar from "../../components/ui/usernavbar";
 
 import styles from "./userroutes.module.css";
@@ -13,20 +13,27 @@ import NotFound from "../../pages/app/common/notfound";
 const User = () => {
   const location = useLocation();
 
+  const routeConfig = [
+    { path: "/", element: <Homepage /> },
+    { path: "/profile/:userID?", element: <Profile /> },
+    { path: "/intro", element: <Intro /> },
+    { path: "/gameplay", element: <GamePlay /> },
+    { path: "/missioncompleted", element: <MissionCompleted /> },
+  ];
+
+  const routeElement = useRoutes(routeConfig);
+
+  const isAnyRouteNotMatched = routeElement === null;
+
   return (
     <div className={styles.container}>
-      {location.pathname.includes("/intro") ? null : (
+      {location.pathname.includes("/intro") || isAnyRouteNotMatched ? (
+        <UserNavBar disable={true} role="Player" />
+      ) : (
         <UserNavBar role="Player" />
       )}
       <div className={styles.layoutContainer}>
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/profile/:userID?" element={<Profile />} />
-          <Route path="/intro" element={<Intro />} />
-          <Route path="/gameplay" element={<GamePlay />} />
-          <Route path="/missioncompleted" element={<MissionCompleted />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        {routeElement || <NotFound />}
       </div>
     </div>
   );

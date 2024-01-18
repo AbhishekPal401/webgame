@@ -36,7 +36,7 @@ import getDesignations from "../app/admin/masters/getDesignations.js";
 import instanceSummary from "../app/admin/gameinstances/instanceSummary.js";
 import getInstanceProgress from "../app/admin/gameinstances/getInstanceProgress.js";
 import getOverviewGameDetails from "../app/admin/gameinstances/getOverviewGameDetails.js";
-
+import gameplay from "../local/gameplay.js";
 
 const reducers = combineReducers({
   login,
@@ -72,6 +72,7 @@ const reducers = combineReducers({
   getOverviewGameDetails,
   getDesignations,
   getOrganizations,
+  gameplay,
 });
 
 const rootReducer = (state, action) => {

@@ -1,23 +1,29 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./usernavbar.module.css";
 import logo from "../../../assets/logo/pwclabel.png";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ModalContainer from "../../modal";
 import { logoutUser } from "../../../store/auth/login";
 import Button from "../../common/button";
+import { signalRService } from "../../../services/signalR";
+import { setConnectionState } from "../../../store/local/gameplay";
+import { isJSONString } from "../../../utils/common";
 
-const UserNavBar = ({ role = "Player" }) => {
+const UserNavBar = ({ disable = false, role = "Player" }) => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [initial, setInitials] = useState("");
 
   const { credentials } = useSelector((state) => state.login);
+  const { isConnectedToServer } = useSelector((state) => state.gameplay);
+  const { sessionDetails } = useSelector((state) => state.getSession);
 
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const extractInitials = (username) => {
     const words = username.split(" ");
@@ -58,6 +64,66 @@ const UserNavBar = ({ role = "Player" }) => {
       }
     }
   }, []);
+
+  useEffect(() => {
+    //signalR connection initiated and joining room
+    const startConnection = async () => {
+      try {
+        // Start the SignalR connection
+        await signalRService.startConnection(() => {
+          dispatch(setConnectionState(true));
+        });
+      } catch (error) {
+        console.error("Error during connection ", error);
+      }
+    };
+
+    dispatch(setConnectionState(false));
+
+    startConnection();
+  }, []);
+
+  const joinRoom = useCallback(async () => {
+    if (!isJSONString(sessionDetails.data)) return;
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    const data = {
+      InstanceID: sessionData.InstanceID,
+      SessionID: sessionData.SessionID,
+      UserID: credentials.data.userID,
+      UserName: credentials.data.userName,
+      Designation: credentials?.data?.designation
+        ? credentials.data.designation
+        : "",
+    };
+
+    console.log("Joining the room...", data);
+    await signalRService.joinSession(data);
+  }, [sessionDetails, credentials]);
+
+  useEffect(() => {
+    if (isConnectedToServer) {
+      if (
+        location.pathname === "/" ||
+        location.pathname.includes("/missioncompleted") ||
+        location.pathname.includes("/game/") ||
+        location.pathname.includes("/missioncompleted")
+      )
+        return;
+
+      (async () => {
+        try {
+          await joinRoom();
+        } catch (error) {
+          console.error("Error during join room:", error);
+        }
+      })();
+    }
+  }, [isConnectedToServer]);
+
+  if (disable) {
+    return null;
+  }
 
   return (
     <div className={styles.navbarContainer}>

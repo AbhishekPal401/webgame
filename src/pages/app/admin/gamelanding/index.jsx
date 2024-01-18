@@ -16,14 +16,15 @@ import {
 import { toast } from "react-toastify";
 import { signalRService } from "../../../../services/signalR";
 
-const UserHomePage = () => {
-  const [connected, setConnected] = useState(false);
+const AdminGameLanding = () => {
+  // const [connected, setConnected] = useState(false);
   const [ready, setReady] = useState(false);
   const [connectedUsers, setConnectedUsers] = useState([]);
 
   const { credentials } = useSelector((state) => state.login);
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
+  const { isConnectedToServer } = useSelector((state) => state.gameplay);
 
   const { instanceID } = useParams();
 
@@ -86,22 +87,6 @@ const UserHomePage = () => {
   }, [sessionDetails, credentials]);
 
   useEffect(() => {
-    //signalR connection initiated and joining room
-    const startConnection = async () => {
-      try {
-        // Start the SignalR connection
-        await signalRService.startConnection(() => {
-          setConnected(true);
-        });
-      } catch (error) {
-        console.error("Error during connection ", error);
-      }
-    };
-
-    startConnection();
-  }, []);
-
-  useEffect(() => {
     const startJoiningRoom = async () => {
       try {
         await joinRoom();
@@ -124,10 +109,10 @@ const UserHomePage = () => {
       }
     };
 
-    if (connected) {
+    if (isConnectedToServer) {
       startJoiningRoom();
     }
-  }, [sessionDetails, connected]);
+  }, [sessionDetails, isConnectedToServer]);
 
   useEffect(() => {
     if (!credentials) return;
@@ -220,4 +205,4 @@ const UserHomePage = () => {
   );
 };
 
-export default UserHomePage;
+export default AdminGameLanding;

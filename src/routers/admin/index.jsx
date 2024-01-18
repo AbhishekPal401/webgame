@@ -30,9 +30,9 @@ const Admin = () => {
 
   return (
     <div className={styles.container}>
-      {location.pathname.includes("/intro") ? null : location.pathname.includes(
-          "/game"
-        ) ||
+      {location.pathname.includes("/intro") ? (
+        <UserNavbar disable={true} role="Admin" />
+      ) : location.pathname.includes("/game/") ||
         location.pathname.includes("/gameplay") ||
         location.pathname.includes("/missioncompleted") ? (
         <UserNavbar role="Admin" />

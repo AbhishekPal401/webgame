@@ -22,6 +22,7 @@ const UserHomePage = () => {
   const { credentials } = useSelector((state) => state.login);
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
+  const { isConnectedToServer } = useSelector((state) => state.gameplay);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ const UserHomePage = () => {
   }, [sessionDetails, credentials]);
 
   const onsubmit = async () => {
-    if (!ready) return;
+    if (!ready || !isConnectedToServer) return;
     const sessionData = JSON.parse(sessionDetails.data);
 
     const data = {
@@ -85,10 +86,6 @@ const UserHomePage = () => {
     };
 
     dispatch(getSessionDetails(data));
-  }, []);
-
-  useEffect(() => {
-    signalRService.startConnection();
   }, []);
 
   useEffect(() => {
@@ -134,7 +131,9 @@ const UserHomePage = () => {
                 <Button
                   onClick={onsubmit}
                   customClassName={
-                    ready ? styles.button : styles.buttonDisabled
+                    ready && isConnectedToServer
+                      ? styles.button
+                      : styles.buttonDisabled
                   }
                 >
                   Ready
