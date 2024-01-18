@@ -52,8 +52,11 @@ const Question = ({
   onDecisionSubmit = () => {},
   adminState = "",
   Votes = [],
+  decisionDetails = [],
   onNextQuestion = () => {},
   showVotes = false,
+  showDecision = false,
+  setShowDecision = () => {},
   setShowVotes = () => {},
 }) => {
   const [showMedia, setShowMedia] = useState(true);
@@ -182,6 +185,7 @@ const Question = ({
                 customClassName={styles.button}
                 onClick={() => {
                   setShowVotes(true);
+                  setShowDecision(false);
                 }}
               >
                 Reveal Votes
@@ -228,6 +232,15 @@ const Question = ({
       return Votes.find((answer) => answer.answer === answerId) || null;
     },
     [Votes]
+  );
+
+  const getDecisionDetailsById = useCallback(
+    (answerId) => {
+      return (
+        decisionDetails.find((answer) => answer.answer === answerId) || null
+      );
+    },
+    [decisionDetails]
   );
 
   useEffect(() => {
@@ -291,6 +304,18 @@ const Question = ({
                       Votes.length > 0 &&
                       getVotesDetailsById(item?.AnswerID) &&
                       getVotesDetailsById(item?.AnswerID).userName.map(
+                        (username) => {
+                          return (
+                            <div className={styles.userbadge}>{username}</div>
+                          );
+                        }
+                      )}
+                    {showDecision &&
+                      decisionDetails &&
+                      Array.isArray(decisionDetails) &&
+                      decisionDetails.length > 0 &&
+                      getDecisionDetailsById(item?.AnswerID) &&
+                      getDecisionDetailsById(item?.AnswerID).userName.map(
                         (username) => {
                           return (
                             <div className={styles.userbadge}>{username}</div>

@@ -100,6 +100,9 @@ const GamePlay = () => {
     PlayingStates.VotingInProgress
   );
   const [votesDetails, setVoteDetails] = useState([]);
+  const [decisionDetails, setDecisionDetails] = useState([]);
+  const [showDecision, setShowDecision] = useState(false);
+
   const [nextQuestionFetched, setNextQuestionFetched] = useState(false);
   const [adminState, setAdminState] = useState("MakeDecision");
   const [showVotes, setShowVotes] = useState(false);
@@ -127,6 +130,9 @@ const GamePlay = () => {
         if (votesDetails.votes) {
           setVoteDetails(votesDetails.votes);
         }
+        if (votesDetails.decisionVote) {
+          setDecisionDetails(votesDetails.decisionVote);
+        }
         setNextQuestionFetched(false);
         setShowVotes(false);
       } else if (
@@ -136,6 +142,9 @@ const GamePlay = () => {
         if (votesDetails.votes) {
           setVoteDetails(votesDetails.votes);
         }
+        if (votesDetails.decisionVote) {
+          setDecisionDetails(votesDetails.decisionVote);
+        }
         setNextQuestionFetched(false);
         setShowVotes(false);
       } else if (
@@ -144,6 +153,9 @@ const GamePlay = () => {
         setCurrentState(PlayingStates.DecisionCompleted);
         if (votesDetails.votes) {
           setVoteDetails(votesDetails.votes);
+        }
+        if (votesDetails.decisionVote) {
+          setDecisionDetails(votesDetails.decisionVote);
         }
         setNextQuestionFetched(false);
       }
@@ -239,6 +251,7 @@ const GamePlay = () => {
       setNextQuestionFetched(true);
       setSelectedAnswer(null);
       setAdminState("MakeDecision");
+      setShowDecision(false);
       setVoteDetails([]);
       setCurrentState(PlayingStates.VotingInProgress);
       setStartedAt(Math.floor(Date.now() / 1000));
@@ -305,12 +318,14 @@ const GamePlay = () => {
           Message: "Success",
         };
 
-        console.log(data);
         dispatch(resetAnswerDetailsState());
+        setSelectedAnswer({});
 
         signalRService.ProceedToNextQuestionInvoke(data);
       } else {
         setAdminState("RevealDecision");
+        setShowDecision(true);
+        setSelectedAnswer({});
       }
     }
   }, [answerDetails]);
@@ -409,8 +424,11 @@ const GamePlay = () => {
                   adminState={adminState}
                   onNextQuestion={NextQuestionInvoke}
                   Votes={votesDetails}
+                  decisionDetails={decisionDetails}
                   showVotes={showVotes}
                   setShowVotes={setShowVotes}
+                  setShowDecision={setShowDecision}
+                  showDecision={showDecision}
                 />
               )}
           </div>
