@@ -428,7 +428,7 @@ const CreateUser = () => {
             const data = {
               userID: userID ? userID : "",
               userName: userData.username.value,
-              password: "",
+              password: userID ? "pwc@123456" : "",
               role: userData.role.value,
               email: userData.email.value,
               mobile: userData.mobile.value,
@@ -456,7 +456,7 @@ const CreateUser = () => {
           const data = {
             userID: userID ? userID : "",
             userName: userData.username.value,
-            password: "",
+            password: userID ? "pwc@123456" : "",
             role: userData.role.value,
             email: userData.email.value,
             mobile: userData.mobile.value,
