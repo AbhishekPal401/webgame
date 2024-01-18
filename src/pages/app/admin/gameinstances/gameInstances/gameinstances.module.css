@@ -112,6 +112,30 @@
   cursor: pointer;
 }
 
+/* Actions */
+.table_content tbody td:last-child {
+  width: 10rem;
+}
+.actions {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.circleSvg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background-color: #ffecbd;
+  cursor: pointer;
+}
+.circleSvg:hover {
+  height: 2.4rem;
+  width: 2.4rem;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
 
 /* pagination */
 

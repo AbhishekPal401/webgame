@@ -178,9 +178,9 @@
 .table_content th:first-child {
   border-radius: 0.6rem 0 0 0.6rem;
 }
-
 .table_content th:last-child {
   border-radius: 0 0.6rem 0.6rem 0;
+  width: 10rem;
 }
 .actions {
   display: flex;
@@ -191,13 +191,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 2.4rem;
-  height: 2.4rem;
+  width: 2.2rem;
+  height: 2.2rem;
   border-radius: 50%;
   background-color: #ffecbd;
-}
-.circleSvg svg {
   cursor: pointer;
+}
+.circleSvg:hover {
+  height: 2.4rem;
+  width: 2.4rem;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 /* pagination */

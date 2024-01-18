@@ -23,6 +23,7 @@ import CreateInstances from "../../pages/app/admin/gameinstances/createinstanace
 import UpdateInstances from "../../pages/app/admin/gameinstances/updateinstances";
 import MasterList from "../../pages/app/admin/masters/masterlist";
 import NotFound from "../../pages/app/common/notfound";
+import ViewInstances from "../../pages/app/admin/gameinstances/viewinstances";
 
 const Admin = () => {
   const location = useLocation();
@@ -83,6 +84,10 @@ const Admin = () => {
             <Route
               path="/instances/updateinstances/:instanceID?"
               element={<UpdateInstances />}
+            />
+            <Route
+              path="/instances/viewinstances/:instanceID?"
+              element={<ViewInstances />}
             />
             <Route path="/profile/:userID?" element={<Profile />} />
             <Route path="/game/:instanceID?" element={<Gamelanding />} />

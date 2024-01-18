@@ -435,11 +435,6 @@ function QuestionBuilder() {
     if (valid) {
       let url = supportFIleDefaultUrl.url;
       let fileType = supportFIleDefaultUrl.type;
-      console.log("url  : " + url + " and fileType :" + fileType);
-      console.log(
-        "questionData?.narrativeMedia?.value ",
-        questionData?.narrativeMedia?.value
-      );
 
       if (questionData?.narrativeMedia?.value) {
         const formData = new FormData();
@@ -468,44 +463,82 @@ function QuestionBuilder() {
 
           console.log("upload success");
           url = JSON.parse(serializedData.Data).URL;
-          console.log("uploaded file url :", url);
+
+          const data = {
+            questionID: questionID ? questionID : "",
+            scenarioID: scenarioID ? scenarioID : "",
+            questionText: questionData?.question?.value,
+            requester: {
+              requestID: generateGUID(),
+              requesterID: credentials.data.userID,
+              requesterName: credentials.data.userName,
+              requesterType: credentials.data.role,
+            },
+            delegatedTo: questionData?.decisionMaker?.value,
+            supportFile: url,
+            supportFileType: fileType,
+            answersData: questionData.answers.map((answer) => ({
+              answerID: answer.answerId.value,
+              answerText: answer.option.value,
+              isOptimalAnswer: answer.optimal.value,
+              answerScore: answer.score.value,
+              nextQuestionNo: answer.nextQuestion.value,
+              content: answer.consequence.value, // TODO :: consequence for now is null || not implemented in backend
+              requester: {
+                requestID: generateGUID(),
+                requesterID: credentials.data.userID,
+                requesterName: credentials.data.userName,
+                requesterType: credentials.data.role,
+              },
+            })),
+          };
+
+          console.log("data to update : ", data);
+          dispatch(updateQuestion(data));
+
         } else if (!response.data && !response.data.success) {
           toast.error(response.data.message);
           console.log("upload error");
+        } else {
+          console.log("error message :", response.data.message);
+          toast.error("File upload failed.");
         }
-      }
-      console.log("2 url  : " + url + " and fileType :" + fileType);
-      const data = {
-        questionID: questionID ? questionID : "",
-        scenarioID: scenarioID ? scenarioID : "",
-        questionText: questionData?.question?.value,
-        requester: {
-          requestID: generateGUID(),
-          requesterID: credentials.data.userID,
-          requesterName: credentials.data.userName,
-          requesterType: credentials.data.role,
-        },
-        delegatedTo: questionData?.decisionMaker?.value,
-        supportFile: url,
-        supportFileType: fileType,
-        answersData: questionData.answers.map((answer) => ({
-          answerID: answer.answerId.value,
-          answerText: answer.option.value,
-          isOptimalAnswer: answer.optimal.value,
-          answerScore: answer.score.value,
-          nextQuestionNo: answer.nextQuestion.value,
-          content: answer.consequence.value, // TODO :: consequence for now is null || not implemented in backend
+      } else {
+
+        // else no narrative media is uploaded
+        const data = {
+          questionID: questionID ? questionID : "",
+          scenarioID: scenarioID ? scenarioID : "",
+          questionText: questionData?.question?.value,
           requester: {
             requestID: generateGUID(),
             requesterID: credentials.data.userID,
             requesterName: credentials.data.userName,
             requesterType: credentials.data.role,
           },
-        })),
-      };
+          delegatedTo: questionData?.decisionMaker?.value,
+          supportFile: url,
+          supportFileType: fileType,
+          answersData: questionData.answers.map((answer) => ({
+            answerID: answer.answerId.value,
+            answerText: answer.option.value,
+            isOptimalAnswer: answer.optimal.value,
+            answerScore: answer.score.value,
+            nextQuestionNo: answer.nextQuestion.value,
+            content: answer.consequence.value, // TODO :: consequence for now is null || not implemented in backend
+            requester: {
+              requestID: generateGUID(),
+              requesterID: credentials.data.userID,
+              requesterName: credentials.data.userName,
+              requesterType: credentials.data.role,
+            },
+          })),
+        };
 
-      console.log("data to update : ", data);
-      dispatch(updateQuestion(data));
+        console.log("data to update : ", data);
+        dispatch(updateQuestion(data));
+      }
+
     } else {
       toast.error("Please fill all the details.");
     }

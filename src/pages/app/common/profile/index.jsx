@@ -434,8 +434,8 @@ const UserProfile = () => {
       // valid = false;
     }
 
-    console.log(" password validation "+validatePassword(userData?.password?.value?.trim())+" passwprd: "+userData.password.value)
-    
+    console.log(" password validation " + validatePassword(userData?.password?.value?.trim()) + " passwprd: " + userData.password.value)
+
     if (!userID && userData.profileImage.value === "") {
       data = {
         ...data,
@@ -473,28 +473,56 @@ const UserProfile = () => {
             const serializedData = JSON.parse(response.data.data);
 
             url = JSON.parse(serializedData.Data).URL;
+
+            const data = {
+              userID: userID ? userID : "",
+              userName: userData.username.value,
+              password: userData.password.value ? userData.password.value : "",
+              role: userData.role.value,
+              email: userData.email.value,
+              mobile: userData.mobile.value,
+              designation: userData.designation.value,
+              organizationName: userData.organizationName.value,
+              profileImage: url,
+              requester: {
+                requestID: generateGUID(),
+                requesterID: credentials.data.userID,
+                requesterName: credentials.data.userName,
+                requesterType: credentials.data.role,
+              },
+            };
+            console.log("data to be created :", data)
+            dispatch(createUser(data));
+
+          } else if (response.data && !response.data.success) {
+            toast.error(response.data.message);
+            console.log("error message :", response.data.message);
+          } else {
+            console.log("error message :", response.data.message);
+            toast.error("File upload failed.");
           }
+        } else {
+          const data = {
+            userID: userID ? userID : "",
+            userName: userData.username.value,
+            password: userData.password.value ? userData.password.value : "",
+            role: userData.role.value,
+            email: userData.email.value,
+            mobile: userData.mobile.value,
+            designation: userData.designation.value,
+            organizationName: userData.organizationName.value,
+            profileImage: url,
+            requester: {
+              requestID: generateGUID(),
+              requesterID: credentials.data.userID,
+              requesterName: credentials.data.userName,
+              requesterType: credentials.data.role,
+            },
+          };
+          console.log("data to be created :", data)
+          dispatch(createUser(data));
         }
 
-        const data = {
-          userID: userID ? userID : "",
-          userName: userData.username.value,
-          password: userData.password.value ? userData.password.value : "",
-          role: userData.role.value,
-          email: userData.email.value,
-          mobile: userData.mobile.value,
-          designation: userData.designation.value,
-          organizationName: userData.organizationName.value,
-          profileImage: url,
-          requester: {
-            requestID: generateGUID(),
-            requesterID: credentials.data.userID,
-            requesterName: credentials.data.userName,
-            requesterType: credentials.data.role,
-          },
-        };
-        console.log("data to be created :",data)
-        dispatch(createUser(data));
       }
     } catch (error) {
       toast.error("An error ocurred while saving the user.")
