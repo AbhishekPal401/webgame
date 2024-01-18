@@ -117,9 +117,9 @@ const GameInstances = () => {
                                                     <td>{index + 1}</td>
                                                     <td
                                                         className={styles.gameInstances}
-                                                    onClick={() => {
-                                                        navigate(`/instances/updateinstances/${gameInstance.InstanceID}`);
-                                                    }}
+                                                        onClick={() => {
+                                                            navigate(`/instances/updateinstances/${gameInstance.InstanceID}`);
+                                                        }}
                                                     >
                                                         {gameInstance.InstanceName}
                                                     </td>
@@ -132,7 +132,30 @@ const GameInstances = () => {
                                                     <td>{gameInstance.ScenarioName}</td>
                                                     <td>{formatDateString(gameInstance.CreatedAt)}</td>
                                                     <td>{gameInstance.Status}</td>
-                                                    <td></td>
+                                                    <td >
+                                                        <div className={styles.actions}>
+                                                            <div
+                                                                className={styles.circleSvg}
+                                                                onClick={() => {
+                                                                    navigate(`/instances/viewinstances/${gameInstance.InstanceID}`);
+                                                                }}
+                                                            >
+                                                                <svg height="14" width="14" >
+                                                                    <use xlinkHref="sprite.svg#view_icon" />
+                                                                </svg>
+                                                            </div>
+                                                            <div className={styles.circleSvg}>
+                                                                <svg height="14" width="14">
+                                                                    <use xlinkHref="sprite.svg#edit_icon" />
+                                                                </svg>
+                                                            </div>
+                                                            <div className={styles.circleSvg}>
+                                                                <svg height="14" width="14">
+                                                                    <use xlinkHref="sprite.svg#delete_icon" />
+                                                                </svg>
+                                                            </div>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             );
                                         }

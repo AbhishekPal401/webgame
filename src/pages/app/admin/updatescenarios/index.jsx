@@ -330,35 +330,68 @@ const UpdateScenarios = () => {
             const serializedData = JSON.parse(response.data.data);
 
             url = JSON.parse(serializedData.Data).URL;
+
+            // now dispatch 
+            const data = {
+              scenarioID: scenarioID ? scenarioID : "",
+              scenarioName: scenarioData?.scenarioName?.value,
+              description: scenarioData?.scenarioDescription?.value,
+              gameIntro: scenarioData?.gameIntroText?.value,
+              introFile: url,
+              introFileType: fileType,
+              status: "Create",
+              version: "1",
+              baseVersionID: "1",
+              // handled by backend :: status, version, baseVersionID
+              requester: {
+                requestID: generateGUID(),
+                requesterID: credentials.data.userID,
+                requesterName: credentials.data.userName,
+                requesterType: credentials.data.role,
+              },
+            };
+            dispatch(updateScenario(data));
+
           } else if (response.data && !response.data.success) {
             toast.error(response.data.message);
             console.log("error message :", response.data.message);
+          } else {
+            console.log("error message :", response.data.message);
+            toast.error("File upload failed.");
           }
+
         } catch (error) {
           toast.error("An error occurred while uploading the file.");
           console.error("Axios error:", error);
         }
+      } else {
+
+        if (url != "" || url != null || url != undefined) {
+          // else if no intro file is uploaded 
+          const data = {
+            scenarioID: scenarioID ? scenarioID : "",
+            scenarioName: scenarioData?.scenarioName?.value,
+            description: scenarioData?.scenarioDescription?.value,
+            gameIntro: scenarioData?.gameIntroText?.value,
+            introFile: url,
+            introFileType: fileType,
+            status: "Create",
+            version: "1",
+            baseVersionID: "1",
+            // handled by backend :: status, version, baseVersionID
+            requester: {
+              requestID: generateGUID(),
+              requesterID: credentials.data.userID,
+              requesterName: credentials.data.userName,
+              requesterType: credentials.data.role,
+            },
+          };
+          dispatch(updateScenario(data));
+        } else {
+          toast.error("Please upload Game intro file.");
+        }
       }
 
-      const data = {
-        scenarioID: scenarioID ? scenarioID : "",
-        scenarioName: scenarioData?.scenarioName?.value,
-        description: scenarioData?.scenarioDescription?.value,
-        gameIntro: scenarioData?.gameIntroText?.value,
-        introFile: url,
-        introFileType: fileType,
-        status: "Create",
-        version: "1",
-        baseVersionID: "1",
-        // handled by backend :: status, version, baseVersionID
-        requester: {
-          requestID: generateGUID(),
-          requesterID: credentials.data.userID,
-          requesterName: credentials.data.userName,
-          requesterType: credentials.data.role,
-        },
-      };
-      dispatch(updateScenario(data));
     } else {
       toast.error("Please fill all the details.");
     }

@@ -1,6 +1,12 @@
 import { dateFormats } from "../constants/date";
 
 export const formatTime = (value) => {
+
+    if (!value || value.trim() === "") {
+        return 'Invalid Time';
+    }
+
+
     if (value >= 60) {
         const hours = Math.floor(value / 60);
         const minutes = value % 60;
@@ -70,6 +76,10 @@ export const formatDateString = (dateTimeString, formatType = 'default') => {
     let formattedMonth;
     let parsedDate;
     let timeString;
+
+    if (!dateTimeString || dateTimeString.trim() === "") {
+        return 'Invalid Date';
+    }
 
     for (const dateFormat of formats) {
         const matches = dateTimeString.match(dateFormat.regex);

@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { apiCallBegan } from "../../../../middleware/actions.js";
 
 const slice = createSlice({
-  name: "masters-by-type",
+  name: "user-all-organizations",
   initialState: {
-    mastersByType: null,
+    organizations: null,
     loading: false,
   },
   reducers: {
@@ -12,15 +12,15 @@ const slice = createSlice({
       users.loading = true;
     },
     success: (users, action) => {
-      users.mastersByType = action.payload;
+      users.organizations = action.payload;
       users.loading = false;
     },
     failed: (users, action) => {
-      users.mastersByType = action.payload;
+      users.organizations = action.payload;
       users.loading = false;
     },
     reset: (users, action) => {
-      users.mastersByType = null;
+      users.organizations = null;
       users.loading = false;
     },
   },
@@ -30,16 +30,16 @@ const { requested, success, failed, reset } = slice.actions;
 
 export default slice.reducer;
 
-export const getMastersByType = (data) =>
+export const getAllOrganizations = () =>
   apiCallBegan({
-    url: "api/User/GetMasters",
+    url: "api/User/GetOrganizationList",
     method: "POST",
-    data,
+    data: {},
     onStart: requested.type,
     onSuccess: success.type,
     onFailed: failed.type,
   });
 
-export const resetMastersByTypeState = () => async (dispatch) => {
+export const resetOrganizationsState = () => async (dispatch) => {
   dispatch(reset());
 };

@@ -89,15 +89,34 @@
   height: 3rem;
   padding-left: 0.5rem;
 }
-
-/* for table head rounding */
-
 .table_content th:first-child {
   border-radius: 0.6rem 0 0 0.6rem;
 }
 
+/* Actions */
 .table_content th:last-child {
   border-radius: 0 0.6rem 0.6rem 0;
+  width: 10rem;
+}
+.actions {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.circleSvg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background-color: #ffecbd;
+  cursor: pointer;
+}
+.circleSvg:hover {
+  height: 2.4rem;
+  width: 2.4rem;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 /* pagination */

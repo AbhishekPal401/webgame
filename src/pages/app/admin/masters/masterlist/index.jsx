@@ -11,37 +11,37 @@ import { generateGUID, isJSONString } from "../../../../../utils/common.js";
 import { formatDateString } from "../../../../../utils/helper.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import ButtonLink from "../../../../../components/common/ButtonLink/index.jsx";
-import {
-  getMastersByType,
-  resetMastersByTypeState
-} from "../../../../../store/app/admin/masters/mastersByType.js";
 import {
   createMaster,
   resetCreateMasterState
 } from "../../../../../store/app/admin/masters/createMaster.js";
-
+import {
+  getAllDesignations,
+  resetDesignationsState
+} from "../../../../../store/app/admin/masters/getDesignations.js";
+import {
+  getAllOrganizations,
+  resetOrganizationsState
+} from "../../../../../store/app/admin/masters/getOrganizations.js";
 
 const MasterList = () => {
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const [addMasterData, setAddMasterData] = useState({
     designation: { value: '', error: '' },
     description: { value: '', error: '' },
     organization: { value: '', error: '' },
   });
-
   const [activeTab, setActiveTab] = useState('Designation');
   const [showModal, setShowModal] = useState(false);
 
-  const { mastersByType, loading: masterLoading } = useSelector((state) => state.mastersByType);
-
-  const { createMasterResponse, loading: createMasterResponseLoading } =
-    useSelector((state) => state.createMaster);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { credentials } = useSelector((state) => state.login);
+  const { designations, loading: designationsLoading } = useSelector((state) => state.getDesignations);
+  const { organizations, loading: organizationsLoading } = useSelector((state) => state.getOrganizations);
+  const { createMasterResponse, loading: createMasterResponseLoading } =
+    useSelector((state) => state.createMaster);
 
   const resetAddMasterData = useCallback(() => {
     setAddMasterData({
@@ -69,7 +69,7 @@ const MasterList = () => {
     [setActiveTab]
   );
 
-  // on add Group details
+  // on add master details
   const onAddMasterData = () => {
     console.log("onAddMasterData")
 
@@ -124,10 +124,11 @@ const MasterList = () => {
     try {
       if (valid) {
         const data = {
-          masterID: "", //TODO:: not implemented at backend
+          masterID: "", 
           masterName: (activeTab === 'Designation' ?
             addMasterData?.designation?.value :
             addMasterData?.organization?.value),
+          description: (activeTab === 'Designation' ? addMasterData?.description?.value : ""),
           masterType: (activeTab === 'Designation' ? 'Designation' : 'Organization'),
           isActive: "true",
           requester: {
@@ -153,10 +154,7 @@ const MasterList = () => {
 
   useEffect(() => {
     if (credentials) {
-      const data = {
-        masterType: activeTab === 'Designation' ? 'Designation' : 'Organization',
-      };
-      dispatch(getMastersByType(data));
+      activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
     }
   }, [activeTab, dispatch, credentials]);
 
@@ -167,10 +165,7 @@ const MasterList = () => {
       console.log("Master created")
       toast.success("Add master data successfull");
 
-      const fetchMasterData = {
-        masterType: activeTab === 'Designation' ? 'Designation' : 'Organization',
-      };
-      dispatch(getMastersByType(fetchMasterData));
+      activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
 
       resetAddMasterData();
       setShowModal(false);
@@ -192,8 +187,8 @@ const MasterList = () => {
         <div className={styles.left}>
           <label>Master List</label>
         </div>
-        <div 
-          style={{ backgroundImage: `url("./images/binary.png") `}}
+        <div
+          style={{ backgroundImage: `url("./images/binary.png") ` }}
           className={styles.right}
         >
           <img src="./images/scenario.png" />
@@ -202,7 +197,7 @@ const MasterList = () => {
 
       <div className={styles.mainContainer}>
         <div
-          style={{  backgroundImage: `url("./images/particles.png")` }} 
+          style={{ backgroundImage: `url("./images/particles.png")` }}
           className={styles.mainTopContainer}>
           <div className={styles.mainTopLeft}>
             <div className={styles.designationsContainer}>
@@ -298,64 +293,64 @@ const MasterList = () => {
               <tbody>
                 {activeTab === 'Designation' ?
                   (
-                    mastersByType &&
-                    mastersByType?.success &&
-                    mastersByType?.data &&
-                    JSON.parse(mastersByType?.data)?.map((master, index) => (
+                    designations &&
+                    designations?.success &&
+                    designations?.data &&
+                    JSON.parse(designations?.data)?.map((designation, index) => (
                       <tr key={index}>
                         <td>
                           <Checkbox />
                         </td>
                         <td>{index + 1}</td>
-                        <td>{master.MasterDisplayName}</td>
-                        <td>Description</td>
-                        <td>1 Jan 2024</td>
-                        <td>5</td>
-                        <td>Active</td>
+                        <td>{designation.Designation}</td>
+                        <td>{designation.Description}</td>
+                        <td>{formatDateString(designation.DateCreated)}</td>
+                        <td>{designation.Scenarios}</td>
+                        <td>{(designation.Status) ? 'Active' : 'Inactive'}</td>
                         <td>
-                          {/* <div className={styles.actions}>
+                          <div className={styles.actions}>
                             <div className={styles.circleSvg}>
-                              <svg>
+                              <svg height="14" width="14">
                                 <use xlinkHref="sprite.svg#edit_icon" />
                               </svg>
                             </div>
                             <div className={styles.circleSvg}>
-                              <svg>
+                              <svg height="14" width="14">
                                 <use xlinkHref="sprite.svg#delete_icon" />
                               </svg>
                             </div>
-                          </div> */}
+                          </div>
                         </td>
                       </tr>
                     ))
                   ) : (
-                    mastersByType &&
-                    mastersByType?.success &&
-                    mastersByType?.data &&
-                    JSON.parse(mastersByType?.data)?.map((master, index) => (
+                    organizations &&
+                    organizations?.success &&
+                    organizations?.data &&
+                    JSON.parse(organizations?.data)?.map((organization, index) => (
                       <tr key={index}>
                         <td>
                           <Checkbox />
                         </td>
                         <td>{index + 1}</td>
-                        <td>{master.MasterDisplayName}</td>
-                        <td>25</td>
-                        <td>1 Jan 2024</td>
-                        <td>5</td>
-                        <td>Active</td>
+                        <td>{organization.Organization}</td>
+                        <td>{organization.MemberUsers}</td>
+                        <td>{formatDateString(organization.DateCreated)}</td>
+                        <td>{organization.GamesPlayed}</td>
+                        <td>{(organization.Status) ? 'Active' : 'Inactive'}</td>
                         <td>
-                          {/* <div className={styles.actions}>
+                          <div className={styles.actions}>
                             <div className={styles.circleSvg}>
-                              <svg>
+                              <svg height="14" width="14">
                                 <use xlinkHref="sprite.svg#edit_icon" />
                               </svg>
                             </div>
                             <div className={styles.circleSvg}>
-                              <svg>
+                              <svg height="14" width="14">
                                 <use xlinkHref="sprite.svg#delete_icon" />
                               </svg>
                             </div>
-                          </div> */}
+                          </div>
                         </td>
                       </tr>
                     ))

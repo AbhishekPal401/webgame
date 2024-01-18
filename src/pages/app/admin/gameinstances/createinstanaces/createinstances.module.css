@@ -33,8 +33,9 @@
   display: block;
 }
 .inputLabel {
-  font-size: 1.3rem;
   color: var(--input_label);
+  font-size: 1.3rem;
+  font-family: "Helvetica 500";
 }
 .error {
   color: var(--red);

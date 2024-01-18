@@ -424,28 +424,58 @@ const CreateUser = () => {
             const serializedData = JSON.parse(response.data.data);
 
             url = JSON.parse(serializedData.Data).URL;
+
+            // if success dispacth a request 
+            const data = {
+              userID: userID ? userID : "",
+              userName: userData.username.value,
+              password: "",
+              role: userData.role.value,
+              email: userData.email.value,
+              mobile: userData.mobile.value,
+              designation: userData.designation.value,
+              organizationName: userData.organizationName.value,
+              profileImage: (url != null && url != undefined && url != "") ? url : "file",
+              requester: {
+                requestID: generateGUID(),
+                requesterID: credentials.data.userID,
+                requesterName: credentials.data.userName,
+                requesterType: credentials.data.role,
+              },
+            };
+            console.log("dispatch data:", data)
+            dispatch(createUser(data));
+
+          } else if (response.data && !response.data.success) {
+            toast.error(response.data.message);
+            console.log("error message :", response.data.message);
+          } else {
+            console.log("error message :", response.data.message);
+            toast.error("File upload failed.");
           }
+
+        } else {
+          const data = {
+            userID: userID ? userID : "",
+            userName: userData.username.value,
+            password: "",
+            role: userData.role.value,
+            email: userData.email.value,
+            mobile: userData.mobile.value,
+            designation: userData.designation.value,
+            organizationName: userData.organizationName.value,
+            profileImage: (url != null && url != undefined && url != "") ? url : "file",
+            requester: {
+              requestID: generateGUID(),
+              requesterID: credentials.data.userID,
+              requesterName: credentials.data.userName,
+              requesterType: credentials.data.role,
+            },
+          };
+          console.log("dispatch data:", data)
+          dispatch(createUser(data));
         }
 
-        const data = {
-          userID: userID ? userID : "",
-          userName: userData.username.value,
-          password: "",
-          role: userData.role.value,
-          email: userData.email.value,
-          mobile: userData.mobile.value,
-          designation: userData.designation.value,
-          organizationName: userData.organizationName.value,
-          profileImage: (url != null && url != undefined && url != "") ? url : "file",
-          requester: {
-            requestID: generateGUID(),
-            requesterID: credentials.data.userID,
-            requesterName: credentials.data.userName,
-            requesterType: credentials.data.role,
-          },
-        };
-        console.log("dispatch data:", data)
-        dispatch(createUser(data));
       } else {
         console.log("user empty data:", userData)
         toast.error("Please fill all the details properly.")

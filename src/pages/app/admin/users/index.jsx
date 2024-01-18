@@ -58,12 +58,12 @@ const Users = () => {
   }, [usersByPage]);
 
   //DEBG:: start
-  useEffect(() => {
-    if (!usersByPage) {
-      return;
-    }
-    console.log("usersByPage :",JSON.parse(usersByPage.data))
-  }, [usersByPage]);
+  // useEffect(() => {
+  //   if (!usersByPage) {
+  //     return;
+  //   }
+  //   console.log("usersByPage :", JSON.parse(usersByPage.data))
+  // }, [usersByPage]);
   //DEBG:: end
 
   useEffect(() => {
@@ -138,11 +138,11 @@ const Users = () => {
                 <th>Username</th>
                 <th>Email</th>
                 <th>Mobile</th>
-                <th>Organization</th> 
-                {/* <th>Data Updated</th> */}
-                <th>Role Played</th>   
+                <th>Organization</th>
+                <th>Data Updated</th>
+                <th>Role Played</th>
                 <th>Playtime</th>
-                <th>Status</th>   
+                <th>Status</th>
                 <th></th>
               </tr>
             </thead>
@@ -161,29 +161,33 @@ const Users = () => {
                         }}
                         className={styles.username}
                       >
-                        {user.UserName}
+                        {user?.UserName}
                       </td>
-                      <td>{user.Email}</td>
-                      <td>{user.Mobile}</td>
-                      <td>{user.OrganizationName}</td>
-                      {/* <td>{formatDateString(user.UpdatedAt)}</td> */}
-                      <td>{user.Designation}</td>
-                      <td>{formatTime(user.Duration)}</td>
-                      <td>{(user.Status) ? "Active" : "Inactive"}</td>
+                      <td>{user?.Email}</td>
+                      <td>{user?.Mobile}</td>
+                      <td>{user?.OrganizationName}</td>
+                      <td>{user?.UpdatedAt && formatDateString(user.UpdatedAt)}</td>
+                      <td>{user?.Designation}</td>
+                      <td>{user?.Duration && formatTime(user.Duration)}</td>
+                      <td>{(user?.Status) ? "Active" : "Inactive"}</td>
 
                       <td>
-                        <Button
-                          customStyle={{
-                            paddingTop: "0.2rem",
-                            paddingBottom: "0.2rem",
-                          }}
-                          buttonType="cancel"
-                          onClick={() => {
-                            setShowDeleteModal(user);
-                          }}
-                        >
-                          Delete
-                        </Button>
+                        <div className={styles.actions}>
+                          <div className={styles.circleSvg}>
+                            <svg height="14" width="14">
+                              <use xlinkHref="sprite.svg#edit_icon" />
+                            </svg>
+                          </div>
+                          <div className={styles.circleSvg}
+                            onClick={() => {
+                              setShowDeleteModal(user);
+                            }}
+                          >
+                            <svg height="14" width="14">
+                              <use xlinkHref="sprite.svg#delete_icon" />
+                            </svg>
+                          </div>
+                        </div>
                       </td>
                     </tr>
                   );

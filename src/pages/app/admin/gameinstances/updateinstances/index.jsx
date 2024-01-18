@@ -144,25 +144,25 @@ const UpdateInstances = () => {
     };
 
     // DEBUG :: start
-    useEffect(() => {
-        if (gameInstanceByIdDetails === null ||
-            gameInstanceByIdDetails === undefined ||
-            groupByOrgIdDetails === null ||
-            groupByOrgIdDetails === undefined) return;
+    // useEffect(() => {
+    //     if (gameInstanceByIdDetails === null ||
+    //         gameInstanceByIdDetails === undefined ||
+    //         groupByOrgIdDetails === null ||
+    //         groupByOrgIdDetails === undefined) return;
 
-        if (isJSONString(gameInstanceByIdDetails.data)) {
-            console.log("gameInstanceByIdDetails :", JSON.parse(gameInstanceByIdDetails.data));
+    //     if (isJSONString(gameInstanceByIdDetails.data)) {
+    //         console.log("gameInstanceByIdDetails :", JSON.parse(gameInstanceByIdDetails.data));
 
-        }
-        if (isJSONString(groupByOrgIdDetails.data)) {
-            console.log("groupByOrgIdDetails :", JSON.parse(groupByOrgIdDetails.data));
-        }
-    }, []);
+    //     }
+    //     if (isJSONString(groupByOrgIdDetails.data)) {
+    //         console.log("groupByOrgIdDetails :", JSON.parse(groupByOrgIdDetails.data));
+    //     }
+    // }, []);
 
-    useEffect(() => {
-        console.log("game instance state :", gameInstanceData)
+    // useEffect(() => {
+    //     console.log("game instance state :", gameInstanceData)
 
-    }, [gameInstanceData]);
+    // }, [gameInstanceData]);
 
     //DEBUG :: end
 

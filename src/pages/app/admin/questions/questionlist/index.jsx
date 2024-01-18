@@ -154,7 +154,20 @@ function QuestionList() {
                           <td>{question.Answers}</td>
                           <td>{question.DelegatedTo}</td>
                           <td>{question.NarativeMedia}</td>
-                          <td></td>
+                          <td>
+                            <div className={styles.actions}>
+                              <div className={styles.circleSvg}>
+                                <svg height="14" width="14">
+                                  <use xlinkHref="sprite.svg#edit_icon" />
+                                </svg>
+                              </div>
+                              <div className={styles.circleSvg}>
+                                <svg height="14" width="14">
+                                  <use xlinkHref="sprite.svg#delete_icon" />
+                                </svg>
+                              </div>
+                            </div>
+                          </td>
                         </tr>
                       );
                     }
