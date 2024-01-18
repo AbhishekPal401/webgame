@@ -10,7 +10,11 @@ import {
   resetUserDetailState,
 } from "../../../../store/app/admin/users/getUserbyId.js";
 import { useDispatch, useSelector } from "react-redux";
-import { validateEmail, validatePhone, validatePassword } from "../../../../utils/validators";
+import {
+  validateEmail,
+  validatePhone,
+  validatePassword,
+} from "../../../../utils/validators";
 import { baseUrl } from "../../../../middleware/url";
 import { toast } from "react-toastify";
 import {
@@ -164,7 +168,7 @@ const CreateUser = () => {
   const setUserDetailState = useCallback(() => {
     if (isJSONString(userByIdDetails.data)) {
       const data = JSON.parse(userByIdDetails.data);
-      console.log(" userByIdDetails data ", data)
+      console.log(" userByIdDetails data ", data);
       const newData = {
         username: {
           value: data.UserName,
@@ -305,10 +309,7 @@ const CreateUser = () => {
       };
 
       valid = false;
-    } else if (
-      userData.email.value.includes("@") &&
-      !validateEmail(userData.email.value)
-    ) {
+    } else if (!validateEmail(userData.email.value)) {
       data = {
         ...data,
         email: {
@@ -343,7 +344,6 @@ const CreateUser = () => {
       };
       valid = false;
     }
-
 
     if (userData?.role?.value?.trim() === "") {
       data = {
@@ -389,12 +389,11 @@ const CreateUser = () => {
           error: "Please select profile image",
         },
       };
-      console.log("profile image is not uploaded")
+      console.log("profile image is not uploaded");
       // valid = false;
     }
 
     try {
-
       if (valid) {
         let url = defaultUrl;
 
@@ -425,7 +424,7 @@ const CreateUser = () => {
 
             url = JSON.parse(serializedData.Data).URL;
 
-            // if success dispacth a request 
+            // if success dispacth a request
             const data = {
               userID: userID ? userID : "",
               userName: userData.username.value,
@@ -435,7 +434,8 @@ const CreateUser = () => {
               mobile: userData.mobile.value,
               designation: userData.designation.value,
               organizationName: userData.organizationName.value,
-              profileImage: (url != null && url != undefined && url != "") ? url : "file",
+              profileImage:
+                url != null && url != undefined && url != "" ? url : "file",
               requester: {
                 requestID: generateGUID(),
                 requesterID: credentials.data.userID,
@@ -443,9 +443,8 @@ const CreateUser = () => {
                 requesterType: credentials.data.role,
               },
             };
-            console.log("dispatch data:", data)
+            console.log("dispatch data:", data);
             dispatch(createUser(data));
-
           } else if (response.data && !response.data.success) {
             toast.error(response.data.message);
             console.log("error message :", response.data.message);
@@ -453,7 +452,6 @@ const CreateUser = () => {
             console.log("error message :", response.data.message);
             toast.error("File upload failed.");
           }
-
         } else {
           const data = {
             userID: userID ? userID : "",
@@ -464,7 +462,8 @@ const CreateUser = () => {
             mobile: userData.mobile.value,
             designation: userData.designation.value,
             organizationName: userData.organizationName.value,
-            profileImage: (url != null && url != undefined && url != "") ? url : "file",
+            profileImage:
+              url != null && url != undefined && url != "" ? url : "file",
             requester: {
               requestID: generateGUID(),
               requesterID: credentials.data.userID,
@@ -472,19 +471,17 @@ const CreateUser = () => {
               requesterType: credentials.data.role,
             },
           };
-          console.log("dispatch data:", data)
+          console.log("dispatch data:", data);
           dispatch(createUser(data));
         }
-
       } else {
-        console.log("user empty data:", userData)
-        toast.error("Please fill all the details properly.")
+        console.log("user empty data:", userData);
+        toast.error("Please fill all the details properly.");
       }
     } catch (error) {
-      toast.error("An error ocurred while saving the user.")
+      toast.error("An error ocurred while saving the user.");
       console.log("error :", error);
     }
-
   };
 
   const onCancel = () => {
@@ -504,10 +501,11 @@ const CreateUser = () => {
     <PageContainer>
       <div
         style={{
-          background: 'url("./images/particles-yellow.png") top right no-repeat',
-          backgroundSize: '80%',
-        }}>
-
+          background:
+            'url("./images/particles-yellow.png") top right no-repeat',
+          backgroundSize: "80%",
+        }}
+      >
         <div className={styles.topContainer}>
           <div className={styles.left}>
             <label> {userID ? "Update User" : "Create New User"}</label>
@@ -528,8 +526,8 @@ const CreateUser = () => {
             >
               <div className={styles.leftInputs}>
                 <Input
-                  customStyle={{ margin: '0rem' }}
-                  customLabelStyle={{ display: 'none' }}
+                  customStyle={{ margin: "0rem" }}
+                  customLabelStyle={{ display: "none" }}
                   type="text"
                   value={userData.username.value}
                   name={"username"}
@@ -562,9 +560,12 @@ const CreateUser = () => {
                   </select>
                 </div>
 
-
                 <div>
-                  <label style={{ marginTop: '0rem' }} htmlFor="dropdown_designation" className="select_label">
+                  <label
+                    style={{ marginTop: "0rem" }}
+                    htmlFor="dropdown_designation"
+                    className="select_label"
+                  >
                     Decision Maker:
                   </label>
                   <select
@@ -615,12 +616,11 @@ const CreateUser = () => {
                       })}
                   </select>
                 </div>
-
               </div>
               <div className={styles.rightInputs}>
                 <Input
-                  customStyle={{ margin: '0rem' }}
-                  customLabelStyle={{ display: 'none' }}
+                  customStyle={{ margin: "0rem" }}
+                  customLabelStyle={{ display: "none" }}
                   type="text"
                   value={userData.email.value}
                   name={"email"}
@@ -628,8 +628,8 @@ const CreateUser = () => {
                   onChange={onChange}
                 />
                 <Input
-                  customStyle={{ margin: '0rem' }}
-                  customLabelStyle={{ display: 'none' }}
+                  customStyle={{ margin: "0rem" }}
+                  customLabelStyle={{ display: "none" }}
                   type="tel"
                   value={userData.mobile.value}
                   name="mobile"
@@ -657,7 +657,6 @@ const CreateUser = () => {
           </Button>
           <Button onClick={onSubmit}> {userID ? "Update" : "Create"}</Button>
         </div>
-
       </div>
     </PageContainer>
   );
