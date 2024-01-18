@@ -27,7 +27,7 @@ const UserHomePage = () => {
 
   const { instanceID } = useParams();
 
-  console.log("InstanceID", instanceID);
+  // console.log("InstanceID", instanceID);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
