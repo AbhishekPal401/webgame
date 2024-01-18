@@ -151,7 +151,7 @@ const UserHomePage = () => {
   }, [instanceID]);
 
   useEffect(() => {
-    if (connectedUsers && connectedUsers.length >= 2) {
+    if (connectedUsers && connectedUsers.length >= 3) {
       setReady(true);
     } else {
       setReady(false);
