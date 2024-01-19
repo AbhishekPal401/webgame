@@ -334,10 +334,7 @@ const UserProfile = () => {
       };
 
       valid = false;
-    } else if (
-      userData.email.value.includes("@") &&
-      !validateEmail(userData.email.value)
-    ) {
+    } else if (!validateEmail(userData.email.value)) {
       data = {
         ...data,
         email: {

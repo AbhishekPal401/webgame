@@ -197,7 +197,7 @@ const CreateInstances = () => {
         } else if (!createGameInstanceResponse.success) {
             console.log(" error : ",createGameInstanceResponse?.message)
             // toast.error(createGameInstanceResponse?.message);
-            toast.error("An error occured while saving the instance.");
+            toast.error(createGameInstanceResponse?.message);
             dispatch(resetCreateGameInstanceState());
         } else {
             dispatch(resetCreateGameInstanceState());

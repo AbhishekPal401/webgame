@@ -96,7 +96,7 @@
   color: var(--input_label);
 }
 .optimalContainer > div:first-child > label,
-.selectedContainer > div:first-child > label{
+.selectedContainer > div:first-child > label {
   cursor: pointer;
 }
 /* Tree Data Container */
@@ -168,7 +168,6 @@
   flex-direction: column;
   gap: 2rem;
   height: fit-content;
-
 }
 .treeRightBottom > div:first-child {
   font-size: 1.4rem;
@@ -178,47 +177,58 @@
 
 /* Player Details table */
 .playerDetails {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-height: 15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 15rem;
 }
 .playerDetails,
-.playerDetails  div {
-    width: 100%;
+.playerDetails div {
+  width: 100%;
 }
 .playerDetails > .head:first-child {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
 }
-.playerDetails > .head:first-child  div{
-    font-size: 1.2rem;
-    font-family: "Helvetica 300";
-    color: var(--primary);
-    flex: 5;
+.playerDetails > .head:first-child div {
+  font-size: 1.2rem;
+  font-family: "Helvetica 300";
+  color: var(--primary);
+  flex: 5;
 }
 .playerDetails > .body:nth-child(2) {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    overflow-x: auto;
-    overflow-x: hidden;
-    height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-x: auto;
+  overflow-x: hidden;
+  height: 100%;
 }
-.playerDetails > .body:nth-child(2) .row{
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
+.playerDetails > .body:nth-child(2) .row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
 }
-.playerDetails > .body:nth-child(2) .row div{
-    font-size: 1.2rem;
-    font-family: "Helvetica 300";
-    color: var(--input_label);
-    flex: 5;
+.playerDetails > .body:nth-child(2) .row div {
+  font-size: 1.2rem;
+  font-family: "Helvetica 300";
+  color: var(--input_label);
+  flex: 5;
+}
+
+/* message  */
+.progressMessage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  font-size: 1.4rem;
+  font-family: "Helvetica 500";
+  color: var(--primary);
 }
 
 /* Button contaienr */
