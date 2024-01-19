@@ -24,6 +24,7 @@ const azure = () => {
         }
       })
       .catch((e) => {
+        console.log("error", e);
         toast.error(`Unable to login ${e?.message} `);
       });
   };

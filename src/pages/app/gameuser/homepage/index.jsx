@@ -18,7 +18,7 @@ import { signalRService } from "../../../../services/signalR";
 
 const UserHomePage = () => {
   const [ready, setReady] = useState(true);
-
+  const [inProgress, setInProgress] = useState(false);
   const { credentials } = useSelector((state) => state.login);
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
@@ -104,11 +104,53 @@ const UserHomePage = () => {
 
     if (questionDetails.success) {
       // toast.success(questionDetails.message);
-      navigate("/intro");
+      if (inProgress) {
+        setInProgress(false);
+        navigate("/gameplay");
+      } else {
+        navigate("/intro");
+      }
     } else {
       // toast.error(questionDetails.message);
     }
   }, [questionDetails]);
+
+  const getCurrentQuestion = async () => {
+    if (!ready || !isConnectedToServer) return;
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    const data = {
+      InstanceID: sessionData.InstanceID,
+      SessionID: sessionData.SessionID,
+      UserID: credentials.data.userID,
+      UserName: credentials.data.userName,
+      Designation: credentials?.data?.designation
+        ? credentials.data.designation
+        : "",
+    };
+
+    await signalRService.joinSession(data);
+    setReady(false);
+    setInProgress(true);
+
+    const questionPayload = {
+      sessionID: sessionData.SessionID,
+      scenarioID: sessionData.ScenarioID,
+      currentQuestionID: "",
+      currentQuestionNo: 0,
+      currentStatus: "InProgress",
+      userID: credentials.data.userID,
+      currentTotalScore: 0,
+      requester: {
+        requestID: generateGUID(),
+        requesterID: credentials.data.userID,
+        requesterName: credentials.data.userName,
+        requesterType: credentials.data.role,
+      },
+    };
+
+    dispatch(getNextQuestionDetails(questionPayload));
+  };
 
   return (
     <motion.div
@@ -125,9 +167,22 @@ const UserHomePage = () => {
         <div className={styles.players}>
           <div>
             {sessionDetails &&
-              sessionDetails.data &&
-              isJSONString(sessionDetails.data) &&
-              JSON.parse(sessionDetails.data)?.SessionID && (
+            sessionDetails.data &&
+            isJSONString(sessionDetails.data) &&
+            JSON.parse(sessionDetails.data)?.SessionID ? (
+              JSON.parse(sessionDetails.data)?.NextQuestionID &&
+              JSON.parse(sessionDetails.data)?.CurrentState === "InProgress" ? (
+                <Button
+                  onClick={getCurrentQuestion}
+                  customClassName={
+                    ready && isConnectedToServer
+                      ? styles.button
+                      : styles.buttonDisabled
+                  }
+                >
+                  Join Game
+                </Button>
+              ) : (
                 <Button
                   onClick={onsubmit}
                   customClassName={
@@ -138,7 +193,8 @@ const UserHomePage = () => {
                 >
                   Ready
                 </Button>
-              )}
+              )
+            ) : null}
           </div>
         </div>
       </div>
