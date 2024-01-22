@@ -56,6 +56,7 @@ const AdminGameLanding = () => {
       currentQuestionNo: 0,
       currentStatus: "Play",
       userID: credentials.data.userID,
+      ReConnection: false,
       currentTotalScore: 0,
       requester: {
         requestID: generateGUID(),

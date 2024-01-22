@@ -247,15 +247,25 @@ const GamePlay = () => {
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
-    if (questionDetails.success && callNextQuestion) {
-      setNextQuestionFetched(true);
-      setSelectedAnswer(null);
-      setAdminState("MakeDecision");
-      setShowDecision(false);
-      setVoteDetails([]);
-      setCurrentState(PlayingStates.VotingInProgress);
-      setStartedAt(Math.floor(Date.now() / 1000));
-      setCallNextQuestion(false);
+    if (questionDetails.success) {
+      if (callNextQuestion) {
+        setNextQuestionFetched(true);
+        setSelectedAnswer(null);
+        setAdminState("MakeDecision");
+        setShowDecision(false);
+        setVoteDetails([]);
+        setCurrentState(PlayingStates.VotingInProgress);
+        setStartedAt(Math.floor(Date.now() / 1000));
+        setCallNextQuestion(false);
+      } else {
+        if (questionDetails?.data?.HubLiveData) {
+          let hublivedata = questionDetails?.data?.HubLiveData;
+
+          if (isJSONString(questionDetails?.data?.HubLiveData)) {
+            hublivedata = JSON.parse(questionDetails?.data?.HubLiveData);
+          }
+        }
+      }
     } else if (questionDetails.success === false) {
     }
   }, [questionDetails]);

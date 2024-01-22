@@ -36,6 +36,7 @@ const UserHomePage = () => {
       currentQuestionID: "",
       currentQuestionNo: 0,
       currentStatus: "Play",
+      ReConnection: false,
       userID: credentials.data.userID,
       currentTotalScore: 0,
       requester: {
@@ -139,6 +140,7 @@ const UserHomePage = () => {
       currentQuestionID: "",
       currentQuestionNo: 0,
       currentStatus: "InProgress",
+      ReConnection: true,
       userID: credentials.data.userID,
       currentTotalScore: 0,
       requester: {

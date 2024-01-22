@@ -252,15 +252,91 @@ const GamePlay = () => {
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
-    if (questionDetails.success && callNextQuestion) {
-      setNextQuestionFetched(true);
-      setSelectedAnswer(null);
-      setStartedAt(Math.floor(Date.now() / 1000));
-      setCurrentState(PlayingStates.UserVote);
-      setCurrentQuestionSubmitted(false);
-      setShowModal(false);
-      setIsDecision(false);
-      setCallNextQuestion(false);
+    if (questionDetails.success) {
+      console.log("questionDetails", questionDetails);
+
+      if (callNextQuestion) {
+        setNextQuestionFetched(true);
+        setSelectedAnswer(null);
+        setStartedAt(Math.floor(Date.now() / 1000));
+        setCurrentQuestionSubmitted(false);
+        setCallNextQuestion(false);
+        setCurrentState(PlayingStates.UserVote);
+        setShowModal(false);
+        setIsDecision(false);
+      } else {
+        if (questionDetails?.data?.HubLiveData) {
+          let hublivedata = questionDetails?.data?.HubLiveData;
+
+          if (isJSONString(questionDetails?.data?.HubLiveData)) {
+            hublivedata = JSON.parse(questionDetails?.data?.HubLiveData);
+          }
+
+          let currentState = PlayingStates.UserVote;
+
+          if (
+            questionDetails?.data?.QuestionDetails?.QuestionID ===
+            hublivedata.QuestionID
+          ) {
+            setNextQuestionFetched(true);
+            setSelectedAnswer(null);
+            setStartedAt(Math.floor(Date.now() / 1000));
+            setCurrentQuestionSubmitted(false);
+            setCallNextQuestion(false);
+
+            //checking if user voted
+            if (Array.isArray(hublivedata.Votes)) {
+              hublivedata.Votes.forEach((answersubmitDetails) => {
+                answersubmitDetails.VotersInfo.forEach((userDetails) => {
+                  if (userDetails.UserID === credentials.data.userID) {
+                    currentState = PlayingStates.VotingCompleted;
+                  }
+                });
+              });
+            }
+
+            //checking if user made decision
+            if (Array.isArray(hublivedata.DecisionVote)) {
+              hublivedata.DecisionVote.forEach((answersubmitDetails) => {
+                answersubmitDetails.VotersInfo.forEach((userDetails) => {
+                  if (userDetails.UserID === credentials.data.userID) {
+                    currentState = PlayingStates.DecisionCompleted;
+                  }
+                });
+              });
+            }
+
+            if (
+              currentState === PlayingStates.VotingCompleted &&
+              hublivedata?.DecisionDisplayType === PlayingStates.VotingCompleted
+            ) {
+              setShowModal(true);
+            } else {
+              setShowModal(false);
+            }
+            setCurrentState(currentState);
+            setIsDecision(false);
+          } else {
+            setNextQuestionFetched(true);
+            setSelectedAnswer(null);
+            setStartedAt(Math.floor(Date.now() / 1000));
+            setCurrentState(PlayingStates.UserVote);
+            setCurrentQuestionSubmitted(false);
+            setShowModal(false);
+            setIsDecision(false);
+            setCallNextQuestion(false);
+          }
+        } else {
+          setNextQuestionFetched(true);
+          setSelectedAnswer(null);
+          setStartedAt(Math.floor(Date.now() / 1000));
+          setCurrentQuestionSubmitted(false);
+          setCallNextQuestion(false);
+          setCurrentState(PlayingStates.UserVote);
+          setShowModal(false);
+          setIsDecision(false);
+        }
+      }
     }
   }, [questionDetails, callNextQuestion]);
 

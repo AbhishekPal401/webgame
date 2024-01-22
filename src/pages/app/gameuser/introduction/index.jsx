@@ -27,6 +27,8 @@ const Intro = () => {
       currentQuestionID: "",
       currentQuestionNo: 0,
       currentStatus: "InProgress",
+      ReConnection: false,
+
       userID: credentials.data.userID,
       currentTotalScore: 0,
       requester: {
