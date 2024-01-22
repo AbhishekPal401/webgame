@@ -304,13 +304,30 @@ const GamePlay = () => {
   useEffect(() => {
     if (answerDetails === null || answerDetails === undefined) return;
     if (answerDetails.success && selectedAnswer) {
+      if (!isJSONString(sessionDetails.data)) return;
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      const data = {
+        InstanceID: sessionData.InstanceID,
+        SessionID: sessionData.SessionID,
+        UserID: credentials.data.userID,
+        UserName: credentials.data.userName,
+        ActionType: "AdminDeciderDecision",
+
+        Message: "Admin decision",
+
+        QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+        AnswerID: selectedAnswer.AnswerID,
+      };
+
+      console.log("send vote data", data);
+
+      signalRService.SendVotes(data);
+
       if (
         answerDetails.data.IsPlayCompleted ||
         answerDetails.data.NextQuestionID === ""
       ) {
-        if (!isJSONString(sessionDetails.data)) return;
-        const sessionData = JSON.parse(sessionDetails.data);
-
         const data = {
           InstanceID: sessionData.InstanceID,
           UserID: credentials.data.userID,
