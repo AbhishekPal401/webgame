@@ -9,6 +9,7 @@ import { validateEmail } from "../../../utils/validators";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../../store/auth/login.js";
 import Azure from "../../../pages/auth/azure/azure.jsx";
+import { toast } from "react-toastify";
 
 const LoginForm = () => {
   const [loginData, setLoginData] = useState({
@@ -32,6 +33,13 @@ const LoginForm = () => {
         error: "",
       },
     });
+  };
+
+  const onKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); 
+      loginSubmit(e);
+    }
   };
 
   const loginSubmit = (e) => {
@@ -94,6 +102,7 @@ const LoginForm = () => {
 
       dispatch(login(data));
     } else {
+      toast.error("Please enter valid credentials.")
       setLoginData(data);
     }
   };
@@ -115,6 +124,7 @@ const LoginForm = () => {
           label="Username"
           value={loginData.username.value}
           onChange={onChange}
+          onKeyPress={onKeyPress}
         />
         <Input
           type="password"
@@ -125,6 +135,7 @@ const LoginForm = () => {
             marginTop: "2rem",
           }}
           onChange={onChange}
+          onKeyPress={onKeyPress}
         />
       </div>
 
