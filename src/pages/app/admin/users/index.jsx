@@ -119,7 +119,12 @@ const Users = () => {
 
         <div className={styles.topContainer}>
           <div className={styles.left}>
-            <label>User Management</label>
+            <div>
+              <label>User Management</label>
+            </div>
+            <div>
+              <label>Users</label>
+            </div>
           </div>
           <div
             className={styles.right}
