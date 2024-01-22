@@ -102,7 +102,7 @@ const LoginForm = () => {
 
       dispatch(login(data));
     } else {
-      toast.error("Please enter valid credentials.")
+      toast.error("Please fill all the mandatory details.")
       setLoginData(data);
     }
   };
