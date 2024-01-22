@@ -456,7 +456,7 @@ const CreateUser = () => {
           const data = {
             userID: userID ? userID : "",
             userName: userData.username.value,
-            password: userID ? "pwc@123456" : "",
+            password: "",
             role: userData.role.value,
             email: userData.email.value,
             mobile: userData.mobile.value,
@@ -544,7 +544,7 @@ const CreateUser = () => {
                     className="select_input"
                     onChange={onOrganisationSelect}
                   >
-                    <option value="">Organisation</option>
+                    <option value="">Organization</option>
                     {masters &&
                       masters.data &&
                       isJSONString(masters.data) &&
