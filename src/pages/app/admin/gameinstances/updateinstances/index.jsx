@@ -611,18 +611,18 @@ const UpdateInstances = () => {
             valid = false;
         }
 
-        if (gameInstanceData?.groupSize?.value?.trim() === "") {
-            console.log("groupSize:", data.groupSize);
-            data = {
-                ...data,
-                groupSize: {
-                    ...data.groupSize,
-                    error: "Please select group size",
-                },
-            };
+        // if (gameInstanceData?.groupSize?.value?.trim() === "") {
+        //     console.log("groupSize:", data.groupSize);
+        //     data = {
+        //         ...data,
+        //         groupSize: {
+        //             ...data.groupSize,
+        //             error: "Please select group size",
+        //         },
+        //     };
 
-            valid = false;
-        }
+        //     valid = false;
+        // }
 
         if (gameInstanceData?.scenarioName?.value?.trim() === "") {
             console.log("scenarioName:", data.scenarioName);
@@ -637,18 +637,18 @@ const UpdateInstances = () => {
             valid = false;
         }
 
-        if (gameInstanceData?.level?.value?.trim() === "") {
-            console.log("level:", data.level);
-            data = {
-                ...data,
-                level: {
-                    ...data.level,
-                    error: "Please select level",
-                },
-            };
+        // if (gameInstanceData?.level?.value?.trim() === "") {
+        //     console.log("level:", data.level);
+        //     data = {
+        //         ...data,
+        //         level: {
+        //             ...data.level,
+        //             error: "Please select level",
+        //         },
+        //     };
 
-            valid = false;
-        }
+        //     valid = false;
+        // }
 
         // Validate each player in the updatedPlayers array
         updatedPlayers = updatedPlayers?.map((player) => {
@@ -834,7 +834,7 @@ const UpdateInstances = () => {
                                     </div>
                                     <div className={styles.field}>
                                         {/*Select Group Size :: start */}
-                                        <div>
+                                        {/* <div>
                                             <select
                                                 id="dropdown_group_size"
                                                 value={gameInstanceData?.groupSize?.value}
@@ -848,7 +848,7 @@ const UpdateInstances = () => {
                                                     </option>
                                                 ))}
                                             </select>
-                                        </div>
+                                        </div> */}
                                         {/*Select Group Size :: end */}
                                     </div>
                                 </div>
@@ -882,7 +882,7 @@ const UpdateInstances = () => {
                                     </div>
                                     <div className={styles.field}>
                                         {/*Select level :: start */}
-                                        <div>
+                                        {/* <div>
                                             <select
                                                 id="dropdown_level"
                                                 value={gameInstanceData?.level?.value}
@@ -896,7 +896,7 @@ const UpdateInstances = () => {
                                                     </option>
                                                 ))}
                                             </select>
-                                        </div>
+                                        </div> */}
                                         {/*Select level :: end */}
                                     </div>
                                     <div></div>
