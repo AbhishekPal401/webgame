@@ -130,11 +130,19 @@ const Homepage = () => {
                               onClick={() => {
                                 if (scenario.Status === "Create") {
                                   navigate(`/game/${scenario.InstanceID}`);
+                                } else if (
+                                  scenario.Status === "Start" ||
+                                  scenario.Status === "InProgress"
+                                ) {
+                                  navigate(`/game/${scenario.InstanceID}`);
                                 }
                               }}
                             >
                               {scenario.Status === "Create"
                                 ? "Start"
+                                : scenario.Status === "Start" ||
+                                  scenario.Status === "InProgress"
+                                ? "Join"
                                 : "Report"}
                             </Button>
                           </div>

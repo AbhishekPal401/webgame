@@ -257,6 +257,7 @@ const GamePlay = () => {
         setCurrentState(PlayingStates.VotingInProgress);
         setStartedAt(Math.floor(Date.now() / 1000));
         setCallNextQuestion(false);
+        setDecisionDetails([]);
       } else {
         if (questionDetails?.data?.HubLiveData) {
           let hublivedata = questionDetails?.data?.HubLiveData;
@@ -264,6 +265,69 @@ const GamePlay = () => {
           if (isJSONString(questionDetails?.data?.HubLiveData)) {
             hublivedata = JSON.parse(questionDetails?.data?.HubLiveData);
           }
+
+          let currentState = PlayingStates.VotingInProgress;
+          let currentQuestionSubmitted = false;
+
+          if (
+            questionDetails?.data?.QuestionDetails?.QuestionID ===
+            hublivedata.QuestionID
+          ) {
+            setNextQuestionFetched(true);
+            setSelectedAnswer(null);
+            setStartedAt(Math.floor(Date.now() / 1000));
+            setCallNextQuestion(false);
+            setShowDecision(false);
+
+            currentState = hublivedata?.DecisionDisplayType;
+
+            //checking if admin made decision
+            if (Array.isArray(hublivedata.DecisionVote)) {
+              hublivedata.DecisionVote.forEach((answersubmitDetails) => {
+                answersubmitDetails.VotersInfo.forEach((userDetails) => {
+                  if (userDetails.UserID === credentials.data.userID) {
+                    currentQuestionSubmitted = true;
+                  }
+                });
+              });
+            }
+
+            if (currentQuestionSubmitted) {
+              setAdminState("RevealDecision");
+            } else {
+              setAdminState("MakeDecision");
+            }
+
+            if (hublivedata.Votes) {
+              setVoteDetails(hublivedata.votes);
+            }
+
+            if (hublivedata.DecisionVote) {
+              setDecisionDetails(hublivedata.decisionVote);
+            }
+
+            setCurrentState(currentState);
+          } else {
+            setNextQuestionFetched(true);
+            setSelectedAnswer(null);
+            setAdminState("MakeDecision");
+            setShowDecision(false);
+            setVoteDetails([]);
+            setCurrentState(PlayingStates.VotingInProgress);
+            setStartedAt(Math.floor(Date.now() / 1000));
+            setCallNextQuestion(false);
+            setDecisionDetails([]);
+          }
+        } else {
+          setNextQuestionFetched(true);
+          setSelectedAnswer(null);
+          setAdminState("MakeDecision");
+          setShowDecision(false);
+          setVoteDetails([]);
+          setCurrentState(PlayingStates.VotingInProgress);
+          setStartedAt(Math.floor(Date.now() / 1000));
+          setCallNextQuestion(false);
+          setDecisionDetails([]);
         }
       }
     } else if (questionDetails.success === false) {

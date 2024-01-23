@@ -273,6 +273,7 @@ const GamePlay = () => {
           }
 
           let currentState = PlayingStates.UserVote;
+          let currentQuestionSubmitted = false;
 
           if (
             questionDetails?.data?.QuestionDetails?.QuestionID ===
@@ -281,15 +282,17 @@ const GamePlay = () => {
             setNextQuestionFetched(true);
             setSelectedAnswer(null);
             setStartedAt(Math.floor(Date.now() / 1000));
-            setCurrentQuestionSubmitted(false);
             setCallNextQuestion(false);
+
+            currentState = hublivedata?.DecisionDisplayType;
 
             //checking if user voted
             if (Array.isArray(hublivedata.Votes)) {
               hublivedata.Votes.forEach((answersubmitDetails) => {
                 answersubmitDetails.VotersInfo.forEach((userDetails) => {
                   if (userDetails.UserID === credentials.data.userID) {
-                    currentState = PlayingStates.VotingCompleted;
+                    // currentState = PlayingStates.VotingCompleted;
+                    currentQuestionSubmitted = true;
                   }
                 });
               });
@@ -306,15 +309,14 @@ const GamePlay = () => {
               });
             }
 
-            if (
-              currentState === PlayingStates.VotingCompleted &&
-              hublivedata?.DecisionDisplayType === PlayingStates.VotingCompleted
-            ) {
+            if (currentState === PlayingStates.VotingCompleted) {
               setShowModal(true);
             } else {
               setShowModal(false);
             }
             setCurrentState(currentState);
+            setCurrentQuestionSubmitted(currentQuestionSubmitted);
+
             setIsDecision(false);
           } else {
             setNextQuestionFetched(true);

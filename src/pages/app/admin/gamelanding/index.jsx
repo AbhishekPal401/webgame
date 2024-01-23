@@ -15,16 +15,22 @@ import {
 } from "../../../../store/app/user/questions/getNextQuestion";
 import { toast } from "react-toastify";
 import { signalRService } from "../../../../services/signalR";
+import { setActiveUsers } from "../../../../store/local/gameplay";
 
 const AdminGameLanding = () => {
   // const [connected, setConnected] = useState(false);
   const [ready, setReady] = useState(false);
-  const [connectedUsers, setConnectedUsers] = useState([]);
+  const [inProgress, setInProgress] = useState(false);
+  const [joinClick, setJoinClick] = useState(false);
+
+  // const [connectedUsers, setConnectedUsers] = useState([]);
 
   const { credentials } = useSelector((state) => state.login);
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
-  const { isConnectedToServer } = useSelector((state) => state.gameplay);
+  const { isConnectedToServer, activeUsers } = useSelector(
+    (state) => state.gameplay
+  );
 
   const { instanceID } = useParams();
 
@@ -94,7 +100,8 @@ const AdminGameLanding = () => {
 
         signalRService.connectedUsers((users) => {
           console.log("ConnectedUsers", users);
-          setConnectedUsers(users);
+          dispatch(setActiveUsers(users));
+          // setConnectedUsers(users);
         });
 
         signalRService.ReceiveNotification((actionType, message) => {
@@ -109,8 +116,20 @@ const AdminGameLanding = () => {
         console.error("Error during join room:", error);
       }
     };
+    let isReconnection = false;
+    if (
+      sessionDetails &&
+      sessionDetails.data &&
+      isJSONString(sessionDetails.data) &&
+      JSON.parse(sessionDetails.data)?.SessionID &&
+      JSON.parse(sessionDetails.data)?.NextQuestionID
+      //  &&
+      // JSON.parse(sessionDetails.data)?.CurrentState === "InProgress"
+    ) {
+      isReconnection = true;
+    }
 
-    if (isConnectedToServer) {
+    if (isConnectedToServer && !isReconnection) {
       startJoiningRoom();
     }
   }, [sessionDetails, isConnectedToServer]);
@@ -135,22 +154,69 @@ const AdminGameLanding = () => {
   }, [instanceID]);
 
   useEffect(() => {
-    if (connectedUsers && connectedUsers.length >= 3) {
+    if (activeUsers && activeUsers.length >= 3) {
       setReady(true);
     } else {
       setReady(false);
     }
-  }, [connectedUsers]);
+  }, [activeUsers]);
 
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
     if (questionDetails.success) {
-      navigate("/intro");
+      if (inProgress) {
+        navigate("/gameplay");
+      } else {
+        navigate("/intro");
+      }
     } else {
-      // toast.error(questionDetails.message);
+      toast.error(questionDetails.message);
+      setJoinClick(false);
     }
   }, [questionDetails]);
+
+  const getCurrentQuestion = async () => {
+    if (!isConnectedToServer) return;
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    const data = {
+      InstanceID: sessionData.InstanceID,
+      SessionID: sessionData.SessionID,
+      UserID: credentials.data.userID,
+      UserName: credentials.data.userName,
+      Designation: credentials?.data?.designation
+        ? credentials.data.designation
+        : "",
+    };
+
+    await signalRService.joinSession(data);
+    setInProgress(true);
+
+    signalRService.connectedUsers((users) => {
+      console.log("ConnectedUsers", users);
+      dispatch(setActiveUsers(users));
+    });
+
+    const questionPayload = {
+      sessionID: sessionData.SessionID,
+      scenarioID: sessionData.ScenarioID,
+      currentQuestionID: "",
+      currentQuestionNo: 0,
+      currentStatus: "InProgress",
+      ReConnection: true,
+      userID: credentials.data.userID,
+      currentTotalScore: 0,
+      requester: {
+        requestID: generateGUID(),
+        requesterID: credentials.data.userID,
+        requesterName: credentials.data.userName,
+        requesterType: credentials.data.role,
+      },
+    };
+
+    dispatch(getNextQuestionDetails(questionPayload));
+  };
 
   return (
     <motion.div
@@ -166,40 +232,72 @@ const AdminGameLanding = () => {
         <h1>Game of Risks</h1>
         <div className={styles.players}>
           <div>
-            <Button
-              onClick={() => {
-                if (ready) {
-                  startGame();
+            {sessionDetails &&
+            sessionDetails.data &&
+            isJSONString(sessionDetails.data) &&
+            JSON.parse(sessionDetails.data)?.SessionID &&
+            JSON.parse(sessionDetails.data)?.NextQuestionID ? (
+              //  &&
+              // JSON.parse(sessionDetails.data)?.CurrentState === "InProgress"
+              <Button
+                onClick={() => {
+                  if (!joinClick) {
+                    getCurrentQuestion();
+                    setJoinClick(false);
+                  }
+                }}
+                customClassName={
+                  !joinClick && isConnectedToServer
+                    ? styles.button
+                    : styles.buttonDisabled
                 }
-              }}
-              customClassName={ready ? styles.button : styles.buttonDisabled}
-            >
-              Start
-            </Button>
+              >
+                Join Game
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  if (ready) {
+                    startGame();
+                  }
+                }}
+                customClassName={ready ? styles.button : styles.buttonDisabled}
+              >
+                Start
+              </Button>
+            )}
           </div>
-          <div className={styles.wait}>
-            <div>Waiting for players to join</div>
-            <div className={styles.users}>
-              {connectedUsers &&
-                Array.isArray(connectedUsers) &&
-                connectedUsers.map((userDetails, index) => {
-                  if (userDetails.userID === credentials.data.userID)
-                    return null;
-                  return (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, x: "6em" }}
-                      animate={{ opacity: 1, x: "0" }}
-                      exit={{ opacity: 0, x: "-6rem" }}
-                      transition={{ duration: 0.8, damping: 10 }}
-                      className={styles.userbadge}
-                    >
-                      {userDetails.designation}
-                    </motion.div>
-                  );
-                })}
+          {sessionDetails &&
+          sessionDetails.data &&
+          isJSONString(sessionDetails.data) &&
+          JSON.parse(sessionDetails.data)?.SessionID &&
+          JSON.parse(sessionDetails.data)?.NextQuestionID ? (
+            <div></div>
+          ) : (
+            <div className={styles.wait}>
+              <div>Waiting for players to join</div>
+              <div className={styles.users}>
+                {activeUsers &&
+                  Array.isArray(activeUsers) &&
+                  activeUsers.map((userDetails, index) => {
+                    if (userDetails.userID === credentials.data.userID)
+                      return null;
+                    return (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: "6em" }}
+                        animate={{ opacity: 1, x: "0" }}
+                        exit={{ opacity: 0, x: "-6rem" }}
+                        transition={{ duration: 0.8, damping: 10 }}
+                        className={styles.userbadge}
+                      >
+                        {userDetails.designation}
+                      </motion.div>
+                    );
+                  })}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </motion.div>
