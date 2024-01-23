@@ -9,8 +9,6 @@ import ModalContainer from "../../../modal";
 import Button from "../../../common/button/index.jsx";
 
 const AdminSidebar = () => {
-  const { currentActive } = useSelector((state) => state.sidebar);
-
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const dispatch = useDispatch();
@@ -24,10 +22,32 @@ const AdminSidebar = () => {
           marginTop: "2rem",
         }}
         linkTo="/"
-        isActive={currentActive === "home"}
+        isActive={
+          location.pathname === "/" || location.pathname.includes("home")
+        }
         svgSrc="sprite.svg#homepage"
         onClick={() => {
           dispatch(setCurrentActive("home"));
+        }}
+      />
+
+      <ButtonLink
+        linkTo="/scenario"
+        isActive={location.pathname.includes("scenario") ||
+          location.pathname.includes("questions")
+        }
+        svgSrc="sprite.svg#scenario"
+        onClick={() => {
+          dispatch(setCurrentActive("scenario"));
+        }}
+      />
+
+      <ButtonLink
+        linkTo="/instances"
+        isActive={location.pathname.includes("instances")}
+        svgSrc="sprite.svg#instances"
+        onClick={() => {
+          dispatch(setCurrentActive("instances"));
         }}
       />
 

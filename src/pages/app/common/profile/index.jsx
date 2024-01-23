@@ -531,13 +531,14 @@ const UserProfile = () => {
   const onCancel = () => {
     if (userID) {
       setUserDetailState();
-      navigateTo("/users");
+      navigateTo(credentials.data.role === "1" ? "/users" : -1);
       return;
     } else {
       resetUserData();
       setImageURl(null);
     }
-    navigateTo("/users");
+    navigateTo(credentials.data.role === "1" ? "/users" : -1);
+
 
   };
 

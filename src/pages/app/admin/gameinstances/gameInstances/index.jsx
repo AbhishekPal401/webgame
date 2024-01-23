@@ -115,12 +115,7 @@ const GameInstances = () => {
                                                         <Checkbox />
                                                     </td>
                                                     <td>{index + 1}</td>
-                                                    <td
-                                                        className={styles.gameInstances}
-                                                        onClick={() => {
-                                                            navigate(`/instances/updateinstances/${gameInstance.InstanceID}`);
-                                                        }}
-                                                    >
+                                                    <td>
                                                         {gameInstance.InstanceName}
                                                     </td>
                                                     {/* <td
@@ -144,7 +139,11 @@ const GameInstances = () => {
                                                                     <use xlinkHref="sprite.svg#view_icon" />
                                                                 </svg>
                                                             </div>
-                                                            <div className={styles.circleSvg}>
+                                                            <div className={styles.circleSvg}
+                                                                onClick={() => {
+                                                                    navigate(`/instances/updateinstances/${gameInstance.InstanceID}`);
+                                                                }}
+                                                            >
                                                                 <svg height="14" width="14">
                                                                     <use xlinkHref="sprite.svg#edit_icon" />
                                                                 </svg>

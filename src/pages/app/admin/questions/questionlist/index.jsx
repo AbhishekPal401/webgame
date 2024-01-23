@@ -138,14 +138,7 @@ function QuestionList() {
                             <Checkbox />
                           </td>
                           <td>{index + 1}</td>
-                          <td
-                            className={styles.questions}
-                            onClick={() => {
-                              navigate(
-                                `/questions/${scenarioID}/questionbuilder/${question.QuestionID}`
-                              );
-                            }}
-                          >
+                          <td>
                             {question.QuestionText}
                           </td>
                           <td className={styles.scenarioDescription}>
@@ -156,7 +149,13 @@ function QuestionList() {
                           <td>{question.NarativeMedia}</td>
                           <td>
                             <div className={styles.actions}>
-                              <div className={styles.circleSvg}>
+                              <div className={styles.circleSvg}
+                                onClick={() => {
+                                  navigate(
+                                    `/questions/${scenarioID}/questionbuilder/${question.QuestionID}`
+                                  );
+                                }}
+                              >
                                 <svg height="14" width="14">
                                   <use xlinkHref="sprite.svg#edit_icon" />
                                 </svg>
