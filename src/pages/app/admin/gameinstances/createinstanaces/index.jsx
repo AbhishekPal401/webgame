@@ -1186,6 +1186,7 @@ const CreateInstances = () => {
                                                             className="select_input"
                                                             placeholder="Assign Role"
                                                             onChange={(e) => onPlayerChange(e, index, 'playerDesignation')}
+                                                            disabled
                                                         >
                                                             <option value={""}>Assign Role</option>
 
