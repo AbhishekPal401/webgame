@@ -30,7 +30,7 @@ const azure = () => {
 
   return (
     <Button customClassName={styles.microsoftLoginButton} onClick={openIdLogin}>
-      Login with PWC
+      Login via PWC
     </Button>
   );
 };

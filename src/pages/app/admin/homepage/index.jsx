@@ -110,16 +110,15 @@ const Homepage = () => {
                         <div className={styles.cardTopContainer}>
                           <div className={styles.cardTopContainerLeft}>
                             <h4>{scenario.InstanceName}</h4>
-                            <p>Scenario:{scenario.ScenarioName}</p>
-                            <p>Status: {scenario.Status}</p>
+                            <p>Scenario : {scenario.ScenarioName}</p>
+                            <p>Status : {scenario.Status}</p>
                           </div>
                           <div className={styles.cardTopContainerRight}></div>
                         </div>
                         <div className={styles.cardBottomContainer}>
                           <div className={styles.cardBottomContainerLeft}>
                             <p>
-                              Updated :
-                              {formatDateString(
+                              Updated : {formatDateString(
                                 scenario.UpdatedAt,
                                 dateFormats.DATE_FORMAT_8
                               )}

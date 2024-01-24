@@ -44,7 +44,7 @@
 }
 
 .forgotpassword {
-  text-decoration: none;
+  text-decoration: underline;
   color: var(--black);
   font-size: 1.4rem;
 }
