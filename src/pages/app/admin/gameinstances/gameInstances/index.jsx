@@ -99,6 +99,7 @@ const GameInstances = () => {
                                     {/* <th>Version</th> */}
                                     <th>Scenario Name</th>
                                     <th>Date Created</th>
+                                    <th>Date Played</th>
                                     <th>Status</th>
                                     <th></th>
                                 </tr>
@@ -126,6 +127,12 @@ const GameInstances = () => {
                                                     </td> */}
                                                     <td>{gameInstance.ScenarioName}</td>
                                                     <td>{formatDateString(gameInstance.CreatedAt)}</td>
+                                                    <td>
+                                                        {gameInstance.Status === "Completed" ?
+                                                            formatDateString(gameInstance.DatePlayed) :
+                                                            ""
+                                                        }
+                                                    </td>
                                                     <td>{gameInstance.Status}</td>
                                                     <td >
                                                         <div className={styles.actions}>
