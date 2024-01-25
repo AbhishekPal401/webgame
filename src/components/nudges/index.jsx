@@ -14,6 +14,7 @@ const Nudges = () => {
   const { credentials } = useSelector((state) => state.login);
 
   const sendNotification = () => {
+    console.log("called");
     if (!isJSONString(sessionDetails.data)) return;
     const sessionData = JSON.parse(sessionDetails.data);
 
