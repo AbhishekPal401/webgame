@@ -65,6 +65,11 @@ export const formatDateString = (dateTimeString, formatType = 'default') => {
             format: dateFormats.DATE_FORMAT_2,
             regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/
         },
+        {
+            format: dateFormats.DATE_FORMAT_11,
+            regex: /^([a-zA-Z]{3})\s+(\d{1,2})\s+(\d{4})\s+(\d{1,2}):(\d{2})([APMapm]{2})$/,
+        }
+
     ];
 
 

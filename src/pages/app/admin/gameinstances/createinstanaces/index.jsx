@@ -197,7 +197,7 @@ const CreateInstances = () => {
         } else if (!createGameInstanceResponse.success) {
             console.log(" error : ",createGameInstanceResponse?.message)
             // toast.error(createGameInstanceResponse?.message);
-            toast.error("An error occured while saving the instance.");
+            toast.error(createGameInstanceResponse?.message);
             dispatch(resetCreateGameInstanceState());
         } else {
             dispatch(resetCreateGameInstanceState());
@@ -786,18 +786,18 @@ const CreateInstances = () => {
             valid = false;
         }
 
-        if (gameInstanceData?.groupSize?.value?.trim() === "") {
-            console.log("groupSize:", data.groupSize);
-            data = {
-                ...data,
-                groupSize: {
-                    ...data.groupSize,
-                    error: "Please select group size",
-                },
-            };
+        // if (gameInstanceData?.groupSize?.value?.trim() === "") {
+        //     console.log("groupSize:", data.groupSize);
+        //     data = {
+        //         ...data,
+        //         groupSize: {
+        //             ...data.groupSize,
+        //             error: "Please select group size",
+        //         },
+        //     };
 
-            valid = false;
-        }
+        //     valid = false;
+        // }
 
         if (gameInstanceData?.scenarioName?.value?.trim() === "") {
             console.log("scenarioName:", data.scenarioName);
@@ -812,18 +812,18 @@ const CreateInstances = () => {
             valid = false;
         }
 
-        if (gameInstanceData?.level?.value?.trim() === "") {
-            console.log("level:", data.level);
-            data = {
-                ...data,
-                level: {
-                    ...data.level,
-                    error: "Please select level",
-                },
-            };
+        // if (gameInstanceData?.level?.value?.trim() === "") {
+        //     console.log("level:", data.level);
+        //     data = {
+        //         ...data,
+        //         level: {
+        //             ...data.level,
+        //             error: "Please select level",
+        //         },
+        //     };
 
-            valid = false;
-        }
+        //     valid = false;
+        // }
 
         // Validate each user in the updatedPlayers array
         updatedPlayers = updatedPlayers.map((player) => {
@@ -1025,7 +1025,7 @@ const CreateInstances = () => {
                                     </div>
                                     <div className={styles.field}>
                                         {/*Select Group Size :: start */}
-                                        <div>
+                                        {/* <div>
                                             <select
                                                 id="dropdown_group_size"
                                                 value={gameInstanceData.groupSize.value}
@@ -1039,7 +1039,7 @@ const CreateInstances = () => {
                                                     </option>
                                                 ))}
                                             </select>
-                                        </div>
+                                        </div> */}
                                         {/*Select Group Size :: end */}
                                     </div>
                                 </div>
@@ -1072,8 +1072,8 @@ const CreateInstances = () => {
                                         {/*Select Sceanrio Name :: end */}
                                     </div>
                                     <div className={styles.field}>
-                                        {/*Select Group Size :: start */}
-                                        <div>
+                                        {/*Select Level :: start */}
+                                        {/* <div>
                                             <select
                                                 id="dropdown_level"
                                                 value={gameInstanceData.level.value}
@@ -1087,8 +1087,8 @@ const CreateInstances = () => {
                                                     </option>
                                                 ))}
                                             </select>
-                                        </div>
-                                        {/*Select Group Size :: end */}
+                                        </div> */}
+                                        {/*Select Level :: end */}
                                     </div>
                                     <div></div>
                                     <div></div>
@@ -1186,6 +1186,7 @@ const CreateInstances = () => {
                                                             className="select_input"
                                                             placeholder="Assign Role"
                                                             onChange={(e) => onPlayerChange(e, index, 'playerDesignation')}
+                                                            disabled
                                                         >
                                                             <option value={""}>Assign Role</option>
 

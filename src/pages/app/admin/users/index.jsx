@@ -119,7 +119,12 @@ const Users = () => {
 
         <div className={styles.topContainer}>
           <div className={styles.left}>
-            <label>User Management</label>
+            <div>
+              <label>User Management</label>
+            </div>
+            <div>
+              <label>Users</label>
+            </div>
           </div>
           <div
             className={styles.right}
@@ -155,12 +160,7 @@ const Users = () => {
                   return (
                     <tr key={index}>
                       <td>{index + pageCount * (pageNumber - 1) + 1}</td>
-                      <td
-                        onClick={() => {
-                          navigate(`/users/createandedit/${user.UserID}`);
-                        }}
-                        className={styles.username}
-                      >
+                      <td>
                         {user?.UserName}
                       </td>
                       <td>{user?.Email}</td>
@@ -173,7 +173,11 @@ const Users = () => {
 
                       <td>
                         <div className={styles.actions}>
-                          <div className={styles.circleSvg}>
+                          <div className={styles.circleSvg}
+                            onClick={() => {
+                              navigate(`/users/createandedit/${user.UserID}`);
+                            }}
+                          >
                             <svg height="14" width="14">
                               <use xlinkHref="sprite.svg#edit_icon" />
                             </svg>

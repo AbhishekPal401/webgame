@@ -8,8 +8,8 @@ import Button from "../../../../../components/common/button";
 import SelectedTree from "../../../../../components/trees/selectedTree";
 import OptimalTree from "../../../../../components/trees/mission";
 import { generateGUID } from "../../../../../utils/common";
-import { getInstanceSummaryById } from "../../../../../store/app/admin/gameinstances/instanceSummary";
-import { getInstanceProgressyById } from "../../../../../store/app/admin/gameinstances/getInstanceProgress";
+import { getInstanceSummaryById, resetInstanceSummaryByIDState } from "../../../../../store/app/admin/gameinstances/instanceSummary";
+import { getInstanceProgressyById, resetInstanceProgressByIDState } from "../../../../../store/app/admin/gameinstances/getInstanceProgress";
 import {
     getOverviewGameDetailsById,
     resetOverviewGameDetailState
@@ -108,20 +108,22 @@ const ViewInstances = () => {
             dispatch(getOverviewGameDetailsById(data));
         }
         return () => {
+            dispatch(resetInstanceSummaryByIDState());
+            dispatch(resetInstanceProgressByIDState());
             dispatch(resetOverviewGameDetailState());
         }
     }, []);
 
 
-    useEffect(() => {
-        if (getOverviewGameByIdDetails === undefined || getOverviewGameByIdDetails === null )
-            return;
-        
-        if(getOverviewGameByIdDetails.success === false) {
-            toast.error(getOverviewGameByIdDetails.message)
-        }
+    // useEffect(() => {
+    //     if (getOverviewGameByIdDetails === undefined || getOverviewGameByIdDetails === null)
+    //         return;
 
-    }, [getOverviewGameByIdDetails]);
+    //     if (getOverviewGameByIdDetails.success === false) {
+    //         toast.error(getOverviewGameByIdDetails.message)
+    //     }
+
+    // }, [getOverviewGameByIdDetails]);
 
     const handleTabClick = useCallback(
         (tab) => {
@@ -194,7 +196,7 @@ const ViewInstances = () => {
                                 <div className={styles.verticalLine}>
                                 </div>
                                 <div className={styles.treeRight}>
-                                    {getOverviewGameByIdDetails &&
+                                    {/* {getOverviewGameByIdDetails &&
                                         getOverviewGameByIdDetails.success &&
                                         getOverviewGameByIdDetails.data &&
                                         getOverviewGameByIdDetails.data.map(
@@ -266,7 +268,69 @@ const ViewInstances = () => {
                                                     </div>
                                                 </div>
                                             )
-                                        )}
+                                        )} */}
+
+                                    {getOverviewGameByIdDetails &&
+                                        (getOverviewGameByIdDetails.success) ? (
+                                        getOverviewGameByIdDetails.data &&
+                                        getOverviewGameByIdDetails.data.map((data, index) => (
+                                            <div key={index} className={styles.treeRightContainer}>
+                                                <div className={styles.treeRightTop}>
+                                                    <div>
+                                                        <div>Game Played On</div>
+                                                        <div>- {data.GamePlayedOn && formatDateString(data.GamePlayedOn)}</div>
+                                                    </div>
+                                                    <div>
+                                                        <div>Time Spend</div>
+                                                        <div>- {data.TimeSpend && formatTime(data.TimeSpend)}</div>
+                                                    </div>
+                                                    <div>
+                                                        <div>Score</div>
+                                                        <div>- {data.Score}</div>
+                                                    </div>
+                                                    <div>
+                                                        <div>Game Scenario</div>
+                                                        <div>- {data.GameScenario}</div>
+                                                    </div>
+                                                    <div>
+                                                        <div>Game Instance</div>
+                                                        <div>- {data.GameInstance}</div>
+                                                    </div>
+                                                    <div>
+                                                        <div>Organization Name</div>
+                                                        <div>- {data.OrganizationName}</div>
+                                                    </div>
+                                                </div>
+                                                <div className={styles.treeRightBottom}>
+                                                    <div>Players Details</div>
+                                                    <div className={styles.playerDetails}>
+                                                        <div className={styles.head}>
+                                                            <div>Players Name</div>
+                                                            <div>Role Played</div>
+                                                        </div>
+                                                        <div className={styles.body}>
+                                                            {data &&
+                                                                data.Players &&
+                                                                data.Players.map((player, playerIndex) => (
+                                                                    <div key={playerIndex} className={styles.row}>
+                                                                        <div>{player.PlayersName}</div>
+                                                                        <div>{player.RolePlayed}</div>
+                                                                    </div>
+                                                                ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        (getOverviewGameByIdDetails &&
+                                            getOverviewGameByIdDetails.message &&
+                                            <div className={styles.progressMessage}>
+                                                {getOverviewGameByIdDetails.message}
+                                            </div>
+                                        )
+
+                                    )}
 
                                 </div>
                             </div>

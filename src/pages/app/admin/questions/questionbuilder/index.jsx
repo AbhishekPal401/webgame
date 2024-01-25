@@ -364,8 +364,7 @@ function QuestionBuilder() {
       valid = false;
     }
 
-    if ((supportFileDisplayURL === null ||
-      supportFileDisplayURL === undefined) &&
+    if (!supportFileDisplayURL &&
       questionData?.narrativeMedia?.value === "") {
       console.log("narrativeMedia:", data.narrativeMedia);
       data = {
@@ -677,7 +676,7 @@ function QuestionBuilder() {
                       <label>Score</label>
                       <label>Next Question</label>
                       <label>Consequence</label>
-                      <label>Narrative</label>
+                      {/* <label>Narrative</label> */}
                     </div>
                     {questionData.answers.map((answer, index) => (
                       <div key={index} className={styles.answerInputFields}>
@@ -769,9 +768,9 @@ function QuestionBuilder() {
                         {/* Consequence :: end  */}
 
                         {/* Narrative :: start  */}
-                        <div className={styles.narrative}>
+                        {/* <div className={styles.narrative}>
                           <p>Choose File</p>
-                        </div>
+                        </div> */}
                         {/* Narrative :: end  */}
                       </div>
                     ))}

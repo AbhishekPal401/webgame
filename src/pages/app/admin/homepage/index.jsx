@@ -110,16 +110,15 @@ const Homepage = () => {
                         <div className={styles.cardTopContainer}>
                           <div className={styles.cardTopContainerLeft}>
                             <h4>{scenario.InstanceName}</h4>
-                            <p>Scenario:{scenario.ScenarioName}</p>
-                            <p>Status: {scenario.Status}</p>
+                            <p>Scenario : {scenario.ScenarioName}</p>
+                            <p>Status : {scenario.Status}</p>
                           </div>
                           <div className={styles.cardTopContainerRight}></div>
                         </div>
                         <div className={styles.cardBottomContainer}>
                           <div className={styles.cardBottomContainerLeft}>
                             <p>
-                              Updated :
-                              {formatDateString(
+                              Updated : {formatDateString(
                                 scenario.UpdatedAt,
                                 dateFormats.DATE_FORMAT_8
                               )}
@@ -180,7 +179,9 @@ const Homepage = () => {
                     <th>Description</th>
                     <th>Date Created</th>
                     <th>Games Played</th>
+                    <th>Last Played</th>
                     <th>Status</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -195,20 +196,43 @@ const Homepage = () => {
                               <Checkbox />
                             </td>
                             <td>{index + 1}</td>
-                            <td
-                              className={styles.scenarioName}
-                              onClick={() => {
-                                navigate(
-                                  `/scenario/updatescenarios/${scenario.ScenarioID}`
-                                );
-                              }}
-                            >
+                            <td>
                               {scenario.ScenarioName}
                             </td>
-                            <td>{scenario.Description}</td>
+                            <td
+                              className={styles.scenarioDescription}
+                              onClick={() => {
+                                navigate(`/questions/${scenario.ScenarioID}`);
+                              }}
+                            >{scenario.Description}</td>
                             <td>{formatDateString(scenario.CreatedAt)}</td>
                             <td>{scenario.GamesPlayed}</td>
+                            <td>{scenario.LastPlayed != null || scenario.LastPlayed != undefined ?
+                              formatDateString(scenario.LastPlayed) :
+                              ""
+                            }
+                            </td>
                             <td>{scenario.Status}</td>
+                            <td>
+                              <div className={styles.actions}>
+                                <div className={styles.circleSvg}
+                                  onClick={() => {
+                                    navigate(
+                                      `/scenario/updatescenarios/${scenario.ScenarioID}`
+                                    );
+                                  }}
+                                >
+                                  <svg height="14" width="14">
+                                    <use xlinkHref="sprite.svg#edit_icon" />
+                                  </svg>
+                                </div>
+                                <div className={styles.circleSvg}>
+                                  <svg height="14" width="14">
+                                    <use xlinkHref="sprite.svg#delete_icon" />
+                                  </svg>
+                                </div>
+                              </div>
+                            </td>
                           </tr>
                         );
                       }

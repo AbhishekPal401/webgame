@@ -1,8 +1,10 @@
 .microsoftLoginButton {
   width: 100%;
   height: auto;
-  background-color: rgb(255, 241, 162);
-  border: 0.2rem solid rgb(248, 248, 107);
+  /* background-color: rgb(255, 241, 162);
+  border: 0.2rem solid rgb(248, 248, 107); */
+  background-color: Beige;
+  border: 0.2rem solid #ffe297 !important;
   color: #171717;
   display: inline-block;
   font-family: "Helvetica 400";

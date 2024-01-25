@@ -334,10 +334,7 @@ const UserProfile = () => {
       };
 
       valid = false;
-    } else if (
-      userData.email.value.includes("@") &&
-      !validateEmail(userData.email.value)
-    ) {
+    } else if (!validateEmail(userData.email.value)) {
       data = {
         ...data,
         email: {
@@ -534,13 +531,14 @@ const UserProfile = () => {
   const onCancel = () => {
     if (userID) {
       setUserDetailState();
-      navigateTo("/users");
+      navigateTo(credentials.data.role === "1" ? "/users" : -1);
       return;
     } else {
       resetUserData();
       setImageURl(null);
     }
-    navigateTo("/users");
+    navigateTo(credentials.data.role === "1" ? "/users" : -1);
+
 
   };
 
