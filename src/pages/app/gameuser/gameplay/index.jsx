@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./gameplay.module.css";
 import { motion } from "framer-motion";
 import CountDown from "../../../../components/ui/countdown";
@@ -26,6 +26,8 @@ import {
 import RealTimeTree from "../../../../components/trees/realtime";
 import Loader from "../../../../components/loader";
 import ModalContainer from "../../../../components/modal";
+import { setActiveUsers } from "../../../../store/local/gameplay";
+import TeamMembers from "../../../../components/teammembers";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -111,6 +113,8 @@ const GamePlay = () => {
 
   const [showDecisionTree, setShowDecisionTree] = useState(false);
 
+  const [position, setPosition] = useState(0);
+
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { credentials } = useSelector((state) => state.login);
@@ -118,6 +122,16 @@ const GamePlay = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const alerRef = useRef();
+
+  useEffect(() => {
+    if (alerRef.current) {
+      const divRect = alerRef.current.getBoundingClientRect();
+      const topPosition = divRect.bottom + window.scrollY - 40;
+      setPosition(topPosition);
+    }
+  }, []);
 
   useEffect(() => {
     const handleVotingDetails = (votesDetails) => {
@@ -145,6 +159,27 @@ const GamePlay = () => {
     };
 
     signalRService.GetVotingDetails(handleVotingDetails);
+
+    signalRService.connectedUsers((users) => {
+      console.log("ConnectedUsers", users);
+      dispatch(setActiveUsers(users));
+    });
+
+    signalRService.NotificationListener((ActionType, Message) => {
+      console.log("NotificationListener", ActionType, Message);
+
+      if (ActionType === "Nudges") {
+        if (Message) {
+          toast.success(Message, {
+            containerId: "alert_messages",
+            position: "top-right",
+            style: {
+              top: `${position}px`,
+            },
+          });
+        }
+      }
+    });
 
     return () => {
       signalRService.GetVotingDetailsOff(handleVotingDetails);
@@ -478,21 +513,8 @@ const GamePlay = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.notification}>
-            <div>
-              <svg
-                onClick={() => {
-                  if (!isJSONString(sessionDetails.data)) return;
-                  const sessionData = JSON.parse(sessionDetails.data);
-
-                  const data = {
-                    InstanceID: sessionData.InstanceID,
-                    UserID: credentials.data.userID,
-                    isFinalPlay: "Yes",
-                  };
-
-                  signalRService.ProceedToNextQuestionInvoke(data);
-                }}
-              >
+            <div ref={alerRef}>
+              <svg id="alert_messages">
                 <use xlinkHref={"sprite.svg#notifcation"} />
               </svg>
             </div>
@@ -500,12 +522,7 @@ const GamePlay = () => {
             <div></div>
           </div>
           <div className={styles.accordian}>
-            <div>Team Members</div>
-            <div>
-              <svg onClick={() => {}}>
-                <use xlinkHref={"sprite.svg#up_arrow"} />
-              </svg>
-            </div>
+            <TeamMembers />
           </div>
         </div>
       </div>

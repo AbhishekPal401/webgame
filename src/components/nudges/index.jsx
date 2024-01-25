@@ -1,9 +1,42 @@
 import React, { useState } from "react";
 import styles from "./nudges.module.css";
 import Button from "../common/button";
+import { signalRService } from "../../services/signalR";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { isJSONString } from "../../utils/common";
 
 const Nudges = () => {
   const [show, setShow] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const { sessionDetails } = useSelector((state) => state.getSession);
+  const { credentials } = useSelector((state) => state.login);
+
+  const sendNotification = () => {
+    if (!isJSONString(sessionDetails.data)) return;
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    if (message === "") {
+      toast.error("Message cannot be empty");
+      return;
+    }
+
+    const data = {
+      InstanceID: sessionData.InstanceID,
+      UserID: credentials.data.userID,
+
+      UserRole: credentials.data.role,
+      UserName: credentials.data.userName,
+
+      ActionType: "Nudges",
+      Message: message,
+    };
+
+    signalRService.NotificationInvoke(data);
+
+    setMessage("");
+  };
 
   return (
     <div className={styles.container}>
@@ -25,10 +58,16 @@ const Nudges = () => {
       {show && (
         <div className={styles.description}>
           <div className={styles.input}>
-            <textarea draggable={false}></textarea>
+            <textarea
+              value={message}
+              draggable={false}
+              onChange={(e) => {
+                setMessage(e.target.value);
+              }}
+            ></textarea>
           </div>
           <div className={styles.buttonContainer}>
-            <Button>Send</Button>
+            <Button onClick={sendNotification}>Send</Button>
           </div>
         </div>
       )}

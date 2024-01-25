@@ -143,12 +143,36 @@ class SignalRService {
     }
   }
 
+  async NotificationInvoke(data) {
+    try {
+      this.hubConnection.invoke("Notifications", data);
+    } catch (error) {
+      console.error("Error while sending Notifications:", error);
+      throw error;
+    }
+  }
+
+  async NotificationListener(callback = () => {}) {
+    try {
+      this.hubConnection.on("Notifications", (ActionType, Message) => {
+        callback(ActionType, Message);
+      });
+    } catch (error) {
+      console.error("Error while listening Notifications:", error);
+      throw error;
+    }
+  }
+
   GetVotingDetailsOff(callback) {
     this.hubConnection.off("ReceiveVotingInfo", callback);
   }
 
   ProceedToNextQuestionListenerOff(callback) {
     this.hubConnection.off("ProceedToNextQuestion", callback);
+  }
+
+  NotificationListenerOff(callback = () => {}) {
+    this.hubConnection.off("Notifications", callback);
   }
 
   // Ensure a single instance of SignalRService is used

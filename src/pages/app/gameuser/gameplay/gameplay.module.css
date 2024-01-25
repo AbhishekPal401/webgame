@@ -193,29 +193,6 @@
   background-color: var(--primary);
 }
 .accordian {
-  width: 24rem;
-  height: 3.5rem;
-  background-color: var(--innerbackground);
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 1rem;
-}
-
-.accordian > div:nth-child(1) {
-  font-size: 1.4rem;
-  font-family: "helvetica 300";
-}
-
-.accordian > div:nth-child(2) {
-  width: 1.4rem;
-  font-size: 3rem;
-  color: var(--black);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: "helvetica 300";
 }
 
 .tree,

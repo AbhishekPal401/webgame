@@ -74,6 +74,7 @@
 .itemDetails > div {
   font-size: 1.1rem;
   font-family: "helvetica 400";
+  text-transform: capitalize;
 }
 
 .itemDetails > div:nth-child(1) {
@@ -85,12 +86,24 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  text-transform: uppercase;
 }
 
-.itemDetails > div:nth-child(4) {
+.active {
   width: 1rem !important;
   flex: none !important;
   height: 1rem;
   border-radius: 1rem;
   background-color: var(--green);
+}
+
+.inactive {
+  width: 1rem !important;
+  flex: none !important;
+  height: 1rem;
+  border-radius: 1rem;
+  background-color: #7d7d7d;
+}
+
+.itemDetails > div:nth-child(4) {
 }

@@ -18,12 +18,9 @@ import { signalRService } from "../../../../services/signalR";
 import { setActiveUsers } from "../../../../store/local/gameplay";
 
 const AdminGameLanding = () => {
-  // const [connected, setConnected] = useState(false);
   const [ready, setReady] = useState(false);
   const [inProgress, setInProgress] = useState(false);
   const [joinClick, setJoinClick] = useState(false);
-
-  // const [connectedUsers, setConnectedUsers] = useState([]);
 
   const { credentials } = useSelector((state) => state.login);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -101,7 +98,6 @@ const AdminGameLanding = () => {
         signalRService.connectedUsers((users) => {
           console.log("ConnectedUsers", users);
           dispatch(setActiveUsers(users));
-          // setConnectedUsers(users);
         });
 
         signalRService.ReceiveNotification((actionType, message) => {
