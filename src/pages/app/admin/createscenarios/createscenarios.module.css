@@ -38,7 +38,7 @@
 }
 .formContainer {
   width: 100%;
-  height: 20rem;
+  height: fit-content;
   display: flex;
   flex-direction: row;
   overflow: hidden;
@@ -69,6 +69,10 @@
 .createScenarioFormRight .verticalLine,
 .createScenarioRightInputs {
   transform: scaleY(-1); /* Reset rotation for inner contents */
+}
+.createScenarioLeftInputs {
+  height: fit-content;
+
 }
 
 .inputLabel {
@@ -145,6 +149,7 @@
   font: normal;
   height: 100%; /* to do change height to % */
   resize: none;
+  font-family: 'Helvetica 500';
 }
 
 .buttonContainer {

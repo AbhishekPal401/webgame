@@ -41,6 +41,28 @@ const CreateScenario = () => {
   const [resetFile, setResetFile] = useState(false);
   const [introFileDisplay, setIntroFileDisplay] = useState(null);
 
+  console.log(" scenario data :", scenarioData)
+
+  const allowedFileTypesArray = [
+    fileTypes.AUDIO_EXTENSION,
+    fileTypes.MIME_AUDIO_1,
+    fileTypes.MIME_AUDIO_2,
+    fileTypes.VIDEO_EXTENSION,
+    fileTypes.MIME_VIDEO,
+    fileTypes.IMAGE_EXTENSION_1,
+    fileTypes.IMAGE_EXTENSION_2,
+    fileTypes.IMAGE_EXTENSION_3,
+    fileTypes.MIME_IMAGE_1,
+    fileTypes.MIME_IMAGE_2,
+    fileTypes.MIME_IMAGE_3,
+    fileTypes.MIME_PDF_1,
+    fileTypes.PDF_EXTENSION,
+    fileTypes.MIME_POWERPOINT_1,
+    fileTypes.MIME_POWERPOINT_2,
+    fileTypes.MIME_POWERPOINT_3,
+    fileTypes.POWERPOINT_EXTENSION,
+  ]
+
   const { credentials } = useSelector((state) => state.login);
 
   const { createScenarioResponse } = useSelector(
@@ -48,6 +70,19 @@ const CreateScenario = () => {
   );
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
+
+  const onResetFile = useCallback(
+    (file) => {
+      setScenarioData((prevScenarioData) => ({
+        ...prevScenarioData,
+        gameIntroVideo: {
+          value: "",
+          error: "",
+        },
+      }));
+    },
+    [scenarioData]
+  );
 
   useEffect(() => {
     if (createScenarioResponse === null || createScenarioResponse === undefined)
@@ -304,7 +339,7 @@ const CreateScenario = () => {
                 <Input
                   value={scenarioData?.scenarioDescription?.value}
                   labelStyle={styles.inputLabel}
-                  customStyle={{ height: "70%" }}
+                  customStyle={{ height: "15rem" }}
                   name={"scenarioDescription"}
                   placeholder="Scenario Description"
                   textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
@@ -331,7 +366,7 @@ const CreateScenario = () => {
                 <Input
                   value={scenarioData?.gameIntroText?.value}
                   labelStyle={styles.inputLabel}
-                  customStyle={{ height: "80%" }}
+                  customStyle={{ height: "15rem" }}
                   name={"gameIntroText"}
                   placeholder="Add Game Intro Text"
                   textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
@@ -349,19 +384,14 @@ const CreateScenario = () => {
                     setUrl={(file) => {
                       setIntroFileDisplay(file);
                     }}
-                    hint="Eligible Formats: MP4 and MP3"
+                    hint="Eligible Formats: MP4, Image and PDF"
                     onUpload={onUpload}
+                    onResetFile={onResetFile}
                     resetFile={resetFile}
                     fileSrcType={
                       introFileDisplay && extractFileType(introFileDisplay)
                     }
-                    allowedFileTypes={[
-                      fileTypes.AUDIO_EXTENSION,
-                      fileTypes.MIME_AUDIO_1,
-                      fileTypes.MIME_AUDIO_2,
-                      fileTypes.VIDEO_EXTENSION,
-                      fileTypes.MIME_VIDEO,
-                    ]}
+                    allowedFileTypes={allowedFileTypesArray}
                   />
                 </div>
                 <div className={styles.imageDropZoneContainerRight}></div>

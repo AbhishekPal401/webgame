@@ -85,10 +85,10 @@
   margin-top: 0;
 }
 .fileDropZone {
-  height: 23rem;
+  height: fit-content;
 }
 .customFileContianer {
-  height: 100%;
+  height: 18rem;
 }
 .questionInputEmptyRight,
 .answerInputEmptyRight {

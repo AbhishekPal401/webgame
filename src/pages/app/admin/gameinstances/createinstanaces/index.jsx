@@ -177,6 +177,13 @@ const CreateInstances = () => {
             resetGameInstanceData();
         };
         fetchData();
+
+        // return() => {
+        //     console.log("Cleanup executed.")
+        //     dispatch(resetGroupDetailsByOrgIDState());
+        //     dispatch(resetGamePlayerDetailsByGroupIDState());
+        //     resetGameInstanceData();
+        // }
     }, []);
 
     //update game instance details

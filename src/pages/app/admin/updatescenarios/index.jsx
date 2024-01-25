@@ -21,7 +21,7 @@ import {
   resetScenarioDetailState,
 } from "../../../../store/app/admin/scenario/getScenarioById.js";
 import { isJSONString } from "../../../../utils/common.js";
-import { formatDateString } from "../../../../utils/helper.js";
+import { extractFileInfo, formatDateString } from "../../../../utils/helper.js";
 import { dateFormats } from "../../../../constants/date.js";
 import { fileTypes } from "../../../../constants/filetypes.js";
 import { extractFileType } from "../../../../utils/helper.js";
@@ -56,6 +56,28 @@ const UpdateScenarios = () => {
     type: null,
   });
   const [introFileDisplay, setIntroFileDisplay] = useState(null);
+
+  const allowedFileTypesArray = [
+    fileTypes.AUDIO_EXTENSION,
+    fileTypes.MIME_AUDIO_1,
+    fileTypes.MIME_AUDIO_2,
+    fileTypes.VIDEO_EXTENSION,
+    fileTypes.MIME_VIDEO,
+    fileTypes.IMAGE_EXTENSION_1,
+    fileTypes.IMAGE_EXTENSION_2,
+    fileTypes.IMAGE_EXTENSION_3,
+    fileTypes.MIME_IMAGE_1,
+    fileTypes.MIME_IMAGE_2,
+    fileTypes.MIME_IMAGE_3,
+    fileTypes.MIME_PDF_1,
+    fileTypes.PDF_EXTENSION,
+    fileTypes.MIME_POWERPOINT_1,
+    fileTypes.MIME_POWERPOINT_2,
+    fileTypes.MIME_POWERPOINT_3,
+    fileTypes.POWERPOINT_EXTENSION,
+  ]
+
+  console.log(" scenario data :",scenarioData)
 
   const { credentials } = useSelector((state) => state.login);
 
@@ -236,6 +258,19 @@ const UpdateScenarios = () => {
     [scenarioData]
   );
 
+  const onResetFile = useCallback(
+    (file) => {
+      setScenarioData((prevScenarioData) => ({
+        ...prevScenarioData,
+        gameIntroFile: {
+          value: "",
+          error: "",
+        },
+      }));
+    },
+    [scenarioData]
+  );
+
   // Update scenario on submit
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -283,7 +318,7 @@ const UpdateScenarios = () => {
       valid = false;
     }
 
-    if (!scenarioID && scenarioData?.gameIntroFile?.value === "") {
+    if ((!scenarioID || !introFileDisplay)&& scenarioData?.gameIntroFile?.value === "") {
       console.log("gameIntroFile:", data.gameIntroFile);
       data = {
         ...data,
@@ -451,7 +486,7 @@ const UpdateScenarios = () => {
                 <Input
                   value={scenarioData?.scenarioDescription?.value}
                   labelStyle={styles.inputLabel}
-                  customStyle={{ height: "70%" }}
+                  customStyle={{ height: "15rem" }}
                   name={"scenarioDescription"}
                   placeholder="Scenario Description"
                   textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
@@ -478,7 +513,7 @@ const UpdateScenarios = () => {
                 <Input
                   value={scenarioData?.gameIntroText?.value}
                   labelStyle={styles.inputLabel}
-                  customStyle={{ height: "80%" }}
+                  customStyle={{ height: "15rem" }}
                   name={"gameIntroText"}
                   placeholder="Add Game Intro Text"
                   textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
@@ -492,15 +527,10 @@ const UpdateScenarios = () => {
                   <FileDropZone
                     customstyle={{ marginTop: "1rem" }}
                     label="Upload Game Intro Video"
-                    hint="Eligible Formats: MP4 and MP3"
-                    allowedFileTypes={[
-                      fileTypes.AUDIO_EXTENSION,
-                      fileTypes.VIDEO_EXTENSION,
-                      fileTypes.MIME_AUDIO_1,
-                      fileTypes.MIME_AUDIO_2,
-                      fileTypes.MIME_VIDEO,
-                    ]}
+                    hint="Eligible Formats: MP4, Image and PDF"
+                    allowedFileTypes={allowedFileTypesArray}
                     onUpload={onUpload}
+                    onResetFile={onResetFile}
                     fileSrc={introFileDisplay}
                     setUrl={(file) => {
                       setIntroFileDisplay(file);
@@ -508,6 +538,7 @@ const UpdateScenarios = () => {
                     fileSrcType={
                       introFileDisplay && extractFileType(introFileDisplay)
                     }
+                    fileName={introFileDisplay && extractFileInfo(introFileDisplay).name}
                   />
                 </div>
                 <div className={styles.imageDropZoneContainerRight}></div>

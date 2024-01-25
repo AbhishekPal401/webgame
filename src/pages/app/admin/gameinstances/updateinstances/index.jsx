@@ -159,24 +159,35 @@ const UpdateInstances = () => {
     //     }
     // }, []);
 
-    // useEffect(() => {
-    //     console.log("game instance state :", gameInstanceData)
+    useEffect(() => {
+        console.log("game instance state :", gameInstanceData)
 
-    // }, [gameInstanceData]);
+    }, [gameInstanceData]);
 
     //DEBUG :: end
 
     //dispatch request to get the the masters and getScenarioNameAndIdDetails
     useEffect(() => {
-        const fetchData = async () => {
-            await dispatch(getAllMasters());
-            await dispatch(getScenarioNameAndIdDetails());
+        // const fetchData = async () => {
+        //     await dispatch(getAllMasters());
+        //     await dispatch(getScenarioNameAndIdDetails());
 
-            // await dispatch(resetGroupDetailsByOrgIDState());
-            // await dispatch(resetGamePlayerDetailsByGroupIDState());
-            // resetGameInstanceData();
+        //     // await dispatch(resetGroupDetailsByOrgIDState());
+        //     // await dispatch(resetGamePlayerDetailsByGroupIDState());
+        //     // awaiit resetGameInstanceData();
+        // };
+        // fetchData();
+        dispatch(getAllMasters());
+        dispatch(getScenarioNameAndIdDetails());
+        // resetGameInstanceData();
+
+        return () => {
+            resetGameInstanceData();
+            dispatch(resetGameInstanceDetailState());
+            dispatch(resetGroupDetailsByOrgIDState());
+            dispatch(resetGamePlayerDetailsByGroupIDState());
+            console.log("Cleanup  function executed");
         };
-        fetchData();
     }, []);
 
 
@@ -225,20 +236,37 @@ const UpdateInstances = () => {
 
     // check if we have instanceID and dispatch a request to get game instace details by ID
     useEffect(() => {
-        const fetchData = async () => {
-            if (instanceID === null || instanceID === undefined) {
-                resetGameInstanceData();
-            } else {
-                const data = {
-                    instanceID: instanceID,
-                };
-                await dispatch(
-                    getGameInstanceDetailsByID(data)
-                );
-            }
+        // const fetchData = async () => {
+        //     if (instanceID === null || instanceID === undefined) {
+        //         resetGameInstanceData();
+        //     } else {
+        //         const data = {
+        //             instanceID: instanceID,
+        //         };
+        //         await dispatch(
+        //             getGameInstanceDetailsByID(data)
+        //         );
+        //     }
+        // }
+
+        // fetchData();
+
+        if (instanceID === null || instanceID === undefined) {
+            resetGameInstanceData();
+        } else {
+            const data = {
+                instanceID: instanceID,
+            };
+            dispatch(
+                getGameInstanceDetailsByID(data)
+            );
         }
 
-        fetchData();
+        return () => {
+            // dispatch(resetGameInstanceDetailState())
+            console.log("Cleanup getGameInstanceDetailsByID function executed");
+        };
+
     }, [instanceID]);
 
 
@@ -314,7 +342,10 @@ const UpdateInstances = () => {
             }
 
             console.log("setGameInstanceDetailState new data :", newData);
-            setGameInstanceData(newData);
+            setGameInstanceData((previousData) => ({
+                ...previousData,
+                ...newData
+            }));
         }
     }, [gameInstanceByIdDetails]);
 
@@ -335,19 +366,28 @@ const UpdateInstances = () => {
             gameInstanceByIdDetails === undefined) {
             return;
         }
-        else if (gameInstanceData.organization.value === undefined ||
-            gameInstanceData.organization.value === null) {
+        // else if (
+        //     !gameInstanceData.organization?.value?.trim()
+        // ) {
 
-            console.log("organizationID is not present")
-        }
+        //     console.log("organizationID is not present :", gameInstanceData.organization)
+        // }
         else {
+            const organizationId = JSON.parse(gameInstanceByIdDetails.data).InstanceDetailsByID.OrganizationID;
             const data = {
-                organizationID: gameInstanceData.organization.value,
+                organizationID: organizationId,
             }
-            console.log("organizationID data :", data);
+            console.log("organization data from store :", JSON.parse(gameInstanceByIdDetails.data).InstanceDetailsByID.OrganizationID)
+            console.log("organizationID in local state :", data);
+            console.log("state when fetching  group by orgID :", gameInstanceData);
+
 
             dispatch(getGroupDetailsByOrgID(data));
 
+            return () => {
+                // dispatch(resetGroupDetailsByOrgIDState());
+                console.log("Cleanup getGroupDetailsByOrgID function executed");
+            };
         }
     }, [gameInstanceByIdDetails]);
 
@@ -360,19 +400,27 @@ const UpdateInstances = () => {
             gameInstanceByIdDetails === undefined) {
             return;
         }
-        else if (gameInstanceData.groupName.value === undefined ||
-            gameInstanceData.groupName.value === null) {
+        // else if (!gameInstanceData?.groupName?.value?.trim()) {
 
-            console.log("groupID is not present")
-        }
+        //     console.log("groupID is not present :", gameInstanceData)
+        // }
         else {
+            const groupId = JSON.parse(gameInstanceByIdDetails.data).InstanceDetailsByID.GroupID;
             const data = {
-                groupID: gameInstanceData.groupName.value,
+                groupID: groupId,
             }
-            console.log("groupID", data);
+            // console.log("group data :", JSON.parse(groupByOrgIdDetails.data));
+            console.log("groupID in local state: ", data);
+            console.log("state when fetching players by group :", gameInstanceData);
 
             dispatch(getGamePlayerDetailsByGroupID(data));
         }
+
+
+        return () => {
+            // dispatch(resetGamePlayerDetailsByGroupIDState());
+            console.log("Cleanup getGamePlayerDetailsByGroupID function executed");
+        };
     }, [gameInstanceByIdDetails]);
 
     // set the updated player data into Game Instance state
@@ -418,7 +466,7 @@ const UpdateInstances = () => {
                 ...prevData,
                 instancePlayers: players,
             })
-
+            console.log("new players data to set in state from gamePlayersByGroupIdDetails  :", players);
             setGameInstanceData(newData);
         }
     }, [gamePlayersByGroupIdDetails]);
@@ -497,6 +545,10 @@ const UpdateInstances = () => {
                     value: "",
                     error: "",
                 },
+                groupId: {
+                    value: "",
+                    error: "",
+                },
                 instancePlayers: [],
             });
             return;
@@ -505,6 +557,10 @@ const UpdateInstances = () => {
         setGameInstanceData({
             ...gameInstanceData,
             groupName: {
+                value: event.target.value,
+                error: "",
+            },
+            groupId: {
                 value: event.target.value,
                 error: "",
             },
@@ -724,7 +780,7 @@ const UpdateInstances = () => {
     const onCancel = () => {
 
         resetGameInstanceData();
-        console.log("on cancel gameInstacneData :", gameInstanceData)
+        // console.log("on cancel gameInstacneData :", gameInstanceData)
 
         navigateTo(`/instances`);
     };

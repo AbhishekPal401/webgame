@@ -64,3 +64,7 @@
   background-color: #ffecbd;
   height: 15rem;
 }
+
+.customFileNameContainerClass > div:first-child {
+  color: var(--input_label_dark);
+}
