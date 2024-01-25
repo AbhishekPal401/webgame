@@ -12,7 +12,7 @@ const TeamMembers = () => {
           </svg>
         </div>
       </div>
-      <div>
+      {/* <div>
         <div className={styles.item}>
           <div>Admin</div>
           <div>
@@ -22,7 +22,7 @@ const TeamMembers = () => {
             <div></div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
