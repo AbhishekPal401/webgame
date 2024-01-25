@@ -195,7 +195,7 @@ const CreateInstances = () => {
             navigateTo(`/instances`);
 
         } else if (!createGameInstanceResponse.success) {
-            console.log(" error : ",createGameInstanceResponse?.message)
+            console.log(" error : ", createGameInstanceResponse?.message)
             // toast.error(createGameInstanceResponse?.message);
             toast.error(createGameInstanceResponse?.message);
             dispatch(resetCreateGameInstanceState());
@@ -263,17 +263,27 @@ const CreateInstances = () => {
             toast.success(createGroupUsersResponse?.message);
             console.log("createGroupUsersResponse :", createGroupUsersResponse)
 
-            // set the organization id in game instance state  
+            //reset the grp id and players in local state
             setGameInstanceData({
                 ...gameInstanceData,
                 groupName: {
                     value: "",
                     error: "",
                 },
+                instancePlayers: [],
             });
+            
+            //reset the create group user and local state and show modal
             resetAddGroupData();
             dispatch(resetCreateGroupUsersState());
             setShowAddGroupModal(null);
+
+            // dispatch request to get the newly added group ID's and reset the players state
+            const data = {
+                organizationID: gameInstanceData.organization.value,
+            }
+            dispatch(getGroupDetailsByOrgID(data));
+            dispatch(resetGamePlayerDetailsByGroupIDState());
 
         } else if (!createGroupUsersResponse.success) {
 
@@ -332,7 +342,7 @@ const CreateInstances = () => {
         if (gamePlayersByGroupIdDetails === null ||
             gamePlayersByGroupIdDetails === undefined) return;
 
-            console.log("gamePlayersByGroupIdDetails data:", JSON.parse(gamePlayersByGroupIdDetails.data));
+        console.log("gamePlayersByGroupIdDetails data:", JSON.parse(gamePlayersByGroupIdDetails.data));
 
         setGameInstanceDetailState();
     }, [gamePlayersByGroupIdDetails]);
@@ -1270,7 +1280,7 @@ const CreateInstances = () => {
                                         value={addGroupData.groupName.value}
                                         placeholder="Group Name"
                                         onChange={onAddGroupChange}
-                                        // autoFocus={!searchValue}
+                                    // autoFocus={!searchValue}
                                     />
                                 </div>
                                 <div className={styles.searchContainer}>
@@ -1319,7 +1329,7 @@ const CreateInstances = () => {
                 )}
 
                 {/* Modal Container :: end*/}
-            </div>                 
+            </div>
         </PageContainer>
     );
 }
