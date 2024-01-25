@@ -122,9 +122,7 @@ const AdminGameLanding = () => {
       sessionDetails.data &&
       isJSONString(sessionDetails.data) &&
       JSON.parse(sessionDetails.data)?.SessionID &&
-      JSON.parse(sessionDetails.data)?.NextQuestionID
-      //  &&
-      // JSON.parse(sessionDetails.data)?.CurrentState === "InProgress"
+      JSON.parse(sessionDetails.data)?.CurrentState === "InProgress"
     ) {
       isReconnection = true;
     }
@@ -236,9 +234,7 @@ const AdminGameLanding = () => {
             sessionDetails.data &&
             isJSONString(sessionDetails.data) &&
             JSON.parse(sessionDetails.data)?.SessionID &&
-            JSON.parse(sessionDetails.data)?.NextQuestionID ? (
-              //  &&
-              // JSON.parse(sessionDetails.data)?.CurrentState === "InProgress"
+            JSON.parse(sessionDetails.data)?.CurrentState === "InProgress" ? (
               <Button
                 onClick={() => {
                   if (!joinClick) {
@@ -271,7 +267,7 @@ const AdminGameLanding = () => {
           sessionDetails.data &&
           isJSONString(sessionDetails.data) &&
           JSON.parse(sessionDetails.data)?.SessionID &&
-          JSON.parse(sessionDetails.data)?.NextQuestionID ? (
+          JSON.parse(sessionDetails.data)?.CurrentState === "InProgress" ? (
             <div></div>
           ) : (
             <div className={styles.wait}>

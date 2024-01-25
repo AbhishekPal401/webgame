@@ -58,6 +58,7 @@ const Question = ({
   showDecision = false,
   setShowDecision = () => {},
   setShowVotes = () => {},
+  delegatedTo = "",
 }) => {
   const [showMedia, setShowMedia] = useState(true);
   const [duration, setDuration] = useState(Duration);
@@ -161,7 +162,7 @@ const Question = ({
       if (showVotes) {
         CustomButtonRender = (
           <div className={styles.buttonContainer}>
-            <div>Decision Made by CTO</div>
+            <div>Decision Made by {delegatedTo}</div>
             <Button customClassName={styles.button} onClick={onNextQuestion}>
               Next Question
             </Button>
@@ -180,7 +181,7 @@ const Question = ({
         } else if (adminState === "RevealDecision") {
           CustomButtonRender = (
             <div className={styles.buttonContainer}>
-              <div>Decision Made by CTO</div>
+              <div>Decision Made by {delegatedTo}</div>
               <Button
                 customClassName={styles.button}
                 onClick={() => {
@@ -188,7 +189,7 @@ const Question = ({
                   setShowDecision(false);
                 }}
               >
-                Reveal Votes
+                Approve
               </Button>
             </div>
           );

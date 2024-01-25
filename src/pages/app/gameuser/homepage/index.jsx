@@ -172,7 +172,6 @@ const UserHomePage = () => {
             sessionDetails.data &&
             isJSONString(sessionDetails.data) &&
             JSON.parse(sessionDetails.data)?.SessionID ? (
-              JSON.parse(sessionDetails.data)?.NextQuestionID &&
               JSON.parse(sessionDetails.data)?.CurrentState === "InProgress" ? (
                 <Button
                   onClick={getCurrentQuestion}

@@ -25,6 +25,7 @@ import {
   getInstanceProgressyById,
   resetInstanceProgressByIDState,
 } from "../../../../store/app/admin/gameinstances/getInstanceProgress.js";
+import TeamMembers from "../../../../components/teammembers/index.jsx";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -367,6 +368,7 @@ const GamePlay = () => {
     const data = {
       InstanceID: sessionData.InstanceID,
       UserID: credentials.data.userID,
+      UserRole: credentials.data.role,
       ActionType: "NextQuestion",
       Message: "Success",
     };
@@ -520,6 +522,9 @@ const GamePlay = () => {
                   setShowVotes={setShowVotes}
                   setShowDecision={setShowDecision}
                   showDecision={showDecision}
+                  delegatedTo={
+                    questionDetails?.data?.QuestionDetails?.DelegatedTo
+                  }
                 />
               )}
           </div>
@@ -547,12 +552,7 @@ const GamePlay = () => {
             <div></div>
           </div>
           <div className={styles.accordian}>
-            <div>Team Members</div>
-            <div>
-              <svg onClick={() => {}}>
-                <use xlinkHref={"sprite.svg#up_arrow"} />
-              </svg>
-            </div>
+            <TeamMembers />
           </div>
         </div>
       </div>
