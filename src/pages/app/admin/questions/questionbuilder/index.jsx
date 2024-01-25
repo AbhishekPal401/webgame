@@ -21,7 +21,7 @@ import {
   updateQuestion,
   resetUpdateQuestionState,
 } from "../../../../../store/app/admin/questions/updateQuestion";
-import { extractFileType } from "../../../../../utils/helper";
+import { extractFileInfo, extractFileType } from "../../../../../utils/helper";
 
 function QuestionBuilder() {
   const [questionData, setQuestionData] = useState({
@@ -62,6 +62,26 @@ function QuestionBuilder() {
   const { scenarioID, questionID } = useParams();
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
+
+  const allowedFileTypesArray = [
+    // fileTypes.AUDIO_EXTENSION,
+    // fileTypes.MIME_AUDIO_1,
+    // fileTypes.MIME_AUDIO_2,
+    fileTypes.VIDEO_EXTENSION,
+    fileTypes.MIME_VIDEO,
+    fileTypes.IMAGE_EXTENSION_1,
+    fileTypes.IMAGE_EXTENSION_2,
+    fileTypes.IMAGE_EXTENSION_3,
+    fileTypes.MIME_IMAGE_1,
+    fileTypes.MIME_IMAGE_2,
+    fileTypes.MIME_IMAGE_3,
+    fileTypes.MIME_PDF_1,
+    fileTypes.PDF_EXTENSION,
+    fileTypes.MIME_POWERPOINT_1,
+    fileTypes.MIME_POWERPOINT_2,
+    fileTypes.MIME_POWERPOINT_3,
+    fileTypes.POWERPOINT_EXTENSION,
+  ]
 
   const resetQuestionData = () => {
     setQuestionData({
@@ -318,6 +338,21 @@ function QuestionBuilder() {
         ...prevQUestionData,
         narrativeMedia: {
           value: file,
+          error: "",
+        },
+      }));
+
+      // setSupportFileDisplayURL(file);
+    },
+    [questionData]
+  );
+
+  const onResetFile = useCallback(
+    (file) => {
+      setQuestionData((prevQUestionData) => ({
+        ...prevQUestionData,
+        narrativeMedia: {
+          value: "",
           error: "",
         },
       }));
@@ -643,14 +678,9 @@ function QuestionBuilder() {
                         customContainerClass={styles.customFileContianer}
                         hint="Eligible Formats: Mp4, Image and PDF"
                         customHintClass={styles.hint}
-                        allowedFileTypes={[
-                          fileTypes.AUDIO_EXTENSION,
-                          fileTypes.MIME_AUDIO_1,
-                          fileTypes.MIME_AUDIO_2,
-                          fileTypes.VIDEO_EXTENSION,
-                          fileTypes.MIME_VIDEO,
-                        ]}
+                        allowedFileTypes={allowedFileTypesArray}
                         onUpload={onUpload}
+                        onResetFile={onResetFile}
                         fileSrc={supportFileDisplayURL}
                         fileSrcType={
                           supportFileDisplayURL &&
@@ -659,6 +689,10 @@ function QuestionBuilder() {
                         setUrl={(file) => {
                           setSupportFileDisplayURL(file);
                         }}
+                        fileName={
+                          supportFileDisplayURL && 
+                          extractFileInfo(supportFileDisplayURL).name
+                        }
                       />
                     </div>
                     {/* Narative Media :: end */}

@@ -51,6 +51,20 @@ function UploadQuestion() {
     [uploadQuestionsData]
   );
 
+  const onResetFile = useCallback(
+    (file) => {
+      setUploadQuestionsData((prevUploadQuestionsData) => ({
+        ...prevUploadQuestionsData,
+        questionsExcel: {
+          value: "",
+          error: "",
+          uploaded: true,
+        },
+      }));
+    },
+    [uploadQuestionsData]
+  );
+
   const handleDownload = async () => {
     try {
       if(!scenarioID || !credentials) 
@@ -182,9 +196,11 @@ function UploadQuestion() {
             label="Upload Question File"
             customstyle={{ color: "#434343" }}
             customContainerClass={styles.customFileContianer}
+            customFileNameContainerClass={styles.customFileNameContainerClass}
             hint="Eligible Formats: XLS and XLSX"
             customHintClass={styles.hint}
             onUpload={onUpload}
+            onResetFile={onResetFile}
             fileSrc={excelFileDisplay}
             fileSrcType={excelFileDisplay && extractFileType(excelFileDisplay)}
             setUrl={(file) => {

@@ -221,3 +221,31 @@ export const extractFileType = (fileSrc) => {
     }
 };
 
+export const extractFileInfo = (fileSrc) => {
+    if (fileSrc.startsWith('data:')) {
+        // For data URL
+        const semicolonIndex = fileSrc.indexOf(';');
+        const mimeType = fileSrc.substring(5, semicolonIndex);
+
+        return { type: mimeType, name: null, size: 'unknown' };
+    } else if (fileSrc.startsWith('https')) {
+        // For URLs starting with 'https'
+        const urlParts = fileSrc.split('/');
+        const filename = urlParts[urlParts.length - 1];
+        const queryParamIndex = filename.indexOf('?');
+        const filenameToParse = queryParamIndex !== -1 ? filename.substring(0, queryParamIndex) : filename;
+        const dotIndex = filenameToParse.lastIndexOf('.');
+
+        if (dotIndex !== -1) {
+            const fileExtension = filenameToParse.substring(dotIndex + 1);
+            // const fileSizeIndex = filename.indexOf('_'); // Assuming size is included in the filename with underscore
+            // const fileSize = fileSizeIndex !== -1 ? filename.substring(fileSizeIndex + 1, dotIndex) : 'unknown';
+            console.log("filenameToParse", filenameToParse)
+            return { type: fileExtension, name: filenameToParse };
+        } else {
+            return { type: 'unknown', name: filenameToParse };
+        }
+    } else {
+        return { type: 'unknown', name: 'unknown' };
+    }
+};

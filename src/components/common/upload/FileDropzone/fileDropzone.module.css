@@ -1,51 +1,51 @@
 .container {
-    border-radius: 0.6rem;
-    overflow: hidden;
-    background-color: transparent;
-    font-weight: bold;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    cursor: pointer;
-    border: 0.2rem dotted var(--primary);
-    width: 100%;
-    height: 10rem;
-    margin-top: 1rem;
-  }
-  .label {
-    color: var(--input_label);
-    font-size: 1.3rem;
-  }
-  .hint {
-    color: var(--input_label);
-    font-size: 1.1rem;
-    margin-top: 1rem;
-  }
-  .container p {
-    color: var(--input_label);
-  }
-  
-  .container label {
-    color: var(--primary);
-    text-decoration: underline;
-  }
-  
-  .error {
-    color: var(--red);
-    margin-top: 0.5rem;
-  }
-  
-  .previewContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-width: 100%; /* Limit the container width to the available space */
-    max-height: 100%; /* Limit the container height to the available space */
-    overflow: hidden; /* Hide any overflowing content */
-  }
-  
+  border-radius: 0.6rem;
+  overflow: hidden;
+  background-color: transparent;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  cursor: pointer;
+  border: 0.2rem dotted var(--primary);
+  width: 100%;
+  height: 10rem;
+  margin-top: 1rem;
+}
+.label {
+  color: var(--input_label);
+  font-size: 1.3rem;
+}
+.hint {
+  color: var(--input_label);
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+.container p {
+  color: var(--input_label);
+}
+
+.container label {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.error {
+  color: var(--red);
+  margin-top: 0.5rem;
+}
+
+.previewContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%; /* Limit the container width to the available space */
+  max-height: 100%; /* Limit the container height to the available space */
+  overflow: hidden; /* Hide any overflowing content */
+}
+
 /* For audio and video elements within the preview container */
 .previewContainer audio,
 .previewContainer video {
@@ -54,3 +54,21 @@
   width: auto; /* Allow the width to adjust to maintain aspect ratio */
   height: auto; /* Allow the height to adjust to maintain aspect ratio */
 }
+
+.fileNameContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  justify-content: space-between;
+  padding: 1rem 1rem 0;
+}
+.fileNameContainer > div:first-child {
+  color: var(--input_label);
+  font-size: 1.3rem;
+}
+.fileNameContainer > div:nth-child(2) {
+  display: flex;
+  justify-content: end;
+  cursor: pointer;
+}
+
