@@ -26,6 +26,7 @@ import {
   resetInstanceProgressByIDState,
 } from "../../../../store/app/admin/gameinstances/getInstanceProgress.js";
 import TeamMembers from "../../../../components/teammembers/index.jsx";
+import Nudges from "../../../../components/nudges/index.jsx";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -552,6 +553,7 @@ const GamePlay = () => {
             <div></div>
           </div>
           <div className={styles.accordian}>
+            <Nudges />
             <TeamMembers />
           </div>
         </div>

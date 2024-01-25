@@ -1,0 +1,53 @@
+.container {
+  background-color: #f3f3f3;
+  padding-bottom: 1rem;
+  margin-bottom: 0.8rem;
+  border-radius: 0.25rem;
+}
+
+.header {
+  width: 30rem;
+  height: 3.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.header > div:nth-child(1) {
+  font-size: 1.4rem;
+  font-family: "helvetica 400";
+}
+.arrow {
+  width: 1.4rem;
+  font-size: 3rem;
+  color: var(--black);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.input {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.input textarea {
+  background-color: var(--innerbackground);
+  margin: 0 1rem;
+  outline: none;
+  appearance: none;
+  border: none;
+  width: 100%;
+  height: 10rem;
+  resize: none;
+}
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 1rem;
+  margin-top: 1rem;
+}

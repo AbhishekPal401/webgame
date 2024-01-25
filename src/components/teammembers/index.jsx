@@ -12,17 +12,37 @@ const TeamMembers = () => {
           </svg>
         </div>
       </div>
-      {/* <div>
+      <div className={styles.mainContainer}>
         <div className={styles.item}>
           <div>Admin</div>
-          <div>
-            <div>A</div>
-            <div>Abhishek</div>
-            <div>CFO</div>
-            <div></div>
+          <div className={styles.userContainer}>
+            <div className={styles.itemDetails}>
+              <div>A</div>
+              <div>Abhishek</div>
+              <div>CFO</div>
+              <div></div>
+            </div>
           </div>
         </div>
-      </div> */}
+        <div className={styles.item}>
+          <div>CTO</div>
+          <div className={styles.userContainer}>
+            <div className={styles.itemDetails}>
+              <div>B</div>
+              <div>Bushan</div>
+              <div>CTO</div>
+              <div></div>
+            </div>
+            <hr />
+            <div className={styles.itemDetails}>
+              <div>C</div>
+              <div>Chandan</div>
+              <div>CTO</div>
+              <div></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
