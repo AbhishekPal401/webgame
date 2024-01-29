@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import styles from "./gameplay.module.css";
 import { motion } from "framer-motion";
 import CountDown from "../../../../components/ui/countdown";
@@ -165,26 +171,43 @@ const GamePlay = () => {
       dispatch(setActiveUsers(users));
     });
 
-    signalRService.NotificationListener((ActionType, Message) => {
-      console.log("NotificationListener", ActionType, Message);
-
-      if (ActionType === "Nudges") {
-        if (Message) {
-          toast.success(Message, {
-            containerId: "alert_messages",
-            position: "top-right",
-            style: {
-              top: `${position}px`,
-            },
-          });
-        }
-      }
-    });
-
     return () => {
       signalRService.GetVotingDetailsOff(handleVotingDetails);
     };
   }, []);
+
+  useEffect(() => {
+    const showNotifications = (ActionType, Message) => {
+      console.log("NotificationListener", ActionType, Message);
+
+      const htmlElement = <div dangerouslySetInnerHTML={{ __html: Message }} />;
+
+      if (ActionType === "Nudges") {
+        if (Message) {
+          toast.success(htmlElement, {
+            containerId: "alert_messages",
+            className: "notification",
+            position: "top-right",
+            style: {
+              top: `${position}px`,
+              borderRight: "0.4rem solid #ffb600",
+            },
+            closeButton: false,
+            autoClose: 3000,
+            icon: false,
+          });
+        }
+      }
+    };
+
+    if (position > 0) {
+      signalRService.NotificationListener(showNotifications);
+    }
+
+    return () => {
+      signalRService.NotificationListenerOff(showNotifications);
+    };
+  }, [position]);
 
   useEffect(() => {
     const handleProceedToNextQuestion = (data) => {

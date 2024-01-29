@@ -27,6 +27,13 @@
   align-items: center;
   margin-top: 7rem;
 }
+
+.players > div:nth-child(2) {
+  font-size: 1.6rem;
+  font-family: "Helvetica 500";
+  color: var(--innerbackground);
+  margin-left: 3rem;
+}
 .button {
   display: inline-block;
   text-align: center;

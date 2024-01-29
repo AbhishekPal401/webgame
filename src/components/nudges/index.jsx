@@ -5,6 +5,8 @@ import { signalRService } from "../../services/signalR";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { isJSONString } from "../../utils/common";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const Nudges = () => {
   const [show, setShow] = useState(false);
@@ -14,11 +16,11 @@ const Nudges = () => {
   const { credentials } = useSelector((state) => state.login);
 
   const sendNotification = () => {
-    console.log("called");
+    console.log("message", message);
     if (!isJSONString(sessionDetails.data)) return;
     const sessionData = JSON.parse(sessionDetails.data);
 
-    if (message === "") {
+    if (message === "" || message === "<p><br></p>") {
       toast.error("Message cannot be empty");
       return;
     }
@@ -59,13 +61,21 @@ const Nudges = () => {
       {show && (
         <div className={styles.description}>
           <div className={styles.input}>
-            <textarea
+            {/* <textarea
               value={message}
               draggable={false}
               onChange={(e) => {
                 setMessage(e.target.value);
               }}
-            ></textarea>
+            ></textarea> */}
+            <ReactQuill
+              className={styles.quill}
+              value={message}
+              onChange={setMessage}
+              modules={Nudges.modules}
+              formats={Nudges.formats}
+              placeholder="Write your message..."
+            />
           </div>
           <div className={styles.buttonContainer}>
             <Button onClick={sendNotification}>Send</Button>
@@ -75,5 +85,25 @@ const Nudges = () => {
     </div>
   );
 };
+
+Nudges.modules = {
+  toolbar: [
+    [{ color: [] }],
+    ["clean"],
+    ["bold", "italic", "underline"],
+
+    [{ align: "center" }, { align: "right" }, { align: "justify" }],
+  ],
+};
+
+Nudges.formats = [
+  "header",
+  "font",
+  "size",
+  "bold",
+  "italic",
+  "underline",
+  "align",
+];
 
 export default Nudges;

@@ -25,6 +25,10 @@
   background-color: var(--red) !important;
 }
 
+.notification > button > svg {
+  display: none !important;
+}
+
 /* =============== select dropdown ============= */
 .select_label {
   display: block;

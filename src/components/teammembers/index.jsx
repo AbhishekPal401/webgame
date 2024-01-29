@@ -79,7 +79,7 @@ const TeamMembers = () => {
           <div className={styles.mainContainer}>
             {allUsersInSession.data.map((item, index) => {
               return (
-                <div className={styles.item}>
+                <div className={styles.item} key={index}>
                   <div>{item.designation}</div>
                   <div className={styles.userContainer}>
                     {item &&
@@ -89,7 +89,7 @@ const TeamMembers = () => {
                         return (
                           <>
                             {i === 0 ? null : <hr />}
-                            <div className={styles.itemDetails}>
+                            <div className={styles.itemDetails} key={i}>
                               <div>{users.UserName[0]}</div>
                               <div>{users.UserName}</div>
                               <div>{users.DesignationName}</div>

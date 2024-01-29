@@ -197,6 +197,24 @@ const UserHomePage = () => {
               )
             ) : null}
           </div>
+          <div>
+            {sessionDetails &&
+            sessionDetails.data &&
+            isJSONString(sessionDetails.data) &&
+            JSON.parse(sessionDetails.data)?.SessionID ? (
+              JSON.parse(sessionDetails.data)?.CurrentState === "InProgress" ? (
+                <></>
+              ) : (
+                <>
+                  {ready && isConnectedToServer
+                    ? ""
+                    : " Waiting for the Admin to start the game "}
+                </>
+              )
+            ) : (
+              <>{" Waiting for the Admin to join the game"}</>
+            )}
+          </div>
         </div>
       </div>
     </motion.div>
