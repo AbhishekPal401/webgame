@@ -480,6 +480,7 @@ const UpdateScenarios = () => {
                   name={"scenarioName"}
                   value={scenarioData?.scenarioName?.value}
                   placeholder="Scenario Name"
+                  inputStyleClass={styles.inputStyleClass}
                   onChange={onChange}
                 />
                 {/*TODO:: Rich Text Editor */}
@@ -527,7 +528,7 @@ const UpdateScenarios = () => {
                   <FileDropZone
                     customstyle={{ marginTop: "1rem" }}
                     label="Upload Game Intro Video"
-                    hint="Eligible Formats: MP4, Image and PDF"
+                    hint="Eligible Formats: Mp4, Mp3, Image and PDF"
                     allowedFileTypes={allowedFileTypesArray}
                     onUpload={onUpload}
                     onResetFile={onResetFile}
