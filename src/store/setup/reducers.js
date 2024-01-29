@@ -32,7 +32,8 @@ import createGroupUsers from "../app/admin/groups/createGroupUsers.js";
 import createMaster from "../app/admin/masters/createMaster.js";
 import getOrganizations from "../app/admin/masters/getOrganizations.js";
 import getDesignations from "../app/admin/masters/getDesignations.js";
-
+import deleteScenario from "../app/admin/scenario/deleteScenario.js";
+import deleteQuestions from "../app/admin/questions/deleteQuestions.js";
 import instanceSummary from "../app/admin/gameinstances/instanceSummary.js";
 import getInstanceProgress from "../app/admin/gameinstances/getInstanceProgress.js";
 import getOverviewGameDetails from "../app/admin/gameinstances/getOverviewGameDetails.js";
@@ -75,6 +76,8 @@ const reducers = combineReducers({
   getOrganizations,
   gameplay,
   allSessionUser,
+  deleteScenario,
+  deleteQuestions,
 });
 
 const rootReducer = (state, action) => {

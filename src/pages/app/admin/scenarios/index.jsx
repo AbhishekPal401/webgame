@@ -9,16 +9,25 @@ import { generateGUID, isJSONString } from "../../../../utils/common.js";
 import { getScenarioByPage } from "../../../../store/app/admin/scenario/scenario.js";
 import { formatDateString } from "../../../../utils/helper.js";
 import { useNavigate } from "react-router-dom";
+import ModalContainer from "../../../../components/modal/index.jsx";
+import {
+  deleteScenarioByID,
+  resetDeleteScenarioState
+} from "../../../../store/app/admin/scenario/deleteScenario.js";
+import { toast } from "react-toastify";
 
 const Scenarios = () => {
   const [pageCount, setPageCount] = useState(10);
   const [pageNumber, setPageNumber] = useState(1);
+  const [showDeleteModal, setShowDeleteModal] = useState(null);
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { credentials } = useSelector((state) => state.login);
   const { scenarioByPage } = useSelector((state) => state.scenarios);
+  const { deleteScenarioResponse } = useSelector((state) => state.deleteScenario);
 
   useEffect(() => {
     if (credentials) {
@@ -48,8 +57,56 @@ const Scenarios = () => {
     }
   }, [scenarioByPage]);
 
+  useEffect(() => {
+    if (deleteScenarioResponse === null || deleteScenarioResponse === undefined) return;
+
+    if (deleteScenarioResponse.success) {
+      toast.success(deleteScenarioResponse.message);
+      const data = {
+        pageNumber: pageNumber,
+        pageCount: pageCount,
+        type: "",
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      dispatch(getScenarioByPage(data));
+      dispatch(resetDeleteScenarioState());
+      setShowDeleteModal(null);
+    } else if (!deleteScenarioResponse.success) {
+      toast.error(deleteScenarioResponse.message);
+    }
+  }, [deleteScenarioResponse]);
+
   const navigateTo = () => {
     navigate("/scenario/createscenarios");
+  };
+
+  const handleCheckboxChange = (scenarioID) => {
+    const isSelected = selectedCheckboxes.includes(scenarioID);
+    const updatedRows = isSelected
+      ? selectedCheckboxes.filter((row) => row !== scenarioID)
+      : [...selectedCheckboxes, scenarioID];
+
+    setSelectedCheckboxes(updatedRows);
+  };
+
+  const onDeleteScenario = () => {
+    const data = {
+      scenarioID: showDeleteModal.ScenarioID,
+      requester: {
+        requestID: generateGUID(),
+        requesterID: credentials.data.userID,
+        requesterName: credentials.data.userName,
+        requesterType: credentials.data.role,
+      },
+    };
+
+    dispatch(deleteScenarioByID(data));
   };
 
   return (
@@ -91,10 +148,14 @@ const Scenarios = () => {
               scenarioByPage.data &&
               JSON.parse(scenarioByPage.data)?.ScenarioDetails.map(
                 (scenario, index) => {
+                  const isSelected = selectedCheckboxes.includes(scenario.ScenarioID);
                   return (
                     <tr key={index}>
                       <td>
-                        <Checkbox />
+                        <Checkbox
+                          checked={isSelected}
+                          onChange={() => handleCheckboxChange(scenario.ScenarioID)}
+                        />
                       </td>
                       <td>{index + 1}</td>
                       <td>
@@ -110,27 +171,42 @@ const Scenarios = () => {
                       </td>
                       <td>{formatDateString(scenario.CreatedAt)}</td>
                       <td>{scenario.GamesPlayed}</td>
-                      <td>{scenario.LastPlayed != null ||  scenario.LastPlayed != undefined?
-                          formatDateString(scenario.LastPlayed) :
-                          ""
-                        }
+                      <td>{scenario.LastPlayed != null || scenario.LastPlayed != undefined ?
+                        formatDateString(scenario.LastPlayed) :
+                        ""
+                      }
                       </td>
                       <td>{scenario.Status}</td>
                       <td>
                         <div className={styles.actions}>
                           <div className={styles.circleSvg}
                             onClick={() => {
-                              navigate(
-                                `/scenario/updatescenarios/${scenario.ScenarioID}`
-                              );
+                              if (isSelected) {
+                                navigate(`/scenario/updatescenarios/${scenario.ScenarioID}`);
+                              }
                             }}
                           >
-                            <svg height="14" width="14">
+                            <svg
+                              height="14"
+                              width="14"
+                              style={{ opacity: isSelected ? "1" : "0.3" }}
+                            >
                               <use xlinkHref="sprite.svg#edit_icon" />
                             </svg>
                           </div>
-                          <div className={styles.circleSvg}>
-                            <svg height="14" width="14">
+                          <div
+                            className={styles.circleSvg}
+                            onClick={() => {
+                              if (isSelected) {
+                                setShowDeleteModal(scenario);
+                              }
+                            }}
+                          >
+                            <svg
+                              height="14"
+                              width="14"
+                              style={{ opacity: isSelected ? "1" : "0.3" }}
+                            >
                               <use xlinkHref="sprite.svg#delete_icon" />
                             </svg>
                           </div>
@@ -166,8 +242,50 @@ const Scenarios = () => {
             />
           </div>
         )}
+
       </div>
       {/* Scenario Table:: end */}
+      {showDeleteModal && (
+        <ModalContainer>
+          <div className="modal_content">
+            <div className="modal_header">
+              <div>Delete Scenario</div>
+              <div>
+                <svg
+                  className="modal_crossIcon"
+                  onClick={() => {
+                    setShowDeleteModal(null);
+                  }}
+                >
+                  <use xlinkHref={"sprite.svg#crossIcon"} />
+                </svg>
+              </div>
+            </div>
+            <div className="modal_description">
+              Are you sure you want to delete this scenario ?
+            </div>
+
+            <div className="modal_buttonContainer">
+              <Button
+                buttonType={"cancel"}
+                onClick={() => {
+                  setShowDeleteModal(null);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                customStyle={{
+                  marginLeft: "1rem",
+                }}
+                onClick={onDeleteScenario}
+              >
+                Delete
+              </Button>
+            </div>
+          </div>
+        </ModalContainer>
+      )}
     </PageContainer>
   );
 };
