@@ -333,6 +333,7 @@ const CreateScenario = () => {
                   name={"scenarioName"}
                   value={scenarioData?.scenarioName?.value}
                   placeholder="Scenario Name"
+                  inputStyleClass={styles.inputStyleClass}
                   onChange={onChange}
                 />
                 {/*TODO:: Rich Text Editor */}
@@ -384,7 +385,7 @@ const CreateScenario = () => {
                     setUrl={(file) => {
                       setIntroFileDisplay(file);
                     }}
-                    hint="Eligible Formats: MP4, Image and PDF"
+                    hint="Eligible Formats: Mp4, Mp3, Image and PDF"
                     onUpload={onUpload}
                     onResetFile={onResetFile}
                     resetFile={resetFile}

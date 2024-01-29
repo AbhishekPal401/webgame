@@ -154,9 +154,12 @@
   font: normal;
   height: 100%; /* to do change height to % */
   resize: none;
-  font-family: 'Helvetica 500';
+  font-family: 'Helvetica 400';
 }
-
+.inputStyleClass {
+  font: normal;
+  font-family: 'Helvetica 400';
+}
 .buttonContainer {
   display: flex;
   flex-direction: row;

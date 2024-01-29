@@ -64,9 +64,9 @@ function QuestionBuilder() {
   const navigateTo = useNavigate();
 
   const allowedFileTypesArray = [
-    // fileTypes.AUDIO_EXTENSION,
-    // fileTypes.MIME_AUDIO_1,
-    // fileTypes.MIME_AUDIO_2,
+    fileTypes.AUDIO_EXTENSION,
+    fileTypes.MIME_AUDIO_1,
+    fileTypes.MIME_AUDIO_2,
     fileTypes.VIDEO_EXTENSION,
     fileTypes.MIME_VIDEO,
     fileTypes.IMAGE_EXTENSION_1,
@@ -676,7 +676,7 @@ function QuestionBuilder() {
                         label="Narative Media"
                         customstyle={{}}
                         customContainerClass={styles.customFileContianer}
-                        hint="Eligible Formats: Mp4, Image and PDF"
+                        hint="Eligible Formats: Mp4, Mp3, Image and PDF"
                         customHintClass={styles.hint}
                         allowedFileTypes={allowedFileTypesArray}
                         onUpload={onUpload}
