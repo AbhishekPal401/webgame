@@ -9,14 +9,26 @@ import { getQuestionsByScenarioId } from "../../../../../store/app/admin/questio
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { baseUrl } from "../../../../../middleware/url.js";
+import ModalContainer from "../../../../../components/modal/index.jsx";
+import { generateGUID } from "../../../../../utils/common.js";
+import {
+  deleteQuestionByID,
+  resetDeleteQuestionState
+} from "../../../../../store/app/admin/questions/deleteQuestions.js";
+import { toast } from "react-toastify";
+
 
 function QuestionList() {
+  const [showDeleteModal, setShowDeleteModal] = useState(null);
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+
   const dispatch = useDispatch();
 
   const { credentials } = useSelector((state) => state.login);
   const { questionsByScenarioIdDetails } = useSelector(
     (state) => state.getQuestionsByScenarioId
   );
+  const { deleteQuestionResponse } = useSelector((state) => state.deleteQuestions);
 
   const { scenarioID } = useParams();
   const navigate = useNavigate();
@@ -50,6 +62,28 @@ function QuestionList() {
       navigate(`/questions/uploadquestions/${scenarioID}`);
     }
   }, [questionsByScenarioIdDetails, navigate, scenarioID, isLoading]);
+
+  useEffect(() => {
+    if (deleteQuestionResponse === null || deleteQuestionResponse === undefined) return;
+
+    if (deleteQuestionResponse.success) {
+      toast.success(deleteQuestionResponse.message);
+
+      const data = {
+        scenarioID: scenarioID,
+      };
+
+      dispatch(getQuestionsByScenarioId(data)).finally(() =>
+        setIsLoading(false)
+      );
+
+      dispatch(resetDeleteQuestionState());
+      setShowDeleteModal(null);
+
+    } else if (!deleteQuestionResponse.success) {
+      toast.error(deleteQuestionResponse.message);
+    }
+  }, [deleteQuestionResponse]);
 
   const handleDownload = async () => {
     try {
@@ -92,6 +126,23 @@ function QuestionList() {
     }
   };
 
+  const handleCheckboxChange = (questionId) => {
+    const isSelected = selectedCheckboxes.includes(questionId);
+    const updatedRows = isSelected
+      ? selectedCheckboxes.filter((row) => row !== questionId)
+      : [...selectedCheckboxes, questionId];
+
+      setSelectedCheckboxes(updatedRows);
+  };
+
+  const onDeleteQuestion = () => {
+    const data = {
+      questionID: showDeleteModal.QuestionID,
+    };
+
+    dispatch(deleteQuestionByID(data));
+  };
+
   return (
     <PageContainer>
       <div className={styles.conatiner}>
@@ -132,10 +183,14 @@ function QuestionList() {
                   questionsByScenarioIdDetails.data &&
                   JSON.parse(questionsByScenarioIdDetails?.data).map(
                     (question, index) => {
+                      const isSelected = selectedCheckboxes.includes(question.QuestionID);
                       return (
                         <tr key={index}>
                           <td>
-                            <Checkbox />
+                            <Checkbox
+                              checked={isSelected}
+                              onChange={() => handleCheckboxChange(question.QuestionID)}
+                            />
                           </td>
                           <td>{index + 1}</td>
                           <td>
@@ -151,17 +206,34 @@ function QuestionList() {
                             <div className={styles.actions}>
                               <div className={styles.circleSvg}
                                 onClick={() => {
-                                  navigate(
-                                    `/questions/${scenarioID}/questionbuilder/${question.QuestionID}`
-                                  );
+                                  if (isSelected) {
+                                    navigate(
+                                      `/questions/${scenarioID}/questionbuilder/${question.QuestionID}`
+                                    );
+                                  }
                                 }}
                               >
-                                <svg height="14" width="14">
+                                <svg
+                                  height="14"
+                                  width="14"
+                                  style={{ opacity: isSelected ? "1" : "0.3" }}
+                                >
                                   <use xlinkHref="sprite.svg#edit_icon" />
                                 </svg>
                               </div>
-                              <div className={styles.circleSvg}>
-                                <svg height="14" width="14">
+                              <div
+                                className={styles.circleSvg}
+                                onClick={() => {
+                                  if (isSelected) {
+                                    setShowDeleteModal(question);
+                                  }
+                                }}
+                              >
+                                <svg
+                                  height="14"
+                                  width="14"
+                                  style={{ opacity: isSelected ? "1" : "0.3" }}
+                                >
                                   <use xlinkHref="sprite.svg#delete_icon" />
                                 </svg>
                               </div>
@@ -178,6 +250,47 @@ function QuestionList() {
 
         {/* Questions Table:: end */}
       </div>
+      {showDeleteModal && (
+        <ModalContainer>
+          <div className="modal_content">
+            <div className="modal_header">
+              <div>Delete Question</div>
+              <div>
+                <svg
+                  className="modal_crossIcon"
+                  onClick={() => {
+                    setShowDeleteModal(null);
+                  }}
+                >
+                  <use xlinkHref={"sprite.svg#crossIcon"} />
+                </svg>
+              </div>
+            </div>
+            <div className="modal_description">
+              Are you sure you want to delete this question ?
+            </div>
+
+            <div className="modal_buttonContainer">
+              <Button
+                buttonType={"cancel"}
+                onClick={() => {
+                  setShowDeleteModal(null);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                customStyle={{
+                  marginLeft: "1rem",
+                }}
+                onClick={onDeleteQuestion}
+              >
+                Delete
+              </Button>
+            </div>
+          </div>
+        </ModalContainer>
+      )}
     </PageContainer>
   );
 }

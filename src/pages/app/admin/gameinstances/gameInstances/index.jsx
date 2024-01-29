@@ -16,6 +16,7 @@ import Pagination from "../../../../../components/ui/pagination/index.jsx";
 const GameInstances = () => {
     const [pageCount, setPageCount] = useState(10);
     const [pageNumber, setPageNumber] = useState(1);
+    const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -52,18 +53,28 @@ const GameInstances = () => {
         }
     }, [gameInstancesByPage]);
 
-
+    // DEBUG :: Start
     // useEffect(() => {
     //     gameInstancesByPage &&
     //         gameInstancesByPage.success &&
     //         gameInstancesByPage.data
 
-    //     console.log("gameInstancesByPage : ", gameInstancesByPage);
-    //     console.log("gameInstancesByPage.data : ", gameInstancesByPage.data);
+    //     // console.log("gameInstancesByPage : ", gameInstancesByPage);
+    //     // console.log("gameInstancesByPage.data : ", gameInstancesByPage.data);
     //     console.log("JSON.parse(gameInstancesByPage.data) : ", JSON.parse(gameInstancesByPage.data));
-
-
     // }, [gameInstancesByPage]);
+
+    // DEBUG :: End
+
+
+    const handleCheckboxChange = (insatanceId) => {
+        const isSelected = selectedCheckboxes.includes(insatanceId);
+        const updatedRows = isSelected
+            ? selectedCheckboxes.filter((row) => row !== insatanceId)
+            : [...selectedCheckboxes, insatanceId];
+
+        setSelectedCheckboxes(updatedRows);
+    };
 
     const navigateTo = () => {
         navigate(`/instances/createinstances`);
@@ -110,10 +121,14 @@ const GameInstances = () => {
                                     gameInstancesByPage.data &&
                                     JSON.parse(gameInstancesByPage.data).InstanceDetails.map(
                                         (gameInstance, index) => {
+                                            const isSelected = selectedCheckboxes.includes(gameInstance.InstanceID);
                                             return (
                                                 <tr key={index}>
                                                     <td>
-                                                        <Checkbox />
+                                                        <Checkbox
+                                                            checked={isSelected}
+                                                            onChange={() => handleCheckboxChange(gameInstance.InstanceID)}
+                                                        />
                                                     </td>
                                                     <td>{index + 1}</td>
                                                     <td>
@@ -126,11 +141,17 @@ const GameInstances = () => {
                                                         Version
                                                     </td> */}
                                                     <td>{gameInstance.ScenarioName}</td>
-                                                    <td>{formatDateString(gameInstance.CreatedAt)}</td>
                                                     <td>
-                                                        {gameInstance.Status === "Completed" ?
-                                                            formatDateString(gameInstance.DatePlayed) :
-                                                            ""
+                                                        {
+                                                            formatDateString(gameInstance.CreatedAt) !== "Invalid Date" &&
+                                                            formatDateString(gameInstance.CreatedAt)
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        {
+                                                            gameInstance.Status === "Completed" &&
+                                                            formatDateString(gameInstance.DatePlayed) !== "Invalid Date" &&
+                                                            formatDateString(gameInstance.DatePlayed)
                                                         }
                                                     </td>
                                                     <td>{gameInstance.Status}</td>
@@ -139,24 +160,46 @@ const GameInstances = () => {
                                                             <div
                                                                 className={styles.circleSvg}
                                                                 onClick={() => {
-                                                                    navigate(`/instances/viewinstances/${gameInstance.InstanceID}`);
+                                                                    if (isSelected && gameInstance.Status === "Completed") {
+                                                                        navigate(`/instances/viewinstances/${gameInstance.InstanceID}`);
+                                                                    }
                                                                 }}
                                                             >
-                                                                <svg height="14" width="14" >
+                                                                <svg
+                                                                    height="14"
+                                                                    width="14"
+                                                                    style={{
+                                                                        opacity: (isSelected &&
+                                                                            gameInstance.Status === "Completed") ? "1" : "0.3"
+                                                                    }}
+                                                                >
                                                                     <use xlinkHref="sprite.svg#view_icon" />
                                                                 </svg>
                                                             </div>
                                                             <div className={styles.circleSvg}
                                                                 onClick={() => {
-                                                                    navigate(`/instances/updateinstances/${gameInstance.InstanceID}`);
+                                                                    if (isSelected && gameInstance.Status !== "Completed") {
+                                                                        navigate(`/instances/updateinstances/${gameInstance.InstanceID}`);
+                                                                    }
                                                                 }}
                                                             >
-                                                                <svg height="14" width="14">
+                                                                <svg
+                                                                    height="14"
+                                                                    width="14"
+                                                                    style={{
+                                                                        opacity: (isSelected &&
+                                                                            gameInstance.Status !== "Completed") ? "1" : "0.3"
+                                                                    }}
+                                                                >
                                                                     <use xlinkHref="sprite.svg#edit_icon" />
                                                                 </svg>
                                                             </div>
                                                             <div className={styles.circleSvg}>
-                                                                <svg height="14" width="14">
+                                                                <svg
+                                                                    height="14"
+                                                                    width="14"
+                                                                    style={{ opacity: isSelected ? "1" : "0.3" }}
+                                                                >
                                                                     <use xlinkHref="sprite.svg#delete_icon" />
                                                                 </svg>
                                                             </div>

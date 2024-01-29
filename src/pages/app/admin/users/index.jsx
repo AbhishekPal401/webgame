@@ -17,11 +17,13 @@ import {
 } from "../../../../store/app/admin/users/deleteUser.js";
 import { toast } from "react-toastify";
 import { formatDateString, formatTime } from "../../../../utils/helper.js";
+import Checkbox from "../../../../components/ui/checkbox/index.jsx";
 
 const Users = () => {
   const [pageCount, setPageCount] = useState(10);
   const [pageNumber, setPageNumber] = useState(1);
   const [showDeleteModal, setShowDeleteModal] = useState(null);
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -90,6 +92,16 @@ const Users = () => {
     }
   }, [deleteUserResponse]);
 
+  const handleCheckboxChange = (userId) => {
+    const isSelected = selectedCheckboxes.includes(userId);
+    const updatedRows = isSelected
+      ? selectedCheckboxes.filter((row) => row !== userId)
+      : [...selectedCheckboxes, userId];
+
+    setSelectedCheckboxes(updatedRows);
+  };
+
+
   const navigateTo = () => {
     navigate("/users/createandedit");
   };
@@ -139,6 +151,7 @@ const Users = () => {
           <table className={styles.table_content}>
             <thead>
               <tr>
+                <th></th>
                 <th>#</th>
                 <th>Username</th>
                 <th>Email</th>
@@ -157,8 +170,15 @@ const Users = () => {
                 usersByPage.data &&
                 isJSONString(usersByPage.data) &&
                 JSON.parse(usersByPage.data)?.UserDetails.map((user, index) => {
+                  const isSelected = selectedCheckboxes.includes(user.UserID);
                   return (
                     <tr key={index}>
+                      <td>
+                        <Checkbox
+                          checked={isSelected}
+                          onChange={() => handleCheckboxChange(user.UserID)}
+                        />
+                      </td>
                       <td>{index + pageCount * (pageNumber - 1) + 1}</td>
                       <td>
                         {user?.UserName}
@@ -175,19 +195,35 @@ const Users = () => {
                         <div className={styles.actions}>
                           <div className={styles.circleSvg}
                             onClick={() => {
-                              navigate(`/users/createandedit/${user.UserID}`);
+                              if (isSelected) {
+                                navigate(`/users/createandedit/${user.UserID}`);
+                              }
                             }}
                           >
-                            <svg height="14" width="14">
+                            <svg
+                              height="14"
+                              width="14"
+                              style={{
+                                opacity: isSelected ? "1" : "0.3"
+                              }}
+                            >
                               <use xlinkHref="sprite.svg#edit_icon" />
                             </svg>
                           </div>
                           <div className={styles.circleSvg}
                             onClick={() => {
-                              setShowDeleteModal(user);
+                              if (isSelected) {
+                                setShowDeleteModal(user);
+                              }
                             }}
                           >
-                            <svg height="14" width="14">
+                            <svg
+                              height="14"
+                              width="14"
+                              style={{
+                                opacity: isSelected ? "1" : "0.3"
+                              }}
+                            >
                               <use xlinkHref="sprite.svg#delete_icon" />
                             </svg>
                           </div>

@@ -33,6 +33,7 @@ const MasterList = () => {
   });
   const [activeTab, setActiveTab] = useState('Designation');
   const [showModal, setShowModal] = useState(false);
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -65,6 +66,7 @@ const MasterList = () => {
   const handleTabClick = useCallback(
     (tab) => {
       setActiveTab(tab);
+      setSelectedCheckboxes([]);
     },
     [setActiveTab]
   );
@@ -151,6 +153,15 @@ const MasterList = () => {
       console.error("Saving master data error:", error);
     }
   }
+
+  const handleCheckboxChange = (index) => {
+    const isSelected = selectedCheckboxes.includes(index);
+    const updatedRows = isSelected
+      ? selectedCheckboxes.filter((row) => row !== index)
+      : [...selectedCheckboxes, index];
+
+      setSelectedCheckboxes(updatedRows);
+  };
 
   useEffect(() => {
     if (credentials) {
@@ -296,64 +307,102 @@ const MasterList = () => {
                     designations &&
                     designations?.success &&
                     designations?.data &&
-                    JSON.parse(designations?.data)?.map((designation, index) => (
-                      <tr key={index}>
-                        <td>
-                          <Checkbox />
-                        </td>
-                        <td>{index + 1}</td>
-                        <td>{designation.Designation}</td>
-                        <td>{designation.Description}</td>
-                        <td>{formatDateString(designation.DateCreated)}</td>
-                        <td>{designation.Scenarios}</td>
-                        <td>{(designation.Status) ? 'Active' : 'Inactive'}</td>
-                        <td>
-                          <div className={styles.actions}>
-                            <div className={styles.circleSvg}>
-                              <svg height="14" width="14">
-                                <use xlinkHref="sprite.svg#edit_icon" />
-                              </svg>
+                    JSON.parse(designations?.data)?.map((designation, index) => {
+                      const isSelected = selectedCheckboxes.includes(index);
+
+                      return (
+                        <tr key={index}>
+                          <td>
+                            <Checkbox
+                              checked={isSelected}
+                              onChange={() => handleCheckboxChange(index)}
+                            />
+                          </td>
+                          <td>{index + 1}</td>
+                          <td>{designation.Designation}</td>
+                          <td>{designation.Description}</td>
+                          <td>{formatDateString(designation.DateCreated)}</td>
+                          <td>{designation.Scenarios}</td>
+                          <td>{(designation.Status) ? 'Active' : 'Inactive'}</td>
+                          <td>
+                            <div className={styles.actions}>
+                              <div className={styles.circleSvg}>
+                                <svg
+                                  height="14"
+                                  width="14"
+                                  style={{
+                                    opacity: isSelected ? "1" : "0.3"
+                                  }}
+                                >
+                                  <use xlinkHref="sprite.svg#edit_icon" />
+                                </svg>
+                              </div>
+                              <div className={styles.circleSvg}>
+                                <svg
+                                  height="14"
+                                  width="14"
+                                  style={{
+                                    opacity: isSelected ? "1" : "0.3"
+                                  }}
+                                >
+                                  <use xlinkHref="sprite.svg#delete_icon" />
+                                </svg>
+                              </div>
                             </div>
-                            <div className={styles.circleSvg}>
-                              <svg height="14" width="14">
-                                <use xlinkHref="sprite.svg#delete_icon" />
-                              </svg>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
+                          </td>
+                        </tr>
+                      )
+                    })
                   ) : (
                     organizations &&
                     organizations?.success &&
                     organizations?.data &&
-                    JSON.parse(organizations?.data)?.map((organization, index) => (
-                      <tr key={index}>
-                        <td>
-                          <Checkbox />
-                        </td>
-                        <td>{index + 1}</td>
-                        <td>{organization.Organization}</td>
-                        <td>{organization.MemberUsers}</td>
-                        <td>{formatDateString(organization.DateCreated)}</td>
-                        <td>{organization.GamesPlayed}</td>
-                        <td>{(organization.Status) ? 'Active' : 'Inactive'}</td>
-                        <td>
-                          <div className={styles.actions}>
-                            <div className={styles.circleSvg}>
-                              <svg height="14" width="14">
-                                <use xlinkHref="sprite.svg#edit_icon" />
-                              </svg>
+                    JSON.parse(organizations?.data)?.map((organization, index) => {
+                      const isSelected = selectedCheckboxes.includes(index);
+
+                      return (
+                        <tr key={index}>
+                          <td>
+                            <Checkbox
+                              checked={isSelected}
+                              onChange={() => handleCheckboxChange(index)}
+                            />
+                          </td>
+                          <td>{index + 1}</td>
+                          <td>{organization.Organization}</td>
+                          <td>{organization.MemberUsers}</td>
+                          <td>{formatDateString(organization.DateCreated)}</td>
+                          <td>{organization.GamesPlayed}</td>
+                          <td>{(organization.Status) ? 'Active' : 'Inactive'}</td>
+                          <td>
+                            <div className={styles.actions}>
+                              <div className={styles.circleSvg}>
+                                <svg
+                                  height="14"
+                                  width="14"
+                                  style={{
+                                    opacity: isSelected ? "1" : "0.3"
+                                  }}
+                                >
+                                  <use xlinkHref="sprite.svg#edit_icon" />
+                                </svg>
+                              </div>
+                              <div className={styles.circleSvg}>
+                                <svg 
+                                  height="14" 
+                                  width="14"
+                                  style={{
+                                    opacity: isSelected ? "1" : "0.3"
+                                  }}  
+                                >
+                                  <use xlinkHref="sprite.svg#delete_icon" />
+                                </svg>
+                              </div>
                             </div>
-                            <div className={styles.circleSvg}>
-                              <svg height="14" width="14">
-                                <use xlinkHref="sprite.svg#delete_icon" />
-                              </svg>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
+                          </td>
+                        </tr>
+                      )
+                    })
                   )
                 }
               </tbody>
