@@ -104,6 +104,7 @@ Nudges.formats = [
   "italic",
   "underline",
   "align",
+  "color",
 ];
 
 export default Nudges;

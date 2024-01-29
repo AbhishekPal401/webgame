@@ -307,6 +307,46 @@ const GamePlay = () => {
     [credentials, questionDetails, selectedAnswer, startedAt, sessionDetails]
   );
 
+  const defaultAnswerSubmit = useCallback(
+    (decider = false) => {
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      const data = {
+        sessionID: sessionData.SessionID,
+        instanceID: sessionData.InstanceID,
+        scenarioID: sessionData.ScenarioID,
+        userID: credentials.data.userID,
+        questionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+        questionNo:
+          questionDetails?.data?.QuestionDetails?.QuestionNo.toString(),
+        answerID: "NA",
+        score: "0",
+        startedAt: startedAt.toString(),
+        finishedAt: Math.floor(Date.now() / 1000).toString(),
+        duration: "",
+        IsDeciderDecision: decider ? true : false,
+        IsAdminDecision: false,
+        isAnswerDeligated:
+          questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker,
+        delegatedUserID: questionDetails?.data?.QuestionDetails
+          ?.IsUserDecisionMaker
+          ? credentials.data.userID
+          : "",
+        isOptimal: false,
+        currentState: "InProgress",
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      dispatch(submitAnswerDetails(data));
+    },
+    [credentials, questionDetails, startedAt, sessionDetails]
+  );
+
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
@@ -429,6 +469,33 @@ const GamePlay = () => {
       setSelectedAnswer(null);
       setIsDecision(false);
       dispatch(resetAnswerDetailsState());
+    } else if (answerDetails.success && selectedAnswer === null) {
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      const data = {
+        InstanceID: sessionData.InstanceID,
+        SessionID: sessionData.SessionID,
+        UserID: credentials.data.userID,
+        UserName: credentials.data.userName,
+        ActionType: isDecision
+          ? "DeciderDecision"
+          : questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker
+          ? "DeciderVote"
+          : "UserVote",
+        Message: "Voting",
+
+        QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+        AnswerID: "na",
+      };
+
+      console.log("send vote data", data);
+
+      signalRService.SendVotes(data);
+
+      setCurrentQuestionSubmitted(true);
+      setSelectedAnswer(null);
+      setIsDecision(false);
+      dispatch(resetAnswerDetailsState());
     }
   }, [answerDetails, isDecision]);
 
@@ -530,6 +597,11 @@ const GamePlay = () => {
                   }}
                   CurrentState={currentState}
                   isCurrentQuestionVotted={currentQuestionSubmitted}
+                  onComplete={defaultAnswerSubmit}
+                  onDecisionCompleteDefault={() => {
+                    setIsDecision(true);
+                    defaultAnswerSubmit();
+                  }}
                 />
               )}
           </div>

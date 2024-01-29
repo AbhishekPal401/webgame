@@ -24,13 +24,14 @@ const renderer = ({ minutes, seconds, completed }) => {
   }
 };
 
-const CountDown = memo(({ duration = 5000 }) => {
+const CountDown = memo(({ duration = 5000, onComplete = () => {} }) => {
   return (
     <Countdown
       key={duration}
       date={Date.now() + duration}
       renderer={renderer}
       autoStart={true}
+      onComplete={onComplete}
     />
   );
 });
@@ -59,6 +60,9 @@ const Question = ({
   setShowDecision = () => {},
   setShowVotes = () => {},
   delegatedTo = "",
+  onComplete = () => {},
+  onDecisionCompleteDefault = () => {},
+  onAdminDecisionCompleteDefault = () => {},
 }) => {
   const [showMedia, setShowMedia] = useState(true);
   const [duration, setDuration] = useState(Duration);
@@ -245,10 +249,24 @@ const Question = ({
   );
 
   useEffect(() => {
-    if (Duration) {
-      setDuration(Duration);
+    setDuration(Duration);
+  }, [QuestionText, QuestionNo]);
+
+  useEffect(() => {
+    if (
+      CurrentState === PlayingStates.DecisionCompleted &&
+      isAdmin &&
+      adminState === "MakeDecision"
+    ) {
+      setDuration(30 * 1000); //30 seconds
+    } else if (
+      CurrentState === PlayingStates.VotingCompleted &&
+      !isAdmin &&
+      IsDecisionMaker
+    ) {
+      setDuration(30 * 1000); //30 seconds
     }
-  }, [Duration, QuestionText, QuestionNo]);
+  }, [CurrentState]);
 
   return (
     <div className={styles.container}>
@@ -268,7 +286,22 @@ const Question = ({
           </div>
 
           <div className={styles.timer}>
-            Time Left to Vote <CountDown duration={duration} /> min
+            Time Left to Vote{" "}
+            <CountDown
+              duration={duration}
+              onComplete={
+                isAdmin &&
+                CurrentState === PlayingStates.DecisionCompleted &&
+                adminState === "MakeDecision"
+                  ? onAdminDecisionCompleteDefault
+                  : CurrentState === PlayingStates.VotingCompleted &&
+                    !isAdmin &&
+                    IsDecisionMaker
+                  ? onDecisionCompleteDefault
+                  : onComplete
+              }
+            />{" "}
+            min
           </div>
         </div>
       </div>

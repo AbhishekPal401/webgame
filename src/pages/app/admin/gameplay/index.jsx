@@ -526,6 +526,20 @@ const GamePlay = () => {
                   delegatedTo={
                     questionDetails?.data?.QuestionDetails?.DelegatedTo
                   }
+                  onAdminDecisionCompleteDefault={() => {
+                    toast.success("Time is up, Please make a decision", {
+                      containerId: "alert_messages",
+                      className: "notification",
+                      position: "top-right",
+                      style: {
+                        top: `${position}px`,
+                        borderRight: "0.4rem solid #ffb600",
+                      },
+                      closeButton: false,
+                      autoClose: 3000,
+                      icon: false,
+                    });
+                  }}
                 />
               )}
           </div>
@@ -533,19 +547,7 @@ const GamePlay = () => {
         <div className={styles.right}>
           <div className={styles.notification}>
             <div ref={alerRef}>
-              <svg
-                id="alert_messages"
-                onClick={() => {
-                  // toast.success("Alert message", {
-                  //   containerId: "alert_messages",
-                  //   position: "top-right",
-                  //   style: {
-                  //     top: `${position}px`,
-                  //   },
-                  //   icon,
-                  // });
-                }}
-              >
+              <svg id="alert_messages">
                 <use xlinkHref={"sprite.svg#notifcation"} />
               </svg>
             </div>

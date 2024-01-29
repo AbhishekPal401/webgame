@@ -4,7 +4,8 @@
 }
 
 .header {
-  width: 30rem;
+  width: 34rem;
+
   height: 3.8rem;
   display: flex;
   flex-direction: row;
