@@ -5,7 +5,7 @@
 }
 
 .header {
-  width: 30rem;
+  width: 34rem;
   height: 3.8rem;
   display: flex;
   flex-direction: row;
@@ -61,4 +61,18 @@
   align-items: center;
   margin-right: 1rem;
   margin-top: 1rem;
+}
+
+.quill {
+  width: 30rem !important;
+  background-color: var(--innerbackground);
+  margin: 0 1rem;
+}
+
+.quill > div {
+  border: none !important;
+}
+
+.quill > div:nth-child(2) {
+  height: 8rem !important;
 }

@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import styles from "./gameplay.module.css";
 import { motion } from "framer-motion";
 import CountDown from "../../../../components/ui/countdown";
@@ -165,26 +171,43 @@ const GamePlay = () => {
       dispatch(setActiveUsers(users));
     });
 
-    signalRService.NotificationListener((ActionType, Message) => {
-      console.log("NotificationListener", ActionType, Message);
-
-      if (ActionType === "Nudges") {
-        if (Message) {
-          toast.success(Message, {
-            containerId: "alert_messages",
-            position: "top-right",
-            style: {
-              top: `${position}px`,
-            },
-          });
-        }
-      }
-    });
-
     return () => {
       signalRService.GetVotingDetailsOff(handleVotingDetails);
     };
   }, []);
+
+  useEffect(() => {
+    const showNotifications = (ActionType, Message) => {
+      console.log("NotificationListener", ActionType, Message);
+
+      const htmlElement = <div dangerouslySetInnerHTML={{ __html: Message }} />;
+
+      if (ActionType === "Nudges") {
+        if (Message) {
+          toast.success(htmlElement, {
+            containerId: "alert_messages",
+            className: "notification",
+            position: "top-right",
+            style: {
+              top: `${position}px`,
+              borderRight: "0.4rem solid #ffb600",
+            },
+            closeButton: false,
+            autoClose: 3000,
+            icon: false,
+          });
+        }
+      }
+    };
+
+    if (position > 0) {
+      signalRService.NotificationListener(showNotifications);
+    }
+
+    return () => {
+      signalRService.NotificationListenerOff(showNotifications);
+    };
+  }, [position]);
 
   useEffect(() => {
     const handleProceedToNextQuestion = (data) => {
@@ -282,6 +305,46 @@ const GamePlay = () => {
       dispatch(submitAnswerDetails(data));
     },
     [credentials, questionDetails, selectedAnswer, startedAt, sessionDetails]
+  );
+
+  const defaultAnswerSubmit = useCallback(
+    (decider = false) => {
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      const data = {
+        sessionID: sessionData.SessionID,
+        instanceID: sessionData.InstanceID,
+        scenarioID: sessionData.ScenarioID,
+        userID: credentials.data.userID,
+        questionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+        questionNo:
+          questionDetails?.data?.QuestionDetails?.QuestionNo.toString(),
+        answerID: "NA",
+        score: "0",
+        startedAt: startedAt.toString(),
+        finishedAt: Math.floor(Date.now() / 1000).toString(),
+        duration: "",
+        IsDeciderDecision: decider ? true : false,
+        IsAdminDecision: false,
+        isAnswerDeligated:
+          questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker,
+        delegatedUserID: questionDetails?.data?.QuestionDetails
+          ?.IsUserDecisionMaker
+          ? credentials.data.userID
+          : "",
+        isOptimal: false,
+        currentState: "InProgress",
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      dispatch(submitAnswerDetails(data));
+    },
+    [credentials, questionDetails, startedAt, sessionDetails]
   );
 
   useEffect(() => {
@@ -406,6 +469,33 @@ const GamePlay = () => {
       setSelectedAnswer(null);
       setIsDecision(false);
       dispatch(resetAnswerDetailsState());
+    } else if (answerDetails.success && selectedAnswer === null) {
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      const data = {
+        InstanceID: sessionData.InstanceID,
+        SessionID: sessionData.SessionID,
+        UserID: credentials.data.userID,
+        UserName: credentials.data.userName,
+        ActionType: isDecision
+          ? "DeciderDecision"
+          : questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker
+          ? "DeciderVote"
+          : "UserVote",
+        Message: "Voting",
+
+        QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+        AnswerID: "na",
+      };
+
+      console.log("send vote data", data);
+
+      signalRService.SendVotes(data);
+
+      setCurrentQuestionSubmitted(true);
+      setSelectedAnswer(null);
+      setIsDecision(false);
+      dispatch(resetAnswerDetailsState());
     }
   }, [answerDetails, isDecision]);
 
@@ -507,6 +597,11 @@ const GamePlay = () => {
                   }}
                   CurrentState={currentState}
                   isCurrentQuestionVotted={currentQuestionSubmitted}
+                  onComplete={defaultAnswerSubmit}
+                  onDecisionCompleteDefault={() => {
+                    setIsDecision(true);
+                    defaultAnswerSubmit();
+                  }}
                 />
               )}
           </div>
