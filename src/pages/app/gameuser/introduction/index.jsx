@@ -42,7 +42,7 @@ const Intro = () => {
     dispatch(getNextQuestionDetails(data));
   }, [sessionDetails, credentials]);
 
-  const handlePlay = () => {
+  const onSkip = () => {
     fetchIntro();
   };
 
@@ -101,7 +101,7 @@ const Intro = () => {
             className={styles.buttonContainer}
             style={{ backgroundImage: 'url("./images/grey_strip.png")' }}
           >
-            <Button onClick={handlePlay} customStyle={{ fontSize: "1.4rem" }}>
+            <Button onClick={onSkip} customStyle={{ fontSize: "1.4rem" }}>
               Skip
             </Button>
           </div>

@@ -175,6 +175,10 @@ class SignalRService {
     this.hubConnection.off("Notifications", callback);
   }
 
+  ReceiveNotificationOff(callback = () => {}) {
+    this.hubConnection.off("ReceiveNotification", callback);
+  }
+
   // Ensure a single instance of SignalRService is used
   static getInstance() {
     if (!SignalRService.instance) {

@@ -90,15 +90,21 @@ const UserHomePage = () => {
   }, []);
 
   useEffect(() => {
-    signalRService.ReceiveNotification((actionType, message) => {
+    const notification = (actionType, message) => {
       console.log("actionType", actionType);
       console.log("message", message);
 
       if (actionType === "AdminPlayStart") {
         fetchIntro();
       }
-    });
-  });
+    };
+
+    signalRService.ReceiveNotification(notification);
+
+    return () => {
+      signalRService.ReceiveNotificationOff(notification);
+    };
+  }, [fetchIntro]);
 
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
