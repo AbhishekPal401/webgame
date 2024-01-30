@@ -34,3 +34,54 @@
   align-items: center;
   padding-right: 1rem;
 }
+.audioContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+.previewAudioImage {
+  max-width: 100%; 
+  max-height: 100%; 
+  width: auto; 
+  height: auto; 
+}
+.pdfPreviewContainer {
+  max-width: 100%; 
+  max-height: 100%; 
+  width: 100%; 
+  height: 100%; 
+}
+.customizedPDFPreviewContainer {
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* Enable scrollbar */
+}
+.previewContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%; /* Limit the container width to the available space */
+  max-height: 100%; /* Limit the container height to the available space */
+  overflow: hidden; /* Hide any overflowing content */
+}
+.previewImage {
+  max-width: 100%; 
+  max-height: 100%; 
+  width: 50%; 
+  height: 100%; 
+}
+/* Customize scrollbar */
+.customizedPDFPreviewContainer::-webkit-scrollbar {
+  width: 12px;
+}
+
+.customizedPDFPreviewContainer::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 6px;
+}
+
+.customizedPDFPreviewContainer::-webkit-scrollbar-track {
+  background-color: #ddd;
+}

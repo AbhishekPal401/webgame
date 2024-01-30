@@ -178,7 +178,7 @@ const GameInstances = () => {
                                                             </div>
                                                             <div className={styles.circleSvg}
                                                                 onClick={() => {
-                                                                    if (isSelected && gameInstance.Status !== "Completed") {
+                                                                    if (isSelected && gameInstance.Status === "Create") {
                                                                         navigate(`/instances/updateinstances/${gameInstance.InstanceID}`);
                                                                     }
                                                                 }}
@@ -188,7 +188,7 @@ const GameInstances = () => {
                                                                     width="14"
                                                                     style={{
                                                                         opacity: (isSelected &&
-                                                                            gameInstance.Status !== "Completed") ? "1" : "0.3"
+                                                                            gameInstance.Status === "Create") ? "1" : "0.3"
                                                                     }}
                                                                 >
                                                                     <use xlinkHref="sprite.svg#edit_icon" />
@@ -198,7 +198,11 @@ const GameInstances = () => {
                                                                 <svg
                                                                     height="14"
                                                                     width="14"
-                                                                    style={{ opacity: isSelected ? "1" : "0.3" }}
+                                                                    style={{ 
+                                                                        opacity: (isSelected &&
+                                                                            (gameInstance.Status === "Create" ||
+                                                                            gameInstance.Status === "Completed")) ? "1" : "0.3" 
+                                                                    }}
                                                                 >
                                                                     <use xlinkHref="sprite.svg#delete_icon" />
                                                                 </svg>
