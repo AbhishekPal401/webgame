@@ -170,7 +170,7 @@ function QuestionList() {
                   <th></th>
                   <th>#</th>
                   <th>Questions</th>
-                  <th>Level</th>
+                  {/* <th>Level</th> */}
                   <th>Answers</th>
                   <th>Decision maker</th>
                   <th>Narrative Media</th>
@@ -196,9 +196,9 @@ function QuestionList() {
                           <td>
                             {question.QuestionText}
                           </td>
-                          <td className={styles.scenarioDescription}>
-                            Levels{/* TODO :: get levels */}
-                          </td>
+                          {/* <td className={styles.scenarioDescription}>
+                            Levels
+                          </td> */}
                           <td>{question.Answers}</td>
                           <td>{question.DelegatedTo}</td>
                           <td>{question.NarativeMedia}</td>
