@@ -527,7 +527,7 @@ const UpdateScenarios = () => {
                 <div className={styles.imageDropZoneContainerLeft}>
                   <FileDropZone
                     customstyle={{ marginTop: "1rem" }}
-                    label="Upload Game Intro Video"
+                    label="Upload Game Intro Media"
                     hint="Eligible Formats: Mp4, Mp3, Image and PDF"
                     allowedFileTypes={allowedFileTypesArray}
                     onUpload={onUpload}
