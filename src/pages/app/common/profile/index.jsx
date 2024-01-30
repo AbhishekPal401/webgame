@@ -356,7 +356,7 @@ const UserProfile = () => {
           error: "Please enter mobile number",
         },
       };
-      valid = false;
+      // valid = false;
     } else if (!validatePhone(userData.mobile.value)) {
       console.log("Invalid mobile number");
 
