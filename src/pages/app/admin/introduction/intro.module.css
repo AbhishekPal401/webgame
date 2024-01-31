@@ -72,16 +72,3 @@
   width: 50%; 
   height: 100%; 
 }
-/* Customize scrollbar */
-.customizedPDFPreviewContainer::-webkit-scrollbar {
-  width: 12px;
-}
-
-.customizedPDFPreviewContainer::-webkit-scrollbar-thumb {
-  background-color: #555;
-  border-radius: 6px;
-}
-
-.customizedPDFPreviewContainer::-webkit-scrollbar-track {
-  background-color: #ddd;
-}

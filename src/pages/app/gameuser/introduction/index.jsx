@@ -8,6 +8,7 @@ import { generateGUID, isJSONString } from "../../../../utils/common";
 import { getNextQuestionDetails } from "../../../../store/app/user/questions/getNextQuestion";
 import { toast } from "react-toastify";
 import { extractFileType } from "../../../../utils/helper";
+import PDFPreview from "../../../../components/preview/pdfpreview";
 
 const Intro = () => {
   const mediaRef = useRef(null);
@@ -130,12 +131,13 @@ const Intro = () => {
                       allowFullScreen
                       sandbox="allow-scripts allow-same-origin"
                     /> */}
-                     <embed
+                     {/* <embed
                       src={questionDetails.data.IntroMediaURL}
                       type="application/pdf"
                       width="100%"
                       height="100%"
-                    />
+                    /> */}
+                    <PDFPreview pdfUrl={questionDetails.data.IntroMediaURL}/>
                   </div>
                 )}
 

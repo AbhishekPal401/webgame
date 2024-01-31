@@ -1,0 +1,54 @@
+
+.container {
+  
+}
+
+.pdfContainer {
+  position: relative;
+}
+
+.pdfDocumentContainer {
+  overflow: auto;
+}
+
+.navBar {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.navContainer {
+  opacity: 0; 
+  transition: opacity 0.3s ease;
+  position: fixed;
+  background-color: #323639;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  width: 20%;
+  color: white;
+}
+
+.pdfContainer:hover .navContainer {
+  opacity: 1;
+}
+
+.navContainer > div:first-child {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navContainer > div:first-child > div:first-child {
+  cursor: pointer;
+}
+
+.navContainer > div:first-child > div:nth-child(3) {
+  cursor: pointer;
+}
