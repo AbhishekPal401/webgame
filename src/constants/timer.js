@@ -1,0 +1,6 @@
+export const TIMER_STATES = {
+  START: "START",
+  STOP: "STOP",
+  PAUSE: "PAUSE",
+  COMPLETED: "COMPLETED",
+};

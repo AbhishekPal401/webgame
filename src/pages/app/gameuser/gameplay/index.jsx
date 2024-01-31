@@ -34,6 +34,7 @@ import Loader from "../../../../components/loader";
 import ModalContainer from "../../../../components/modal";
 import { setActiveUsers } from "../../../../store/local/gameplay";
 import TeamMembers from "../../../../components/teammembers";
+import { TIMER_STATES } from "../../../../constants/timer";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -116,10 +117,10 @@ const GamePlay = () => {
   const [isDecision, setIsDecision] = useState(false);
   const [nextQuestionFetched, setNextQuestionFetched] = useState(false);
   const [callNextQuestion, setCallNextQuestion] = useState(false);
-
   const [showDecisionTree, setShowDecisionTree] = useState(false);
-
   const [position, setPosition] = useState(0);
+  const [countdown, setCoundown] = useState(TIMER_STATES.STOP);
+  const [duration, setDuration] = useState(0);
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -351,7 +352,8 @@ const GamePlay = () => {
     if (questionDetails === null || questionDetails === undefined) return;
 
     if (questionDetails.success) {
-      console.log("questionDetails", questionDetails);
+      let duration =
+        Number(questionDetails.data.QuestionDetails.Duration) * 1000;
 
       if (callNextQuestion) {
         setNextQuestionFetched(true);
@@ -372,23 +374,24 @@ const GamePlay = () => {
 
           let currentState = PlayingStates.UserVote;
           let currentQuestionSubmitted = false;
+          let currentDecisionSubmitted = false;
 
           if (
             questionDetails?.data?.QuestionDetails?.QuestionID ===
-            hublivedata.QuestionID
+            hublivedata.questionID
           ) {
             setNextQuestionFetched(true);
             setSelectedAnswer(null);
             setStartedAt(Math.floor(Date.now() / 1000));
             setCallNextQuestion(false);
 
-            currentState = hublivedata?.DecisionDisplayType;
+            currentState = hublivedata?.decisionDisplayType;
 
             //checking if user voted
-            if (Array.isArray(hublivedata.Votes)) {
-              hublivedata.Votes.forEach((answersubmitDetails) => {
-                answersubmitDetails.VotersInfo.forEach((userDetails) => {
-                  if (userDetails.UserID === credentials.data.userID) {
+            if (Array.isArray(hublivedata.votes)) {
+              hublivedata.votes.forEach((answersubmitDetails) => {
+                answersubmitDetails.votersInfo.forEach((userDetails) => {
+                  if (userDetails.userID === credentials.data.userID) {
                     // currentState = PlayingStates.VotingCompleted;
                     currentQuestionSubmitted = true;
                   }
@@ -397,15 +400,22 @@ const GamePlay = () => {
             }
 
             //checking if user made decision
-            if (Array.isArray(hublivedata.DecisionVote)) {
-              hublivedata.DecisionVote.forEach((answersubmitDetails) => {
-                answersubmitDetails.VotersInfo.forEach((userDetails) => {
-                  if (userDetails.UserID === credentials.data.userID) {
+            if (Array.isArray(hublivedata.decisionVote)) {
+              hublivedata.decisionVote.forEach((answersubmitDetails) => {
+                answersubmitDetails.votersInfo.forEach((userDetails) => {
+                  if (userDetails.userID === credentials.data.userID) {
                     currentState = PlayingStates.DecisionCompleted;
+                    currentDecisionSubmitted = true;
                   }
                 });
               });
             }
+
+            // if (questionDetails.data.QuestionDetails.IsUserDecisionMaker) {
+            //   if (currentQuestionSubmitted && !currentDecisionSubmitted) {
+            //     duration = 30 * 1000; // 30 seconds
+            //   }
+            // }
 
             if (currentState === PlayingStates.VotingCompleted) {
               setShowModal(true);
@@ -437,6 +447,8 @@ const GamePlay = () => {
           setIsDecision(false);
         }
       }
+
+      setDuration(duration);
     }
   }, [questionDetails, callNextQuestion]);
 
@@ -485,7 +497,7 @@ const GamePlay = () => {
         Message: "Voting",
 
         QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-        AnswerID: "na",
+        AnswerID: "NA",
       };
 
       console.log("send vote data", data);
@@ -498,6 +510,29 @@ const GamePlay = () => {
       dispatch(resetAnswerDetailsState());
     }
   }, [answerDetails, isDecision]);
+
+  useEffect(() => {
+    if (currentState === PlayingStates.UserVote) {
+      setCoundown(TIMER_STATES.START);
+    } else if (currentState === PlayingStates.VotingInProgress) {
+      if (currentQuestionSubmitted) {
+        setCoundown(TIMER_STATES.PAUSE);
+      } else {
+        setCoundown(TIMER_STATES.START);
+      }
+    } else if (currentState === PlayingStates.VotingCompleted) {
+      if (questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker) {
+        setDuration(30 * 1000); // 30 seconds
+        setCoundown(TIMER_STATES.START);
+      } else {
+        setCoundown(TIMER_STATES.PAUSE);
+      }
+    } else if (currentState === PlayingStates.DecisionCompleted) {
+      setCoundown(TIMER_STATES.PAUSE);
+    } else {
+      setCoundown(TIMER_STATES.PAUSE);
+    }
+  }, [currentState, currentQuestionSubmitted, questionDetails]);
 
   return (
     <motion.div
@@ -574,9 +609,7 @@ const GamePlay = () => {
                   IsDecisionMaker={
                     questionDetails.data.QuestionDetails.IsUserDecisionMaker
                   }
-                  Duration={
-                    Number(questionDetails.data.QuestionDetails.Duration) * 1000
-                  }
+                  Duration={duration}
                   QuestionNo={questionDetails.data.QuestionDetails.QuestionNo}
                   QuestionText={
                     questionDetails.data.QuestionDetails.QuestionText
@@ -602,6 +635,7 @@ const GamePlay = () => {
                     setIsDecision(true);
                     defaultAnswerSubmit();
                   }}
+                  countdown={countdown}
                 />
               )}
           </div>

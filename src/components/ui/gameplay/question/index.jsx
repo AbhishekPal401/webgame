@@ -1,4 +1,13 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+  useLayoutEffect,
+} from "react";
 import styles from "./question.module.css";
 import SmallCountDown from "../smallcountdown";
 import Button from "../../../common/button";
@@ -8,6 +17,7 @@ import VideoController from "../../../media/videocontroller";
 import AudioController from "../../../media/audiocontroller";
 
 import { PlayingStates } from "../../../../constants/playingStates";
+import { TIMER_STATES } from "../../../../constants/timer";
 
 const renderer = ({ minutes, seconds, completed }) => {
   if (completed) {
@@ -24,17 +34,29 @@ const renderer = ({ minutes, seconds, completed }) => {
   }
 };
 
-const CountDown = memo(({ duration = 5000, onComplete = () => {} }) => {
-  return (
-    <Countdown
-      key={duration}
-      date={Date.now() + duration}
-      renderer={renderer}
-      autoStart={true}
-      onComplete={onComplete}
-    />
-  );
-});
+const CountDown = memo(
+  forwardRef(({ duration = 5000, onComplete = () => {}, QuestionNo }, ref) => {
+    const countdownRef = useRef(null);
+
+    // Expose start, stop, and pause functions to Question component
+    useImperativeHandle(ref, () => ({
+      start: () => countdownRef.current.start(),
+      stop: () => countdownRef.current.stop(),
+      pause: () => countdownRef.current.pause(),
+    }));
+
+    return (
+      <Countdown
+        ref={countdownRef}
+        key={duration}
+        date={Date.now() + duration}
+        renderer={renderer}
+        autoStart={false}
+        onComplete={onComplete}
+      />
+    );
+  })
+);
 
 const Question = ({
   Duration = 10,
@@ -51,23 +73,21 @@ const Question = ({
   IsDecisionMaker = false,
   isCurrentQuestionVotted = false,
   onDecisionSubmit = () => {},
-  adminState = "",
   Votes = [],
   decisionDetails = [],
   onNextQuestion = () => {},
   showVotes = false,
-  showDecision = false,
-  setShowDecision = () => {},
-  setShowVotes = () => {},
   delegatedTo = "",
   onComplete = () => {},
   onDecisionCompleteDefault = () => {},
   onAdminDecisionCompleteDefault = () => {},
+  countdown = TIMER_STATES.STOP,
 }) => {
   const [showMedia, setShowMedia] = useState(true);
-  const [duration, setDuration] = useState(Duration);
+  // const [duration, setDuration] = useState(Duration);
 
   let CustomButtonRender = null;
+  const countDownRef = useRef();
 
   if (CurrentState === PlayingStates.VotingInProgress) {
     if (isAdmin) {
@@ -163,42 +183,51 @@ const Question = ({
     }
   } else if (CurrentState === PlayingStates.DecisionCompleted) {
     if (isAdmin) {
-      if (showVotes) {
-        CustomButtonRender = (
-          <div className={styles.buttonContainer}>
-            <div>Decision Made by {delegatedTo}</div>
-            <Button customClassName={styles.button} onClick={onNextQuestion}>
-              Next Question
-            </Button>
-          </div>
-        );
-      } else {
-        if (adminState === "MakeDecision") {
-          CustomButtonRender = (
-            <div className={styles.buttonContainer}>
-              <div></div>
-              <Button customClassName={styles.button} onClick={onAnswerSubmit}>
-                Make a Decision
-              </Button>
-            </div>
-          );
-        } else if (adminState === "RevealDecision") {
-          CustomButtonRender = (
-            <div className={styles.buttonContainer}>
-              <div>Decision Made by {delegatedTo}</div>
-              <Button
-                customClassName={styles.button}
-                onClick={() => {
-                  setShowVotes(true);
-                  setShowDecision(false);
-                }}
-              >
-                Approve
-              </Button>
-            </div>
-          );
-        }
-      }
+      CustomButtonRender = (
+        <div className={styles.buttonContainer}>
+          <div>Decision Made by {delegatedTo}</div>
+          <Button customClassName={styles.button} onClick={onNextQuestion}>
+            Approve & Next Question
+          </Button>
+        </div>
+      );
+
+      // if (showVotes) {
+      //   CustomButtonRender = (
+      //     <div className={styles.buttonContainer}>
+      //       <div>Decision Made by {delegatedTo}</div>
+      //       <Button customClassName={styles.button} onClick={onNextQuestion}>
+      //         Next Question
+      //       </Button>
+      //     </div>
+      //   );
+      // } else {
+      //   if (adminState === "MakeDecision") {
+      //     CustomButtonRender = (
+      //       <div className={styles.buttonContainer}>
+      //         <div></div>
+      //         <Button customClassName={styles.button} onClick={onAnswerSubmit}>
+      //           Make a Decision
+      //         </Button>
+      //       </div>
+      //     );
+      //   } else if (adminState === "RevealDecision") {
+      //     CustomButtonRender = (
+      //       <div className={styles.buttonContainer}>
+      //         <div>Decision Made by {delegatedTo}</div>
+      //         <Button
+      //           customClassName={styles.button}
+      //           onClick={() => {
+      //             setShowVotes(true);
+      //             setShowDecision(false);
+      //           }}
+      //         >
+      //           Approve
+      //         </Button>
+      //       </div>
+      //     );
+      //   }
+      // }
     } else {
       CustomButtonRender = (
         <div className={styles.buttonContainer}>
@@ -240,33 +269,94 @@ const Question = ({
   );
 
   const getDecisionDetailsById = useCallback(
-    (answerId) => {
-      return (
-        decisionDetails.find((answer) => answer.answer === answerId) || null
-      );
+    (answerId, delegatedTo) => {
+      const answerObject =
+        decisionDetails.find((answer) => answer.answer === answerId) || null;
+
+      if (
+        answerObject &&
+        answerObject.votersInfo &&
+        Array.isArray(answerObject.votersInfo)
+      ) {
+        let isDelegated = false;
+
+        answerObject.votersInfo.forEach((votesDetails) => {
+          if (votesDetails.designation === delegatedTo) {
+            isDelegated = true;
+          }
+        });
+
+        return isDelegated;
+      } else {
+        return false;
+      }
     },
-    [decisionDetails]
+    [decisionDetails, delegatedTo]
   );
 
-  useEffect(() => {
-    setDuration(Duration);
-  }, [QuestionText, QuestionNo]);
+  // useEffect(() => {
+  //   setDuration(Duration);
+  // }, [QuestionText, QuestionNo]);
+
+  // useEffect(() => {
+  //   if (CurrentState === PlayingStates.DecisionCompleted && isAdmin) {
+  //     setDuration(30 * 1000); //30 seconds
+  //   } else if (
+  //     !isAdmin &&
+  //     CurrentState === PlayingStates.VotingCompleted &&
+  //     IsDecisionMaker
+  //   ) {
+  //     setDuration(30 * 1000); //30 seconds
+  //   }
+  // }, [CurrentState]);
 
   useEffect(() => {
-    if (
-      CurrentState === PlayingStates.DecisionCompleted &&
-      isAdmin &&
-      adminState === "MakeDecision"
-    ) {
-      setDuration(30 * 1000); //30 seconds
-    } else if (
-      CurrentState === PlayingStates.VotingCompleted &&
-      !isAdmin &&
-      IsDecisionMaker
-    ) {
-      setDuration(30 * 1000); //30 seconds
+    let timeoutId;
+
+    if (isAdmin) {
+      if (countDownRef.current) {
+        if (countdown === TIMER_STATES.STOP) {
+          timeoutId = setTimeout(() => {
+            countDownRef.current.stop();
+          }, 10);
+        } else if (countdown === TIMER_STATES.START) {
+          timeoutId = setTimeout(() => {
+            countDownRef.current.start();
+          }, 10);
+        } else if (countdown === TIMER_STATES.PAUSE) {
+          timeoutId = setTimeout(() => {
+            countDownRef.current.pause();
+          }, 10);
+        }
+      }
+    } else {
+      if (countDownRef.current) {
+        if (countdown === TIMER_STATES.STOP) {
+          timeoutId = setTimeout(() => {
+            countDownRef.current.stop();
+          }, 10);
+        } else if (countdown === TIMER_STATES.START) {
+          timeoutId = setTimeout(() => {
+            countDownRef.current.start();
+          }, 10);
+        } else if (countdown === TIMER_STATES.PAUSE) {
+          timeoutId = setTimeout(() => {
+            countDownRef.current.pause();
+          }, 10);
+        }
+      }
     }
-  }, [CurrentState]);
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [countdown, countDownRef.current]);
+
+  console.log("countdown", countdown);
+  console.log("CurrentState", CurrentState);
+  console.log("Duration", Duration);
 
   return (
     <div className={styles.container}>
@@ -278,21 +368,23 @@ const Question = ({
             <SmallCountDown
               height={16}
               width={16}
-              duration={duration}
+              duration={Duration}
               loops={1}
               reverse={true}
               inverse={false}
+              isPaused={countdown === TIMER_STATES.START ? false : true}
+              QuestionNo={QuestionNo}
             />
           </div>
 
           <div className={styles.timer}>
             Time Left to Vote{" "}
             <CountDown
-              duration={duration}
+              ref={countDownRef}
+              duration={Duration}
+              QuestionNo={QuestionNo}
               onComplete={
-                isAdmin &&
-                CurrentState === PlayingStates.DecisionCompleted &&
-                adminState === "MakeDecision"
+                isAdmin && CurrentState === PlayingStates.DecisionCompleted
                   ? onAdminDecisionCompleteDefault
                   : CurrentState === PlayingStates.VotingCompleted &&
                     !isAdmin &&
@@ -300,7 +392,7 @@ const Question = ({
                   ? onDecisionCompleteDefault
                   : onComplete
               }
-            />{" "}
+            />
             min
           </div>
         </div>
@@ -321,6 +413,10 @@ const Question = ({
                   className={`${styles.answer} ${
                     selectedAnswer?.AnswerID === item?.AnswerID
                       ? styles.selected
+                      : selectedAnswer
+                      ? ""
+                      : getDecisionDetailsById(item?.AnswerID, delegatedTo)
+                      ? styles.selected
                       : ""
                   }`}
                   key={index}
@@ -338,18 +434,6 @@ const Question = ({
                       Votes.length > 0 &&
                       getVotesDetailsById(item?.AnswerID) &&
                       getVotesDetailsById(item?.AnswerID).userName.map(
-                        (username) => {
-                          return (
-                            <div className={styles.userbadge}>{username}</div>
-                          );
-                        }
-                      )}
-                    {showDecision &&
-                      decisionDetails &&
-                      Array.isArray(decisionDetails) &&
-                      decisionDetails.length > 0 &&
-                      getDecisionDetailsById(item?.AnswerID) &&
-                      getDecisionDetailsById(item?.AnswerID).userName.map(
                         (username) => {
                           return (
                             <div className={styles.userbadge}>{username}</div>

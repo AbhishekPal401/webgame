@@ -27,6 +27,7 @@ import {
 } from "../../../../store/app/admin/gameinstances/getInstanceProgress.js";
 import TeamMembers from "../../../../components/teammembers/index.jsx";
 import Nudges from "../../../../components/nudges/index.jsx";
+import { TIMER_STATES } from "../../../../constants/timer.js";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -104,13 +105,14 @@ const GamePlay = () => {
   const [votesDetails, setVoteDetails] = useState([]);
   const [decisionDetails, setDecisionDetails] = useState([]);
   const [showDecision, setShowDecision] = useState(false);
-
   const [nextQuestionFetched, setNextQuestionFetched] = useState(false);
   const [adminState, setAdminState] = useState("MakeDecision");
   const [showVotes, setShowVotes] = useState(false);
   const [callNextQuestion, setCallNextQuestion] = useState(false);
   const [showDecisionTree, setShowDecisionTree] = useState(false);
   const [position, setPosition] = useState(0);
+  const [countdown, setcoundown] = useState(TIMER_STATES.STOP);
+  const [duration, setDuration] = useState(0);
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -135,6 +137,7 @@ const GamePlay = () => {
         if (votesDetails.decisionVote) {
           setDecisionDetails(votesDetails.decisionVote);
         }
+
         setNextQuestionFetched(false);
         setShowVotes(false);
       } else if (
@@ -159,6 +162,7 @@ const GamePlay = () => {
         if (votesDetails.decisionVote) {
           setDecisionDetails(votesDetails.decisionVote);
         }
+        setShowVotes(true);
         setNextQuestionFetched(false);
       }
     };
@@ -250,10 +254,14 @@ const GamePlay = () => {
     if (questionDetails === null || questionDetails === undefined) return;
 
     if (questionDetails.success) {
+      const duration =
+        Number(questionDetails.data.QuestionDetails.Duration) * 1000;
+      setDuration(duration);
+
       if (callNextQuestion) {
         setNextQuestionFetched(true);
         setSelectedAnswer(null);
-        setAdminState("MakeDecision");
+        // setAdminState("MakeDecision");
         setShowDecision(false);
         setVoteDetails([]);
         setCurrentState(PlayingStates.VotingInProgress);
@@ -273,7 +281,7 @@ const GamePlay = () => {
 
           if (
             questionDetails?.data?.QuestionDetails?.QuestionID ===
-            hublivedata.QuestionID
+            hublivedata.questionID
           ) {
             setNextQuestionFetched(true);
             setSelectedAnswer(null);
@@ -281,30 +289,32 @@ const GamePlay = () => {
             setCallNextQuestion(false);
             setShowDecision(false);
 
-            currentState = hublivedata?.DecisionDisplayType;
+            currentState = hublivedata?.decisionDisplayType;
 
             //checking if admin made decision
-            if (Array.isArray(hublivedata.DecisionVote)) {
-              hublivedata.DecisionVote.forEach((answersubmitDetails) => {
-                answersubmitDetails.VotersInfo.forEach((userDetails) => {
-                  if (userDetails.UserID === credentials.data.userID) {
+            if (Array.isArray(hublivedata.decisionVote)) {
+              hublivedata.decisionVote.forEach((answersubmitDetails) => {
+                answersubmitDetails.votersInfo.forEach((userDetails) => {
+                  if (userDetails.userID === credentials.data.userID) {
                     currentQuestionSubmitted = true;
                   }
                 });
               });
             }
 
-            if (currentQuestionSubmitted) {
-              setAdminState("RevealDecision");
+            if (currentState === PlayingStates.DecisionCompleted) {
+              setShowVotes(true);
+              setcoundown(TIMER_STATES.START);
             } else {
-              setAdminState("MakeDecision");
+              setcoundown(TIMER_STATES.STOP);
+              setShowVotes(false);
             }
 
-            if (hublivedata.Votes) {
+            if (hublivedata.votes) {
               setVoteDetails(hublivedata.votes);
             }
 
-            if (hublivedata.DecisionVote) {
+            if (hublivedata.decisionVote) {
               setDecisionDetails(hublivedata.decisionVote);
             }
 
@@ -312,7 +322,7 @@ const GamePlay = () => {
           } else {
             setNextQuestionFetched(true);
             setSelectedAnswer(null);
-            setAdminState("MakeDecision");
+            // setAdminState("MakeDecision");
             setShowDecision(false);
             setVoteDetails([]);
             setCurrentState(PlayingStates.VotingInProgress);
@@ -323,7 +333,7 @@ const GamePlay = () => {
         } else {
           setNextQuestionFetched(true);
           setSelectedAnswer(null);
-          setAdminState("MakeDecision");
+          // setAdminState("MakeDecision");
           setShowDecision(false);
           setVoteDetails([]);
           setCurrentState(PlayingStates.VotingInProgress);
@@ -360,48 +370,151 @@ const GamePlay = () => {
 
       dispatch(getNextQuestionDetails(data));
     }
-  }, [callNextQuestion, callNextQuestion]);
+  }, [callNextQuestion]);
+
+  const getOptionByAnswerId = (answerid) => {
+    if (
+      questionDetails &&
+      questionDetails.data &&
+      questionDetails.data.AnswerDetails &&
+      Array.isArray(questionDetails.data.AnswerDetails)
+    ) {
+      const obj = questionDetails.data.AnswerDetails.find((option) => {
+        return option.AnswerID === answerid;
+      });
+
+      return obj;
+    } else {
+      return null;
+    }
+  };
 
   const NextQuestionInvoke = useCallback(() => {
-    if (!isJSONString(sessionDetails.data)) return;
-    const sessionData = JSON.parse(sessionDetails.data);
-
-    const data = {
-      InstanceID: sessionData.InstanceID,
-      UserID: credentials.data.userID,
-      UserRole: credentials.data.role,
-      ActionType: "NextQuestion",
-      Message: "Success",
-    };
-
-    console.log(data);
-    signalRService.ProceedToNextQuestionInvoke(data);
-  }, [sessionDetails, credentials]);
-
-  useEffect(() => {
-    if (answerDetails === null || answerDetails === undefined) return;
-    if (answerDetails.success && selectedAnswer) {
-      if (!isJSONString(sessionDetails.data)) return;
+    if (selectedAnswer) {
       const sessionData = JSON.parse(sessionDetails.data);
 
       const data = {
-        InstanceID: sessionData.InstanceID,
-        SessionID: sessionData.SessionID,
-        UserID: credentials.data.userID,
-        UserName: credentials.data.userName,
-        ActionType: "AdminDeciderDecision",
-
-        Message: "Admin decision",
-
-        QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-        AnswerID: selectedAnswer.AnswerID,
+        sessionID: sessionData.SessionID,
+        instanceID: sessionData.InstanceID,
+        scenarioID: sessionData.ScenarioID,
+        userID: credentials.data.userID,
+        questionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+        questionNo:
+          questionDetails?.data?.QuestionDetails?.QuestionNo.toString(),
+        answerID: selectedAnswer.AnswerID,
+        score: selectedAnswer?.Score,
+        startedAt: startedAt.toString(),
+        finishedAt: Math.floor(Date.now() / 1000).toString(),
+        duration: "",
+        IsDeciderDecision: false,
+        IsAdminDecision: true,
+        isAnswerDeligated:
+          questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker,
+        delegatedUserID: questionDetails?.data?.QuestionDetails
+          ?.IsUserDecisionMaker
+          ? credentials.data.userID
+          : "",
+        isOptimal: selectedAnswer?.IsOptimalAnswer,
+        currentState: "InProgress",
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
       };
 
-      console.log("send vote data", data);
+      console.log("selectedAnswer", data);
 
-      signalRService.SendVotes(data);
+      dispatch(submitAnswerDetails(data));
+    } else {
+      console.log("decisionDetails", decisionDetails);
+      console.log("questionDetails", questionDetails);
 
-      if (
+      let decisionCount = decisionDetails.length;
+
+      if (decisionCount === 0) {
+        toast.success("Please select a option");
+      } else if (decisionCount === 1) {
+        const sessionData = JSON.parse(sessionDetails.data);
+
+        const option = getOptionByAnswerId(decisionDetails[0].answer);
+
+        if (option) {
+          const data = {
+            sessionID: sessionData.SessionID,
+            instanceID: sessionData.InstanceID,
+            scenarioID: sessionData.ScenarioID,
+            userID: credentials.data.userID,
+            questionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+            questionNo:
+              questionDetails?.data?.QuestionDetails?.QuestionNo.toString(),
+            answerID: option.AnswerID,
+            score: option?.Score,
+            startedAt: startedAt.toString(),
+            finishedAt: Math.floor(Date.now() / 1000).toString(),
+            duration: "",
+            IsDeciderDecision: false,
+            IsAdminDecision: true,
+            isAnswerDeligated:
+              questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker,
+            delegatedUserID: questionDetails?.data?.QuestionDetails
+              ?.IsUserDecisionMaker
+              ? credentials.data.userID
+              : "",
+            isOptimal: option?.IsOptimalAnswer,
+            currentState: "InProgress",
+            requester: {
+              requestID: generateGUID(),
+              requesterID: credentials.data.userID,
+              requesterName: credentials.data.userName,
+              requesterType: credentials.data.role,
+            },
+          };
+
+          console.log("notselectedAnswer", data);
+
+          dispatch(submitAnswerDetails(data));
+        }
+      } else if (decisionCount > 1) {
+        toast.success("Please select a option");
+      }
+    }
+
+    // return;
+
+    // if (!isJSONString(sessionDetails.data)) return;
+    // const sessionData = JSON.parse(sessionDetails.data);
+
+    // const data = {
+    //   InstanceID: sessionData.InstanceID,
+    //   UserID: credentials.data.userID,
+    //   UserRole: credentials.data.role,
+    //   ActionType: "NextQuestion",
+    //   Message: "Success",
+    // };
+
+    // console.log(data);
+    // signalRService.ProceedToNextQuestionInvoke(data);
+  }, [sessionDetails, credentials, decisionDetails, selectedAnswer]);
+
+  useEffect(() => {
+    if (answerDetails === null || answerDetails === undefined) return;
+    if (answerDetails.success) {
+      if (!isJSONString(sessionDetails.data)) return;
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      if (answerDetails?.data?.NextQuestionID) {
+        const data = {
+          InstanceID: sessionData.InstanceID,
+          UserID: credentials.data.userID,
+          UserRole: credentials.data.role,
+          ActionType: "NextQuestion",
+          Message: "Success",
+        };
+
+        signalRService.ProceedToNextQuestionInvoke(data);
+      } else if (
         answerDetails.data.IsPlayCompleted ||
         answerDetails.data.NextQuestionID === ""
       ) {
@@ -412,17 +525,64 @@ const GamePlay = () => {
           Message: "Success",
         };
 
-        dispatch(resetAnswerDetailsState());
-        setSelectedAnswer({});
-
         signalRService.ProceedToNextQuestionInvoke(data);
-      } else {
-        setAdminState("RevealDecision");
-        setShowDecision(true);
-        setSelectedAnswer({});
       }
+
+      dispatch(resetAnswerDetailsState());
+      setSelectedAnswer({});
+
+      // const data = {
+      //   InstanceID: sessionData.InstanceID,
+      //   SessionID: sessionData.SessionID,
+      //   UserID: credentials.data.userID,
+      //   UserName: credentials.data.userName,
+      //   ActionType: "AdminDeciderDecision",
+
+      //   Message: "Admin decision",
+
+      //   QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+      //   AnswerID: selectedAnswer.AnswerID,
+      // };
+
+      // console.log("send vote data", data);
+
+      // signalRService.SendVotes(data);
+
+      // if (
+      //   answerDetails.data.IsPlayCompleted ||
+      //   answerDetails.data.NextQuestionID === ""
+      // ) {
+      //   const data = {
+      //     InstanceID: sessionData.InstanceID,
+      //     UserID: credentials.data.userID,
+      //     ActionType: "IsCompleted",
+      //     Message: "Success",
+      //   };
+
+      //   dispatch(resetAnswerDetailsState());
+      //   setSelectedAnswer({});
+
+      //   signalRService.ProceedToNextQuestionInvoke(data);
+      // } else {
+      //   setAdminState("RevealDecision");
+      //   setShowDecision(true);
+      //   setSelectedAnswer({});
+      // }
     }
   }, [answerDetails]);
+
+  useEffect(() => {
+    if (currentState === PlayingStates.VotingInProgress) {
+      setcoundown(TIMER_STATES.STOP);
+    } else if (currentState === PlayingStates.VotingCompleted) {
+      setcoundown(TIMER_STATES.STOP);
+    } else if (currentState === PlayingStates.DecisionCompleted) {
+      setDuration(30 * 1000); //30 seconds
+      setcoundown(TIMER_STATES.START);
+    } else {
+      setcoundown(TIMER_STATES.STOP);
+    }
+  }, [currentState]);
 
   return (
     <motion.div
@@ -499,9 +659,7 @@ const GamePlay = () => {
                   IsDecisionMaker={
                     questionDetails.data.QuestionDetails.IsUserDecisionMaker
                   }
-                  Duration={
-                    Number(questionDetails.data.QuestionDetails.Duration) * 1000
-                  }
+                  Duration={duration}
                   QuestionNo={questionDetails.data.QuestionDetails.QuestionNo}
                   QuestionText={
                     questionDetails.data.QuestionDetails.QuestionText
@@ -540,6 +698,7 @@ const GamePlay = () => {
                       icon: false,
                     });
                   }}
+                  countdown={countdown}
                 />
               )}
           </div>
