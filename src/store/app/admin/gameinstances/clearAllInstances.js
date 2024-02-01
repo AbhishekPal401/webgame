@@ -30,10 +30,11 @@ const { requested, success, failed, reset } = slice.actions;
 
 export default slice.reducer;
 
-export const clearAllGameInstances = () =>
+export const clearAllGameInstances = (data) =>
     apiCallBegan({
-        url: "api/Instance/ClearInstance",
-        method: "GET",
+        url: "api/Instance/ClearAllInstances",
+        method: "POST",
+        data,
         onStart: requested.type,
         onSuccess: success.type,
         onFailed: failed.type,

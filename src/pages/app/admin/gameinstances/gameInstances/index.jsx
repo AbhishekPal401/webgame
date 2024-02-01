@@ -155,8 +155,14 @@ const GameInstances = () => {
     };
 
     const onClearAllInsatnces = () => {
-        if(showClearAllModal === "Clear") {
-            dispatch(clearAllGameInstances());
+        if (showClearAllModal === "Clear") {
+            const data = {
+                requestID: generateGUID(),
+                requesterID: credentials.data.userID,
+                requesterName: credentials.data.userName,
+                requesterType: credentials.data.role,
+            };
+            dispatch(clearAllGameInstances(data));
         }
     };
 
