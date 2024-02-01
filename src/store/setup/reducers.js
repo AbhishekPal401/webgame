@@ -39,6 +39,9 @@ import getInstanceProgress from "../app/admin/gameinstances/getInstanceProgress.
 import getOverviewGameDetails from "../app/admin/gameinstances/getOverviewGameDetails.js";
 import gameplay from "../local/gameplay.js";
 import allSessionUser from "../app/admin/session/getAllSessionUser.js";
+import deleteGameInstance from "../app/admin/gameinstances/deleteGameInstance.js";
+import clearInstanceById from "../app/admin/gameinstances/clearInstanceById.js";
+import clearAllInstances from "../app/admin/gameinstances/clearAllInstances.js";
 
 const reducers = combineReducers({
   login,
@@ -78,6 +81,9 @@ const reducers = combineReducers({
   allSessionUser,
   deleteScenario,
   deleteQuestions,
+  deleteGameInstance,
+  clearInstanceById,
+  clearAllInstances,
 });
 
 const rootReducer = (state, action) => {

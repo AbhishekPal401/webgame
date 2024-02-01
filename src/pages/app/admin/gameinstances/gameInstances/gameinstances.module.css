@@ -42,6 +42,12 @@
 .mainTopContainerRight Button {
   font-size: 1.4rem;
 }
+.mainTopContainerRight {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  
+}
 .mainTopContainerLeft {
 }
 .mainTableContainer {

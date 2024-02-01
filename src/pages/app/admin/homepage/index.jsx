@@ -16,6 +16,10 @@ import {
   deleteScenarioByID,
   resetDeleteScenarioState
 } from "../../../../store/app/admin/scenario/deleteScenario.js";
+import {
+  clearGameInstanceByID,
+  resetClearGameInstanceState
+} from "../../../../store/app/admin/gameinstances/clearInstanceById.js";
 import { toast } from "react-toastify";
 import ModalContainer from "../../../../components/modal/index.jsx";
 
@@ -23,6 +27,7 @@ const Homepage = () => {
   const [pageCount, setPageCount] = useState(5);
   const [pageNumber, setPageNumber] = useState(1);
   const [showDeleteModal, setShowDeleteModal] = useState(null);
+  const [showClearModal, setShowClearModal] = useState(null);
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
   const dispatch = useDispatch();
@@ -36,6 +41,7 @@ const Homepage = () => {
   );
   const { scenarioByPage } = useSelector((state) => state.scenarios);
   const { deleteScenarioResponse } = useSelector((state) => state.deleteScenario);
+  const { clearGameInstanceByIdResponse } = useSelector((state) => state.clearInstanceById);
 
   useEffect(() => {
     if (credentials) {
@@ -108,6 +114,32 @@ const Homepage = () => {
     }
   }, [deleteScenarioResponse]);
 
+  useEffect(() => {
+    if (clearGameInstanceByIdResponse === null || clearGameInstanceByIdResponse === undefined) return;
+
+    if (clearGameInstanceByIdResponse.success) {
+      // toast.success(clearGameInstanceByIdResponse.message);
+      toast.success("Successfully cleared.");
+      const data = {
+        pageNumber: pageNumber,
+        pageCount: pageCount,
+        type: "recent",
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      dispatch(getSessionHistoryByType(data));
+      dispatch(resetClearGameInstanceState());
+      setShowClearModal(null);
+    } else if (!clearGameInstanceByIdResponse.success) {
+      toast.error(clearGameInstanceByIdResponse.message);
+    }
+  }, [clearGameInstanceByIdResponse]);
+
   const navigateTo = () => {
     navigate("/scenario/createscenarios");
   };
@@ -134,6 +166,20 @@ const Homepage = () => {
 
     dispatch(deleteScenarioByID(data));
   };
+
+  const onClearInstance = () => {
+    const data = {
+      instanceID: showClearModal,
+      requester: {
+        requestID: generateGUID(),
+        requesterID: credentials.data.userID,
+        requesterName: credentials.data.userName,
+        requesterType: credentials.data.role,
+      },
+    };
+    dispatch(clearGameInstanceByID(data));
+  };
+
 
   return (
     <PageContainer>
@@ -198,9 +244,22 @@ const Homepage = () => {
                                 ? "Start"
                                 : scenario.Status === "Start" ||
                                   scenario.Status === "InProgress"
-                                ? "Join"
-                                : "Report"}
+                                  ? "Join"
+                                  : "Report"}
                             </Button>
+
+                            {
+                              (scenario.Status === "Start" ||
+                                scenario.Status === "InProgress") &&
+                              <Button
+                                onClick={() => {
+                                    setShowClearModal(scenario.InstanceID);
+                                }}
+                              >
+                                Clear
+                              </Button>
+                            }
+
                           </div>
                         </div>
                       </div>
@@ -347,6 +406,8 @@ const Homepage = () => {
           {/* Scenario Table:: end */}
         </div>
       </div>
+
+      {/* Delete Scenario modal :: start */}
       {showDeleteModal && (
         <ModalContainer>
           <div className="modal_content">
@@ -388,6 +449,52 @@ const Homepage = () => {
           </div>
         </ModalContainer>
       )}
+      {/* Delete Sceanrio modal :: end */}
+
+      {/* Clear instance :: start */}
+      {showClearModal && (
+        <ModalContainer>
+          <div className="modal_content">
+            <div className="modal_header">
+              <div>CLear Game Instance</div>
+              <div>
+                <svg
+                  className="modal_crossIcon"
+                  onClick={() => {
+                    setShowClearModal(null);
+                  }}
+                >
+                  <use xlinkHref={"sprite.svg#crossIcon"} />
+                </svg>
+              </div>
+            </div>
+            <div className="modal_description">
+              Are you sure you want to clear this game instance ?
+            </div>
+
+            <div className="modal_buttonContainer">
+              <Button
+                buttonType={"cancel"}
+                onClick={() => {
+                  setShowClearModal(null);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                customStyle={{
+                  marginLeft: "1rem",
+                }}
+                onClick={onClearInstance}
+              >
+                Clear
+              </Button>
+            </div>
+          </div>
+        </ModalContainer>
+      )}
+      {/* Clear instance :: end */}
+
     </PageContainer>
   );
 };
