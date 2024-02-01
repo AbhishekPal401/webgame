@@ -622,7 +622,11 @@ const GamePlay = () => {
       <div className={styles.header}>
         <div className={styles.header_left}>
           <div>Objectives</div>
-          <div>Cyber security game</div>
+          <div>
+            {questionDetails?.data?.GameIntro
+              ? questionDetails?.data?.GameIntro
+              : ""}{" "}
+          </div>
         </div>
         <div
           className={styles.header_middle}

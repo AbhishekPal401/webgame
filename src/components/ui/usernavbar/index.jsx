@@ -140,7 +140,9 @@ const UserNavBar = ({ disable = false, role = "Player" }) => {
 
       <div className={styles.label}>Game of Risks</div>
       <div className={styles.containerRight}>
-        <div className={styles.role}>{role}</div>
+        <div className={styles.role}>
+          {role === "Player" ? credentials.data.designation : "Admin"}
+        </div>
 
         <div
           className={styles.profileIcon}
