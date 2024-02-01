@@ -21,14 +21,14 @@ const SelectTree = ({ clicked = 1, onSelect = () => {} }) => {
         >
           Selected
         </div>
-        <div
+        {/* <div
           className={clicked === 1 ? styles.selected : ""}
           onClick={() => {
             onSelect(1);
           }}
         >
           Optimal
-        </div>
+        </div> */}
       </div>
       <div className={styles.line}></div>
     </div>
@@ -129,14 +129,10 @@ const MissionCompleted = () => {
               instanceProgress.data &&
               instanceProgress.data.Summary && (
                 <>
-                  {currentTab === 0 ? (
-                    <SelectedTree
-                      data={instanceProgress.data.Summary}
-                      userType="admin"
-                    />
-                  ) : (
-                    <OptimalTree data={instanceSummary.data.Summary} />
-                  )}
+                  <SelectedTree
+                    data={instanceProgress.data.Summary}
+                    userType="admin"
+                  />
                 </>
               )}
             <div className={styles.right}>

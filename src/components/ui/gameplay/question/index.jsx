@@ -93,7 +93,6 @@ const Question = ({
   const countDownRef = useRef();
 
   console.log("countdown", countdown);
-  console.log("isCurrentDecisionVotted", isCurrentDecisionVotted);
   console.log("IsDecisionMaker", IsDecisionMaker);
   console.log("CurrentState", CurrentState);
 

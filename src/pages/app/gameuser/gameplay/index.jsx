@@ -366,12 +366,19 @@ const GamePlay = () => {
         },
       };
 
+      console.log("answer data", data);
+
       dispatch(submitAnswerDetails(data));
     },
     [credentials, questionDetails, startedAt, sessionDetails]
   );
 
+  const voteDefault = useCallback(() => {
+    defaultAnswerSubmit(false);
+  }, [defaultAnswerSubmit]);
+
   const onDecisionCompleteDefault = useCallback(() => {
+    console.log("onDecisionCompleteDefault");
     setIsDecision(true);
     defaultAnswerSubmit(true);
   }, [defaultAnswerSubmit]);
@@ -674,7 +681,7 @@ const GamePlay = () => {
                   CurrentState={currentState}
                   isCurrentQuestionVotted={currentQuestionSubmitted}
                   isCurrentDecisionVotted={currentDecisionSubmitted}
-                  onComplete={defaultAnswerSubmit}
+                  onComplete={voteDefault}
                   onDecisionCompleteDefault={onDecisionCompleteDefault}
                   countdown={countdown}
                 />
