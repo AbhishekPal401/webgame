@@ -72,6 +72,8 @@ const Question = ({
   isAdmin = false,
   IsDecisionMaker = false,
   isCurrentQuestionVotted = false,
+  isCurrentDecisionVotted = false,
+
   onDecisionSubmit = () => {},
   Votes = [],
   decisionDetails = [],
@@ -83,11 +85,17 @@ const Question = ({
   onAdminDecisionCompleteDefault = () => {},
   countdown = TIMER_STATES.STOP,
 }) => {
+  const [mediaShownOnce, setMediaShownOnce] = useState(false);
   const [showMedia, setShowMedia] = useState(true);
   // const [duration, setDuration] = useState(Duration);
 
   let CustomButtonRender = null;
   const countDownRef = useRef();
+
+  console.log("countdown", countdown);
+  console.log("isCurrentDecisionVotted", isCurrentDecisionVotted);
+  console.log("IsDecisionMaker", IsDecisionMaker);
+  console.log("CurrentState", CurrentState);
 
   if (CurrentState === PlayingStates.VotingInProgress) {
     if (isAdmin) {
@@ -170,6 +178,59 @@ const Question = ({
             </Button>
           </div>
         );
+      } else {
+        CustomButtonRender = (
+          <div className={styles.buttonContainer}>
+            <div></div>
+            <Button customClassName={styles.buttonDisabled}>
+              Waiting for Votes
+            </Button>
+          </div>
+        );
+      }
+    }
+  } else if (CurrentState === PlayingStates.DecisionInProgress) {
+    if (isAdmin) {
+      CustomButtonRender = (
+        <div className={styles.buttonContainer}>
+          <div></div>
+          <div className={styles.makeDecision}>
+            <div className={styles.label}>
+              Voting Completed - Waiting for Descision
+            </div>
+            <Button
+              customStyle={{ marginLeft: "4rem" }}
+              customClassName={styles.buttonDisabled}
+            >
+              Make Decision
+            </Button>
+          </div>
+        </div>
+      );
+    } else {
+      if (IsDecisionMaker) {
+        if (isCurrentDecisionVotted) {
+          CustomButtonRender = (
+            <div className={styles.buttonContainer}>
+              <div></div>
+              <Button customClassName={styles.buttonDisabled}>
+                Waiting for Next Question
+              </Button>
+            </div>
+          );
+        } else {
+          CustomButtonRender = (
+            <div className={styles.buttonContainer}>
+              <div></div>
+              <Button
+                customClassName={styles.button}
+                onClick={onDecisionSubmit}
+              >
+                Select Decision
+              </Button>
+            </div>
+          );
+        }
       } else {
         CustomButtonRender = (
           <div className={styles.buttonContainer}>
@@ -294,41 +355,20 @@ const Question = ({
     [decisionDetails, delegatedTo]
   );
 
-  // useEffect(() => {
-  //   setDuration(Duration);
-  // }, [QuestionText, QuestionNo]);
-
-  // useEffect(() => {
-  //   if (CurrentState === PlayingStates.DecisionCompleted && isAdmin) {
-  //     setDuration(30 * 1000); //30 seconds
-  //   } else if (
-  //     !isAdmin &&
-  //     CurrentState === PlayingStates.VotingCompleted &&
-  //     IsDecisionMaker
-  //   ) {
-  //     setDuration(30 * 1000); //30 seconds
-  //   }
-  // }, [CurrentState]);
+  useEffect(() => {
+    if (MediaType && QuestionIntroMediaURL) {
+      setMediaShownOnce(false);
+      setShowMedia(true);
+    }
+  }, [QuestionText, QuestionNo, MediaType, QuestionIntroMediaURL]);
 
   useEffect(() => {
     let timeoutId;
 
-    if (isAdmin) {
-      if (countDownRef.current) {
-        if (countdown === TIMER_STATES.STOP) {
-          timeoutId = setTimeout(() => {
-            countDownRef.current.stop();
-          }, 10);
-        } else if (countdown === TIMER_STATES.START) {
-          timeoutId = setTimeout(() => {
-            countDownRef.current.start();
-          }, 10);
-        } else if (countdown === TIMER_STATES.PAUSE) {
-          timeoutId = setTimeout(() => {
-            countDownRef.current.pause();
-          }, 10);
-        }
-      }
+    if (!mediaShownOnce && QuestionIntroMediaURL) {
+      timeoutId = setTimeout(() => {
+        countDownRef.current.stop();
+      }, 10);
     } else {
       if (countDownRef.current) {
         if (countdown === TIMER_STATES.STOP) {
@@ -352,11 +392,7 @@ const Question = ({
         clearTimeout(timeoutId);
       }
     };
-  }, [countdown, countDownRef.current]);
-
-  console.log("countdown", countdown);
-  console.log("CurrentState", CurrentState);
-  console.log("Duration", Duration);
+  }, [countdown, countDownRef.current, mediaShownOnce]);
 
   return (
     <div className={styles.container}>
@@ -372,7 +408,13 @@ const Question = ({
               loops={1}
               reverse={true}
               inverse={false}
-              isPaused={countdown === TIMER_STATES.START ? false : true}
+              isPaused={
+                QuestionIntroMediaURL && !mediaShownOnce
+                  ? true
+                  : countdown === TIMER_STATES.START
+                  ? false
+                  : true
+              }
               QuestionNo={QuestionNo}
             />
           </div>
@@ -384,13 +426,17 @@ const Question = ({
               duration={Duration}
               QuestionNo={QuestionNo}
               onComplete={
-                isAdmin && CurrentState === PlayingStates.DecisionCompleted
+                isAdmin
                   ? onAdminDecisionCompleteDefault
-                  : CurrentState === PlayingStates.VotingCompleted &&
-                    !isAdmin &&
-                    IsDecisionMaker
+                  : !IsDecisionMaker
+                  ? onComplete
+                  : CurrentState === PlayingStates.VotingInProgress ||
+                    CurrentState === PlayingStates.UserVote
+                  ? onComplete
+                  : CurrentState === PlayingStates.VotingCompleted ||
+                    CurrentState === PlayingStates.DecisionInProgress
                   ? onDecisionCompleteDefault
-                  : onComplete
+                  : () => {}
               }
             />
             min
@@ -455,6 +501,9 @@ const Question = ({
               <VideoController
                 videoUrl={QuestionIntroMediaURL}
                 onCompleted={() => {
+                  if (!mediaShownOnce) {
+                    setMediaShownOnce(true);
+                  }
                   setShowMedia(false);
                 }}
               />
@@ -462,6 +511,9 @@ const Question = ({
               <AudioController
                 audioUrl={QuestionIntroMediaURL}
                 onCompleted={() => {
+                  if (!mediaShownOnce) {
+                    setMediaShownOnce(true);
+                  }
                   setShowMedia(false);
                 }}
               />

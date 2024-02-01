@@ -59,6 +59,7 @@ const UserHomePage = () => {
       SessionID: sessionData.SessionID,
       UserID: credentials.data.userID,
       UserName: credentials.data.userName,
+      UserRole: credentials.data.role,
       Designation: credentials?.data?.designation
         ? credentials.data.designation
         : "",
@@ -131,6 +132,7 @@ const UserHomePage = () => {
       SessionID: sessionData.SessionID,
       UserID: credentials.data.userID,
       UserName: credentials.data.userName,
+      UserRole: credentials.data.role,
       Designation: credentials?.data?.designation
         ? credentials.data.designation
         : "",

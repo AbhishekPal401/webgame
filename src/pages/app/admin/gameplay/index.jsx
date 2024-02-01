@@ -153,6 +153,18 @@ const GamePlay = () => {
         setNextQuestionFetched(false);
         setShowVotes(false);
       } else if (
+        votesDetails.decisionDisplayType === PlayingStates.DecisionInProgress
+      ) {
+        setCurrentState(PlayingStates.DecisionInProgress);
+        if (votesDetails.votes) {
+          setVoteDetails(votesDetails.votes);
+        }
+        if (votesDetails.decisionVote) {
+          setDecisionDetails(votesDetails.decisionVote);
+        }
+        setShowVotes(false);
+        setNextQuestionFetched(false);
+      } else if (
         votesDetails.decisionDisplayType === PlayingStates.DecisionCompleted
       ) {
         setCurrentState(PlayingStates.DecisionCompleted);
@@ -584,6 +596,21 @@ const GamePlay = () => {
     }
   }, [currentState]);
 
+  const showAlertMessage = useCallback(() => {
+    toast.success("Time is up, Please make a decision", {
+      containerId: "alert_messages",
+      className: "notification",
+      position: "top-right",
+      style: {
+        top: `${position}px`,
+        borderRight: "0.4rem solid #ffb600",
+      },
+      closeButton: false,
+      autoClose: 3000,
+      icon: false,
+    });
+  }, [position]);
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 100 }}
@@ -684,20 +711,7 @@ const GamePlay = () => {
                   delegatedTo={
                     questionDetails?.data?.QuestionDetails?.DelegatedTo
                   }
-                  onAdminDecisionCompleteDefault={() => {
-                    toast.success("Time is up, Please make a decision", {
-                      containerId: "alert_messages",
-                      className: "notification",
-                      position: "top-right",
-                      style: {
-                        top: `${position}px`,
-                        borderRight: "0.4rem solid #ffb600",
-                      },
-                      closeButton: false,
-                      autoClose: 3000,
-                      icon: false,
-                    });
-                  }}
+                  onAdminDecisionCompleteDefault={showAlertMessage}
                   countdown={countdown}
                 />
               )}

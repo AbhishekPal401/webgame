@@ -113,6 +113,8 @@ const GamePlay = () => {
   const [currentState, setCurrentState] = useState(PlayingStates.UserVote);
   const [currentQuestionSubmitted, setCurrentQuestionSubmitted] =
     useState(false);
+  const [currentDecisionSubmitted, setCurrentDecisionSubmitted] =
+    useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isDecision, setIsDecision] = useState(false);
   const [nextQuestionFetched, setNextQuestionFetched] = useState(false);
@@ -156,6 +158,27 @@ const GamePlay = () => {
         setCurrentState(PlayingStates.VotingCompleted);
         setShowModal(true);
         setNextQuestionFetched(false);
+      } else if (
+        votesDetails.decisionDisplayType === PlayingStates.DecisionInProgress
+      ) {
+        setCurrentState(PlayingStates.DecisionInProgress);
+        setShowModal(false);
+        setNextQuestionFetched(false);
+        if (votesDetails.decisionVote) {
+          let isSubmitted = false;
+
+          votesDetails.decisionVote.forEach((voteDetails) => {
+            voteDetails.votersInfo.forEach((voter) => {
+              if (voter.userID === credentials.data.userID) {
+                isSubmitted = true;
+              }
+            });
+          });
+
+          setCurrentDecisionSubmitted(isSubmitted);
+        } else {
+          setCurrentDecisionSubmitted(false);
+        }
       } else if (
         votesDetails.decisionDisplayType === PlayingStates.DecisionCompleted
       ) {
@@ -348,6 +371,20 @@ const GamePlay = () => {
     [credentials, questionDetails, startedAt, sessionDetails]
   );
 
+  const onDecisionCompleteDefault = useCallback(() => {
+    setIsDecision(true);
+    defaultAnswerSubmit(true);
+  }, [defaultAnswerSubmit]);
+
+  const decisionSubmit = useCallback(() => {
+    setIsDecision(true);
+    answerSubmit(true);
+  }, [answerSubmit]);
+
+  const voteSubmit = useCallback(() => {
+    answerSubmit(false);
+  }, [answerSubmit]);
+
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
@@ -462,6 +499,7 @@ const GamePlay = () => {
         SessionID: sessionData.SessionID,
         UserID: credentials.data.userID,
         UserName: credentials.data.userName,
+        UserRole: credentials.data.role,
         ActionType: isDecision
           ? "DeciderDecision"
           : questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker
@@ -489,6 +527,7 @@ const GamePlay = () => {
         SessionID: sessionData.SessionID,
         UserID: credentials.data.userID,
         UserName: credentials.data.userName,
+        UserRole: credentials.data.role,
         ActionType: isDecision
           ? "DeciderDecision"
           : questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker
@@ -500,7 +539,7 @@ const GamePlay = () => {
         AnswerID: "NA",
       };
 
-      console.log("send vote data", data);
+      // console.log("send vote data", data);
 
       signalRService.SendVotes(data);
 
@@ -527,12 +566,21 @@ const GamePlay = () => {
       } else {
         setCoundown(TIMER_STATES.PAUSE);
       }
+    } else if (currentState === PlayingStates.DecisionInProgress) {
+      if (currentDecisionSubmitted) {
+        setCoundown(TIMER_STATES.PAUSE);
+      }
     } else if (currentState === PlayingStates.DecisionCompleted) {
       setCoundown(TIMER_STATES.PAUSE);
     } else {
       setCoundown(TIMER_STATES.PAUSE);
     }
-  }, [currentState, currentQuestionSubmitted, questionDetails]);
+  }, [
+    currentState,
+    currentQuestionSubmitted,
+    questionDetails,
+    currentDecisionSubmitted,
+  ]);
 
   return (
     <motion.div
@@ -621,20 +669,13 @@ const GamePlay = () => {
                   MediaType={questionDetails.data.QuestionDetails.MediaType}
                   selectedAnswer={selectedAnswer}
                   setSelectedAnswer={setSelectedAnswer}
-                  onAnswerSubmit={() => {
-                    answerSubmit(false);
-                  }}
-                  onDecisionSubmit={() => {
-                    setIsDecision(true);
-                    answerSubmit(true);
-                  }}
+                  onAnswerSubmit={voteSubmit}
+                  onDecisionSubmit={decisionSubmit}
                   CurrentState={currentState}
                   isCurrentQuestionVotted={currentQuestionSubmitted}
+                  isCurrentDecisionVotted={currentDecisionSubmitted}
                   onComplete={defaultAnswerSubmit}
-                  onDecisionCompleteDefault={() => {
-                    setIsDecision(true);
-                    defaultAnswerSubmit();
-                  }}
+                  onDecisionCompleteDefault={onDecisionCompleteDefault}
                   countdown={countdown}
                 />
               )}
