@@ -331,7 +331,7 @@ const CreateUser = () => {
           error: "Please enter mobile number",
         },
       };
-      valid = false;
+      // valid = false;
     } else if (!validatePhone(userData.mobile.value)) {
       console.log("Invalid mobile number");
 
@@ -544,7 +544,7 @@ const CreateUser = () => {
                     className="select_input"
                     onChange={onOrganisationSelect}
                   >
-                    <option value="">Organization</option>
+                    <option value="" hidden>Organization</option>
                     {masters &&
                       masters.data &&
                       isJSONString(masters.data) &&
@@ -574,7 +574,7 @@ const CreateUser = () => {
                     className="select_input"
                     onChange={onDesignationSelect}
                   >
-                    <option value="">Decision Maker</option>
+                    <option value="" hidden>Decision Maker</option>
                     {masters &&
                       masters.data &&
                       isJSONString(masters.data) &&
@@ -600,7 +600,7 @@ const CreateUser = () => {
                     className="select_input"
                     onChange={onRoleSelect}
                   >
-                    <option value={""}>Roles</option>
+                    <option value={""} hidden>Roles</option>
 
                     {masters &&
                       masters.data &&

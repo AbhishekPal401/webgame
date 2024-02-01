@@ -11,11 +11,23 @@ import { getGameInstancesByPage } from "../../../../../store/app/admin/gameinsta
 import { generateGUID, isJSONString } from "../../../../../utils/common";
 import { formatDateString } from "../../../../../utils/helper";
 import Pagination from "../../../../../components/ui/pagination/index.jsx";
+import ModalContainer from "../../../../../components/modal/index.jsx";
+import {
+    deleteGameInstanceByID,
+    resetDeleteGameInstanceState
+} from "../../../../../store/app/admin/gameinstances/deleteGameInstance.js";
+import {
+    clearAllGameInstances,
+    resetClearAllGameInstancesState
+} from "../../../../../store/app/admin/gameinstances/clearAllInstances.js";
+import { toast } from "react-toastify";
 
 
 const GameInstances = () => {
     const [pageCount, setPageCount] = useState(10);
     const [pageNumber, setPageNumber] = useState(1);
+    const [showDeleteModal, setShowDeleteModal] = useState(null);
+    const [showClearAllModal, setClearAllModal] = useState(null);
     const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
     const dispatch = useDispatch();
@@ -23,6 +35,8 @@ const GameInstances = () => {
 
     const { credentials } = useSelector((state) => state.login);
     const { gameInstancesByPage } = useSelector((state) => state.gameInstances);
+    const { deleteGameInstanceResponse } = useSelector((state) => state.deleteGameInstance);
+    const { clearAllGameInstancesResponse } = useSelector((state) => state.clearAllInstances);
 
     useEffect(() => {
         if (credentials) {
@@ -53,6 +67,56 @@ const GameInstances = () => {
         }
     }, [gameInstancesByPage]);
 
+    useEffect(() => {
+        if (deleteGameInstanceResponse === null || deleteGameInstanceResponse === undefined) return;
+
+        if (deleteGameInstanceResponse.success) {
+            toast.success(deleteGameInstanceResponse.message);
+            const data = {
+                pageNumber: pageNumber,
+                pageCount: pageCount,
+                type: "",
+                requester: {
+                    requestID: generateGUID(),
+                    requesterID: credentials.data.userID,
+                    requesterName: credentials.data.userName,
+                    requesterType: credentials.data.role,
+                },
+            };
+
+            dispatch(getGameInstancesByPage(data));
+            dispatch(resetDeleteGameInstanceState());
+            setShowDeleteModal(null);
+        } else if (!deleteGameInstanceResponse.success) {
+            toast.error(deleteGameInstanceResponse.message);
+        }
+    }, [deleteGameInstanceResponse]);
+
+    useEffect(() => {
+        if (clearAllGameInstancesResponse === null || clearAllGameInstancesResponse === undefined) return;
+
+        if (clearAllGameInstancesResponse.success) {
+            toast.success(clearAllGameInstancesResponse.message);
+            const data = {
+                pageNumber: pageNumber,
+                pageCount: pageCount,
+                type: "",
+                requester: {
+                    requestID: generateGUID(),
+                    requesterID: credentials.data.userID,
+                    requesterName: credentials.data.userName,
+                    requesterType: credentials.data.role,
+                },
+            };
+
+            dispatch(getGameInstancesByPage(data));
+            dispatch(resetClearAllGameInstancesState());
+            setClearAllModal(null);
+        } else if (!clearAllGameInstancesResponse.success) {
+            toast.error(clearAllGameInstancesResponse.message);
+        }
+    }, [clearAllGameInstancesResponse]);
+
     // DEBUG :: Start
     // useEffect(() => {
     //     gameInstancesByPage &&
@@ -76,6 +140,32 @@ const GameInstances = () => {
         setSelectedCheckboxes(updatedRows);
     };
 
+    const onDeleteInsatnce = () => {
+        const data = {
+            instanceID: showDeleteModal.InstanceID,
+            requester: {
+                requestID: generateGUID(),
+                requesterID: credentials.data.userID,
+                requesterName: credentials.data.userName,
+                requesterType: credentials.data.role,
+            },
+        };
+
+        dispatch(deleteGameInstanceByID(data));
+    };
+
+    const onClearAllInsatnces = () => {
+        if (showClearAllModal === "Clear") {
+            const data = {
+                requestID: generateGUID(),
+                requesterID: credentials.data.userID,
+                requesterName: credentials.data.userName,
+                requesterType: credentials.data.role,
+            };
+            dispatch(clearAllGameInstances(data));
+        }
+    };
+
     const navigateTo = () => {
         navigate(`/instances/createinstances`);
     };
@@ -96,6 +186,13 @@ const GameInstances = () => {
                         <div className={styles.mainTopContainerLeft}>
                         </div>
                         <div className={styles.mainTopContainerRight}>
+                            <Button
+                                onClick={() => {
+                                    setClearAllModal("Clear");
+                                }}
+                            >
+                                Clear All
+                            </Button>
                             <Button onClick={navigateTo} >Create New Instance</Button>
                         </div>
                     </div>
@@ -166,7 +263,7 @@ const GameInstances = () => {
                                                                 }}
                                                             >
                                                                 <svg
-                                                                    height="14"
+                                                                    height="10"
                                                                     width="14"
                                                                     style={{
                                                                         opacity: (isSelected &&
@@ -178,7 +275,7 @@ const GameInstances = () => {
                                                             </div>
                                                             <div className={styles.circleSvg}
                                                                 onClick={() => {
-                                                                    if (isSelected && gameInstance.Status !== "Completed") {
+                                                                    if (isSelected && gameInstance.Status === "Create") {
                                                                         navigate(`/instances/updateinstances/${gameInstance.InstanceID}`);
                                                                     }
                                                                 }}
@@ -188,17 +285,30 @@ const GameInstances = () => {
                                                                     width="14"
                                                                     style={{
                                                                         opacity: (isSelected &&
-                                                                            gameInstance.Status !== "Completed") ? "1" : "0.3"
+                                                                            gameInstance.Status === "Create") ? "1" : "0.3"
                                                                     }}
                                                                 >
                                                                     <use xlinkHref="sprite.svg#edit_icon" />
                                                                 </svg>
                                                             </div>
-                                                            <div className={styles.circleSvg}>
+                                                            <div
+                                                                className={styles.circleSvg}
+                                                                onClick={() => {
+                                                                    if (isSelected &&
+                                                                        (gameInstance.Status === "Create" ||
+                                                                            gameInstance.Status === "Completed")) {
+                                                                        setShowDeleteModal(gameInstance);
+                                                                    }
+                                                                }}
+                                                            >
                                                                 <svg
                                                                     height="14"
                                                                     width="14"
-                                                                    style={{ opacity: isSelected ? "1" : "0.3" }}
+                                                                    style={{
+                                                                        opacity: (isSelected &&
+                                                                            (gameInstance.Status === "Create" ||
+                                                                                gameInstance.Status === "Completed")) ? "1" : "0.3"
+                                                                    }}
                                                                 >
                                                                     <use xlinkHref="sprite.svg#delete_icon" />
                                                                 </svg>
@@ -243,6 +353,89 @@ const GameInstances = () => {
 
                 {/* Game Istances Table Container:: end */}
             </div>
+            {showDeleteModal && (
+                <ModalContainer>
+                    <div className="modal_content">
+                        <div className="modal_header">
+                            <div>Delete Game Instance</div>
+                            <div>
+                                <svg
+                                    className="modal_crossIcon"
+                                    onClick={() => {
+                                        setShowDeleteModal(null);
+                                    }}
+                                >
+                                    <use xlinkHref={"sprite.svg#crossIcon"} />
+                                </svg>
+                            </div>
+                        </div>
+                        <div className="modal_description">
+                            Are you sure you want to delete this instance ?
+                        </div>
+
+                        <div className="modal_buttonContainer">
+                            <Button
+                                buttonType={"cancel"}
+                                onClick={() => {
+                                    setShowDeleteModal(null);
+                                }}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                customStyle={{
+                                    marginLeft: "1rem",
+                                }}
+                                onClick={onDeleteInsatnce}
+                            >
+                                Delete
+                            </Button>
+                        </div>
+                    </div>
+                </ModalContainer>
+            )}
+
+            {showClearAllModal && (
+                <ModalContainer>
+                    <div className="modal_content">
+                        <div className="modal_header">
+                            <div>Clear All Game Instances</div>
+                            <div>
+                                <svg
+                                    className="modal_crossIcon"
+                                    onClick={() => {
+                                        setClearAllModal(null);
+                                    }}
+                                >
+                                    <use xlinkHref={"sprite.svg#crossIcon"} />
+                                </svg>
+                            </div>
+                        </div>
+                        <div className="modal_description">
+                            Are you sure you want to clear all the game instance sessions ?
+                        </div>
+
+                        <div className="modal_buttonContainer">
+                            <Button
+                                buttonType={"cancel"}
+                                onClick={() => {
+                                    setClearAllModal(null);
+                                }}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                customStyle={{
+                                    marginLeft: "1rem",
+                                }}
+                                onClick={onClearAllInsatnces}
+                            >
+                                Clear All
+                            </Button>
+                        </div>
+                    </div>
+                </ModalContainer>
+            )}
         </PageContainer>
 
     );

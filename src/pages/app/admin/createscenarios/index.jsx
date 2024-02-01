@@ -380,7 +380,7 @@ const CreateScenario = () => {
                 <div className={styles.imageDropZoneContainerLeft}>
                   <FileDropZone
                     customstyle={{ marginTop: "1rem" }}
-                    label="Upload Game Intro Video"
+                    label="Upload Game Intro Media"
                     fileSrc={introFileDisplay}
                     setUrl={(file) => {
                       setIntroFileDisplay(file);

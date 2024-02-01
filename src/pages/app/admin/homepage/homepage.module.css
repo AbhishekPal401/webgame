@@ -136,14 +136,18 @@
 }
 
 .cardBottomContainerLeft {
-  flex: 7;
-  max-width: 70%;
+  flex: 6;
+  /* max-width: 70%; */
 }
 
 .cardBottomContainerRight {
-  flex: 3;
-  max-width: 30%;
+  flex: 4;
+  /* max-width: 30%; */
   text-align: center;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: flex-end;
 }
 
 .cardBottomContainerRight Button {

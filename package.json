@@ -21,6 +21,7 @@
     "react-d3-tree": "^3.6.2",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
+    "react-pdf": "^7.7.0",
     "react-quill": "^2.0.0",
     "react-redux": "^9.0.4",
     "react-router-dom": "^6.21.0",

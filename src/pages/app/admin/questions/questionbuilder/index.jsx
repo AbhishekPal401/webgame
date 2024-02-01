@@ -233,8 +233,8 @@ function QuestionBuilder() {
             error: "",
           },
           consequence: {
-            value:
-              answer.Content == null ? "Dummy consequence" : answer.Content, // TODO:: the consequence is null from backedn for now
+            value: answer.Content,
+              // answer.Content == null ? "Dummy consequence" : answer.Content, // TODO:: the consequence is null from backedn for now
             error: "",
           },
           narrative: {
@@ -446,7 +446,7 @@ function QuestionBuilder() {
       if (answer?.consequence?.value?.trim() === "") {
         updatedAnswer.consequence.error = "Please enter the consequence.";
         console.log("consequence:", answer.consequence);
-        valid = false;
+        // valid = false;
       }
 
       // TODO:: add choose narative file | not handled on backend
@@ -792,7 +792,7 @@ function QuestionBuilder() {
                             labelStyle={styles.inputLabel}
                             customStyle={{}}
                             name={`consequence-${index}`}
-                            value={answer.consequence.value}
+                            value={answer?.consequence?.value}
                             onChange={(e) =>
                               onAnswerChange(e, index, "consequence")
                             }

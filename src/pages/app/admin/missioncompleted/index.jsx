@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./missioncompleted.module.css";
 import Button from "../../../../components/common/button";
 import OptimalTree from "../../../../components/trees/mission";
@@ -44,6 +45,8 @@ const MissionCompleted = () => {
   const { instanceProgress } = useSelector(
     (state) => state.getInstanceProgress
   );
+
+  const navigate = useNavigate();
 
   // console.log("instanceSummary", instanceSummary);
   // console.log("instanceProgress", instanceProgress);
@@ -155,7 +158,14 @@ const MissionCompleted = () => {
         </div>
         <div className={styles.buttonContainer}>
           <Button customClassName={styles.export}>Export</Button>
-          <Button customClassName={styles.end}>End</Button>
+          <Button
+            customClassName={styles.end}
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            End
+          </Button>
         </div>
       </div>
     </div>

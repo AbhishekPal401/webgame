@@ -356,7 +356,7 @@ const UserProfile = () => {
           error: "Please enter mobile number",
         },
       };
-      valid = false;
+      // valid = false;
     } else if (!validatePhone(userData.mobile.value)) {
       console.log("Invalid mobile number");
 
@@ -593,7 +593,7 @@ const UserProfile = () => {
                       className="select_input"
                       onChange={onRoleSelect}
                     >
-                      <option value={""}>Role</option>
+                      <option value={""} hidden>Role</option>
 
                       {masters &&
                         masters.data &&
@@ -630,7 +630,7 @@ const UserProfile = () => {
                     className="select_input"
                     onChange={onOrganisationSelect}
                   >
-                    <option value="">Organisation</option>
+                    <option value="" hidden>Organisation</option>
                     {masters &&
                       masters.data &&
                       isJSONString(masters.data) &&
@@ -688,7 +688,7 @@ const UserProfile = () => {
                     className="select_input"
                     onChange={onDesignationSelect}
                   >
-                    <option value="">Designation</option>
+                    <option value="" hidden>Designation</option>
                     {masters &&
                       masters.data &&
                       isJSONString(masters.data) &&
