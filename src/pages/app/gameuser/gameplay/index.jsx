@@ -560,16 +560,19 @@ const GamePlay = () => {
   useEffect(() => {
     if (currentState === PlayingStates.UserVote) {
       setCoundown(TIMER_STATES.START);
+      setStartedAt(Math.floor(Date.now() / 1000));
     } else if (currentState === PlayingStates.VotingInProgress) {
       if (currentQuestionSubmitted) {
         setCoundown(TIMER_STATES.PAUSE);
       } else {
         setCoundown(TIMER_STATES.START);
+        setStartedAt(Math.floor(Date.now() / 1000));
       }
     } else if (currentState === PlayingStates.VotingCompleted) {
       if (questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker) {
         setDuration(30 * 1000); // 30 seconds
         setCoundown(TIMER_STATES.START);
+        setStartedAt(Math.floor(Date.now() / 1000));
       } else {
         setCoundown(TIMER_STATES.PAUSE);
       }

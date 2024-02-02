@@ -591,6 +591,7 @@ const GamePlay = () => {
     } else if (currentState === PlayingStates.DecisionCompleted) {
       setDuration(30 * 1000); //30 seconds
       setcoundown(TIMER_STATES.START);
+      setStartedAt(Math.floor(Date.now() / 1000));
     } else {
       setcoundown(TIMER_STATES.STOP);
     }
