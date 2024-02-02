@@ -456,7 +456,7 @@ const Homepage = () => {
         <ModalContainer>
           <div className="modal_content">
             <div className="modal_header">
-              <div>CLear Game Instance</div>
+              <div>Clear Game Instance</div>
               <div>
                 <svg
                   className="modal_crossIcon"
