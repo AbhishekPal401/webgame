@@ -109,7 +109,6 @@ const DecisionTree = ({ onCancel = () => {} }) => {
 const GamePlay = () => {
   const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
   const [selectedAnswer, setSelectedAnswer] = useState({});
-  const [showMedia, setShowMedia] = useState(false);
   const [currentState, setCurrentState] = useState(PlayingStates.UserVote);
   const [currentQuestionSubmitted, setCurrentQuestionSubmitted] =
     useState(false);

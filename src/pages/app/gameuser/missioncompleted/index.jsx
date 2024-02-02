@@ -150,7 +150,7 @@ const MissionCompleted = () => {
           </div>
         </div>
         <div className={styles.buttonContainer}>
-          <Button customClassName={styles.export}>Export</Button>
+          {/* <Button customClassName={styles.export}>Export</Button> */}
           <Button customClassName={styles.end}>End</Button>
         </div>
       </div>

@@ -87,9 +87,9 @@ const TeamMembers = () => {
                       Array.isArray(item.users) &&
                       item.users.map((users, i) => {
                         return (
-                          <>
+                          <div key={i}>
                             {i === 0 ? null : <hr />}
-                            <div className={styles.itemDetails} key={i}>
+                            <div className={styles.itemDetails}>
                               <div>{users.UserName[0]}</div>
                               <div>{users.UserName}</div>
                               <div>{users.DesignationName}</div>
@@ -99,7 +99,7 @@ const TeamMembers = () => {
                                 <div className={styles.inactive}></div>
                               )}
                             </div>
-                          </>
+                          </div>
                         );
                       })}
                   </div>

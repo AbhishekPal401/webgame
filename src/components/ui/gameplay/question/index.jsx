@@ -107,6 +107,11 @@ const Question = ({
               }
             }}
           >
+            {MediaType ? (
+              <svg className={styles.repeatIcon}>
+                <use xlinkHref={"sprite.svg#repeat"} />
+              </svg>
+            ) : null}
             {MediaType === "Video"
               ? "Replay Video"
               : MediaType === "Audio"
@@ -136,6 +141,11 @@ const Question = ({
                 }
               }}
             >
+              {MediaType ? (
+                <svg className={styles.repeatIcon}>
+                  <use xlinkHref={"sprite.svg#repeat"} />
+                </svg>
+              ) : null}
               {MediaType === "Video"
                 ? "Replay Video"
                 : MediaType === "Audio"
@@ -251,43 +261,6 @@ const Question = ({
           </Button>
         </div>
       );
-
-      // if (showVotes) {
-      //   CustomButtonRender = (
-      //     <div className={styles.buttonContainer}>
-      //       <div>Decision Made by {delegatedTo}</div>
-      //       <Button customClassName={styles.button} onClick={onNextQuestion}>
-      //         Next Question
-      //       </Button>
-      //     </div>
-      //   );
-      // } else {
-      //   if (adminState === "MakeDecision") {
-      //     CustomButtonRender = (
-      //       <div className={styles.buttonContainer}>
-      //         <div></div>
-      //         <Button customClassName={styles.button} onClick={onAnswerSubmit}>
-      //           Make a Decision
-      //         </Button>
-      //       </div>
-      //     );
-      //   } else if (adminState === "RevealDecision") {
-      //     CustomButtonRender = (
-      //       <div className={styles.buttonContainer}>
-      //         <div>Decision Made by {delegatedTo}</div>
-      //         <Button
-      //           customClassName={styles.button}
-      //           onClick={() => {
-      //             setShowVotes(true);
-      //             setShowDecision(false);
-      //           }}
-      //         >
-      //           Approve
-      //         </Button>
-      //       </div>
-      //     );
-      //   }
-      // }
     } else {
       CustomButtonRender = (
         <div className={styles.buttonContainer}>
@@ -308,6 +281,11 @@ const Question = ({
             }
           }}
         >
+          {MediaType ? (
+            <svg className={styles.repeatIcon}>
+              <use xlinkHref={"sprite.svg#repeat"} />
+            </svg>
+          ) : null}
           {MediaType === "Video"
             ? "Replay Video"
             : MediaType === "Audio"

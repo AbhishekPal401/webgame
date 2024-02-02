@@ -34,7 +34,8 @@ const Admin = () => {
         <UserNavbar disable={true} role="Admin" />
       ) : location.pathname.includes("/game/") ||
         location.pathname.includes("/gameplay") ||
-        location.pathname.includes("/missioncompleted") ? (
+        location.pathname.includes("/missioncompleted") ||
+        location.pathname.includes("/gameprofile") ? (
         <UserNavbar role="Admin" />
       ) : (
         <Navbar />
@@ -44,7 +45,8 @@ const Admin = () => {
         {location.pathname.includes("/game") ||
         location.pathname.includes("/intro") ||
         location.pathname.includes("/gameplay") ||
-        location.pathname.includes("/missioncompleted") ? null : (
+        location.pathname.includes("/missioncompleted") ||
+        location.pathname.includes("/gameprofile") ? null : (
           <div className={styles.leftContainer}>
             <Sidebar />
           </div>
@@ -90,6 +92,7 @@ const Admin = () => {
               element={<ViewInstances />}
             />
             <Route path="/profile/:userID?" element={<Profile />} />
+            <Route path="/gameprofile/:userID?" element={<Profile />} />
             <Route path="/game/:instanceID?" element={<Gamelanding />} />
             <Route path="/intro" element={<Intro />} />
             <Route path="/gameplay" element={<GamePlay />} />

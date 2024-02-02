@@ -106,7 +106,6 @@ const GamePlay = () => {
   const [decisionDetails, setDecisionDetails] = useState([]);
   const [showDecision, setShowDecision] = useState(false);
   const [nextQuestionFetched, setNextQuestionFetched] = useState(false);
-  const [adminState, setAdminState] = useState("MakeDecision");
   const [showVotes, setShowVotes] = useState(false);
   const [callNextQuestion, setCallNextQuestion] = useState(false);
   const [showDecisionTree, setShowDecisionTree] = useState(false);
@@ -705,7 +704,6 @@ const GamePlay = () => {
                   setSelectedAnswer={setSelectedAnswer}
                   onAnswerSubmit={answerSubmit}
                   CurrentState={currentState}
-                  adminState={adminState}
                   onNextQuestion={NextQuestionInvoke}
                   Votes={votesDetails}
                   decisionDetails={decisionDetails}
