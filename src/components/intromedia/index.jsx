@@ -10,6 +10,17 @@ const IntroMedia = ({
   console.log("mediaURL", mediaURL);
   console.log("description", description);
 
+  let resource = "";
+
+  if (mediaType === "Video" && mediaURL) {
+    resource = (
+      <video controls className={styles.video}>
+        <source src={mediaURL} />
+        Your browser does not support the video tag.
+      </video>
+    );
+  }
+
   return (
     <div className={"modal_content"} style={{ width: "80vw" }}>
       <div className={"modal_header"}>
@@ -24,14 +35,7 @@ const IntroMedia = ({
         {description ? description : ""}
       </div>
 
-      <div style={{ height: "72vh" }}>
-        {mediaURL && (
-          <video controls className={styles.video}>
-            <source src={mediaURL} />
-            Your browser does not support the video tag.
-          </video>
-        )}
-      </div>
+      <div style={{ height: "72vh" }}>{resource}</div>
     </div>
   );
 };
