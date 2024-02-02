@@ -5,7 +5,11 @@ const IntroMedia = ({
   onCancel = () => {},
   mediaURL = "",
   description = "",
+  mediaType = "",
 }) => {
+  console.log("mediaURL", mediaURL);
+  console.log("description", description);
+
   return (
     <div className={"modal_content"} style={{ width: "80vw" }}>
       <div className={"modal_header"}>

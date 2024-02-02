@@ -10,7 +10,7 @@ import { generateGUID } from "../../../../utils/common";
 import { signalRService } from "../../../../services/signalR";
 import { useNavigate } from "react-router-dom";
 
-const SelectTree = ({ clicked = 0, onSelect = () => { } }) => {
+const SelectTree = ({ clicked = 0, onSelect = () => {} }) => {
   return (
     <div className={styles.selectTree}>
       <div className={styles.selectButtonContainer}>
@@ -74,6 +74,12 @@ const MissionCompleted = () => {
       dispatch(getInstanceSummaryById(data));
     }
   }, []);
+
+  const resetAll = () => {
+    dispatch(resetNextQuestionDetailsState());
+    dispatch(resetAnswerDetailsState());
+    dispatch(resetSessionDetailsState());
+  };
 
   return (
     <div
@@ -156,6 +162,7 @@ const MissionCompleted = () => {
           <Button
             customClassName={styles.end}
             onClick={() => {
+              resetAll();
               navigate("/");
             }}
           >

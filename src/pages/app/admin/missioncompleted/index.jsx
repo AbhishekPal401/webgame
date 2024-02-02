@@ -9,6 +9,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { generateGUID } from "../../../../utils/common";
 import SelectedTree from "../../../../components/trees/selectedTree";
 import { signalRService } from "../../../../services/signalR";
+import { resetNextQuestionDetailsState } from "../../../../store/app/user/questions/getNextQuestion";
+import { resetAnswerDetailsState } from "../../../../store/app/user/answers/postAnswer";
+import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
 
 const SelectTree = ({ clicked = 1, onSelect = () => {} }) => {
   return (
@@ -75,6 +78,12 @@ const MissionCompleted = () => {
       dispatch(getInstanceSummaryById(data));
     }
   }, []);
+
+  const resetAll = () => {
+    dispatch(resetNextQuestionDetailsState());
+    dispatch(resetAnswerDetailsState());
+    dispatch(resetSessionDetailsState());
+  };
 
   return (
     <div
@@ -161,6 +170,7 @@ const MissionCompleted = () => {
           <Button
             customClassName={styles.end}
             onClick={() => {
+              resetAll();
               navigate("/");
             }}
           >

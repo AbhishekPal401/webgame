@@ -763,6 +763,7 @@ const GamePlay = () => {
             }}
             mediaURL={questionDetails?.data?.IntroMediaURL}
             description={questionDetails?.data?.GameIntro}
+            mediaType={questionDetails?.data?.IntroFileType}
           />
         </ModalContainer>
       )}

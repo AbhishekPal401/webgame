@@ -94,9 +94,9 @@ const Question = ({
   let CustomButtonRender = null;
   const countDownRef = useRef();
 
-  console.log("QuestionIntroMediaURL", QuestionIntroMediaURL);
-  console.log("MediaType", MediaType);
-  console.log("CurrentState", CurrentState);
+  // console.log("QuestionIntroMediaURL", QuestionIntroMediaURL);
+  // console.log("MediaType", MediaType);
+  // console.log("CurrentState", CurrentState);
 
   let mediaTypeText = "";
 
