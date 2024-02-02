@@ -109,7 +109,6 @@ const DecisionTree = ({ onCancel = () => {} }) => {
 const GamePlay = () => {
   const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
   const [selectedAnswer, setSelectedAnswer] = useState({});
-  const [showMedia, setShowMedia] = useState(false);
   const [currentState, setCurrentState] = useState(PlayingStates.UserVote);
   const [currentQuestionSubmitted, setCurrentQuestionSubmitted] =
     useState(false);
@@ -560,16 +559,19 @@ const GamePlay = () => {
   useEffect(() => {
     if (currentState === PlayingStates.UserVote) {
       setCoundown(TIMER_STATES.START);
+      setStartedAt(Math.floor(Date.now() / 1000));
     } else if (currentState === PlayingStates.VotingInProgress) {
       if (currentQuestionSubmitted) {
         setCoundown(TIMER_STATES.PAUSE);
       } else {
         setCoundown(TIMER_STATES.START);
+        setStartedAt(Math.floor(Date.now() / 1000));
       }
     } else if (currentState === PlayingStates.VotingCompleted) {
       if (questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker) {
         setDuration(30 * 1000); // 30 seconds
         setCoundown(TIMER_STATES.START);
+        setStartedAt(Math.floor(Date.now() / 1000));
       } else {
         setCoundown(TIMER_STATES.PAUSE);
       }

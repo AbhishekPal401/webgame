@@ -106,7 +106,6 @@ const GamePlay = () => {
   const [decisionDetails, setDecisionDetails] = useState([]);
   const [showDecision, setShowDecision] = useState(false);
   const [nextQuestionFetched, setNextQuestionFetched] = useState(false);
-  const [adminState, setAdminState] = useState("MakeDecision");
   const [showVotes, setShowVotes] = useState(false);
   const [callNextQuestion, setCallNextQuestion] = useState(false);
   const [showDecisionTree, setShowDecisionTree] = useState(false);
@@ -591,6 +590,7 @@ const GamePlay = () => {
     } else if (currentState === PlayingStates.DecisionCompleted) {
       setDuration(30 * 1000); //30 seconds
       setcoundown(TIMER_STATES.START);
+      setStartedAt(Math.floor(Date.now() / 1000));
     } else {
       setcoundown(TIMER_STATES.STOP);
     }
@@ -704,7 +704,6 @@ const GamePlay = () => {
                   setSelectedAnswer={setSelectedAnswer}
                   onAnswerSubmit={answerSubmit}
                   CurrentState={currentState}
-                  adminState={adminState}
                   onNextQuestion={NextQuestionInvoke}
                   Votes={votesDetails}
                   decisionDetails={decisionDetails}

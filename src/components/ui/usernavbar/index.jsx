@@ -106,9 +106,10 @@ const UserNavBar = ({ disable = false, role = "Player" }) => {
     if (isConnectedToServer) {
       if (
         location.pathname === "/" ||
-        location.pathname.includes("/missioncompleted") ||
-        location.pathname.includes("/game/") ||
-        location.pathname.includes("/missioncompleted")
+        // location.pathname.includes("/missioncompleted") ||
+        location.pathname.includes("/game/")
+        // ||
+        // location.pathname.includes("/missioncompleted")
       )
         return;
 
@@ -177,7 +178,7 @@ const UserNavBar = ({ disable = false, role = "Player" }) => {
           <div
             onClick={() => {
               setShowDropdown(false);
-              navigate(`/profile/${credentials.data.userID}`);
+              navigate(`/gameprofile/${credentials.data.userID}`);
             }}
             className={styles.row}
           >
