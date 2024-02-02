@@ -396,7 +396,7 @@ function QuestionBuilder() {
         },
       };
 
-      valid = false;
+      // valid = false;
     }
 
     if (!supportFileDisplayURL &&

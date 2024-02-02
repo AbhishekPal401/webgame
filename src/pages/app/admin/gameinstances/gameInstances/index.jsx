@@ -412,7 +412,7 @@ const GameInstances = () => {
                             </div>
                         </div>
                         <div className="modal_description">
-                            Are you sure you want to clear all the game instance sessions ?
+                            Are you sure you want to clear all the game sessions?
                         </div>
 
                         <div className="modal_buttonContainer">

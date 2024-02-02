@@ -79,9 +79,9 @@ const Intro = () => {
   }, [questionDetails]);
 
   const fileType = extractFileType(questionDetails?.data?.IntroMediaURL);
-  console.log("filtype starts wth pdf :", fileType.startsWith("pdf"));
-  console.log("filetype : ", fileType)
-  console.log("File url :", questionDetails.data.IntroMediaURL);
+  // console.log("filtype starts wth pdf :", fileType.startsWith("pdf"));
+  // console.log("filetype : ", fileType)
+  // console.log("File url :", questionDetails.data.IntroMediaURL);
 
   return (
     <motion.div
