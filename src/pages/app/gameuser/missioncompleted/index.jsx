@@ -8,8 +8,9 @@ import { getInstanceProgressyById } from "../../../../store/app/admin/gameinstan
 import { useDispatch, useSelector } from "react-redux";
 import { generateGUID } from "../../../../utils/common";
 import { signalRService } from "../../../../services/signalR";
+import { useNavigate } from "react-router-dom";
 
-const SelectTree = ({ clicked = 0, onSelect = () => {} }) => {
+const SelectTree = ({ clicked = 0, onSelect = () => { } }) => {
   return (
     <div className={styles.selectTree}>
       <div className={styles.selectButtonContainer}>
@@ -48,6 +49,7 @@ const MissionCompleted = () => {
   console.log("instanceSummary", instanceSummary);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const sessionData = JSON.parse(sessionDetails.data);
@@ -151,7 +153,14 @@ const MissionCompleted = () => {
         </div>
         <div className={styles.buttonContainer}>
           {/* <Button customClassName={styles.export}>Export</Button> */}
-          <Button customClassName={styles.end}>End</Button>
+          <Button
+            customClassName={styles.end}
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            End
+          </Button>
         </div>
       </div>
     </div>

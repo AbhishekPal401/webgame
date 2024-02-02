@@ -356,7 +356,10 @@ function QuestionBuilder() {
           error: "",
         },
       }));
-
+      setSupportFileDefaultUrl({
+        url: "",
+        type: "",
+      })
       // setSupportFileDisplayURL(file);
     },
     [questionData]
@@ -410,7 +413,7 @@ function QuestionBuilder() {
         },
       };
 
-      valid = false;
+      // valid = false; narrative media is not madatory 
     }
 
     // Validate each answer in the updatedAnswers array
@@ -471,6 +474,7 @@ function QuestionBuilder() {
       let fileType = supportFIleDefaultUrl.type;
 
       if (questionData?.narrativeMedia?.value) {
+        console.log("narrative media is uploaded")
         const formData = new FormData();
 
         formData.append("Module", "Question");
@@ -538,6 +542,7 @@ function QuestionBuilder() {
           toast.error("File upload failed.");
         }
       } else {
+        console.log(" no narrative media is uploaded")
 
         // else no narrative media is uploaded
         const data = {
@@ -551,8 +556,10 @@ function QuestionBuilder() {
             requesterType: credentials.data.role,
           },
           delegatedTo: questionData?.decisionMaker?.value,
-          supportFile: url,
-          supportFileType: fileType,
+          // supportFile: url, narrative media is not madatory 
+          // supportFileType: fileType,
+          supportFile: url || "",
+          supportFileType: fileType || "",
           answersData: questionData.answers.map((answer) => ({
             answerID: answer.answerId.value,
             answerText: answer.option.value,

@@ -288,6 +288,7 @@ const CreateUser = () => {
     let data = userData;
 
     if (userData?.username?.value?.trim() === "") {
+      console.log("username :",userData?.username?.value);
       data = {
         ...data,
         username: {
@@ -300,6 +301,7 @@ const CreateUser = () => {
     }
 
     if (userData?.email?.value?.trim() === "") {
+      console.log("email :",userData?.email?.value);
       data = {
         ...data,
         email: {
@@ -310,6 +312,7 @@ const CreateUser = () => {
 
       valid = false;
     } else if (!validateEmail(userData.email.value)) {
+      console.log("!validateEmail :",userData?.email?.value);
       data = {
         ...data,
         email: {
@@ -346,6 +349,8 @@ const CreateUser = () => {
     }
 
     if (userData?.role?.value?.trim() === "") {
+      console.log("role :",userData?.role?.value);
+
       data = {
         ...data,
         role: {
@@ -358,6 +363,8 @@ const CreateUser = () => {
     }
 
     if (userData?.designation?.value?.trim() === "") {
+      console.log("designation :",userData?.designation?.value);
+
       data = {
         ...data,
         designation: {
@@ -370,6 +377,8 @@ const CreateUser = () => {
     }
 
     if (userData?.organizationName?.value?.trim() === "") {
+      console.log("organizationName :",userData?.organizationName?.value);
+
       data = {
         ...data,
         organizationName: {
@@ -566,7 +575,7 @@ const CreateUser = () => {
                     htmlFor="dropdown_designation"
                     className="select_label"
                   >
-                    Decision Maker:
+                    Designation:
                   </label>
                   <select
                     id="dropdown_designation"
@@ -574,7 +583,7 @@ const CreateUser = () => {
                     className="select_input"
                     onChange={onDesignationSelect}
                   >
-                    <option value="" hidden>Decision Maker</option>
+                    <option value="" hidden>Designation</option>
                     {masters &&
                       masters.data &&
                       isJSONString(masters.data) &&

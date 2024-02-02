@@ -181,6 +181,10 @@ const UpdateScenarios = () => {
       };
       dispatch(getScenarioDetailsByID(data));
     }
+    return () => {
+      console.log("Clean up sceario function");
+      dispatch(resetScenarioDetailState());
+    }
   }, [scenarioID]);
 
   const setScenarioDetailState = useCallback(() => {
@@ -267,6 +271,10 @@ const UpdateScenarios = () => {
           error: "",
         },
       }));
+      setDefaultIntroFileUrl({
+        url: "",
+        type: "",
+      })
     },
     [scenarioData]
   );
@@ -328,7 +336,7 @@ const UpdateScenarios = () => {
         },
       };
 
-      valid = false;
+      // valid = false;
     }
 
     if (valid) {
@@ -336,6 +344,7 @@ const UpdateScenarios = () => {
       let fileType = defaultIntroFileUrl.type;
 
       if (scenarioData?.gameIntroFile?.value) {
+        console.log(" game intro file is uploaded")
         const formData = new FormData();
 
         formData.append("Module", "scenario");
@@ -400,16 +409,18 @@ const UpdateScenarios = () => {
           console.error("Axios error:", error);
         }
       } else {
+        console.log(" game intro file is not uploaded")
 
-        if (url != "" || url != null || url != undefined) {
+        // if (url != "" || url != null || url != undefined) {
           // else if no intro file is uploaded 
+          // console.log(" if url is not null, empty or indefiened")
           const data = {
             scenarioID: scenarioID ? scenarioID : "",
             scenarioName: scenarioData?.scenarioName?.value,
             description: scenarioData?.scenarioDescription?.value,
             gameIntro: scenarioData?.gameIntroText?.value,
-            introFile: url,
-            introFileType: fileType,
+            introFile: url || "",
+            introFileType: fileType || "",
             status: "Create",
             version: "1",
             baseVersionID: "1",
@@ -422,9 +433,9 @@ const UpdateScenarios = () => {
             },
           };
           dispatch(updateScenario(data));
-        } else {
-          toast.error("Please upload Game intro file.");
-        }
+        // } else {
+        //   toast.error("Please upload Game intro file.");
+        // }
       }
 
     } else {
