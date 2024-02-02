@@ -35,6 +35,7 @@ import ModalContainer from "../../../../components/modal";
 import { setActiveUsers } from "../../../../store/local/gameplay";
 import TeamMembers from "../../../../components/teammembers";
 import { TIMER_STATES } from "../../../../constants/timer";
+import IntroMedia from "../../../../components/intromedia";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -122,6 +123,7 @@ const GamePlay = () => {
   const [position, setPosition] = useState(0);
   const [countdown, setCoundown] = useState(TIMER_STATES.STOP);
   const [duration, setDuration] = useState(0);
+  const [showIntroMedia, setShowIntroMedia] = useState(false);
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -642,7 +644,12 @@ const GamePlay = () => {
       >
         <div className={styles.left}>
           <div>
-            <svg className={styles.pause}>
+            <svg
+              className={styles.pause}
+              onClick={() => {
+                setShowIntroMedia(true);
+              }}
+            >
               <use xlinkHref={"sprite.svg#pause"} />
             </svg>
           </div>
@@ -724,6 +731,18 @@ const GamePlay = () => {
               setShowDecisionTree(false);
               dispatch(resetInstanceProgressByIDState());
             }}
+          />
+        </ModalContainer>
+      )}
+
+      {showIntroMedia && questionDetails?.data?.IntroMediaURL && (
+        <ModalContainer>
+          <IntroMedia
+            onCancel={() => {
+              setShowIntroMedia(false);
+            }}
+            mediaURL={questionDetails?.data?.IntroMediaURL}
+            description={questionDetails?.data?.GameIntro}
           />
         </ModalContainer>
       )}

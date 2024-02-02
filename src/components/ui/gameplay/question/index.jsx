@@ -18,6 +18,7 @@ import AudioController from "../../../media/audiocontroller";
 
 import { PlayingStates } from "../../../../constants/playingStates";
 import { TIMER_STATES } from "../../../../constants/timer";
+import PDFPreview from "../../../preview/pdfpreview";
 
 const renderer = ({ minutes, seconds, completed }) => {
   if (completed) {
@@ -87,14 +88,28 @@ const Question = ({
 }) => {
   const [mediaShownOnce, setMediaShownOnce] = useState(false);
   const [showMedia, setShowMedia] = useState(true);
+  const [showSkip, setShowSkip] = useState(false);
   // const [duration, setDuration] = useState(Duration);
 
   let CustomButtonRender = null;
   const countDownRef = useRef();
 
-  console.log("countdown", countdown);
-  console.log("IsDecisionMaker", IsDecisionMaker);
+  console.log("QuestionIntroMediaURL", QuestionIntroMediaURL);
+  console.log("MediaType", MediaType);
   console.log("CurrentState", CurrentState);
+
+  let mediaTypeText = "";
+
+  if (MediaType === "Video" && QuestionIntroMediaURL) {
+    mediaTypeText = "Replay Video";
+  } else if (MediaType === "Audio" && QuestionIntroMediaURL) {
+    mediaTypeText = "Replay Audio";
+  } else if (
+    (MediaType === "pdf" || MediaType === "Pdf") &&
+    QuestionIntroMediaURL
+  ) {
+    mediaTypeText = "Replay PDF";
+  }
 
   if (CurrentState === PlayingStates.VotingInProgress) {
     if (isAdmin) {
@@ -104,19 +119,16 @@ const Question = ({
             onClick={() => {
               if (MediaType) {
                 setShowMedia(true);
+                setShowSkip(false);
               }
             }}
           >
-            {MediaType ? (
+            {MediaType && QuestionIntroMediaURL ? (
               <svg className={styles.repeatIcon}>
                 <use xlinkHref={"sprite.svg#repeat"} />
               </svg>
             ) : null}
-            {MediaType === "Video"
-              ? "Replay Video"
-              : MediaType === "Audio"
-              ? "Replay Audio"
-              : ""}
+            {mediaTypeText}
           </div>
           <div className={styles.label}>Voting in Progress ...</div>
         </div>
@@ -138,19 +150,16 @@ const Question = ({
               onClick={() => {
                 if (MediaType) {
                   setShowMedia(true);
+                  setShowSkip(false);
                 }
               }}
             >
-              {MediaType ? (
+              {MediaType && QuestionIntroMediaURL ? (
                 <svg className={styles.repeatIcon}>
                   <use xlinkHref={"sprite.svg#repeat"} />
                 </svg>
               ) : null}
-              {MediaType === "Video"
-                ? "Replay Video"
-                : MediaType === "Audio"
-                ? "Replay Audio"
-                : ""}
+              {mediaTypeText}
             </div>
             <Button customClassName={styles.button} onClick={onAnswerSubmit}>
               Vote
@@ -278,19 +287,16 @@ const Question = ({
           onClick={() => {
             if (MediaType) {
               setShowMedia(true);
+              setShowSkip(false);
             }
           }}
         >
-          {MediaType ? (
+          {MediaType && QuestionIntroMediaURL ? (
             <svg className={styles.repeatIcon}>
               <use xlinkHref={"sprite.svg#repeat"} />
             </svg>
           ) : null}
-          {MediaType === "Video"
-            ? "Replay Video"
-            : MediaType === "Audio"
-            ? "Replay Audio"
-            : ""}
+          {mediaTypeText}
         </div>
         <Button customClassName={styles.button} onClick={onAnswerSubmit}>
           Vote
@@ -333,6 +339,7 @@ const Question = ({
   );
 
   useEffect(() => {
+    setShowSkip(false);
     if (MediaType && QuestionIntroMediaURL) {
       setMediaShownOnce(false);
       setShowMedia(true);
@@ -474,7 +481,7 @@ const Question = ({
         <div className={styles.mediaContainer}>
           <div>Incoming Media</div>
           <div>
-            {MediaType === "Video" ? (
+            {MediaType === "Video" && QuestionIntroMediaURL ? (
               <VideoController
                 videoUrl={QuestionIntroMediaURL}
                 onCompleted={() => {
@@ -484,7 +491,38 @@ const Question = ({
                   setShowMedia(false);
                 }}
               />
-            ) : (
+            ) : (MediaType === "pdf" || MediaType === "Pdf") &&
+              QuestionIntroMediaURL ? (
+              <div>
+                <PDFPreview
+                  pdfUrl={QuestionIntroMediaURL}
+                  customStyles={styles.canvas}
+                  scale={0.5}
+                  onLoad={() => {
+                    setShowSkip(true);
+                  }}
+                />
+                {showSkip && (
+                  <div
+                    className={styles.skipContainer}
+                    style={{
+                      backgroundImage: 'url("./images/grey_strip.png")',
+                    }}
+                  >
+                    <Button
+                      onClick={() => {
+                        if (!mediaShownOnce) {
+                          setMediaShownOnce(true);
+                        }
+                        setShowMedia(false);
+                      }}
+                    >
+                      Skip
+                    </Button>
+                  </div>
+                )}
+              </div>
+            ) : MediaType === "Audio" && QuestionIntroMediaURL ? (
               <AudioController
                 audioUrl={QuestionIntroMediaURL}
                 onCompleted={() => {
@@ -494,7 +532,7 @@ const Question = ({
                   setShowMedia(false);
                 }}
               />
-            )}
+            ) : null}
           </div>
         </div>
       )}
