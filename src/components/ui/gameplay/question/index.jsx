@@ -19,6 +19,7 @@ import AudioController from "../../../media/audiocontroller";
 import { PlayingStates } from "../../../../constants/playingStates";
 import { TIMER_STATES } from "../../../../constants/timer";
 import PDFPreview from "../../../preview/pdfpreview";
+import { Tooltip } from "react-tooltip";
 
 const renderer = ({ minutes, seconds, completed }) => {
   if (completed) {
@@ -467,7 +468,11 @@ const Question = ({
                         (username) => {
                           const shortenedDesignation = username.substring(0, 3);
                           return (
-                            <div className={styles.userbadge}>
+                            <div
+                              className={styles.userbadge}
+                              data-tooltip-id="des-tooltip"
+                              data-tooltip-content={username}
+                            >
                               {shortenedDesignation}
                             </div>
                           );
@@ -539,6 +544,8 @@ const Question = ({
           </div>
         </div>
       )}
+
+      <Tooltip id="des-tooltip" />
     </div>
   );
 };

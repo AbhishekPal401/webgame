@@ -16,6 +16,7 @@ import {
 import { toast } from "react-toastify";
 import { signalRService } from "../../../../services/signalR";
 import { setActiveUsers } from "../../../../store/local/gameplay";
+import { Tooltip } from "react-tooltip";
 
 const AdminGameLanding = () => {
   const [ready, setReady] = useState(false);
@@ -287,6 +288,8 @@ const AdminGameLanding = () => {
                         exit={{ opacity: 0, x: "-6rem" }}
                         transition={{ duration: 0.8, damping: 10 }}
                         className={styles.userbadge}
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={userDetails.designation}
                       >
                         {shortenedDesignation}
                       </motion.div>
@@ -297,6 +300,7 @@ const AdminGameLanding = () => {
           )}
         </div>
       </div>
+      <Tooltip id="my-tooltip" />
     </motion.div>
   );
 };
