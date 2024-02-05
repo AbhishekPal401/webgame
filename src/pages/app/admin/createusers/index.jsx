@@ -111,6 +111,10 @@ const CreateUser = () => {
         value: "",
         error: "",
       },
+      status: {
+        value: "",
+        error: "",
+      },
     });
   };
 
@@ -196,6 +200,10 @@ const CreateUser = () => {
         },
         profileImage: {
           value: "",
+          error: "",
+        },
+        status: {
+          value: data.Status,
           error: "",
         },
       };
@@ -445,6 +453,7 @@ const CreateUser = () => {
               organizationName: userData.organizationName.value,
               profileImage:
                 url != null && url != undefined && url != "" ? url : "file",
+              status: userData.status.value,
               requester: {
                 requestID: generateGUID(),
                 requesterID: credentials.data.userID,
@@ -473,6 +482,7 @@ const CreateUser = () => {
             organizationName: userData.organizationName.value,
             profileImage:
               url != null && url != undefined && url != "" ? url : "file",
+            status: userData.status.value,
             requester: {
               requestID: generateGUID(),
               requesterID: credentials.data.userID,
