@@ -198,6 +198,7 @@ const MasterList = () => {
       activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
 
       setShowEditModal(null);
+      setSelectedCheckboxes([]);
       resetUpdateMasterData();
       dispatch(resetUpdateDesignationState());
       // dispatch(resetDesignationsState()); TODO
@@ -221,6 +222,7 @@ const MasterList = () => {
       activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
 
       setShowEditModal(null);
+      setSelectedCheckboxes([]);
       resetUpdateMasterData();
       dispatch(resetUpdateOrganizationState());
       // dispatch(resetDesignationsState()); TODO
@@ -245,7 +247,7 @@ const MasterList = () => {
 
       dispatch(resetDeleteMasterByTypeAndIdState());
       setShowDeleteModal(null);
-
+      setSelectedCheckboxes([]);
     } else if (!deleteMasterByTypeAndIdResponse.success) {
       toast.error(deleteMasterByTypeAndIdResponse.message);
     }
