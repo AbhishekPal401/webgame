@@ -170,7 +170,8 @@ const MasterList = () => {
 
     if (createMasterResponse?.success) {
       console.log("Master created")
-      toast.success("Add master data successfull");
+      toast.success((activeTab === 'Designation') ? 
+        "Designation created successfully" : "Organization created successfully");
 
       activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
 
@@ -181,7 +182,7 @@ const MasterList = () => {
     } else if (!createMasterResponse.success) {
       console.log(" error : ", createMasterResponse?.message)
       // toast.error(createMasterResponse?.message);
-      toast.error("An error occured while saving the master data.");
+      toast.error(createMasterResponse?.message);
       dispatch(resetCreateMasterState());
     } else {
       dispatch(resetCreateMasterState());
@@ -701,7 +702,7 @@ const MasterList = () => {
                           <td>{designation.Description}</td>
                           <td>{formatDateString(designation.DateCreated)}</td>
                           <td>{designation.Scenarios}</td>
-                          <td>{(designation.Status === 'True') ? 'Active' : 'Inactive'}</td>
+                          <td>{(designation.Status) ? 'Active' : 'Inactive'}</td>
                           <td>
                             <div className={styles.actions}>
                               <div
@@ -769,7 +770,7 @@ const MasterList = () => {
                           <td>{organization.MemberUsers}</td>
                           <td>{formatDateString(organization.DateCreated)}</td>
                           <td>{organization.GamesPlayed}</td>
-                          <td>{(organization.Status === 'True') ? 'Active' : 'Inactive'}</td>
+                          <td>{(organization.Status) ? 'Active' : 'Inactive'}</td>
                           <td>
                             <div className={styles.actions}>
                               <div
