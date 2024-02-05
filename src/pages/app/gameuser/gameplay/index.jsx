@@ -109,7 +109,6 @@ const DecisionTree = ({ onCancel = () => {} }) => {
 
 const GamePlay = () => {
   const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
-  const [selectedAnswer, setSelectedAnswer] = useState({});
   const [currentState, setCurrentState] = useState(PlayingStates.UserVote);
   const [currentQuestionSubmitted, setCurrentQuestionSubmitted] =
     useState(false);
@@ -118,6 +117,7 @@ const GamePlay = () => {
   const [showModal, setShowModal] = useState(false);
   const [isDecision, setIsDecision] = useState(false);
   const [nextQuestionFetched, setNextQuestionFetched] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState({});
   const [callNextQuestion, setCallNextQuestion] = useState(false);
   const [showDecisionTree, setShowDecisionTree] = useState(false);
   const [position, setPosition] = useState(0);
@@ -134,6 +134,10 @@ const GamePlay = () => {
   const navigate = useNavigate();
 
   const alerRef = useRef();
+
+  window.onunload = () => {
+    localStorage.setItem("refresh", true);
+  };
 
   useEffect(() => {
     if (alerRef.current) {
@@ -482,14 +486,18 @@ const GamePlay = () => {
             setCallNextQuestion(false);
           }
         } else {
-          setNextQuestionFetched(true);
-          setSelectedAnswer(null);
-          setStartedAt(Math.floor(Date.now() / 1000));
-          setCurrentQuestionSubmitted(false);
-          setCallNextQuestion(false);
-          setCurrentState(PlayingStates.UserVote);
-          setShowModal(false);
-          setIsDecision(false);
+          if (localStorage.getItem("refresh")) {
+            localStorage.setItem("refresh", false);
+          } else {
+            setNextQuestionFetched(true);
+            setSelectedAnswer(null);
+            setStartedAt(Math.floor(Date.now() / 1000));
+            setCurrentQuestionSubmitted(false);
+            setCallNextQuestion(false);
+            setCurrentState(PlayingStates.UserVote);
+            setShowModal(false);
+            setIsDecision(false);
+          }
         }
       }
 
