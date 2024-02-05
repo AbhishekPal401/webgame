@@ -514,7 +514,7 @@ const MasterList = () => {
             id: showEditModal,
             designationName: updateMasterData?.designation?.value,
             description: updateMasterData?.description?.value,
-            status: updateMasterData?.designationStatus?.value.toString(),
+            status: updateMasterData?.designationStatus?.value,
             requester: {
               requestID: generateGUID(),
               requesterID: credentials.data.userID,
