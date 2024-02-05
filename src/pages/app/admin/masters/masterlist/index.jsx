@@ -266,7 +266,7 @@ const MasterList = () => {
           error: ''
         },
         designationStatus: {
-          value: data.Status,
+          value: data.IsActive,
           error: ''
         },
       };
@@ -298,7 +298,7 @@ const MasterList = () => {
           error: ''
         },
         organizationStatus: {
-          value: data.Status,
+          value: data.IsActive,
           error: ''
         },
       };
@@ -514,7 +514,8 @@ const MasterList = () => {
             id: showEditModal,
             designationName: updateMasterData?.designation?.value,
             description: updateMasterData?.description?.value,
-            status: updateMasterData?.designationStatus?.value,
+            // isActive: updateMasterData?.designationStatus?.value?.toString(),
+            isActive: updateMasterData?.designationStatus?.value,
             requester: {
               requestID: generateGUID(),
               requesterID: credentials.data.userID,
@@ -532,7 +533,8 @@ const MasterList = () => {
           const data = {
             id: showEditModal,
             organizationName: updateMasterData?.organization?.value,
-            status: updateMasterData?.organizationStatus?.value,
+            // isActive: updateMasterData?.organizationStatus?.value?.toString(),
+            isActive: updateMasterData?.organizationStatus?.value,
             requester: {
               requestID: generateGUID(),
               requesterID: credentials.data.userID,
