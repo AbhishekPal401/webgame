@@ -189,7 +189,7 @@ const Users = () => {
                       <td>{user?.UpdatedAt && formatDateString(user.UpdatedAt)}</td>
                       <td>{user?.Designation}</td>
                       <td>{user?.Duration && formatTime(user.Duration)}</td>
-                      <td>{(user?.Status) ? "Active" : "Inactive"}</td>
+                      <td>{(user?.Status === 'Active') ? "Active" : "Inactive"}</td>
 
                       <td>
                         <div className={styles.actions}>
