@@ -1,0 +1,28 @@
+.video {
+  width: 100%;
+  height: 100%;
+}
+.audio {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.audio img {
+  width: 35%;
+  height: auto;
+}
+
+.audio audio {
+  margin-top: 3rem;
+  width: 60%;
+}
+
+.pdf {
+  height: 62vh;
+  overflow: auto;
+}
+.previewImage {
+  width: 100%;
+  height: 100%;
+}

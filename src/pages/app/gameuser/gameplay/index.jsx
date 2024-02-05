@@ -35,6 +35,7 @@ import ModalContainer from "../../../../components/modal";
 import { setActiveUsers } from "../../../../store/local/gameplay";
 import TeamMembers from "../../../../components/teammembers";
 import { TIMER_STATES } from "../../../../constants/timer";
+import IntroMedia from "../../../../components/intromedia";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -108,7 +109,6 @@ const DecisionTree = ({ onCancel = () => {} }) => {
 
 const GamePlay = () => {
   const [startedAt, setStartedAt] = useState(Math.floor(Date.now() / 1000));
-  const [selectedAnswer, setSelectedAnswer] = useState({});
   const [currentState, setCurrentState] = useState(PlayingStates.UserVote);
   const [currentQuestionSubmitted, setCurrentQuestionSubmitted] =
     useState(false);
@@ -117,11 +117,13 @@ const GamePlay = () => {
   const [showModal, setShowModal] = useState(false);
   const [isDecision, setIsDecision] = useState(false);
   const [nextQuestionFetched, setNextQuestionFetched] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState({});
   const [callNextQuestion, setCallNextQuestion] = useState(false);
   const [showDecisionTree, setShowDecisionTree] = useState(false);
   const [position, setPosition] = useState(0);
   const [countdown, setCoundown] = useState(TIMER_STATES.STOP);
   const [duration, setDuration] = useState(0);
+  const [showIntroMedia, setShowIntroMedia] = useState(false);
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -132,6 +134,23 @@ const GamePlay = () => {
   const navigate = useNavigate();
 
   const alerRef = useRef();
+
+  window.onunload = () => {
+    localStorage.setItem("refresh", true);
+  };
+
+  useEffect(() => {
+    const handleBackButton = (event) => {
+      event.preventDefault();
+    };
+
+    window.history.pushState(null, null, window.location.pathname);
+    window.addEventListener("popstate", handleBackButton);
+
+    return () => {
+      window.removeEventListener("popstate", handleBackButton);
+    };
+  }, []);
 
   useEffect(() => {
     if (alerRef.current) {
@@ -480,14 +499,18 @@ const GamePlay = () => {
             setCallNextQuestion(false);
           }
         } else {
-          setNextQuestionFetched(true);
-          setSelectedAnswer(null);
-          setStartedAt(Math.floor(Date.now() / 1000));
-          setCurrentQuestionSubmitted(false);
-          setCallNextQuestion(false);
-          setCurrentState(PlayingStates.UserVote);
-          setShowModal(false);
-          setIsDecision(false);
+          if (localStorage.getItem("refresh")) {
+            localStorage.setItem("refresh", false);
+          } else {
+            setNextQuestionFetched(true);
+            setSelectedAnswer(null);
+            setStartedAt(Math.floor(Date.now() / 1000));
+            setCurrentQuestionSubmitted(false);
+            setCallNextQuestion(false);
+            setCurrentState(PlayingStates.UserVote);
+            setShowModal(false);
+            setIsDecision(false);
+          }
         }
       }
 
@@ -642,7 +665,12 @@ const GamePlay = () => {
       >
         <div className={styles.left}>
           <div>
-            <svg className={styles.pause}>
+            <svg
+              className={styles.pause}
+              onClick={() => {
+                setShowIntroMedia(true);
+              }}
+            >
               <use xlinkHref={"sprite.svg#pause"} />
             </svg>
           </div>
@@ -724,6 +752,18 @@ const GamePlay = () => {
               setShowDecisionTree(false);
               dispatch(resetInstanceProgressByIDState());
             }}
+          />
+        </ModalContainer>
+      )}
+
+      {showIntroMedia && questionDetails?.data?.IntroMediaURL && (
+        <ModalContainer>
+          <IntroMedia
+            onCancel={() => {
+              setShowIntroMedia(false);
+            }}
+            mediaURL={questionDetails?.data?.IntroMediaURL}
+            description={questionDetails?.data?.GameIntro}
           />
         </ModalContainer>
       )}

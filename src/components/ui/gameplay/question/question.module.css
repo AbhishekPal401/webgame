@@ -194,9 +194,9 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 1.8rem;
-  height: 1.8rem;
-  border-radius: 1.8rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 2.4rem;
   background-color: var(--primary);
   color: var(--black);
   font-size: 1rem;
@@ -215,4 +215,20 @@
   width: 2rem;
   height: 2rem;
   fill: var(--primary);
+}
+.canvas {
+  height: 35rem;
+  overflow: auto;
+}
+
+.skipContainer {
+  margin-top: 1rem;
+  width: 100%;
+  height: 3.6rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  background-size: 50%;
+  background-position: right;
+  background-repeat: no-repeat;
 }
