@@ -42,6 +42,11 @@ import allSessionUser from "../app/admin/session/getAllSessionUser.js";
 import deleteGameInstance from "../app/admin/gameinstances/deleteGameInstance.js";
 import clearInstanceById from "../app/admin/gameinstances/clearInstanceById.js";
 import clearAllInstances from "../app/admin/gameinstances/clearAllInstances.js";
+import updateDesignation from "../app/admin/masters/updateDesignation.js";
+import updateOrganization from "../app/admin/masters/updateOrganization.js";
+import deleteMasterByTypeAndId from "../app/admin/masters/deleteMasterByTypeAndId.js";
+import getDesignationById from "../app/admin/masters/getDesignationById.js";
+import getOrganizationById from "../app/admin/masters/getOrganizationById.js";
 
 const reducers = combineReducers({
   login,
@@ -84,6 +89,11 @@ const reducers = combineReducers({
   deleteGameInstance,
   clearInstanceById,
   clearAllInstances,
+  updateDesignation,
+  updateOrganization,
+  deleteMasterByTypeAndId,
+  getDesignationById,
+  getOrganizationById,
 });
 
 const rootReducer = (state, action) => {
