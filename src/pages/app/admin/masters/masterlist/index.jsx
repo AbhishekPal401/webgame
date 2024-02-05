@@ -984,7 +984,7 @@ const MasterList = () => {
                 }}
                 onClick={onEditMasterData}
               >
-                Edit
+                Save
               </Button>
             </div>
           </div>
