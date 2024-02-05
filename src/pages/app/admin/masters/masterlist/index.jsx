@@ -778,7 +778,7 @@ const MasterList = () => {
                               <div
                                 className={styles.circleSvg}
                                 onClick={() => {
-                                  if (isSelected) {
+                                  if (isSelected && organization.Status) {
                                     handleOnEditClick(organization.ID);
                                   }
                                 }}
@@ -787,7 +787,7 @@ const MasterList = () => {
                                   height="14"
                                   width="14"
                                   style={{
-                                    opacity: isSelected ? "1" : "0.3"
+                                    opacity: (isSelected && organization.Status) ? "1" : "0.3"
                                   }}
                                 >
                                   <use xlinkHref="sprite.svg#edit_icon" />
@@ -796,7 +796,7 @@ const MasterList = () => {
                               <div
                                 className={styles.circleSvg}
                                 onClick={() => {
-                                  if (isSelected) {
+                                  if (isSelected && organization.Status) {
                                     setShowDeleteModal(organization);
                                   }
                                 }}
@@ -805,7 +805,7 @@ const MasterList = () => {
                                   height="14"
                                   width="14"
                                   style={{
-                                    opacity: isSelected ? "1" : "0.3"
+                                    opacity: (isSelected && organization.Status) ? "1" : "0.3"
                                   }}
                                 >
                                   <use xlinkHref="sprite.svg#delete_icon" />
