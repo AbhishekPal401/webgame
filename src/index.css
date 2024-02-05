@@ -94,21 +94,21 @@ body {
 
 @media (max-width: 576px) {
   html {
-    font-size: 42%;
+    font-size: 45%;
     font-family: "Helvetica 400", "Poppins", sans-serif;
   }
 }
 
 @media (min-width: 576px) {
   html {
-    font-size: 48%;
+    font-size: 50%;
     font-family: "Helvetica 400", "Poppins", sans-serif;
   }
 }
 
 @media (min-width: 768px) {
   html {
-    font-size: 52%;
+    font-size: 54%;
     font-family: "Helvetica 400", "Poppins", sans-serif;
   }
 }
