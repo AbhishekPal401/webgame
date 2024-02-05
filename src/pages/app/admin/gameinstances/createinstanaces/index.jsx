@@ -216,7 +216,7 @@ const CreateInstances = () => {
         if (createGroupResponse === null || createGroupResponse === undefined) return;
 
         if (createGroupResponse?.success) {
-            toast.success(createGroupResponse?.message);
+            // toast.success(createGroupResponse?.message);
 
             console.log("createGroupResponse :", createGroupResponse)
 
@@ -267,7 +267,8 @@ const CreateInstances = () => {
         if (createGroupUsersResponse === null || createGroupUsersResponse === undefined) return;
 
         if (createGroupUsersResponse?.success) {
-            toast.success(createGroupUsersResponse?.message);
+            // toast.success(createGroupUsersResponse?.message);
+            toast.success("Group created successfully");
             console.log("createGroupUsersResponse :", createGroupUsersResponse)
 
             //reset the grp id and players in local state
@@ -714,7 +715,7 @@ const CreateInstances = () => {
         }
 
         if (addGroupData?.addedUsers?.length === 0) {
-            toast.error("Please add at least one user to the group.");
+            console.log("Please add at least one user to the group.");
             valid = false;
         }
 

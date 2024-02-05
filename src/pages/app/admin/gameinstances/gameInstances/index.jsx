@@ -87,6 +87,7 @@ const GameInstances = () => {
             dispatch(getGameInstancesByPage(data));
             dispatch(resetDeleteGameInstanceState());
             setShowDeleteModal(null);
+            setSelectedCheckboxes([]);
         } else if (!deleteGameInstanceResponse.success) {
             toast.error(deleteGameInstanceResponse.message);
         }
@@ -112,6 +113,7 @@ const GameInstances = () => {
             dispatch(getGameInstancesByPage(data));
             dispatch(resetClearAllGameInstancesState());
             setClearAllModal(null);
+            setSelectedCheckboxes([]);
         } else if (!clearAllGameInstancesResponse.success) {
             toast.error(clearAllGameInstancesResponse.message);
         }

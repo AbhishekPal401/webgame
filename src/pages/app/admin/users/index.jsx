@@ -87,6 +87,7 @@ const Users = () => {
       dispatch(getUsersbyPage(data));
       dispatch(resetDeleteUserState());
       setShowDeleteModal(null);
+      setSelectedCheckboxes([]);
     } else if (!deleteUserResponse.success) {
       toast.error(deleteUserResponse.message);
     }
@@ -195,7 +196,7 @@ const Users = () => {
                         <div className={styles.actions}>
                           <div className={styles.circleSvg}
                             onClick={() => {
-                              if (isSelected) {
+                              if (isSelected && user?.Status === 'Active') {
                                 navigate(`/users/createandedit/${user.UserID}`);
                               }
                             }}
@@ -204,7 +205,7 @@ const Users = () => {
                               height="14"
                               width="14"
                               style={{
-                                opacity: isSelected ? "1" : "0.3"
+                                opacity: (isSelected && user?.Status === 'Active') ? "1" : "0.3"
                               }}
                             >
                               <use xlinkHref="sprite.svg#edit_icon" />
@@ -212,7 +213,7 @@ const Users = () => {
                           </div>
                           <div className={styles.circleSvg}
                             onClick={() => {
-                              if (isSelected) {
+                              if (isSelected && user?.Status === 'Active') {
                                 setShowDeleteModal(user);
                               }
                             }}
@@ -221,7 +222,7 @@ const Users = () => {
                               height="14"
                               width="14"
                               style={{
-                                opacity: isSelected ? "1" : "0.3"
+                                opacity: (isSelected && user?.Status === 'Active') ? "1" : "0.3"
                               }}
                             >
                               <use xlinkHref="sprite.svg#delete_icon" />

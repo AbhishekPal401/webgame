@@ -77,6 +77,7 @@ const Scenarios = () => {
       dispatch(getScenarioByPage(data));
       dispatch(resetDeleteScenarioState());
       setShowDeleteModal(null);
+      setSelectedCheckboxes([]);
     } else if (!deleteScenarioResponse.success) {
       toast.error(deleteScenarioResponse.message);
     }
