@@ -140,6 +140,19 @@ const GamePlay = () => {
   };
 
   useEffect(() => {
+    const handleBackButton = (event) => {
+      event.preventDefault();
+    };
+
+    window.history.pushState(null, null, window.location.pathname);
+    window.addEventListener("popstate", handleBackButton);
+
+    return () => {
+      window.removeEventListener("popstate", handleBackButton);
+    };
+  }, []);
+
+  useEffect(() => {
     if (alerRef.current) {
       const divRect = alerRef.current.getBoundingClientRect();
       const topPosition = divRect.bottom + window.scrollY - 40;

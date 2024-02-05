@@ -276,6 +276,9 @@ const AdminGameLanding = () => {
                   activeUsers.map((userDetails, index) => {
                     if (userDetails.userID === credentials.data.userID)
                       return null;
+
+                    const shortenedDesignation =
+                      userDetails.designation.substring(0, 3);
                     return (
                       <motion.div
                         key={index}
@@ -285,7 +288,7 @@ const AdminGameLanding = () => {
                         transition={{ duration: 0.8, damping: 10 }}
                         className={styles.userbadge}
                       >
-                        {userDetails.designation}
+                        {shortenedDesignation}
                       </motion.div>
                     );
                   })}

@@ -465,8 +465,11 @@ const Question = ({
                       getVotesDetailsById(item?.AnswerID) &&
                       getVotesDetailsById(item?.AnswerID).userName.map(
                         (username) => {
+                          const shortenedDesignation = username.substring(0, 3);
                           return (
-                            <div className={styles.userbadge}>{username}</div>
+                            <div className={styles.userbadge}>
+                              {shortenedDesignation}
+                            </div>
                           );
                         }
                       )}
