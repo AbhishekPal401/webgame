@@ -49,20 +49,22 @@ const Intro = () => {
   };
 
   useEffect(() => {
-    const handleEnded = () => { };
+    const handleEnded = () => {
+      onSkip();
+    };
 
     if (mediaRef.current) {
       mediaRef.current.addEventListener("ended", handleEnded);
 
       mediaRef.current
         .play()
-        .then(() => { })
+        .then(() => {})
         .catch((error) => {
           console.error("Autoplay failed:", error);
         });
     }
 
-    return () => { };
+    return () => {};
   }, []);
 
   useEffect(() => {
@@ -114,7 +116,12 @@ const Intro = () => {
                 )}
 
                 {fileType.includes("mp4") && (
-                  <video ref={mediaRef} width="100%" height="100%" controls={false}>
+                  <video
+                    ref={mediaRef}
+                    width="100%"
+                    height="100%"
+                    controls={false}
+                  >
                     <source
                       src={questionDetails.data.IntroMediaURL}
                       type="video/mp4"
@@ -143,22 +150,21 @@ const Intro = () => {
                       width="100%"
                       height="100%"
                     /> */}
-                    <PDFPreview pdfUrl={questionDetails.data.IntroMediaURL}/>
+                    <PDFPreview pdfUrl={questionDetails.data.IntroMediaURL} />
                   </div>
                 )}
 
-                {
-                  (fileType.includes("png") ||
-                    fileType.includes("jpg") ||
-                    fileType.includes("jpeg")) && (
-                    <div className={styles.previewContainer}>
-                      <img
-                        src={questionDetails.data.IntroMediaURL}
-                        alt="Intro Image"
-                        className={styles.previewImage}
-                      />
-                    </div>
-                  )}
+                {(fileType.includes("png") ||
+                  fileType.includes("jpg") ||
+                  fileType.includes("jpeg")) && (
+                  <div className={styles.previewContainer}>
+                    <img
+                      src={questionDetails.data.IntroMediaURL}
+                      alt="Intro Image"
+                      className={styles.previewImage}
+                    />
+                  </div>
+                )}
               </>
             )}
 
