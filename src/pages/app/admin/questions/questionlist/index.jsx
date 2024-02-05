@@ -156,7 +156,7 @@ function QuestionList() {
           >
             <img src="./images/questions.png" />
             <div className={styles.buttonContainer}>
-              <Button buttonType="cancel">Upload Questions</Button>
+              {/* <Button buttonType="cancel">Upload Questions</Button> */}
               <Button onClick={handleDownload}>Download Template</Button>
             </div>
           </div>
