@@ -107,8 +107,8 @@
 }
 
 .modal_crossIcon {
-  width: 2.3rem;
-  height: auto;
+  max-width: 2.7rem;
+  max-height: auto;
 }
 .modal_crossIcon:hover {
   cursor: pointer;
