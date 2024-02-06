@@ -12,6 +12,7 @@ import { signalRService } from "../../../../services/signalR";
 import { resetNextQuestionDetailsState } from "../../../../store/app/user/questions/getNextQuestion";
 import { resetAnswerDetailsState } from "../../../../store/app/user/answers/postAnswer";
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
+import { toPng } from "html-to-image";
 
 const SelectTree = ({ clicked = 1, onSelect = () => {} }) => {
   return (
@@ -37,6 +38,13 @@ const SelectTree = ({ clicked = 1, onSelect = () => {} }) => {
       <div className={styles.line}></div>
     </div>
   );
+};
+
+const getFullTreeNode = (node) => {
+  let duplicate = node.cloneNode(true);
+  console.log("duplicate", duplicate);
+
+  console.log("children", duplicate.children);
 };
 
 const MissionCompleted = () => {
@@ -140,12 +148,12 @@ const MissionCompleted = () => {
               instanceProgress &&
               instanceProgress.data &&
               instanceProgress.data.Summary && (
-                <>
+                <div>
                   <SelectedTree
                     data={instanceProgress.data.Summary}
                     userType="admin"
                   />
-                </>
+                </div>
               )}
             <div className={styles.right}>
               <div>Time Spent</div>
@@ -166,7 +174,28 @@ const MissionCompleted = () => {
           </div>
         </div>
         <div className={styles.buttonContainer}>
-          <Button customClassName={styles.export}>Export</Button>
+          <Button
+            customClassName={styles.export}
+            onClick={() => {
+              // let node = document.getElementById("treeNode");
+              // const filteredNode = getFullTreeNode(node);
+              // if (filteredNode) {
+              //   toPng(filteredNode)
+              //     .then(function (dataUrl) {
+              //       console.log("dataUrl: ", dataUrl);
+              //       var link = document.createElement("a");
+              //       link.download = "my-image-name.jpeg";
+              //       link.href = dataUrl;
+              //       link.click();
+              //     })
+              //     .catch(function (error) {
+              //       console.log("oops, something went wrong!", error);
+              //     });
+              // }
+            }}
+          >
+            Export
+          </Button>
           <Button
             customClassName={styles.end}
             onClick={() => {

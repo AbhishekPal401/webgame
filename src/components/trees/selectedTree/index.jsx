@@ -184,7 +184,11 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
   };
 
   return (
-    <div ref={containerRef}>
+    <div
+      ref={containerRef}
+      id="treeNode"
+      style={{ width: "100%", height: "100%" }}
+    >
       <Tree
         data={data}
         translate={translate}
