@@ -1,6 +1,6 @@
 .video {
   width: 100%;
-  height: 100%;
+  height: 90%;
 }
 .audio {
   display: flex;
@@ -19,10 +19,10 @@
 }
 
 .pdf {
-  height: 62vh;
+  height: 60vh;
   overflow: auto;
 }
 .previewImage {
   width: 100%;
-  height: 100%;
+  height: 90%;
 }

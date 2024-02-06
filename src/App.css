@@ -103,15 +103,17 @@
   justify-content: space-between;
   font-size: 1.8rem;
   font-weight: 500;
+  height: 4rem;
 }
 
 .modal_crossIcon {
-  width: 2rem;
-  height: 2rem;
+  width: 2.3rem;
+  height: auto;
 }
 .modal_crossIcon:hover {
   cursor: pointer;
 }
+
 .modal_description {
   margin-top: 1rem;
   font-size: 1.3rem;

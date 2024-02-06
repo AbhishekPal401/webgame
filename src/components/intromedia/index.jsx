@@ -31,12 +31,12 @@ const IntroMedia = ({
     }
   }, [mediaType, mediaURL]);
 
-  console.log("mediaURL", mediaURL);
-  console.log("description", description);
-  console.log("mediaType", mediaType);
+  // console.log("mediaURL", mediaURL);
+  // console.log("description", description);
+  // console.log("mediaType", mediaType);
 
   return (
-    <div className={"modal_content"} style={{ width: "80vw" }}>
+    <div className={"modal_content"} style={{ width: "80vw", height: "85vh" }}>
       <div className={"modal_header"}>
         <div>Introduction Resource</div>
         <div>

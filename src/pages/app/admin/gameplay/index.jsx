@@ -39,6 +39,8 @@ const DecisionTree = ({ onCancel = () => {} }) => {
 
   const dispatch = useDispatch();
 
+  console.log("instanceProgress", instanceProgress);
+
   useEffect(() => {
     if (isJSONString(sessionDetails.data)) {
       const sessionData = JSON.parse(sessionDetails.data);
@@ -62,7 +64,7 @@ const DecisionTree = ({ onCancel = () => {} }) => {
   }, []);
 
   return (
-    <div className={"modal_content"} style={{ width: "80vw" }}>
+    <div className={"modal_content"} style={{ width: "80vw", height: "85vh" }}>
       <div className={"modal_header"}>
         <div>Decision Tree</div>
         <div>
@@ -72,13 +74,12 @@ const DecisionTree = ({ onCancel = () => {} }) => {
         </div>
       </div>
       <div className={"modal_description"} style={{ marginBottom: "2rem" }}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
+        {!loading &&
+        instanceProgress &&
+        instanceProgress.data &&
+        instanceProgress.data.GameIntro
+          ? instanceProgress.data.GameIntro
+          : ""}
       </div>
 
       <div style={{ height: "72vh" }}>
