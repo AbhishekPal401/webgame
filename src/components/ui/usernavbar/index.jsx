@@ -200,7 +200,7 @@ const UserNavBar = ({ disable = false, role = "Player" }) => {
         <ModalContainer>
           <div className={"modal_content"}>
             <div className={"modal_header"}>
-              <div>Logout:</div>
+              <div>Logout</div>
               <div>
                 <svg
                   className="modal_crossIcon"
