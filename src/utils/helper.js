@@ -19,43 +19,45 @@ export const formatTime = (value) => {
 };
 
 export const formatDateString = (dateTimeString, formatType = "default") => {
+
   // const formats = [
-  //     {
-  //         format: dateFormats.DATE_FORMAT_3,
-  //         regex: /^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})$/
-  //     },
-  //     {
-  //         format: dateFormats.DATE_FORMAT_5,
-  //         regex: /^(\d{2})\/(\d{2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/
-  //     },
-  //     {
-  //         format: dateFormats.DATE_FORMAT_10,
-  //         regex: /^(\d{1})\/(\d{1})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/
-  //     },
-  //     {
-  //         format: dateFormats.DATE_FORMAT_1,
-  //         regex: /^(\d{2})\/(\d{2})\/(\d{4})$/
-  //     },
-  //     {
-  //         format: dateFormats.DATE_FORMAT_2,
-  //         regex: /^(\d{2})\/(\d{2})\/(\d{4})$/
-  //     },
+  //   {
+  //     format: dateFormats.DATE_FORMAT_3,
+  //     regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2})$/,
+  //   },
+  //   {
+  //     format: dateFormats.DATE_FORMAT_5,
+  //     regex:
+  //       /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/,
+  //   },
+  //   {
+  //     format: dateFormats.DATE_FORMAT_10,
+  //     regex:
+  //       /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/,
+  //   },
+  //   {
+  //     format: dateFormats.DATE_FORMAT_1,
+  //     regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/,
+  //   },
+  //   {
+  //     format: dateFormats.DATE_FORMAT_2,
+  //     regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/,
+  //   },
+  //   {
+  //     format: dateFormats.DATE_FORMAT_11,
+  //     regex:
+  //       /^([a-zA-Z]{3})\s+(\d{1,2})\s+(\d{4})\s+(\d{1,2}):(\d{2})([APMapm]{2})$/,
+  //   },
+  //   {
+  //     format: dateFormats.DATE_FORMAT_12,
+  //     regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2})$/,
+  //   },
   // ];
 
   const formats = [
     {
-      format: dateFormats.DATE_FORMAT_3,
-      regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2})$/,
-    },
-    {
-      format: dateFormats.DATE_FORMAT_5,
-      regex:
-        /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/,
-    },
-    {
-      format: dateFormats.DATE_FORMAT_10,
-      regex:
-        /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/,
+      format: dateFormats.DATE_FORMAT_0,
+      regex: /^(\d{1,2}) ([a-zA-Z]{3}) (\d{4})$/,
     },
     {
       format: dateFormats.DATE_FORMAT_1,
@@ -66,11 +68,51 @@ export const formatDateString = (dateTimeString, formatType = "default") => {
       regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/,
     },
     {
+      format: dateFormats.DATE_FORMAT_3,
+      regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2})$/,
+    },
+    {
+      format: dateFormats.DATE_FORMAT_4,
+      regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2})$/,
+    },
+    {
+      format: dateFormats.DATE_FORMAT_5,
+      regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/,
+    },
+    {
+      format: dateFormats.DATE_FORMAT_6,
+      regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/,
+    },
+    {
+      format: dateFormats.DATE_FORMAT_7,
+      regex: /^(\d{1,2}) ([a-zA-Z]{3}) (\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/,
+    },
+    {
+      format: dateFormats.DATE_FORMAT_8,
+      regex: /^(\d{1,2})-(\d{1,2})-(\d{4})$/,
+    },
+    {
+      format: dateFormats.DATE_FORMAT_9,
+      regex: /^(\d{1,2})-(\d{1,2})-(\d{4})$/,
+    },
+    {
+      format: dateFormats.DATE_FORMAT_10,
+      regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/,
+    },
+    {
       format: dateFormats.DATE_FORMAT_11,
-      regex:
-        /^([a-zA-Z]{3})\s+(\d{1,2})\s+(\d{4})\s+(\d{1,2}):(\d{2})([APMapm]{2})$/,
+      regex: /^([a-zA-Z]{3}) (\d{1,2}) (\d{4}) (\d{1,2}):(\d{2})([APMapm]{2})$/,
+    },
+    {
+      format: dateFormats.DATE_FORMAT_13,
+      regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2})$/,
+    },
+    {
+      format: dateFormats.DATE_FORMAT_12,
+      regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2})$/,
     },
   ];
+  
 
   const months = [
     "Jan",

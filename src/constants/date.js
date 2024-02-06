@@ -11,4 +11,6 @@ export const dateFormats = {
  DATE_FORMAT_9 : 'MM-DD-YYYY',
  DATE_FORMAT_10 : 'D/M/YYYY h:mm:ss A',
  DATE_FORMAT_11: 'MMM DD YYYY h:mmA',
+ DATE_FORMAT_12: 'DD/MM/YYYY HH:mm:ss',
+ DATE_FORMAT_13: 'MM/DD/YYYY HH:mm:ss',
 }
