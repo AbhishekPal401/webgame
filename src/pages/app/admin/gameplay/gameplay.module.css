@@ -41,6 +41,9 @@
   overflow: hidden;
 }
 
+.displayInline {
+  display: inline-block;
+}
 .header_middle {
   width: 46%;
   height: 100%;

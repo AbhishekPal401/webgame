@@ -25,11 +25,11 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
         nodeDatum.attributes.isAdminOptimal &&
         nodeDatum.attributes.isOptimal
       ) {
-        nodeClassName = styles.correct;
+        nodeClassName = styles.isNotOptimalNode;
       } else if (nodeDatum.attributes.isAdminOptimal) {
         nodeClassName = styles.selected;
       } else if (nodeDatum.attributes.isOptimal) {
-        nodeClassName = styles.isOptimalNode;
+        nodeClassName = styles.isNotOptimalNode;
       } else {
         nodeClassName = styles.isNotOptimalNode;
       }
@@ -42,11 +42,11 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
         nodeDatum.attributes.isUserSubmitedAnswer &&
         nodeDatum.attributes.isOptimal
       ) {
-        nodeClassName = styles.correct;
+        nodeClassName = styles.isNotOptimalNode;
       } else if (nodeDatum.attributes.isUserSubmitedAnswer) {
         nodeClassName = styles.selected;
       } else if (nodeDatum.attributes.isOptimal) {
-        nodeClassName = styles.isOptimalNode;
+        nodeClassName = styles.isNotOptimalNode;
       } else {
         nodeClassName = styles.isNotOptimalNode;
       }

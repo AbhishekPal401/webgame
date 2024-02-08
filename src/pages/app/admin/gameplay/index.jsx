@@ -650,20 +650,19 @@ const GamePlay = () => {
           <div>
             {questionDetails?.data?.GameIntro ? (
               <p
-                style={{ display: "inline-block" }}
-                data-tooltip-id="objective-tooltip"
-                data-tooltip-content={
-                  questionDetails?.data?.GameIntro
-                    ? questionDetails?.data?.GameIntro
+                className={
+                  questionDetails?.data?.GameIntro.length <= 260
+                    ? styles.displayInline
                     : ""
                 }
+                data-tooltip-id="objective-tooltip"
+                data-tooltip-content={questionDetails?.data?.GameIntro}
               >
                 {questionDetails?.data?.GameIntro}
               </p>
             ) : (
               ""
             )}
-            {""}
           </div>
         </div>
         <div

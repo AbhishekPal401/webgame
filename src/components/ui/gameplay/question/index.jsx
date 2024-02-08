@@ -340,6 +340,15 @@ const Question = ({
     [decisionDetails, delegatedTo]
   );
 
+  const getDeciderDecisionById = useCallback(
+    (answerId) => {
+      return (
+        decisionDetails.find((answer) => answer.answer === answerId) || null
+      );
+    },
+    [decisionDetails]
+  );
+
   useEffect(() => {
     setShowSkip(false);
     if (MediaType && QuestionIntroMediaURL) {
@@ -412,6 +421,8 @@ const Question = ({
 
     signalRService.SkipMediaInvoke(data);
   }, [sessionDetails, credentials, questionDetails]);
+
+  console.log("media", showMedia, MediaType, QuestionIntroMediaURL);
 
   return (
     <div className={styles.container}>
@@ -499,7 +510,23 @@ const Question = ({
                       Array.isArray(Votes) &&
                       Votes.length > 0 &&
                       getVotesDetailsById(item?.AnswerID) &&
-                      getVotesDetailsById(item?.AnswerID).userName.map(
+                      getVotesDetailsById(item?.AnswerID).voteCount > 0 && (
+                        <div className={styles.voteCount}>
+                          {`${
+                            getVotesDetailsById(item?.AnswerID).voteCount === 1
+                              ? "1 Vote"
+                              : `${
+                                  getVotesDetailsById(item?.AnswerID).voteCount
+                                } Votes`
+                          } `}
+                        </div>
+                      )}
+                    {showVotes &&
+                      decisionDetails &&
+                      Array.isArray(decisionDetails) &&
+                      decisionDetails.length > 0 &&
+                      getDeciderDecisionById(item?.AnswerID) &&
+                      getDeciderDecisionById(item?.AnswerID).userName.map(
                         (username) => {
                           const shortenedDesignation = username.substring(0, 3);
                           return (

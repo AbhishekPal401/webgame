@@ -60,6 +60,8 @@ const Intro = () => {
       ActionType: "IntroductionSkip",
     };
 
+    console.log(" global skip data", data);
+
     signalRService.SkipMediaInvoke(data);
 
     // navigate("/gameplay");
