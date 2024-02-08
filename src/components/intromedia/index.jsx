@@ -33,7 +33,7 @@ const IntroMedia = ({
 
   // console.log("mediaURL", mediaURL);
   // console.log("description", description);
-  // console.log("mediaType", mediaType);
+  console.log("resourceType", resourceType);
 
   return (
     <div className={"modal_content"} style={{ width: "80vw", height: "85vh" }}>

@@ -29,6 +29,7 @@ import TeamMembers from "../../../../components/teammembers/index.jsx";
 import Nudges from "../../../../components/nudges/index.jsx";
 import { TIMER_STATES } from "../../../../constants/timer.js";
 import IntroMedia from "../../../../components/intromedia/index.jsx";
+import { Tooltip } from "react-tooltip";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -454,11 +455,15 @@ const GamePlay = () => {
           answerDetails.votersInfo &&
           Array.isArray(answerDetails.votersInfo)
         ) {
+          let isDeciderDecsionAnswer = false;
           answerDetails.votersInfo.forEach((userDetails) => {
             if (userDetails.userID) {
-              decisionCount++;
+              isDeciderDecsionAnswer = true;
             }
           });
+          if (isDeciderDecsionAnswer) {
+            decisionCount++;
+          }
         }
       });
 
@@ -643,9 +648,22 @@ const GamePlay = () => {
         <div className={styles.header_left}>
           <div>Objectives</div>
           <div>
-            {questionDetails?.data?.GameIntro
-              ? questionDetails?.data?.GameIntro
-              : ""}{" "}
+            {questionDetails?.data?.GameIntro ? (
+              <p
+                style={{ display: "inline-block" }}
+                data-tooltip-id="objective-tooltip"
+                data-tooltip-content={
+                  questionDetails?.data?.GameIntro
+                    ? questionDetails?.data?.GameIntro
+                    : ""
+                }
+              >
+                {questionDetails?.data?.GameIntro}
+              </p>
+            ) : (
+              ""
+            )}
+            {""}
           </div>
         </div>
         <div
@@ -785,6 +803,12 @@ const GamePlay = () => {
           />
         </ModalContainer>
       )}
+
+      <Tooltip
+        id="objective-tooltip"
+        place="top-start"
+        style={{ backgroundColor: "rgb(0, 0, 0)", color: "#fff" }}
+      />
     </motion.div>
   );
 };

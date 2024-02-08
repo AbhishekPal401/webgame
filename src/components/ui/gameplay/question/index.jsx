@@ -383,10 +383,12 @@ const Question = ({
   useEffect(() => {
     const skipMedia = (data) => {
       console.log("data", data);
-      if (!mediaShownOnce) {
-        setMediaShownOnce(true);
+      if (data.actionType && data.actionType === "QuestionMediaSkip") {
+        if (!mediaShownOnce) {
+          setMediaShownOnce(true);
+        }
+        setShowMedia(false);
       }
-      setShowMedia(false);
     };
     signalRService.SkipMediaListener(skipMedia);
 
