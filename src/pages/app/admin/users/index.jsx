@@ -158,7 +158,7 @@ const Users = () => {
                 <th>Email</th>
                 <th>Mobile</th>
                 <th>Organization</th>
-                <th>Data Updated</th>
+                <th>Date Updated</th>
                 <th>Role Played</th>
                 <th>Playtime</th>
                 <th>Status</th>

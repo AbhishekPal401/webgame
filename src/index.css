@@ -12,6 +12,7 @@
   --green: #50ad95;
   --active: #ffe299;
   --light_black: #474747;
+  --disabled_label: #B7B7B7;
 }
 
 *::after,

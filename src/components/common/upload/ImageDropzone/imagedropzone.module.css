@@ -52,3 +52,19 @@
   width: auto; /* Allow the width to adjust to maintain aspect ratio */
   height: auto; /* Allow the height to adjust to maintain aspect ratio */
 }
+.fileNameContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  justify-content: space-between;
+  padding: 1rem 1rem 0;
+}
+.fileNameContainer > div:first-child {
+  color: var(--input_label);
+  font-size: 1.3rem;
+}
+.fileNameContainer > div:nth-child(2) {
+  display: flex;
+  justify-content: end;
+  cursor: pointer;
+}

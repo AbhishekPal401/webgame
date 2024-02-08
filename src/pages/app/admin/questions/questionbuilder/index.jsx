@@ -22,6 +22,7 @@ import {
   resetUpdateQuestionState,
 } from "../../../../../store/app/admin/questions/updateQuestion";
 import { extractFileInfo, extractFileType } from "../../../../../utils/helper";
+import RichTextEditor from "../../../../../components/common/richtexteditor";
 
 function QuestionBuilder() {
   const [questionData, setQuestionData] = useState({
@@ -234,7 +235,7 @@ function QuestionBuilder() {
           },
           consequence: {
             value: answer.Content,
-              // answer.Content == null ? "Dummy consequence" : answer.Content, // TODO:: the consequence is null from backedn for now
+            // answer.Content == null ? "Dummy consequence" : answer.Content, // TODO:: the consequence is null from backedn for now
             error: "",
           },
           narrative: {
@@ -307,6 +308,18 @@ function QuestionBuilder() {
       },
     });
   };
+
+  const onQuestionChange = (htmlContent) => {
+    console.log("Game Intro text ", htmlContent)
+    setQuestionData((prevQuestionData) => ({
+      ...prevQuestionData,
+      question: {
+        value: htmlContent,
+        error: "",
+      },
+    }));
+  };
+
 
   const onDecisionMakerSelect = (event) => {
     console.log("onDecisionMakerSelect ", event.target.value);
@@ -629,7 +642,25 @@ function QuestionBuilder() {
                 <label className={styles.innerLabel}>Question</label>
                 <div className={styles.questionInputContainer}>
                   <div className={styles.questionInputLeft}>
-                    <Input
+                    <div
+                      className={styles.question}
+                      // style={{ margin: '0' }}
+                    >
+                      <label
+                        className={styles.inputLabel}
+                      >
+                        Question
+                      </label>
+                      <RichTextEditor
+                        customContaierClass={styles.customRichTextEditorContaierClass}
+                        customEditorStyles={styles.customRichTextEditorStyleClass}
+                        onChange={onQuestionChange}
+                        placeholder="Add question"
+                        value={questionData.question.value}
+                      />
+                    </div>
+
+                    {/* <Input
                       label="Question"
                       labelStyle={styles.inputLabel}
                       customStyle={{ margin: "0" }}
@@ -639,7 +670,7 @@ function QuestionBuilder() {
                       textAreaStyleClass={styles.questionTextarea}
                       onChange={onChange}
                       textArea
-                    />
+                    /> */}
                   </div>
                   <div className={styles.questionInputRight}>
                     {/* Decisin Maker :: start */}
@@ -647,6 +678,7 @@ function QuestionBuilder() {
                       <label
                         htmlFor="dropdown_decision_maker"
                         className="select_label"
+                        style={{ margin: '0' }}
                       >
                         Decision Maker
                       </label>
@@ -697,7 +729,7 @@ function QuestionBuilder() {
                           setSupportFileDisplayURL(file);
                         }}
                         fileName={
-                          supportFileDisplayURL && 
+                          supportFileDisplayURL &&
                           extractFileInfo(supportFileDisplayURL).name
                         }
                       />

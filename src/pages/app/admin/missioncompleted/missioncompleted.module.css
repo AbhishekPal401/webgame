@@ -17,6 +17,12 @@
   border-radius: 2.4rem;
   overflow: hidden;
   background-color: #474747;
+  height: 85vh;
+}
+.innerCotainer {
+  overflow-y: auto;
+  height: inherit;
+  padding: 0 0 2rem 0;
 }
 
 .header {
@@ -113,6 +119,7 @@
 .tree > div:nth-child(1) {
   width: 75%;
   height: 40rem;
+  margin-left: 4rem;
 }
 
 .tree > div:nth-child(1) svg {
@@ -202,6 +209,7 @@
   background-color: var(--primary);
   color: var(--black);
   margin-left: 2rem;
+  cursor: pointer;
 }
 
 .details_row {
