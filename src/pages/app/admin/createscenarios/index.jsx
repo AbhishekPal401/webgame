@@ -17,6 +17,7 @@ import { generateGUID } from "../../../../utils/common.js";
 import axios from "axios";
 import { fileTypes } from "../../../../constants/filetypes.js";
 import { extractFileType } from "../../../../utils/helper.js";
+import RichTextEditor from "../../../../components/common/richtexteditor/index.jsx";
 
 const CreateScenario = () => {
   const [scenarioData, setScenarioData] = useState({
@@ -41,7 +42,7 @@ const CreateScenario = () => {
   const [resetFile, setResetFile] = useState(false);
   const [introFileDisplay, setIntroFileDisplay] = useState(null);
 
-  console.log(" scenario data :", scenarioData)
+  // console.log(" scenario data :", scenarioData)
 
   const allowedFileTypesArray = [
     fileTypes.AUDIO_EXTENSION,
@@ -139,6 +140,17 @@ const CreateScenario = () => {
         error: "",
       },
     });
+  };
+  
+  const onGameIntroTextChange = (htmlContent) => {
+    console.log("Game Intro text ",htmlContent)
+    setScenarioData((prevScenarioData) => ({
+      ...prevScenarioData,
+      gameIntroText: {
+        value: htmlContent,
+        error: "",
+      },
+    }));
   };
 
   const onUpload = useCallback(
@@ -398,7 +410,14 @@ const CreateScenario = () => {
               <div className={styles.gameIntroductionLeftInputs}>
                 <label>Game Introduction</label>
                 {/*TODO:: Rich Text Editor */}
-                <Input
+                <RichTextEditor
+                  customContaierClass={styles.customRichTextEditorContaierClass}
+                  customEditorStyles={styles.customRichTextEditorStyleClass}
+                  onChange={onGameIntroTextChange}
+                  placeholder="Add question"
+                  value={scenarioData?.gameIntroText?.value}
+                />
+                {/* <Input
                   value={scenarioData?.gameIntroText?.value}
                   labelStyle={styles.inputLabel}
                   customStyle={{ height: "15rem" }}
@@ -407,13 +426,14 @@ const CreateScenario = () => {
                   textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
                   onChange={onChange}
                   textArea
-                />
+                /> */}
               </div>
               <div className={styles.verticalLine}></div>
               <div className={styles.gameIntroductionRightInputs}>
                 <div className={styles.imageDropZoneContainerLeft}>
                   <FileDropZone
                     customstyle={{ marginTop: "1rem" }}
+                    customContainerClass={styles.customFileDropzoneContainerClass}
                     label="Upload Game Intro Media"
                     fileSrc={introFileDisplay}
                     setUrl={(file) => {

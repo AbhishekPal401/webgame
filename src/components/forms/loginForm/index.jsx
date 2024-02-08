@@ -3,7 +3,7 @@ import Button from "../../common/button";
 import Input from "../../common/input";
 import Checkbox from "../../ui/checkbox";
 import styles from "./loginForm.module.css";
-import pwcLogo from "../../../assets/logo/pwc.png";
+import pwcLogo from "../../../assets/logo/pwc_logo.png";
 import { Link } from "react-router-dom";
 import { validateEmail } from "../../../utils/validators";
 import { useDispatch, useSelector } from "react-redux";
@@ -125,6 +125,7 @@ const LoginForm = () => {
           value={loginData.username.value}
           onChange={onChange}
           onKeyPress={onKeyPress}
+          inputStyleClass={styles.inputStyleClass}
         />
         <Input
           type="password"
@@ -136,6 +137,7 @@ const LoginForm = () => {
           }}
           onChange={onChange}
           onKeyPress={onKeyPress}
+          inputStyleClass={styles.inputStyleClass}
         />
       </div>
 

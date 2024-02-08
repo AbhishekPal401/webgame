@@ -5,7 +5,7 @@ const Pagination = ({
   totalCount = 100,
   pageNumber = 1,
   countPerPage = 10,
-  onPageChange = () => {},
+  onPageChange = () => { },
 }) => {
   const totalPages = Math.ceil(totalCount / countPerPage);
 
@@ -18,19 +18,26 @@ const Pagination = ({
   return (
     <div className={styles.container}>
       <div
-        className={`${styles.previous} ${
-          pageNumber === 1 ? styles.disabled : ""
-        }`}
+        className={`${styles.previous} ${pageNumber === 1 ? styles.disabled : ""
+          }`}
         role="button"
         tabIndex={0}
-        onKeyDown={() => {}}
+        onKeyDown={() => { }}
         disabled={pageNumber === 1}
         onClick={() => {
           if (pageNumber === 1) return;
           handlePageChange(pageNumber - 1);
         }}
       >
-        Previous
+        <svg
+          height="16"
+          width="16"
+        >
+          <use xlinkHref={"sprite.svg#chevron_left_icon_black"} />
+        </svg>
+
+        <span>Previous</span>
+
       </div>
       <div className={styles.pages_status}>
         <input
@@ -50,19 +57,28 @@ const Pagination = ({
         </div>
       </div>
       <div
-        className={`${styles.next} ${
-          pageNumber === totalPages ? styles.disabled : ""
-        }`}
+        className={`${styles.next} ${pageNumber === totalPages ? styles.disabled : ""
+          }`}
         onClick={() => {
           if (pageNumber === totalPages) return;
           handlePageChange(pageNumber + 1);
         }}
         role="button"
         tabIndex={0}
-        onKeyDown={() => {}}
+        onKeyDown={() => { }}
         disabled={pageNumber === totalPages}
       >
-        Next{" "}
+        <span
+          style={{marginRight: '0.5rem'}}
+        >
+          Next{" "}
+        </span>
+        <svg
+          height="16"
+          width="16"
+        >
+          <use xlinkHref={"sprite.svg#chevron_right_icon_black"} />
+        </svg>
       </div>
     </div>
   );

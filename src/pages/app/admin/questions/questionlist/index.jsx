@@ -193,9 +193,10 @@ function QuestionList() {
                             />
                           </td>
                           <td>{index + 1}</td>
-                          <td>
+                          <td dangerouslySetInnerHTML={{ __html: question.QuestionText || '' }}></td>
+                          {/* <td>
                             {question.QuestionText}
-                          </td>
+                          </td> */}
                           {/* <td className={styles.scenarioDescription}>
                             Levels
                           </td> */}

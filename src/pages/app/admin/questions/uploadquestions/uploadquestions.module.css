@@ -21,6 +21,7 @@
   font-size: 4rem;
   color: var(--label);
   font-weight: bold;
+  font-family: 'Helvetica 500';
 }
 .right {
   flex: 1.5;

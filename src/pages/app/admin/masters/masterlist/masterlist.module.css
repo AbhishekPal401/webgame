@@ -15,6 +15,7 @@
   font-size: 4rem;
   color: var(--label);
   font-weight: bold;
+  font-family: 'Helvetica 500';
 }
 .right {
   flex: 1.5;
@@ -126,7 +127,8 @@
 }
 .table_content thead {
   width: 100%;
-  background-color: var(--black);
+  background-color: var(--light_black);
+  /* background-color: var(--black); */
   /* position: sticky;
       top: 0;
       z-index: 1; */
@@ -151,7 +153,8 @@
   font-size: 1.3rem;
   font-weight: 500;
   color: #434343;
-  border-bottom: 1px solid #707070;
+  /* border-bottom: 1px solid #707070; */
+  border-bottom: 2px solid var(--input_label);
 }
 
 /* .table_content tbody tr:hover {
@@ -162,7 +165,27 @@
   height: 3rem;
   padding-left: 0.5rem;
 }
-
+/* .table_content tbody tr > td:nth-child(3){
+  max-width: 10rem;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.table_content .designationDescription {
+  max-width: 10rem;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+} */
+.table_content tbody tr td {
+  max-width: 10rem;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .scenarioName:hover {
   text-decoration: underline;
   cursor: pointer;
@@ -198,8 +221,8 @@
   cursor: pointer;
 }
 .circleSvg:hover {
-  height: 2.4rem;
-  width: 2.4rem;
+  /* height: 2.4rem;
+  width: 2.4rem; */
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 

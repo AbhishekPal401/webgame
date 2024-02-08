@@ -15,6 +15,7 @@
   font-size: 4rem;
   color: var(--label);
   font-weight: bold;
+  font-family: 'Helvetica 500';
 }
 .right {
   flex: 1.5;
@@ -74,6 +75,14 @@
 }
 .questionInputLeft {
   flex: 6;
+}
+.customRichTextEditorContaierClass {
+  /* margin-top: 2rem; */
+  font-family: "Helvetica 400";
+}
+.customRichTextEditorStyleClass > div:nth-child(2)  {
+  height: 34rem;
+  width: 100%;
 }
 .questionInputRight {
   flex: 3;

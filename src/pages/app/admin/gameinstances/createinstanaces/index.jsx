@@ -280,7 +280,7 @@ const CreateInstances = () => {
                 },
                 instancePlayers: [],
             });
-            
+
             //reset the create group user and local state and show modal
             resetAddGroupData();
             dispatch(resetCreateGroupUsersState());
@@ -411,6 +411,10 @@ const CreateInstances = () => {
                     },
                     isUserAdded: {
                         value: false,
+                        error: "",
+                    },
+                    isActive: {
+                        value: user.Status,
                         error: "",
                     },
                 };
@@ -1298,13 +1302,31 @@ const CreateInstances = () => {
                                         clearSearch={clearSearch}
                                         searchValue={searchValue}
                                     />
-                                    <UsersList
+                                    {/* <UsersList
                                         users={
                                             searchValue
                                                 ? addGroupData.users.filter((user) =>
                                                     user.userEmail.value.includes(searchValue)
                                                 )
                                                 : addGroupData.users
+                                        }
+                                        onToggleUser={onToggleUser}
+                                    /> */}
+                                    <UsersList
+                                        users={
+                                            searchValue
+                                                ? addGroupData.users
+                                                    .filter(user =>
+                                                        user.userEmail.value.includes(searchValue))
+                                                    .filter(user =>
+                                                        user.userRole.value === "3") // Filter users with userRole.value === "3"
+                                                    .filter(user =>
+                                                        user.isActive.value === "Active") // Filter users with user.Status === "Active"
+                                                : addGroupData.users
+                                                    .filter(user =>
+                                                        user.userRole.value === "3") // If no search value, only filter by userRole.value === "3"
+                                                    .filter(user =>
+                                                        user.isActive.value === "Active") // Filter users with user.Status === "Active"
                                         }
                                         onToggleUser={onToggleUser}
                                     />

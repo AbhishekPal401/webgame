@@ -25,6 +25,7 @@ import { extractFileInfo, formatDateString } from "../../../../utils/helper.js";
 import { dateFormats } from "../../../../constants/date.js";
 import { fileTypes } from "../../../../constants/filetypes.js";
 import { extractFileType } from "../../../../utils/helper.js";
+import RichTextEditor from "../../../../components/common/richtexteditor/index.jsx";
 
 const UpdateScenarios = () => {
   const [scenarioData, setScenarioData] = useState({
@@ -77,7 +78,7 @@ const UpdateScenarios = () => {
     fileTypes.POWERPOINT_EXTENSION,
   ]
 
-  console.log(" scenario data :",scenarioData)
+  console.log(" scenario data :", scenarioData)
 
   const { credentials } = useSelector((state) => state.login);
 
@@ -249,6 +250,17 @@ const UpdateScenarios = () => {
     });
   };
 
+  const onGameIntroTextChange = (htmlContent) => {
+    console.log("Game Intro text ", htmlContent)
+    setScenarioData((prevScenarioData) => ({
+      ...prevScenarioData,
+      gameIntroText: {
+        value: htmlContent,
+        error: "",
+      },
+    }));
+  };
+
   const onUpload = useCallback(
     (file) => {
       setScenarioData((prevScenarioData) => ({
@@ -326,7 +338,7 @@ const UpdateScenarios = () => {
       valid = false;
     }
 
-    if ((!scenarioID || !introFileDisplay)&& scenarioData?.gameIntroFile?.value === "") {
+    if ((!scenarioID || !introFileDisplay) && scenarioData?.gameIntroFile?.value === "") {
       console.log("gameIntroFile:", data.gameIntroFile);
       data = {
         ...data,
@@ -412,27 +424,27 @@ const UpdateScenarios = () => {
         console.log(" game intro file is not uploaded")
 
         // if (url != "" || url != null || url != undefined) {
-          // else if no intro file is uploaded 
-          // console.log(" if url is not null, empty or indefiened")
-          const data = {
-            scenarioID: scenarioID ? scenarioID : "",
-            scenarioName: scenarioData?.scenarioName?.value,
-            description: scenarioData?.scenarioDescription?.value,
-            gameIntro: scenarioData?.gameIntroText?.value,
-            introFile: url || "",
-            introFileType: fileType || "",
-            status: "Create",
-            version: "1",
-            baseVersionID: "1",
-            // handled by backend :: status, version, baseVersionID
-            requester: {
-              requestID: generateGUID(),
-              requesterID: credentials.data.userID,
-              requesterName: credentials.data.userName,
-              requesterType: credentials.data.role,
-            },
-          };
-          dispatch(updateScenario(data));
+        // else if no intro file is uploaded 
+        // console.log(" if url is not null, empty or indefiened")
+        const data = {
+          scenarioID: scenarioID ? scenarioID : "",
+          scenarioName: scenarioData?.scenarioName?.value,
+          description: scenarioData?.scenarioDescription?.value,
+          gameIntro: scenarioData?.gameIntroText?.value,
+          introFile: url || "",
+          introFileType: fileType || "",
+          status: "Create",
+          version: "1",
+          baseVersionID: "1",
+          // handled by backend :: status, version, baseVersionID
+          requester: {
+            requestID: generateGUID(),
+            requesterID: credentials.data.userID,
+            requesterName: credentials.data.userName,
+            requesterType: credentials.data.role,
+          },
+        };
+        dispatch(updateScenario(data));
         // } else {
         //   toast.error("Please upload Game intro file.");
         // }
@@ -521,8 +533,15 @@ const UpdateScenarios = () => {
             >
               <div className={styles.gameIntroductionLeftInputs}>
                 <label>Game Introduction</label>
-                {/*TODO:: Rich Text Editor */}
-                <Input
+                {/*Rich Text Editor */}
+                <RichTextEditor
+                  customContaierClass={styles.customRichTextEditorContaierClass}
+                  customEditorStyles={styles.customRichTextEditorStyleClass}
+                  onChange={onGameIntroTextChange}
+                  placeholder="Add question"
+                  value={scenarioData?.gameIntroText?.value}
+                />
+                {/* <Input
                   value={scenarioData?.gameIntroText?.value}
                   labelStyle={styles.inputLabel}
                   customStyle={{ height: "15rem" }}
@@ -531,13 +550,14 @@ const UpdateScenarios = () => {
                   textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
                   onChange={onChange}
                   textArea
-                />
+                /> */}
               </div>
               <div className={styles.verticalLine}></div>
               <div className={styles.gameIntroductionRightInputs}>
                 <div className={styles.imageDropZoneContainerLeft}>
                   <FileDropZone
                     customstyle={{ marginTop: "1rem" }}
+                    customContainerClass={styles.customFileDropzoneContainerClass}
                     label="Upload Game Intro Media"
                     hint="Eligible Formats: Mp4, Mp3, Image and PDF"
                     allowedFileTypes={allowedFileTypesArray}

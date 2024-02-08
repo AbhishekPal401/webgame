@@ -10,7 +10,7 @@ import { generateGUID } from "../../../../utils/common";
 import { signalRService } from "../../../../services/signalR";
 import { useNavigate } from "react-router-dom";
 
-const SelectTree = ({ clicked = 0, onSelect = () => {} }) => {
+const SelectTree = ({ clicked = 0, onSelect = () => { } }) => {
   return (
     <div className={styles.selectTree}>
       <div className={styles.selectButtonContainer}>
@@ -87,87 +87,91 @@ const MissionCompleted = () => {
       style={{ backgroundImage: 'url("/images/user_background.png")' }}
     >
       <div className={styles.missionContainer}>
-        <div
-          className={styles.header}
-          style={{ backgroundImage: 'url("/images/particles2.png")' }}
-        >
-          <div>Mission Accomplished!</div>
-          <div>
-            Thank You For Taking Part In This Game, We Hope You Have Enjoyed It.
-            Here's A Summary Of How You Did.
-          </div>
-          <div className={styles.details_row}>
+        <div className={styles.innerCotainer}>
+
+          <div
+            className={styles.header}
+            style={{ backgroundImage: 'url("/images/particles2.png")' }}
+          >
+            <div>Mission Accomplished!</div>
             <div>
-              {instanceSummary?.data?.GameInstance
-                ? instanceSummary?.data?.GameInstance
-                : ""}
+              Thank You For Taking Part In This Game, We Hope You Have Enjoyed It.
+              Here's A Summary Of How You Did.
             </div>
-            <div>
-              {instanceSummary?.data?.OrganizationName
-                ? instanceSummary?.data?.OrganizationName
-                : ""}
-            </div>
-            <div>
-              {instanceSummary?.data?.GameScenario
-                ? instanceSummary?.data?.GameScenario
-                : ""}
-            </div>
-          </div>
-        </div>
-        <div className={styles.treeContainer}>
-          <SelectTree
-            clicked={currentTab}
-            onSelect={(value) => {
-              setCurrentTab(value);
-            }}
-          />
-          <div className={styles.tree}>
-            {instanceSummary &&
-              instanceSummary.data &&
-              instanceSummary.data.Summary &&
-              instanceProgress &&
-              instanceProgress.data &&
-              instanceProgress.data.Summary && (
-                <>
-                  {currentTab === 0 ? (
-                    <SelectedTree
-                      data={instanceProgress.data.Summary}
-                      userType="normal"
-                    />
-                  ) : (
-                    <OptimalTree data={instanceSummary.data.Summary} />
-                  )}
-                </>
-              )}
-            <div className={styles.right}>
-              <div>Time Spent</div>
-              <div className={styles.circle}>
-                {instanceSummary?.data?.TimeTaken
-                  ? instanceSummary?.data?.TimeTaken
-                  : ""}{" "}
-                <span>min</span>
+            <div className={styles.details_row}>
+              <div>
+                {instanceSummary?.data?.GameInstance
+                  ? instanceSummary?.data?.GameInstance
+                  : ""}
               </div>
-              <div>Score</div>
-              <div className={styles.circle}>
-                {" "}
-                {instanceSummary?.data?.IndividualScore
-                  ? instanceSummary?.data?.IndividualScore
+              <div>
+                {instanceSummary?.data?.OrganizationName
+                  ? instanceSummary?.data?.OrganizationName
+                  : ""}
+              </div>
+              <div>
+                {instanceSummary?.data?.GameScenario
+                  ? instanceSummary?.data?.GameScenario
                   : ""}
               </div>
             </div>
           </div>
-        </div>
-        <div className={styles.buttonContainer}>
-          {/* <Button customClassName={styles.export}>Export</Button> */}
-          <Button
-            customClassName={styles.end}
-            onClick={() => {
-              resetAll();
-              navigate("/");
-            }}
-          >
-            End
-          </Button>
+          <div className={styles.treeContainer}>
+            <SelectTree
+              clicked={currentTab}
+              onSelect={(value) => {
+                setCurrentTab(value);
+              }}
+            />
+            <div className={styles.tree}>
+              {instanceSummary &&
+                instanceSummary.data &&
+                instanceSummary.data.Summary &&
+                instanceProgress &&
+                instanceProgress.data &&
+                instanceProgress.data.Summary && (
+                  <>
+                    {currentTab === 0 ? (
+                      <SelectedTree
+                        data={instanceProgress.data.Summary}
+                        userType="normal"
+                      />
+                    ) : (
+                      <OptimalTree data={instanceSummary.data.Summary} />
+                    )}
+                  </>
+                )}
+              <div className={styles.right}>
+                <div>Time Spent</div>
+                <div className={styles.circle}>
+                  {instanceSummary?.data?.TimeTaken
+                    ? instanceSummary?.data?.TimeTaken
+                    : ""}{" "}
+                  <span>min</span>
+                </div>
+                <div>Score</div>
+                <div className={styles.circle}>
+                  {" "}
+                  {instanceSummary?.data?.IndividualScore
+                    ? instanceSummary?.data?.IndividualScore
+                    : ""}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={styles.buttonContainer}>
+            {/* <Button customClassName={styles.export}>Export</Button> */}
+            <Button
+              customClassName={styles.end}
+              onClick={() => {
+                resetAll();
+                console.log("navigte")
+                navigate("/");
+              }}
+            >
+              End
+            </Button>
+          </div>
         </div>
       </div>
     </div>

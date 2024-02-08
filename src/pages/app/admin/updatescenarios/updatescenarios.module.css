@@ -17,6 +17,7 @@
   font-size: 4rem;
   color: var(--label);
   font-weight: bold;
+  font-family: 'Helvetica 500';
 }
 
 .lastEditedOn {
@@ -138,8 +139,11 @@
 
 .imageDropZoneContainerLeft {
   flex: 7;
+  margin-top: 2rem;
 }
-
+.customFileDropzoneContainerClass {
+  height: 12rem;
+}
 .imageDropZoneContainerRight {
   flex: 3;
 }
@@ -156,6 +160,15 @@
   resize: none;
   font-family: 'Helvetica 400';
 }
+
+.customRichTextEditorContaierClass {
+  margin-top: 2rem;
+  font-family: "Helvetica 400";
+}
+.customRichTextEditorStyleClass > div:nth-child(2)  {
+  height: 15rem ;
+}
+
 .inputStyleClass {
   font: normal;
   font-family: 'Helvetica 400';

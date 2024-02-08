@@ -99,33 +99,34 @@ const MissionCompleted = () => {
       style={{ backgroundImage: 'url("/images/user_background.png")' }}
     >
       <div className={styles.missionContainer}>
-        <div
-          className={styles.header}
-          style={{ backgroundImage: 'url("/images/particles2.png")' }}
-        >
-          <div>Mission Accomplished!</div>
-          <div>
-            Thank You For Taking Part In This Game, We Hope You Have Enjoyed It.
-            Here's A Summary Of How You Did.
-          </div>
-          <div className={styles.details_row}>
+        <div className={styles.innerCotainer}>
+          <div
+            className={styles.header}
+            style={{ backgroundImage: 'url("/images/particles2.png")' }}
+          >
+            <div>Mission Accomplished!</div>
             <div>
-              {instanceSummary?.data?.GameInstance
-                ? instanceSummary?.data?.GameInstance
-                : ""}
+              Thank You For Taking Part In This Game, We Hope You Have Enjoyed
+              It. Here's A Summary Of How You Did.
             </div>
-            <div>
-              {instanceSummary?.data?.OrganizationName
-                ? instanceSummary?.data?.OrganizationName
-                : ""}
+            <div className={styles.details_row}>
+              <div>
+                {instanceSummary?.data?.GameInstance
+                  ? instanceSummary?.data?.GameInstance
+                  : ""}
+              </div>
+              <div>
+                {instanceSummary?.data?.OrganizationName
+                  ? instanceSummary?.data?.OrganizationName
+                  : ""}
+              </div>
+              <div>
+                {instanceSummary?.data?.GameScenario
+                  ? instanceSummary?.data?.GameScenario
+                  : ""}
+              </div>
             </div>
-            <div>
-              {instanceSummary?.data?.GameScenario
-                ? instanceSummary?.data?.GameScenario
-                : ""}
-            </div>
-          </div>
-          {/* <div>
+            {/* <div>
             Player Name{" "}
             <span>
               {credentials?.data?.designation
@@ -133,78 +134,58 @@ const MissionCompleted = () => {
                 : ""}
             </span>
           </div> */}
-        </div>
-        <div className={styles.treeContainer}>
-          <SelectTree
-            clicked={currentTab}
-            onSelect={(value) => {
-              setCurrentTab(value);
-            }}
-          />
-          <div className={styles.tree}>
-            {instanceSummary &&
-              instanceSummary.data &&
-              instanceSummary.data.Summary &&
-              instanceProgress &&
-              instanceProgress.data &&
-              instanceProgress.data.Summary && (
-                <div>
-                  <SelectedTree
-                    data={instanceProgress.data.Summary}
-                    userType="admin"
-                  />
+          </div>
+          <div className={styles.treeContainer}>
+            <SelectTree
+              clicked={currentTab}
+              onSelect={(value) => {
+                setCurrentTab(value);
+              }}
+            />
+            <div className={styles.tree}>
+              {instanceSummary &&
+                instanceSummary.data &&
+                instanceSummary.data.Summary &&
+                instanceProgress &&
+                instanceProgress.data &&
+                instanceProgress.data.Summary && (
+                  <>
+                    <SelectedTree
+                      data={instanceProgress.data.Summary}
+                      userType="admin"
+                    />
+                  </>
+                )}
+              <div className={styles.right}>
+                <div>Time Spent</div>
+                <div className={styles.circle}>
+                  {instanceSummary?.data?.TimeTaken
+                    ? instanceSummary?.data?.TimeTaken
+                    : ""}{" "}
+                  <span>min</span>
                 </div>
-              )}
-            <div className={styles.right}>
-              <div>Time Spent</div>
-              <div className={styles.circle}>
-                {instanceSummary?.data?.TimeTaken
-                  ? instanceSummary?.data?.TimeTaken
-                  : ""}{" "}
-                <span>min</span>
-              </div>
-              <div>Score</div>
-              <div className={styles.circle}>
-                {" "}
-                {instanceSummary?.data?.GroupScore
-                  ? instanceSummary?.data?.GroupScore
-                  : ""}
+                <div>Score</div>
+                <div className={styles.circle}>
+                  {" "}
+                  {instanceSummary?.data?.GroupScore
+                    ? instanceSummary?.data?.GroupScore
+                    : ""}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className={styles.buttonContainer}>
-          <Button
-            customClassName={styles.export}
-            onClick={() => {
-              // let node = document.getElementById("treeNode");
-              // const filteredNode = getFullTreeNode(node);
-              // if (filteredNode) {
-              //   toPng(filteredNode)
-              //     .then(function (dataUrl) {
-              //       console.log("dataUrl: ", dataUrl);
-              //       var link = document.createElement("a");
-              //       link.download = "my-image-name.jpeg";
-              //       link.href = dataUrl;
-              //       link.click();
-              //     })
-              //     .catch(function (error) {
-              //       console.log("oops, something went wrong!", error);
-              //     });
-              // }
-            }}
-          >
-            Export
-          </Button>
-          <Button
-            customClassName={styles.end}
-            onClick={() => {
-              resetAll();
-              navigate("/");
-            }}
-          >
-            End
-          </Button>
+          <div className={styles.buttonContainer}>
+            <Button customClassName={styles.export}>Export</Button>
+            <Button
+              customClassName={styles.end}
+              onClick={() => {
+                resetAll();
+                navigate("/");
+              }}
+            >
+              End
+            </Button>
+          </div>
         </div>
       </div>
     </div>

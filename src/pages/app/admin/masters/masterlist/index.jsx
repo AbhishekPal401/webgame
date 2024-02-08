@@ -602,7 +602,7 @@ const MasterList = () => {
                   style={{
                     color: activeTab === 'Designation' ?
                       'var(--primary)' :
-                      'var(--input_label)'
+                      'var(--disabled_label)'
                   }}
                 >
                   Designations
@@ -613,7 +613,7 @@ const MasterList = () => {
                 style={{
                   backgroundColor: activeTab === 'Designation' ?
                     'var(--primary)' :
-                    'var(--input_label)'
+                    'var(--disabled_label)'
                 }}
               ></div>
             </div>
@@ -626,7 +626,7 @@ const MasterList = () => {
                   style={{
                     color: activeTab === 'Organization' ?
                       'var(--primary)' :
-                      'var(--input_label)'
+                      'var(--disabled_label)'
                   }}
                 >
                   Organizations
@@ -637,7 +637,7 @@ const MasterList = () => {
                 style={{
                   backgroundColor: activeTab === 'Organization' ?
                     'var(--primary)' :
-                    'var(--input_label)'
+                    'var(--disabled_label)'
                 }}
               ></div>
             </div>
@@ -703,7 +703,9 @@ const MasterList = () => {
                           </td>
                           <td>{index + 1}</td>
                           <td>{designation.Designation}</td>
-                          <td>{designation.Description}</td>
+                          <td
+                            className={styles.designationDescription}
+                          >{designation.Description}</td>
                           <td>{formatDateString(designation.DateCreated)}</td>
                           <td>{designation.Scenarios}</td>
                           <td>{(designation.Status) ? 'Active' : 'Inactive'}</td>

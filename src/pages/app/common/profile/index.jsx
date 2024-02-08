@@ -22,7 +22,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { isJSONString } from "../../../../utils/common.js";
 import { useNavigate } from "react-router-dom";
-import { formatDateString } from "../../../../utils/helper.js";
+import { extractFileInfo, extractFileType, formatDateString } from "../../../../utils/helper.js";
+import { fileTypes } from "../../../../constants/filetypes.js";
+import InputDataContainer from "../../../../components/ui/inputdatacontainer/index.jsx";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState({
@@ -85,6 +87,15 @@ const UserProfile = () => {
 
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
+
+  const allowedFileTypesArray = [
+    fileTypes.IMAGE_EXTENSION_1,
+    fileTypes.IMAGE_EXTENSION_2,
+    fileTypes.IMAGE_EXTENSION_3,
+    fileTypes.MIME_IMAGE_1,
+    fileTypes.MIME_IMAGE_2,
+    fileTypes.MIME_IMAGE_3,
+  ]
 
   const resetUserData = () => {
     setUserData({
@@ -302,6 +313,20 @@ const UserProfile = () => {
           error: "",
         },
       }));
+    },
+    [userData]
+  );
+
+  const onResetFile = useCallback(
+    (file) => {
+      setUserData((prevUserData) => ({
+        ...prevUserData,
+        profileImage: {
+          value: "",
+          error: "",
+        },
+      }));
+      setDefaultUrl(null);
     },
     [userData]
   );
@@ -564,160 +589,174 @@ const UserProfile = () => {
           </div>
         </div>
         <div className={styles.mainContainer}>
-          <div className={styles.formContainer}>
+          {/* <div className={styles.formContainer}>
             <div className={styles.formLeft}></div>
             <div
               className={styles.formRight}
               style={{ backgroundImage: 'url("./images/particles.png")' }}
-            >
-              <div className={styles.leftInputs}>
-                <Input
-                  customStyle={{ margin: '0rem' }}
-                  customLabelStyle={{ display: 'none' }}
-                  type="text"
-                  value={userData.username.value}
-                  name={"username"}
-                  placeholder="Username"
-                  onChange={onChange}
-                  disabled={credentials.data.role === "3"}
-                />
-                {credentials?.data?.role === "1" ||
-                  credentials?.data?.role === "2" ? (
-                  <div>
-                    {/* <label htmlFor="dropdown_role" className="select_label">
+            > */}
+          <InputDataContainer
+            customRightContainerStyles={{
+              transform: "scaleY(-1)",
+              backgroundPosition: "bottom right",
+            }}
+          >
+            <div className={styles.leftInputs}>
+              <Input
+                customStyle={{ margin: '0rem' }}
+                customLabelStyle={{ display: 'none' }}
+                type="text"
+                value={userData.username.value}
+                name={"username"}
+                placeholder="Username"
+                onChange={onChange}
+                disabled={credentials.data.role === "3"}
+              />
+              {credentials?.data?.role === "1" ||
+                credentials?.data?.role === "2" ? (
+                <div>
+                  {/* <label htmlFor="dropdown_role" className="select_label">
                       Role:
                     </label> */}
-                    <select
-                      id="dropdown_role"
-                      value={userData.role.value}
-                      className="select_input"
-                      onChange={onRoleSelect}
-                    >
-                      <option value={""} hidden>Role</option>
+                  <select
+                    id="dropdown_role"
+                    value={userData.role.value}
+                    className="select_input"
+                    onChange={onRoleSelect}
+                  >
+                    <option value={""} hidden>Role</option>
 
-                      {masters &&
-                        masters.data &&
-                        isJSONString(masters.data) &&
-                        Array.isArray(JSON.parse(masters.data)) &&
-                        JSON.parse(masters.data).map((item, index) => {
-                          if (item.MasterType !== "Role") return;
-                          return (
-                            <option value={item.MasterID} key={index}>
-                              {item.MasterDisplayName}
-                            </option>
-                          );
-                        })}
-                    </select>
-                  </div>
-                ) : null}
+                    {masters &&
+                      masters.data &&
+                      isJSONString(masters.data) &&
+                      Array.isArray(JSON.parse(masters.data)) &&
+                      JSON.parse(masters.data).map((item, index) => {
+                        if (item.MasterType !== "Role") return;
+                        return (
+                          <option value={item.MasterID} key={index}>
+                            {item.MasterDisplayName}
+                          </option>
+                        );
+                      })}
+                  </select>
+                </div>
+              ) : null}
 
-                <Input
-                  customStyle={{ margin: '0rem' }}
-                  customLabelStyle={{ display: 'none' }}
-                  type="tel"
-                  value={userData.mobile.value}
-                  name="mobile"
-                  placeholder="Mobile No."
-                  onChange={onChange}
-                />
-                <div>
-                  {/* <label htmlFor="dropdown_Organisation" className="select_label">
+              <Input
+                customStyle={{ margin: '0rem' }}
+                customLabelStyle={{ display: 'none' }}
+                type="tel"
+                value={userData.mobile.value}
+                name="mobile"
+                placeholder="Mobile No."
+                onChange={onChange}
+              />
+              <div>
+                {/* <label htmlFor="dropdown_Organisation" className="select_label">
                     Organisation:
                   </label> */}
-                  <select
-                    id="dropdown_Organisation"
-                    value={userData.organizationName.value}
-                    className="select_input"
-                    onChange={onOrganisationSelect}
-                  >
-                    <option value="" hidden>Organisation</option>
-                    {masters &&
-                      masters.data &&
-                      isJSONString(masters.data) &&
-                      Array.isArray(JSON.parse(masters.data)) &&
-                      JSON.parse(masters.data).map((item, index) => {
-                        if (item.MasterType !== "Organization") return;
-                        return (
-                          <option value={item.MasterID} key={index}>
-                            {item.MasterDisplayName}
-                          </option>
-                        );
-                      })}
-                  </select>
-                </div>
-                <div>
-                  <label 
-                    className={styles.inputLabel}
-                  >
-                    Last edited on {formatDateString(userData?.updatedAt?.value)}
-                  </label>
-                </div>
+                <select
+                  id="dropdown_Organisation"
+                  value={userData.organizationName.value}
+                  className="select_input"
+                  onChange={onOrganisationSelect}
+                >
+                  <option value="" hidden>Organisation</option>
+                  {masters &&
+                    masters.data &&
+                    isJSONString(masters.data) &&
+                    Array.isArray(JSON.parse(masters.data)) &&
+                    JSON.parse(masters.data).map((item, index) => {
+                      if (item.MasterType !== "Organization") return;
+                      return (
+                        <option value={item.MasterID} key={index}>
+                          {item.MasterDisplayName}
+                        </option>
+                      );
+                    })}
+                </select>
               </div>
-              <div className={styles.rightInputs}>
-                <Input
-                  customStyle={{ margin: '0rem' }}
-                  customLabelStyle={{ display: 'none' }}
-                  type="text"
-                  value={userData.email.value}
-                  name={"email"}
-                  placeholder="Email"
-                  disabled={true}
-                  onChange={onChange}
-                />
-                <Input
-                  type="password"
-                  value={userData.password.value}
-                  labelStyle={styles.inputLabel}
-                  customStyle={{
-                    margin: '0',
-                    marginTop: '-2.5rem'
-                  }}
-                  name={"password"}
-                  label="Password"
-                  placeholder="Password"
-                  onChange={onChange}
-                />
-                <div>
-                  {/* <label htmlFor="dropdown_designation" className="select_label">
-                    Designation:
-                  </label> */}
-                  <select
-                    disabled={credentials.data.role === "3"}
-                    id="dropdown_designation"
-                    value={userData.designation.value}
-                    className="select_input"
-                    onChange={onDesignationSelect}
-                  >
-                    <option value="" hidden>Designation</option>
-                    {masters &&
-                      masters.data &&
-                      isJSONString(masters.data) &&
-                      Array.isArray(JSON.parse(masters.data)) &&
-                      JSON.parse(masters.data).map((item, index) => {
-                        if (item.MasterType !== "Designation") return;
-                        return (
-                          <option value={item.MasterID} key={index}>
-                            {item.MasterDisplayName}
-                          </option>
-                        );
-                      })}
-                  </select>
-                </div>
-
-                <div>
-                  <ImageDropZone
-                    customstyle={{ marginTop: "0rem" }}
-                    label="Upload Profile Pic"
-                    onUpload={onUpload}
-                    imageSrc={imageURl}
-                    setUrl={(file) => {
-                      setImageURl(file);
-                    }}
-                  />
-                </div>
+              <div>
+                <label
+                  className={styles.inputLabel}
+                >
+                  Last edited on {formatDateString(userData?.updatedAt?.value)}
+                </label>
               </div>
             </div>
-          </div>
+            <div className={styles.rightInputs}>
+              <Input
+                customStyle={{ margin: '0rem' }}
+                customLabelStyle={{ display: 'none' }}
+                type="text"
+                value={userData.email.value}
+                name={"email"}
+                placeholder="Email"
+                disabled={true}
+                onChange={onChange}
+              />
+              <Input
+                type="password"
+                value={userData.password.value}
+                labelStyle={styles.inputLabel}
+                customStyle={{
+                  margin: '0',
+                  marginTop: '-2.5rem'
+                }}
+                name={"password"}
+                label="Password"
+                placeholder="Password"
+                onChange={onChange}
+              />
+              <div>
+                {/* <label htmlFor="dropdown_designation" className="select_label">
+                    Designation:
+                  </label> */}
+                <select
+                  disabled={credentials.data.role === "3"}
+                  id="dropdown_designation"
+                  value={userData.designation.value}
+                  className="select_input"
+                  onChange={onDesignationSelect}
+                >
+                  <option value="" hidden>Designation</option>
+                  {masters &&
+                    masters.data &&
+                    isJSONString(masters.data) &&
+                    Array.isArray(JSON.parse(masters.data)) &&
+                    JSON.parse(masters.data).map((item, index) => {
+                      if (item.MasterType !== "Designation") return;
+                      return (
+                        <option value={item.MasterID} key={index}>
+                          {item.MasterDisplayName}
+                        </option>
+                      );
+                    })}
+                </select>
+              </div>
+
+              <div>
+                <ImageDropZone
+                  customstyle={{ marginTop: "0rem" }}
+                  label="Upload Profile Pic"
+                  onUpload={onUpload}
+                  imageSrc={imageURl}
+                  allowedFileTypes={allowedFileTypesArray}
+                  onResetFile={onResetFile}
+                  setUrl={(file) => {
+                    setImageURl(file);
+                  }}
+                  fileSrcType={
+                    imageURl && extractFileType(imageURl)
+                  }
+                  fileName={imageURl && extractFileInfo(imageURl).name}
+                />
+              </div>
+            </div>
+
+          </InputDataContainer>
+          {/* </div>
+          </div> */}
         </div>
         <div className={styles.buttonContainer}>
           <Button buttonType="cancel" onClick={onCancel}>

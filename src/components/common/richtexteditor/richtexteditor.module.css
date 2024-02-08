@@ -1,0 +1,54 @@
+.container {
+  width: 100%;
+  height: 100%;
+  background-color: var(--innerbackground);
+  border-radius: 0.7rem;
+}
+.editor  {
+  width: 100%;
+  height: 100%;
+}
+.editor > div:nth-child(1) {
+  border-top-left-radius: 0.7rem;
+  border-top-right-radius: 0.7rem;
+  z-index: 2;
+}
+/* Change the qi-container styles */
+.editor > div:nth-child(2) {
+  /* min-height: 10rem;
+  max-height: 20rem; */
+  border-bottom-left-radius: 0.7rem;
+  border-bottom-right-radius: 0.7rem;
+  overflow-y: auto;
+}
+/* .ql-clipboard {
+  position: fixed !important;
+}
+
+.ql-container {
+  height: auto !important;
+}
+
+.ql-editor {
+  height: auto !important;
+} */
+
+/* Change the Heading drop down styles */
+.editor
+  > div:nth-child(1)
+  > span:first-child
+  > span:first-child
+  > span:nth-child(2) {
+  overflow: auto;
+  height: 10rem;
+}
+
+/* CHange the qi-container's ql-editor styles */
+.editor > div:nth-child(2) > div:first-child,
+.editor > div:nth-child(2) > div:first-child::before {
+  font-family: "Helvetica 400";
+}
+.editor > div:nth-child(2) > div:first-child::before {
+  font-style: normal;
+}
+

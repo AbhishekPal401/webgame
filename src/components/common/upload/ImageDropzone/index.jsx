@@ -7,16 +7,46 @@ const ImageDropZone = ({
   customstyle = {},
   resetImage = false,
   imageSrc = "",
-  setUrl = () => {},
-  onUpload = () => {},
+  fileName = "",
+  fileSrcType = "",
+  customFileNameContainerClass = {},
+  allowedFileTypes = [],
+  setUrl = () => { },
+  onUpload = () => { },
+  onResetFile = () => { },
 }) => {
   const [error, setError] = useState(null);
+
+
+  const [fileInfo, setFileInfo] = useState({
+    type: null,
+    name: null,
+    size: null,
+  });
+
+  const resetFileInfo = () => {
+    setFileInfo({
+      type: null,
+      name: null,
+      size: null,
+    });
+  }
+
 
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
 
     if (file) {
       if (file.type === "image/jpeg" || file.type === "image/png") {
+
+        const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+
+        setFileInfo({
+          type: file.type,
+          name: file.name,
+          size: fileSizeInMB,
+        });
+
         onUpload(file);
 
         const reader = new FileReader();
@@ -25,12 +55,27 @@ const ImageDropZone = ({
           setUrl(e.target.result);
           setError(null);
         };
+
+        // Log any errors during FileReader
+        reader.onerror = (e) => {
+          console.error("FileReader error:", e.target.error);
+          setError("Error reading the file. Please try again.");
+        };
+
         reader.readAsDataURL(file);
       } else {
         setError("Invalid file type. Please choose a JPG or PNG file.");
       }
     }
-  }, []);
+  }, [error, onUpload]);
+
+  const handleRemoveFile = () => {
+    setUrl("");
+    setError(null);
+    resetFileInfo();
+    onResetFile();
+  };
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
@@ -66,6 +111,30 @@ const ImageDropZone = ({
         )}
       </div>
       {error && <div className={styles.error}>{error}</div>}
+
+      {(imageSrc && allowedFileTypes.includes(fileSrcType)
+      ) &&
+        <div
+          className={`${styles.fileNameContainer} ${customFileNameContainerClass}`}
+        >
+          <div>
+            <span>{fileName || fileInfo.name}</span>
+          </div>
+
+          <div
+            onClick={handleRemoveFile}
+          >
+            <svg
+              className={styles.xMarkIcon}
+              width="16"
+              height="16"
+            >
+              <use xlinkHref={"sprite.svg#x_mark_icon"} />
+            </svg>
+          </div>
+        </div>
+
+      }
 
       <div className={styles.hint}>Eligible Formats: JPG and PNG</div>
     </>

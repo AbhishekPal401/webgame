@@ -23,17 +23,22 @@ const SearchUsers = ({
             {value && (
 
                 <svg
-                    className="modal_crossIcon"
+                    className={styles.xmarkIcon}
                     onClick={clearSearch}
                 >
                     <use xlinkHref={"sprite.svg#x_mark_icon"} />
                 </svg>
             )}
             {!value && (
-                <img
-                    src="/images/icon-search.png"
-                    alt="search icon"
-                />
+                // <img
+                //     src="/images/icon-search.png"
+                //     alt="search icon"
+                // />
+                <svg
+                    className={styles.searchIcon}
+                >
+                    <use xlinkHref={"sprite.svg#search_icon"} />
+                </svg>
             )}
         </div>
     </div>
