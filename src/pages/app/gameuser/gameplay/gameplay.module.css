@@ -214,6 +214,7 @@
   background-color: var(--primary);
 }
 .accordian {
+  width: inherit;
 }
 
 .tree,
