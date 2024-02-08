@@ -476,7 +476,9 @@ const Question = ({
       <div className={styles.questionContainer}>
         <div>{QuestionNo}.</div>
         <div className={styles.question}>
-          {QuestionText && <div>{QuestionText}</div>}
+          {QuestionText && (
+            <div dangerouslySetInnerHTML={{ __html: QuestionText }}></div>
+          )}
         </div>
       </div>
       <div className={styles.mainContent}>

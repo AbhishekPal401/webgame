@@ -657,8 +657,11 @@ const GamePlay = () => {
                 }
                 data-tooltip-id="objective-tooltip"
                 data-tooltip-content={questionDetails?.data?.GameIntro}
+                dangerouslySetInnerHTML={{
+                  __html: questionDetails?.data?.GameIntro,
+                }}
               >
-                {questionDetails?.data?.GameIntro}
+                {/* {questionDetails?.data?.GameIntro} */}
               </p>
             ) : (
               ""
