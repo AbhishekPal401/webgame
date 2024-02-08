@@ -57,7 +57,7 @@ const Intro = () => {
       QuestionID: questionDetails.data.CurrentQuestionNo.toString(),
       GlobalTimer: Date.now().toString(),
       QuestionTimer: "",
-      ActionType: "",
+      ActionType: "IntroductionSkip",
     };
 
     signalRService.SkipMediaInvoke(data);

@@ -382,6 +382,7 @@ const Question = ({
 
   useEffect(() => {
     const skipMedia = (data) => {
+      console.log("data", data);
       if (!mediaShownOnce) {
         setMediaShownOnce(true);
       }

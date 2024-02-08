@@ -445,7 +445,24 @@ const GamePlay = () => {
       console.log("decisionDetails", decisionDetails);
       console.log("questionDetails", questionDetails);
 
-      let decisionCount = decisionDetails.length;
+      //new validation to do
+
+      let decisionCount = 0;
+
+      decisionDetails.forEach((answerDetails) => {
+        if (
+          answerDetails.votersInfo &&
+          Array.isArray(answerDetails.votersInfo)
+        ) {
+          answerDetails.votersInfo.forEach((userDetails) => {
+            if (userDetails.userID) {
+              decisionCount++;
+            }
+          });
+        }
+      });
+
+      console.log("decisionCount", decisionCount);
 
       if (decisionCount === 0) {
         toast.success("Please select a option");
