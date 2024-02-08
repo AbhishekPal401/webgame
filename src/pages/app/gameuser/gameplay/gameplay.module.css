@@ -30,15 +30,25 @@
 }
 
 .header_left > div:nth-child(2) {
-  font-size: 1.4rem;
+  /* font-size: 1.4rem;
   font-family: "helvetica 400";
   color: var(--black);
   margin-top: 0.5rem;
   display: -webkit-box;
+  -webkit-line-clamp: 5; 
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden; */
+  font-size: 1.4rem;
+  font-family: "helvetica 400";
+  color: var(--black);
+  margin-top: 0.5rem;
+  max-height: 9rem;
+  display: -webkit-box;
   -webkit-line-clamp: 5; /* Number of lines to show */
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .displayInline {
