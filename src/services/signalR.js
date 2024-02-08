@@ -114,20 +114,20 @@ class SignalRService {
     }
   }
 
+  async MissionCompletedInvoke(data) {
+    try {
+      await this.hubConnection.invoke("MissionCompleted", data);
+    } catch (error) {
+      console.error("Error while sending to MissionCompleted:", error);
+    }
+  }
+
   async ProceedToNextQuestionInvoke(data) {
     try {
       await this.hubConnection.invoke("ProceedToNextQuestion", data);
     } catch (error) {
       console.error("Error while sending to ProceedToNextQuestion:", error);
       throw error;
-    }
-  }
-
-  async MissionCompletedInvoke(data) {
-    try {
-      await this.hubConnection.invoke("MissionCompleted", data);
-    } catch (error) {
-      console.error("Error while sending to MissionCompleted:", error);
     }
   }
 
@@ -161,6 +161,31 @@ class SignalRService {
       console.error("Error while listening Notifications:", error);
       throw error;
     }
+  }
+
+  async SkipMediaListener(callback = () => {}) {
+    try {
+      this.hubConnection.on("SkipMedia", (data) => {
+        callback(data);
+      });
+      console.log("media skipped listening started");
+    } catch (error) {
+      console.error("Error while listening SkipMedia:", error);
+      throw error;
+    }
+  }
+
+  async SkipMediaInvoke(data) {
+    try {
+      await this.hubConnection.invoke("SkipMedia", data);
+    } catch (error) {
+      console.error("Error while sending SkipMedia:", error);
+      throw error;
+    }
+  }
+
+  SkipMediaOff(callback = () => {}) {
+    this.hubConnection.off("SkipMedia", callback);
   }
 
   GetVotingDetailsOff(callback) {

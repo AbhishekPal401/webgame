@@ -20,6 +20,8 @@ import { PlayingStates } from "../../../../constants/playingStates";
 import { TIMER_STATES } from "../../../../constants/timer";
 import PDFPreview from "../../../preview/pdfpreview";
 import { Tooltip } from "react-tooltip";
+import { signalRService } from "../../../../services/signalR";
+import { useSelector } from "react-redux";
 
 const renderer = ({ minutes, seconds, completed }) => {
   if (completed) {
@@ -90,14 +92,13 @@ const Question = ({
   const [mediaShownOnce, setMediaShownOnce] = useState(false);
   const [showMedia, setShowMedia] = useState(true);
   const [showSkip, setShowSkip] = useState(false);
-  // const [duration, setDuration] = useState(Duration);
 
   let CustomButtonRender = null;
   const countDownRef = useRef();
 
-  // console.log("QuestionIntroMediaURL", QuestionIntroMediaURL);
-  // console.log("MediaType", MediaType);
-  // console.log("CurrentState", CurrentState);
+  const { credentials } = useSelector((state) => state.login);
+  const { sessionDetails } = useSelector((state) => state.getSession);
+  const { questionDetails } = useSelector((state) => state.getNextQuestion);
 
   let mediaTypeText = "";
 
@@ -379,6 +380,36 @@ const Question = ({
     };
   }, [countdown, countDownRef.current, mediaShownOnce]);
 
+  useEffect(() => {
+    const skipMedia = (data) => {
+      if (!mediaShownOnce) {
+        setMediaShownOnce(true);
+      }
+      setShowMedia(false);
+    };
+    signalRService.SkipMediaListener(skipMedia);
+
+    return () => {
+      signalRService.SkipMediaOff(skipMedia);
+    };
+  }, []);
+
+  const skipInvoke = useCallback(() => {
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    const data = {
+      InstanceID: sessionData.InstanceID,
+      UserID: credentials.data.userID,
+      UserRole: credentials.data.role,
+      QuestionID: questionDetails.data.CurrentQuestionNo.toString(),
+      GlobalTimer: "",
+      QuestionTimer: Date.now().toString(),
+      ActionType: "QuestionMediaSkip",
+    };
+
+    signalRService.SkipMediaInvoke(data);
+  }, [sessionDetails, credentials, questionDetails]);
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -446,7 +477,8 @@ const Question = ({
                       ? styles.selected
                       : selectedAnswer
                       ? ""
-                      : getDecisionDetailsById(item?.AnswerID, delegatedTo)
+                      : getDecisionDetailsById(item?.AnswerID, delegatedTo) &&
+                        CurrentState === PlayingStates.DecisionCompleted
                       ? styles.selected
                       : ""
                   }`}
@@ -492,11 +524,19 @@ const Question = ({
             {MediaType === "Video" && QuestionIntroMediaURL ? (
               <VideoController
                 videoUrl={QuestionIntroMediaURL}
-                onCompleted={() => {
-                  if (!mediaShownOnce) {
-                    setMediaShownOnce(true);
+                showButton={isAdmin ? true : mediaShownOnce ? true : false}
+                onButtonClick={() => {
+                  if (isAdmin) {
+                    if (mediaShownOnce) {
+                      setShowMedia(false);
+                    } else {
+                      skipInvoke();
+                    }
+                  } else {
+                    if (mediaShownOnce) {
+                      setShowMedia(false);
+                    }
                   }
-                  setShowMedia(false);
                 }}
               />
             ) : (MediaType === "pdf" || MediaType === "Pdf") &&
@@ -510,34 +550,60 @@ const Question = ({
                     setShowSkip(true);
                   }}
                 />
-                {showSkip && (
-                  <div
-                    className={styles.skipContainer}
-                    style={{
-                      backgroundImage: 'url("./images/grey_strip.png")',
-                    }}
-                  >
-                    <Button
-                      onClick={() => {
-                        if (!mediaShownOnce) {
-                          setMediaShownOnce(true);
-                        }
-                        setShowMedia(false);
+                {showSkip ? (
+                  isAdmin ? (
+                    <div
+                      className={styles.skipContainer}
+                      style={{
+                        backgroundImage: 'url("./images/grey_strip.png")',
                       }}
                     >
-                      Skip
-                    </Button>
-                  </div>
-                )}
+                      <Button
+                        onClick={() => {
+                          if (mediaShownOnce) {
+                            setShowMedia(false);
+                          } else {
+                            skipInvoke();
+                          }
+                        }}
+                      >
+                        Skip
+                      </Button>
+                    </div>
+                  ) : mediaShownOnce ? (
+                    <div
+                      className={styles.skipContainer}
+                      style={{
+                        backgroundImage: 'url("./images/grey_strip.png")',
+                      }}
+                    >
+                      <Button
+                        onClick={() => {
+                          setShowMedia(false);
+                        }}
+                      >
+                        Skip
+                      </Button>
+                    </div>
+                  ) : null
+                ) : null}
               </div>
             ) : MediaType === "Audio" && QuestionIntroMediaURL ? (
               <AudioController
                 audioUrl={QuestionIntroMediaURL}
-                onCompleted={() => {
-                  if (!mediaShownOnce) {
-                    setMediaShownOnce(true);
+                showButton={isAdmin ? true : mediaShownOnce ? true : false}
+                onButtonClick={() => {
+                  if (isAdmin) {
+                    if (mediaShownOnce) {
+                      setShowMedia(false);
+                    } else {
+                      skipInvoke();
+                    }
+                  } else {
+                    if (mediaShownOnce) {
+                      setShowMedia(false);
+                    }
                   }
-                  setShowMedia(false);
                 }}
               />
             ) : null}

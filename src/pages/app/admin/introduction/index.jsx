@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./intro.module.css";
 import Button from "../../../../components/common/button";
 import { motion } from "framer-motion";
@@ -9,10 +9,13 @@ import { getNextQuestionDetails } from "../../../../store/app/user/questions/get
 import { toast } from "react-toastify";
 import { extractFileType } from "../../../../utils/helper";
 import PDFPreview from "../../../../components/preview/pdfpreview";
+import { signalRService } from "../../../../services/signalR";
 // import PDFPreview from "../../../../components/preview/pdfpreview";
 
 const Intro = () => {
   const mediaRef = useRef(null);
+
+  const [skipData, setSkipData] = useState(null);
 
   const { credentials } = useSelector((state) => state.login);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -44,14 +47,28 @@ const Intro = () => {
     dispatch(getNextQuestionDetails(data));
   }, [sessionDetails, credentials]);
 
-  const onSkip = () => {
-    fetchIntro();
-  };
+  const onSkip = useCallback(() => {
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    const data = {
+      InstanceID: sessionData.InstanceID,
+      UserID: credentials.data.userID,
+      UserRole: credentials.data.role,
+      QuestionID: questionDetails.data.CurrentQuestionNo.toString(),
+      GlobalTimer: Date.now().toString(),
+      QuestionTimer: "",
+      ActionType: "",
+    };
+
+    signalRService.SkipMediaInvoke(data);
+
+    // navigate("/gameplay");
+
+    // fetchIntro();
+  }, [sessionDetails, credentials, questionDetails]);
 
   useEffect(() => {
-    const handleEnded = () => {
-      onSkip();
-    };
+    const handleEnded = () => {};
 
     if (mediaRef.current) {
       mediaRef.current.addEventListener("ended", handleEnded);
@@ -68,6 +85,24 @@ const Intro = () => {
   }, []);
 
   useEffect(() => {
+    const skipMedia = (data) => {
+      setSkipData(data);
+    };
+    signalRService.SkipMediaListener(skipMedia);
+
+    return () => {
+      signalRService.SkipMediaOff(skipMedia);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (skipData) {
+      fetchIntro();
+      setSkipData(null);
+    }
+  }, [skipData, fetchIntro]);
+
+  useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
     if (
@@ -81,9 +116,6 @@ const Intro = () => {
   }, [questionDetails]);
 
   const fileType = extractFileType(questionDetails?.data?.IntroMediaURL);
-  // console.log("filtype starts wth pdf :", fileType.startsWith("pdf"));
-  // console.log("filetype : ", fileType)
-  // console.log("File url :", questionDetails.data.IntroMediaURL);
 
   return (
     <motion.div

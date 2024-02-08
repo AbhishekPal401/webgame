@@ -43,8 +43,15 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import styles from "./audiocontrol.module.css";
+import Button from "../../common/button";
 
-const AudioController = ({ audioUrl = "", onCompleted = () => {} }) => {
+const AudioController = ({
+  audioUrl = "",
+  onCompleted = () => {},
+  showButton = true,
+  onButtonClick = () => {},
+  buttonLabel = "Skip",
+}) => {
   const [isPlaying, setPlaying] = useState(false);
   const audio = useRef();
   const seekTrackRef = useRef();
@@ -111,13 +118,17 @@ const AudioController = ({ audioUrl = "", onCompleted = () => {} }) => {
           // onClick={handlePlayPause}
           onEnded={handleAudioEnd}
         />
-        {/* {!isPlaying && (
-          <div className={styles.overlay}>
-            <svg onClick={handlePlayPause}>
-              <use xlinkHref={"sprite.svg#video_play"} />
-            </svg>
+
+        {showButton && (
+          <div
+            className={styles.skipContainer}
+            style={{
+              backgroundImage: 'url("./images/grey_strip.png")',
+            }}
+          >
+            <Button onClick={onButtonClick}>{buttonLabel}</Button>
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );

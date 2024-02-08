@@ -567,7 +567,7 @@ const GamePlay = () => {
         AnswerID: "NA",
       };
 
-      // console.log("send vote data", data);
+      console.log("send vote data", data);
 
       signalRService.SendVotes(data);
 

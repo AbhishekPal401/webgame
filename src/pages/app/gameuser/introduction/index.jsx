@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./intro.module.css";
 import Button from "../../../../components/common/button";
 import { motion } from "framer-motion";
@@ -9,8 +9,10 @@ import { getNextQuestionDetails } from "../../../../store/app/user/questions/get
 import { toast } from "react-toastify";
 import { extractFileType } from "../../../../utils/helper";
 import PDFPreview from "../../../../components/preview/pdfpreview";
+import { signalRService } from "../../../../services/signalR";
 
 const Intro = () => {
+  const [skipData, setSkipData] = useState(null);
   const mediaRef = useRef(null);
 
   const { credentials } = useSelector((state) => state.login);
@@ -45,8 +47,26 @@ const Intro = () => {
   }, [sessionDetails, credentials]);
 
   const onSkip = () => {
-    fetchIntro();
+    // fetchIntro();
   };
+
+  useEffect(() => {
+    const skipMedia = (data) => {
+      setSkipData(data);
+    };
+    signalRService.SkipMediaListener(skipMedia);
+
+    return () => {
+      signalRService.SkipMediaOff(skipMedia);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (skipData) {
+      fetchIntro();
+      setSkipData(null);
+    }
+  }, [skipData, fetchIntro]);
 
   useEffect(() => {
     const handleEnded = () => {
@@ -161,14 +181,14 @@ const Intro = () => {
               </>
             )}
 
-          <div
+          {/* <div
             className={styles.buttonContainer}
             style={{ backgroundImage: 'url("./images/grey_strip.png")' }}
           >
             <Button onClick={onSkip} customStyle={{ fontSize: "1.4rem" }}>
               Skip
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
     </motion.div>
