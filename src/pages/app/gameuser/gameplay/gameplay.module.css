@@ -13,11 +13,14 @@
 .header_left {
   width: 27%;
   height: 100%;
+  max-height: 100%;
   background-color: var(--innerbackground);
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding-left: 9rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .header_left > div:nth-child(1) {
@@ -31,8 +34,16 @@
   font-family: "helvetica 400";
   color: var(--black);
   margin-top: 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 5; /* Number of lines to show */
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
+.displayInline {
+  display: inline-block;
+}
 .header_middle {
   width: 46%;
   height: 100%;

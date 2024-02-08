@@ -36,6 +36,7 @@ import { setActiveUsers } from "../../../../store/local/gameplay";
 import TeamMembers from "../../../../components/teammembers";
 import { TIMER_STATES } from "../../../../constants/timer";
 import IntroMedia from "../../../../components/intromedia";
+import { Tooltip } from "react-tooltip";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -625,9 +626,22 @@ const GamePlay = () => {
         <div className={styles.header_left}>
           <div>Objectives</div>
           <div>
-            {questionDetails?.data?.GameIntro
-              ? questionDetails?.data?.GameIntro
-              : ""}{" "}
+            {questionDetails?.data?.GameIntro ? (
+              <p
+                className={
+                  questionDetails?.data?.GameIntro.length <= 260
+                    ? styles.displayInline
+                    : ""
+                }
+                data-tooltip-id="objective-tooltip"
+                data-tooltip-content={questionDetails?.data?.GameIntro}
+                dangerouslySetInnerHTML={{
+                  __html: questionDetails?.data?.GameIntro,
+                }}
+              ></p>
+            ) : (
+              ""
+            )}
           </div>
         </div>
         <div
@@ -766,6 +780,12 @@ const GamePlay = () => {
           />
         </ModalContainer>
       )}
+
+      <Tooltip
+        id="objective-tooltip"
+        place="top-start"
+        style={{ backgroundColor: "rgb(0, 0, 0)", color: "#fff" }}
+      />
     </motion.div>
   );
 };
