@@ -12,23 +12,24 @@ import Question from "../../../../components/ui/gameplay/question";
 import { useDispatch, useSelector } from "react-redux";
 import { signalRService } from "../../../../services/signalR";
 import { generateGUID, isJSONString } from "../../../../utils/common";
-import {
-  resetAnswerDetailsState,
-  submitAnswerDetails,
-} from "../../../../store/app/user/answers/postAnswer";
 import { toast } from "react-toastify";
 import { PlayingStates } from "../../../../constants/playingStates";
 import DecisionLoader from "../../../../components/loader/decisionloader";
 import {
+  resetAnswerDetailsState,
+  submitAnswerDetails,
+} from "../../../../store/app/user/answers/postAnswer";
+import {
   getNextQuestionDetails,
   resetNextQuestionDetailsState,
 } from "../../../../store/app/user/questions/getNextQuestion";
-import { useNavigate } from "react-router-dom";
-
+import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
 import {
   getInstanceProgressyById,
   resetInstanceProgressByIDState,
 } from "../../../../store/app/admin/gameinstances/getInstanceProgress";
+import { useNavigate } from "react-router-dom";
+
 import RealTimeTree from "../../../../components/trees/realtime";
 import Loader from "../../../../components/loader";
 import ModalContainer from "../../../../components/modal";
@@ -123,6 +124,9 @@ const GamePlay = () => {
   const [position, setPosition] = useState(0);
   const [countdown, setCoundown] = useState(TIMER_STATES.STOP);
   const [duration, setDuration] = useState(0);
+  const [initGlobaTimeOffset, setInitGlobaTimeOffset] = useState(Date.now());
+  const [MediaShown, setMediaShown] = useState(false);
+
   const [showIntroMedia, setShowIntroMedia] = useState(false);
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
@@ -135,22 +139,26 @@ const GamePlay = () => {
 
   const alerRef = useRef();
 
-  window.onunload = () => {
+  const handlePageUnload = () => {
     localStorage.setItem("refresh", true);
   };
 
+  window.addEventListener("beforeunload", handlePageUnload);
+
   useEffect(() => {
-    const handleBackButton = (event) => {
-      event.preventDefault();
-    };
+    console.log("refresh", localStorage.getItem("refresh"));
 
-    window.history.pushState(null, null, window.location.pathname);
-    window.addEventListener("popstate", handleBackButton);
+    if (localStorage.getItem("refresh") === "true") {
+      // Navigate to the specific page
 
-    return () => {
-      window.removeEventListener("popstate", handleBackButton);
-    };
-  }, []);
+      dispatch(resetNextQuestionDetailsState());
+      dispatch(resetAnswerDetailsState());
+      dispatch(resetSessionDetailsState());
+      dispatch(resetInstanceProgressByIDState());
+      navigate("/");
+      localStorage.setItem("refresh", false);
+    }
+  }, [localStorage.getItem("refresh")]);
 
   useEffect(() => {
     if (alerRef.current) {
@@ -449,7 +457,6 @@ const GamePlay = () => {
 
             currentState = hublivedata?.decisionDisplayType;
 
-            //checking if user voted
             if (Array.isArray(hublivedata.votes)) {
               hublivedata.votes.forEach((answersubmitDetails) => {
                 answersubmitDetails.votersInfo.forEach((userDetails) => {
@@ -473,17 +480,12 @@ const GamePlay = () => {
               });
             }
 
-            // if (questionDetails.data.QuestionDetails.IsUserDecisionMaker) {
-            //   if (currentQuestionSubmitted && !currentDecisionSubmitted) {
-            //     duration = 30 * 1000; // 30 seconds
-            //   }
-            // }
-
             if (currentState === PlayingStates.VotingCompleted) {
               setShowModal(true);
             } else {
               setShowModal(false);
             }
+
             setCurrentState(currentState);
             setCurrentQuestionSubmitted(currentQuestionSubmitted);
 
@@ -499,17 +501,49 @@ const GamePlay = () => {
             setCallNextQuestion(false);
           }
         } else {
-          if (localStorage.getItem("refresh")) {
-            localStorage.setItem("refresh", false);
-          } else {
-            setNextQuestionFetched(true);
-            setSelectedAnswer(null);
-            setStartedAt(Math.floor(Date.now() / 1000));
-            setCurrentQuestionSubmitted(false);
-            setCallNextQuestion(false);
-            setCurrentState(PlayingStates.UserVote);
-            setShowModal(false);
-            setIsDecision(false);
+          setNextQuestionFetched(true);
+          setSelectedAnswer(null);
+          setStartedAt(Math.floor(Date.now() / 1000));
+          setCurrentQuestionSubmitted(false);
+          setCallNextQuestion(false);
+          setCurrentState(PlayingStates.UserVote);
+          setShowModal(false);
+          setIsDecision(false);
+        }
+
+        //for global timer
+        if (questionDetails?.data?.HubTimerData) {
+          let HubTimerData = questionDetails?.data?.HubTimerData;
+          if (isJSONString(questionDetails?.data?.HubTimerData)) {
+            HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
+          }
+
+          if (HubTimerData?.GlobalTimer) {
+            setInitGlobaTimeOffset(Number(HubTimerData?.GlobalTimer));
+          }
+        }
+        //for question timer
+
+        if (questionDetails?.data?.HubTimerData) {
+          let HubTimerData = questionDetails?.data?.HubTimerData;
+          if (isJSONString(questionDetails?.data?.HubTimerData)) {
+            HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
+          }
+
+          // console.log("HubTimerData", HubTimerData);
+          // console.log("questionDetails", questionDetails);
+
+          if (
+            HubTimerData.QuestionID ===
+            questionDetails?.data?.QuestionDetails?.QuestionID
+          ) {
+            const prev = Number(HubTimerData.QuestionTimer);
+            const offset = Date.now() - prev;
+
+            if (prev) {
+              duration = Math.max(0, duration - offset);
+              setMediaShown(true);
+            }
           }
         }
       }
@@ -658,7 +692,7 @@ const GamePlay = () => {
         <div className={styles.header_right}>
           <div className={styles.counter}>
             <div>Time elapsed</div>
-            <CountDown />
+            <CountDown initialTimestamp={initGlobaTimeOffset} />
             <div>MIN</div>
           </div>
           <div className={styles.vertical_line}></div>
@@ -731,6 +765,7 @@ const GamePlay = () => {
                   onComplete={voteDefault}
                   onDecisionCompleteDefault={onDecisionCompleteDefault}
                   countdown={countdown}
+                  MediaShown={MediaShown}
                 />
               )}
           </div>

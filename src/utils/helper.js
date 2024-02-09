@@ -1,6 +1,5 @@
 import { dateFormats } from "../constants/date";
-import DOMPurify from 'dompurify';
-
+import DOMPurify from "dompurify";
 
 // export const formatTime = (value) => {
 //   if (!value || value.trim() === "") {
@@ -66,9 +65,28 @@ export const formatTime = (value) => {
   //  }
 };
 
+export const formatMissionTime = (value) => {
+  if (!value || value.trim() === "") {
+    return "Invalid Time";
+  }
+
+  const seconds = parseInt(value);
+  const hours = Math.floor(seconds / 3600);
+  const remainingSeconds = seconds % 3600;
+  const minutes = remainingSeconds / 60;
+
+  if (hours > 0) {
+    if (minutes === 0) {
+      return `${hours} hr`;
+    } else {
+      return `${hours} hr ${minutes.toFixed(2)} min`;
+    }
+  } else {
+    return `${minutes.toFixed(2)} min`;
+  }
+};
 
 export const formatDateString = (dateTimeString, formatType = "default") => {
-
   const formats = [
     {
       format: dateFormats.DATE_FORMAT_3,
@@ -166,7 +184,6 @@ export const formatDateString = (dateTimeString, formatType = "default") => {
   //   },
   // ];
 
-
   const months = [
     "Jan",
     "Feb",
@@ -205,20 +222,24 @@ export const formatDateString = (dateTimeString, formatType = "default") => {
 
   switch (formatType) {
     case dateFormats.DATE_FORMAT_8:
-      return `${parsedDate.getDate()}-${parsedDate.getMonth() + 1
-        }-${parsedDate.getFullYear()}`;
+      return `${parsedDate.getDate()}-${
+        parsedDate.getMonth() + 1
+      }-${parsedDate.getFullYear()}`;
 
     case dateFormats.DATE_FORMAT_1:
-      return `${parsedDate.getDate()}/${parsedDate.getMonth() + 1
-        }/${parsedDate.getFullYear()}`;
+      return `${parsedDate.getDate()}/${
+        parsedDate.getMonth() + 1
+      }/${parsedDate.getFullYear()}`;
 
     case dateFormats.DATE_FORMAT_9:
-      return `${parsedDate.getMonth() + 1
-        }-${parsedDate.getDate()}-${parsedDate.getFullYear()}`;
+      return `${
+        parsedDate.getMonth() + 1
+      }-${parsedDate.getDate()}-${parsedDate.getFullYear()}`;
 
     case dateFormats.DATE_FORMAT_2:
-      return `${parsedDate.getMonth() + 1
-        }/${parsedDate.getDate()}/${parsedDate.getFullYear()}`;
+      return `${
+        parsedDate.getMonth() + 1
+      }/${parsedDate.getDate()}/${parsedDate.getFullYear()}`;
 
     case dateFormats.DATE_FORMAT_7:
       formattedMonth = months[parsedDate.getMonth()];
@@ -376,74 +397,74 @@ export const extractFileInfo = (fileSrc) => {
   }
 };
 
-
 export const renderFirstLine = (htmlString) => {
   // Create a temporary element to parse the HTML string
-  const tempElement = document.createElement('div');
+  const tempElement = document.createElement("div");
   tempElement.innerHTML = htmlString;
 
   // Get the text content of the first child element
-  const firstLine = tempElement.firstChild?.textContent || '';
+  const firstLine = tempElement.firstChild?.textContent || "";
 
-  console.log(" firstline : ", firstLine)
+  console.log(" firstline : ", firstLine);
   // Return the first line of text
   return firstLine.trim();
 };
 
 export const extractTextContent = (html) => {
-  if (!html) return '';
+  if (!html) return "";
 
   const sanitizedHTML = DOMPurify.sanitize(html);
-  const tempElement = document.createElement('div');
+  const tempElement = document.createElement("div");
   tempElement.innerHTML = sanitizedHTML;
 
   // Get the first child node that is not a text node
   let firstChild = tempElement.firstChild;
-  while (firstChild && firstChild.nodeType === 3) { // 3: Text node
+  while (firstChild && firstChild.nodeType === 3) {
+    // 3: Text node
     firstChild = firstChild.nextSibling;
   }
   // console.log("first child :",firstChild)
   // Extract content based on the element type
   if (firstChild) {
     switch (firstChild.tagName.toLowerCase()) {
-      case 'h1':
-      case 'h2':
-      case 'h3':
-      case 'h4':
-      case 'h5':
-      case 'h6':
-      case 'p':
-      case 'div':
-      case 'span':
+      case "h1":
+      case "h2":
+      case "h3":
+      case "h4":
+      case "h5":
+      case "h6":
+      case "p":
+      case "div":
+      case "span":
         return firstChild.innerText;
-      case 'ul':
-      case 'ol':
+      case "ul":
+      case "ol":
         // Get the first list item's text content
-        const firstListItem = firstChild.querySelector('li');
-        return firstListItem ? firstListItem.innerText : '';
-      case 'table':
+        const firstListItem = firstChild.querySelector("li");
+        return firstListItem ? firstListItem.innerText : "";
+      case "table":
         // Get the first table cell's text content
-        const firstTableCell = firstChild.querySelector('td, th');
-        return firstTableCell ? firstTableCell.innerText : '';
+        const firstTableCell = firstChild.querySelector("td, th");
+        return firstTableCell ? firstTableCell.innerText : "";
       default:
-        return '';
+        return "";
     }
   }
-  return '';
+  return "";
 };
 
 export const extractFirstElementHTML = (html) => {
   // if (!html) return '';
-  if (!html || typeof html !== 'string') return html;
-
+  if (!html || typeof html !== "string") return html;
 
   const sanitizedHTML = DOMPurify.sanitize(html);
-  const tempElement = document.createElement('div');
+  const tempElement = document.createElement("div");
   tempElement.innerHTML = sanitizedHTML;
 
   // Get the first child node that is not a text node
   let firstChild = tempElement.firstChild;
-  while (firstChild && firstChild.nodeType === 3) { // 3: Text node
+  while (firstChild && firstChild.nodeType === 3) {
+    // 3: Text node
     firstChild = firstChild.nextSibling;
   }
 
@@ -452,7 +473,7 @@ export const extractFirstElementHTML = (html) => {
     // return firstChild.outerHTML; /// return formatted text
     return firstChild.textContent; // return plain text
   }
-  return '';
+  return "";
 };
 
 // export const extractFirstElementHTML = (html) => {
@@ -493,4 +514,3 @@ export const extractFirstElementHTML = (html) => {
 //   }
 //   return '';
 // };
-

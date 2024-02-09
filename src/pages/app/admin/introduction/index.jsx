@@ -54,7 +54,7 @@ const Intro = () => {
       InstanceID: sessionData.InstanceID,
       UserID: credentials.data.userID,
       UserRole: credentials.data.role,
-      QuestionID: questionDetails.data.CurrentQuestionNo.toString(),
+      QuestionID: questionDetails.data.QuestionDetails.QuestionID,
       GlobalTimer: Date.now().toString(),
       QuestionTimer: "",
       ActionType: "IntroductionSkip",
@@ -202,14 +202,16 @@ const Intro = () => {
               </>
             )}
 
-          <div
-            className={styles.buttonContainer}
-            style={{ backgroundImage: 'url("./images/grey_strip.png")' }}
-          >
-            <Button onClick={onSkip} customStyle={{ fontSize: "1.4rem" }}>
-              Skip
-            </Button>
-          </div>
+          {questionDetails?.data?.IntroMediaURL && (
+            <div
+              className={styles.buttonContainer}
+              style={{ backgroundImage: 'url("./images/grey_strip.png")' }}
+            >
+              <Button onClick={onSkip} customStyle={{ fontSize: "1.4rem" }}>
+                Skip
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </motion.div>

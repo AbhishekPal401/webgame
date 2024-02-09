@@ -61,7 +61,6 @@ const MissionCompleted = () => {
   const navigate = useNavigate();
 
   // console.log("instanceSummary", instanceSummary);
-  // console.log("instanceProgress", instanceProgress);
 
   const dispatch = useDispatch();
 

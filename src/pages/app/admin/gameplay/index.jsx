@@ -30,6 +30,7 @@ import Nudges from "../../../../components/nudges/index.jsx";
 import { TIMER_STATES } from "../../../../constants/timer.js";
 import IntroMedia from "../../../../components/intromedia/index.jsx";
 import { Tooltip } from "react-tooltip";
+import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession.js";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -114,6 +115,8 @@ const GamePlay = () => {
   const [position, setPosition] = useState(0);
   const [countdown, setcoundown] = useState(TIMER_STATES.STOP);
   const [duration, setDuration] = useState(0);
+  const [initGlobaTimeOffset, setInitGlobaTimeOffset] = useState(Date.now());
+  const [MediaShown, setMediaShown] = useState(false);
 
   const [showDecisionTree, setShowDecisionTree] = useState(false);
   const [showIntroMedia, setShowIntroMedia] = useState(false);
@@ -126,6 +129,25 @@ const GamePlay = () => {
   const alerRef = useRef();
 
   const { answerDetails, loading } = useSelector((state) => state.postAnswer);
+
+  const handlePageUnload = () => {
+    localStorage.setItem("refresh", true);
+  };
+
+  window.addEventListener("beforeunload", handlePageUnload);
+
+  useEffect(() => {
+    console.log("refresh", localStorage.getItem("refresh"));
+
+    if (localStorage.getItem("refresh") === "true") {
+      dispatch(resetNextQuestionDetailsState());
+      dispatch(resetAnswerDetailsState());
+      dispatch(resetInstanceProgressByIDState());
+      navigate(`/game/${JSON.parse(sessionDetails.data).InstanceID}`);
+      dispatch(resetSessionDetailsState());
+      localStorage.setItem("refresh", false);
+    }
+  }, [localStorage.getItem("refresh")]);
 
   useEffect(() => {
     const handleVotingDetails = (votesDetails) => {
@@ -265,6 +287,24 @@ const GamePlay = () => {
     dispatch(submitAnswerDetails(data));
   }, [credentials, questionDetails, selectedAnswer, startedAt, sessionDetails]);
 
+  const onQuestionSkip = useCallback(() => {
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    const data = {
+      InstanceID: sessionData.InstanceID,
+      UserID: credentials.data.userID,
+      UserRole: credentials.data.role,
+      QuestionID: questionDetails.data.QuestionDetails.QuestionID,
+      GlobalTimer: "",
+      QuestionTimer: Date.now().toString(),
+      ActionType: "QuestionMediaSkip",
+    };
+
+    console.log(" global skip data", data);
+
+    signalRService.SkipMediaInvoke(data);
+  }, [sessionDetails, credentials, questionDetails]);
+
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
@@ -356,7 +396,39 @@ const GamePlay = () => {
           setCallNextQuestion(false);
           setDecisionDetails([]);
         }
+
+        if (questionDetails?.data?.HubTimerData) {
+          let HubTimerData = questionDetails?.data?.HubTimerData;
+          if (isJSONString(questionDetails?.data?.HubTimerData)) {
+            HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
+          }
+
+          if (HubTimerData?.GlobalTimer) {
+            setInitGlobaTimeOffset(Number(HubTimerData?.GlobalTimer));
+          }
+
+          if (questionDetails?.data?.HubTimerData) {
+            let HubTimerData = questionDetails?.data?.HubTimerData;
+            if (isJSONString(questionDetails?.data?.HubTimerData)) {
+              HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
+            }
+
+            if (
+              HubTimerData.QuestionID ===
+              questionDetails?.data?.QuestionDetails?.QuestionID
+            ) {
+              const prev = Number(HubTimerData.QuestionTimer);
+              const offset = Date.now() - prev;
+
+              if (prev) {
+                setMediaShown(true);
+              }
+            }
+          }
+        }
       }
+
+      onQuestionSkip();
     } else if (questionDetails.success === false) {
     }
   }, [questionDetails]);
@@ -682,7 +754,7 @@ const GamePlay = () => {
         <div className={styles.header_right}>
           <div className={styles.counter}>
             <div>Time elapsed</div>
-            <CountDown />
+            <CountDown initialTimestamp={initGlobaTimeOffset} />
             <div>MIN</div>
           </div>
           <div className={styles.vertical_line}></div>
@@ -761,6 +833,7 @@ const GamePlay = () => {
                   }
                   onAdminDecisionCompleteDefault={showAlertMessage}
                   countdown={countdown}
+                  MediaShown={MediaShown}
                 />
               )}
           </div>
