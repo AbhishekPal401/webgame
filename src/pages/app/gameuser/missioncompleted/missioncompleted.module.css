@@ -118,7 +118,7 @@
 .tree > div:nth-child(1) {
   width: 75%;
   margin-left: 4rem;
-  height: 40rem;
+  height: 40rem !important;
 }
 
 .tree > div:nth-child(1) svg {

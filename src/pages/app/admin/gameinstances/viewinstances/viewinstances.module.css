@@ -113,7 +113,7 @@
   padding: 1rem;
 }
 .treeLeft > div:nth-child(1) {
-  height: 40rem;
+  height: 40rem !important;
   width: 100%;
 }
 .treeLeft > div:nth-child(1) svg {

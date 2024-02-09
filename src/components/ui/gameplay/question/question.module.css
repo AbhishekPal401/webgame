@@ -68,6 +68,9 @@
   color: var(--innerbackground);
   font-family: "Helvetica 300";
   font-size: 1.6rem;
+  max-height: 5.5rem; /* Limit the maximum height */
+  width: 100%;
+  overflow-y: scroll; /* Set vertical scrolling */
 }
 
 .question p {

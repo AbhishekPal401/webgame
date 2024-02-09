@@ -1,22 +1,46 @@
 import { dateFormats } from "../constants/date";
+import DOMPurify from 'dompurify';
+
+
+// export const formatTime = (value) => {
+//   if (!value || value.trim() === "") {
+//     return "Invalid Time";
+//   }
+//   console.log(" Time incoing : ",value)
+//   if (value >= 60) {
+//     const hours = Math.floor(value / 60);
+//     const minutes = value % 60;
+//     if (minutes === 0) {
+//       return `${hours}hr`;
+//     } else {
+//       return `${hours}.${minutes}hr`;
+//     }
+//   } else {
+//     return `${value}min`;
+//   }
+// };
 
 export const formatTime = (value) => {
   if (!value || value.trim() === "") {
     return "Invalid Time";
   }
 
-  if (value >= 60) {
-    const hours = Math.floor(value / 60);
-    const minutes = value % 60;
+  const seconds = parseInt(value);
+  const hours = Math.floor(seconds / 3600);
+  const remainingSeconds = seconds % 3600;
+  const minutes = remainingSeconds / 60;
+
+  if (hours > 0) {
     if (minutes === 0) {
-      return `${hours}hr`;
+      return `${hours} hr`;
     } else {
-      return `${hours}.${minutes}hr`;
+      return `${hours} hr ${minutes.toFixed(2)} min`;
     }
   } else {
-    return `${value}min`;
+    return `${minutes.toFixed(2)} min`;
   }
 };
+
 
 export const formatDateString = (dateTimeString, formatType = "default") => {
 
@@ -326,3 +350,122 @@ export const extractFileInfo = (fileSrc) => {
     return { type: "unknown", name: "unknown" };
   }
 };
+
+
+export const renderFirstLine = (htmlString) => {
+  // Create a temporary element to parse the HTML string
+  const tempElement = document.createElement('div');
+  tempElement.innerHTML = htmlString;
+
+  // Get the text content of the first child element
+  const firstLine = tempElement.firstChild?.textContent || '';
+
+  console.log(" firstline : ", firstLine)
+  // Return the first line of text
+  return firstLine.trim();
+};
+
+export const extractTextContent = (html) => {
+  if (!html) return '';
+
+  const sanitizedHTML = DOMPurify.sanitize(html);
+  const tempElement = document.createElement('div');
+  tempElement.innerHTML = sanitizedHTML;
+
+  // Get the first child node that is not a text node
+  let firstChild = tempElement.firstChild;
+  while (firstChild && firstChild.nodeType === 3) { // 3: Text node
+    firstChild = firstChild.nextSibling;
+  }
+  // console.log("first child :",firstChild)
+  // Extract content based on the element type
+  if (firstChild) {
+    switch (firstChild.tagName.toLowerCase()) {
+      case 'h1':
+      case 'h2':
+      case 'h3':
+      case 'h4':
+      case 'h5':
+      case 'h6':
+      case 'p':
+      case 'div':
+      case 'span':
+        return firstChild.innerText;
+      case 'ul':
+      case 'ol':
+        // Get the first list item's text content
+        const firstListItem = firstChild.querySelector('li');
+        return firstListItem ? firstListItem.innerText : '';
+      case 'table':
+        // Get the first table cell's text content
+        const firstTableCell = firstChild.querySelector('td, th');
+        return firstTableCell ? firstTableCell.innerText : '';
+      default:
+        return '';
+    }
+  }
+  return '';
+};
+
+export const extractFirstElementHTML = (html) => {
+  // if (!html) return '';
+  if (!html || typeof html !== 'string') return html;
+
+
+  const sanitizedHTML = DOMPurify.sanitize(html);
+  const tempElement = document.createElement('div');
+  tempElement.innerHTML = sanitizedHTML;
+
+  // Get the first child node that is not a text node
+  let firstChild = tempElement.firstChild;
+  while (firstChild && firstChild.nodeType === 3) { // 3: Text node
+    firstChild = firstChild.nextSibling;
+  }
+
+  // Extract HTML content of the first element
+  if (firstChild) {
+    // return firstChild.outerHTML; /// return formatted text
+    return firstChild.textContent; // return plain text
+  }
+  return '';
+};
+
+// export const extractFirstElementHTML = (html) => {
+//   if (!html || typeof html !== 'string') return html;
+
+//   const sanitizedHTML = DOMPurify.sanitize(html);
+//   const tempElement = document.createElement('div');
+//   tempElement.innerHTML = sanitizedHTML;
+
+//   // Get the first child node that is not a text node
+//   let firstChild = tempElement.firstChild;
+//   while (firstChild && firstChild.nodeType === 3) { // 3: Text node
+//     firstChild = firstChild.nextSibling;
+//   }
+
+//   console.log("Firstchild :",firstChild)
+
+//   // Extract HTML content of the first element
+//   if (firstChild) {
+//     const firstElementHTML = firstChild.outerHTML;
+//     const closingTagIndex = firstElementHTML.lastIndexOf('</');
+//     const ellipsisAppendedHTML = firstElementHTML.substring(0, closingTagIndex) + '...' + firstElementHTML.substring(closingTagIndex);
+//     return ellipsisAppendedHTML;
+
+//     // const firstElementHTML = firstChild.outerHTML;
+//     // if (firstElementHTML.includes('<li>')) {
+//     //   const openingLiTagIndex = firstElementHTML.indexOf('<li>');
+//     //   const closingLiTagIndex = firstElementHTML.indexOf('</li>', openingLiTagIndex);
+//     //   const ellipsisAppendedHTML = firstElementHTML.substring(0, closingLiTagIndex) + '...' + firstElementHTML.substring(closingLiTagIndex);
+//     //   console.log("ellipsisAppendedHTML :",ellipsisAppendedHTML)
+
+//     //   return ellipsisAppendedHTML;
+//     // } else {
+//     //   const closingTagIndex = firstElementHTML.lastIndexOf('</');
+//     //   const ellipsisAppendedHTML = firstElementHTML.substring(0, closingTagIndex) + '...' + firstElementHTML.substring(closingTagIndex);
+//     //   return ellipsisAppendedHTML;
+//     // }
+//   }
+//   return '';
+// };
+

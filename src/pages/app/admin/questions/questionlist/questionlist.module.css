@@ -117,8 +117,31 @@
   white-space: nowrap;
 }
 .table_content tbody tr > td:nth-child(3) {
-  max-width: 20rem;
+  max-width: 30rem;  
 }
+
+.tableContentCell > div {
+  max-width: 50rem;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* .tableContentCell {
+  position: relative; 
+}
+
+.tableContentCell::after {
+  content: '...'; 
+  position: absolute; 
+  bottom: 0; 
+  right: 0; 
+  padding: 1rem; 
+  background-color: white; 
+  z-index: 1; 
+  height: inherit;
+} */
+
 
 .questions:hover {
   text-decoration: underline;

@@ -118,7 +118,7 @@
 
 .tree > div:nth-child(1) {
   width: 75%;
-  height: 40rem;
+  height: 40rem !important;
   margin-left: 4rem;
 }
 
