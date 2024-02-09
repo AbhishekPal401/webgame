@@ -54,7 +54,7 @@ const Intro = () => {
       InstanceID: sessionData.InstanceID,
       UserID: credentials.data.userID,
       UserRole: credentials.data.role,
-      QuestionID: questionDetails.data.CurrentQuestionNo.toString(),
+      QuestionID: questionDetails.data.QuestionDetails.QuestionID,
       GlobalTimer: Date.now().toString(),
       QuestionTimer: "",
       ActionType: "IntroductionSkip",

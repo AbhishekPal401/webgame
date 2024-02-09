@@ -123,6 +123,9 @@ const GamePlay = () => {
   const [position, setPosition] = useState(0);
   const [countdown, setCoundown] = useState(TIMER_STATES.STOP);
   const [duration, setDuration] = useState(0);
+  const [initGlobaTimeOffset, setInitGlobaTimeOffset] = useState(Date.now());
+  const [MediaShown, setMediaShown] = useState(false);
+
   const [showIntroMedia, setShowIntroMedia] = useState(false);
 
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
@@ -449,7 +452,6 @@ const GamePlay = () => {
 
             currentState = hublivedata?.decisionDisplayType;
 
-            //checking if user voted
             if (Array.isArray(hublivedata.votes)) {
               hublivedata.votes.forEach((answersubmitDetails) => {
                 answersubmitDetails.votersInfo.forEach((userDetails) => {
@@ -473,17 +475,12 @@ const GamePlay = () => {
               });
             }
 
-            // if (questionDetails.data.QuestionDetails.IsUserDecisionMaker) {
-            //   if (currentQuestionSubmitted && !currentDecisionSubmitted) {
-            //     duration = 30 * 1000; // 30 seconds
-            //   }
-            // }
-
             if (currentState === PlayingStates.VotingCompleted) {
               setShowModal(true);
             } else {
               setShowModal(false);
             }
+
             setCurrentState(currentState);
             setCurrentQuestionSubmitted(currentQuestionSubmitted);
 
@@ -510,6 +507,42 @@ const GamePlay = () => {
             setCurrentState(PlayingStates.UserVote);
             setShowModal(false);
             setIsDecision(false);
+          }
+        }
+
+        //for global timer
+        if (questionDetails?.data?.HubTimerData) {
+          let HubTimerData = questionDetails?.data?.HubTimerData;
+          if (isJSONString(questionDetails?.data?.HubTimerData)) {
+            HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
+          }
+
+          if (HubTimerData?.GlobalTimer) {
+            setInitGlobaTimeOffset(Number(HubTimerData?.GlobalTimer));
+          }
+        }
+        //for question timer
+
+        if (questionDetails?.data?.HubTimerData) {
+          let HubTimerData = questionDetails?.data?.HubTimerData;
+          if (isJSONString(questionDetails?.data?.HubTimerData)) {
+            HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
+          }
+
+          // console.log("HubTimerData", HubTimerData);
+          // console.log("questionDetails", questionDetails);
+
+          if (
+            HubTimerData.QuestionID ===
+            questionDetails?.data?.QuestionDetails?.QuestionID
+          ) {
+            const prev = Number(HubTimerData.QuestionTimer);
+            const offset = Date.now() - prev;
+
+            if (prev) {
+              duration = Math.max(0, duration - offset);
+              setMediaShown(true);
+            }
           }
         }
       }
@@ -658,7 +691,7 @@ const GamePlay = () => {
         <div className={styles.header_right}>
           <div className={styles.counter}>
             <div>Time elapsed</div>
-            <CountDown />
+            <CountDown initialTimestamp={initGlobaTimeOffset} />
             <div>MIN</div>
           </div>
           <div className={styles.vertical_line}></div>
@@ -731,6 +764,7 @@ const GamePlay = () => {
                   onComplete={voteDefault}
                   onDecisionCompleteDefault={onDecisionCompleteDefault}
                   countdown={countdown}
+                  MediaShown={MediaShown}
                 />
               )}
           </div>

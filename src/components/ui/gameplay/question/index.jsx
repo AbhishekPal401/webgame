@@ -88,6 +88,7 @@ const Question = ({
   onDecisionCompleteDefault = () => {},
   onAdminDecisionCompleteDefault = () => {},
   countdown = TIMER_STATES.STOP,
+  MediaShown = false,
 }) => {
   const [mediaShownOnce, setMediaShownOnce] = useState(false);
   const [showMedia, setShowMedia] = useState(true);
@@ -350,6 +351,13 @@ const Question = ({
   );
 
   useEffect(() => {
+    if (MediaShown) {
+      setMediaShownOnce(true);
+      setShowMedia(false);
+    }
+  }, [MediaShown]);
+
+  useEffect(() => {
     setShowSkip(false);
     if (MediaType && QuestionIntroMediaURL) {
       setMediaShownOnce(false);
@@ -413,7 +421,7 @@ const Question = ({
       InstanceID: sessionData.InstanceID,
       UserID: credentials.data.userID,
       UserRole: credentials.data.role,
-      QuestionID: questionDetails.data.CurrentQuestionNo.toString(),
+      QuestionID: questionDetails.data.QuestionDetails.QuestionID,
       GlobalTimer: "",
       QuestionTimer: Date.now().toString(),
       ActionType: "QuestionMediaSkip",
@@ -421,8 +429,6 @@ const Question = ({
 
     signalRService.SkipMediaInvoke(data);
   }, [sessionDetails, credentials, questionDetails]);
-
-  console.log("media", showMedia, MediaType, QuestionIntroMediaURL);
 
   return (
     <div className={styles.container}>

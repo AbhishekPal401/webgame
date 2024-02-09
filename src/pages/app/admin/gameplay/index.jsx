@@ -114,6 +114,8 @@ const GamePlay = () => {
   const [position, setPosition] = useState(0);
   const [countdown, setcoundown] = useState(TIMER_STATES.STOP);
   const [duration, setDuration] = useState(0);
+  const [initGlobaTimeOffset, setInitGlobaTimeOffset] = useState(Date.now());
+  const [MediaShown, setMediaShown] = useState(false);
 
   const [showDecisionTree, setShowDecisionTree] = useState(false);
   const [showIntroMedia, setShowIntroMedia] = useState(false);
@@ -355,6 +357,38 @@ const GamePlay = () => {
           setStartedAt(Math.floor(Date.now() / 1000));
           setCallNextQuestion(false);
           setDecisionDetails([]);
+        }
+
+        if (questionDetails?.data?.HubTimerData) {
+          let HubTimerData = questionDetails?.data?.HubTimerData;
+          if (isJSONString(questionDetails?.data?.HubTimerData)) {
+            HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
+          }
+
+          if (HubTimerData?.GlobalTimer) {
+            console.log("GlobalTimer", Number(HubTimerData?.GlobalTimer));
+
+            setInitGlobaTimeOffset(Number(HubTimerData?.GlobalTimer));
+          }
+
+          if (questionDetails?.data?.HubTimerData) {
+            let HubTimerData = questionDetails?.data?.HubTimerData;
+            if (isJSONString(questionDetails?.data?.HubTimerData)) {
+              HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
+            }
+
+            if (
+              HubTimerData.QuestionID ===
+              questionDetails?.data?.QuestionDetails?.QuestionID
+            ) {
+              const prev = Number(HubTimerData.QuestionTimer);
+              const offset = Date.now() - prev;
+
+              if (prev) {
+                setMediaShown(true);
+              }
+            }
+          }
         }
       }
     } else if (questionDetails.success === false) {
@@ -682,7 +716,7 @@ const GamePlay = () => {
         <div className={styles.header_right}>
           <div className={styles.counter}>
             <div>Time elapsed</div>
-            <CountDown />
+            <CountDown initialTimestamp={initGlobaTimeOffset} />
             <div>MIN</div>
           </div>
           <div className={styles.vertical_line}></div>
@@ -761,6 +795,7 @@ const GamePlay = () => {
                   }
                   onAdminDecisionCompleteDefault={showAlertMessage}
                   countdown={countdown}
+                  MediaShown={MediaShown}
                 />
               )}
           </div>
