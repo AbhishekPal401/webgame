@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import DOMPurify from "dompurify";
 import PageContainer from "../../../../../components/ui/pagecontainer";
 import styles from "./questionlist.module.css";
 import Button from "../../../../../components/common/button";
@@ -16,6 +17,7 @@ import {
   resetDeleteQuestionState
 } from "../../../../../store/app/admin/questions/deleteQuestions.js";
 import { toast } from "react-toastify";
+import { extractTextContent} from "../../../../../utils/helper.js";
 
 
 function QuestionList() {
@@ -132,7 +134,7 @@ function QuestionList() {
       ? selectedCheckboxes.filter((row) => row !== questionId)
       : [...selectedCheckboxes, questionId];
 
-      setSelectedCheckboxes(updatedRows);
+    setSelectedCheckboxes(updatedRows);
   };
 
   const onDeleteQuestion = () => {
@@ -193,10 +195,21 @@ function QuestionList() {
                             />
                           </td>
                           <td>{index + 1}</td>
-                          <td dangerouslySetInnerHTML={{ __html: question.QuestionText || '' }}></td>
+                          {/* {typeof question.QuestionText === 'string' && isHTML(question.QuestionText) ? (
+                            <div dangerouslySetInnerHTML={{ __html: extractFirstElementHTML(question.QuestionText) || '' }}></div>
+                          ) : (
+                            <div>{question.QuestionText}</div>
+                          )} */}
+                          {/* <td className={styles.tableContentCell}>
+                            <div dangerouslySetInnerHTML={{ __html:  DOMPurify.sanitize(question.QuestionText) || '' }}></div>
+                          </td> */}
+                          <td className={styles.tableContentCell}>
+                            <div dangerouslySetInnerHTML={{ __html:  extractTextContent(question.QuestionText) || '' }}></div>
+                          </td>
                           {/* <td>
                             {question.QuestionText}
                           </td> */}
+
                           {/* <td className={styles.scenarioDescription}>
                             Levels
                           </td> */}
