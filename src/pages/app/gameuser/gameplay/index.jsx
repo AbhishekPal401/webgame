@@ -50,22 +50,24 @@ const DecisionTree = ({ onCancel = () => {} }) => {
 
   useEffect(() => {
     if (isJSONString(sessionDetails.data)) {
-      const sessionData = JSON.parse(sessionDetails.data);
+      if (sessionDetails?.data) {
+        const sessionData = JSON.parse(sessionDetails.data);
 
-      if (sessionData && credentials) {
-        const data = {
-          instanceID: sessionData.InstanceID,
-          userID: credentials.data.userID,
-          isAdmin: true,
-          requester: {
-            requestID: generateGUID(),
-            requesterID: credentials.data.userID,
-            requesterName: credentials.data.userName,
-            requesterType: credentials.data.role,
-          },
-        };
+        if (sessionData && credentials) {
+          const data = {
+            instanceID: sessionData.InstanceID,
+            userID: credentials.data.userID,
+            isAdmin: true,
+            requester: {
+              requestID: generateGUID(),
+              requesterID: credentials.data.userID,
+              requesterName: credentials.data.userName,
+              requesterType: credentials.data.role,
+            },
+          };
 
-        dispatch(getInstanceProgressyById(data));
+          dispatch(getInstanceProgressyById(data));
+        }
       }
     }
   }, []);
@@ -288,27 +290,29 @@ const GamePlay = () => {
 
   useEffect(() => {
     if (callNextQuestion) {
-      const sessionData = JSON.parse(sessionDetails.data);
+      if (sessionDetails?.data) {
+        const sessionData = JSON.parse(sessionDetails.data);
 
-      const data = {
-        sessionID: sessionData.SessionID,
-        scenarioID: sessionData.ScenarioID,
-        currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-        currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
-        currentStatus: "InProgress",
-        userID: credentials.data.userID,
-        currentTotalScore: 0,
-        requester: {
-          requestID: generateGUID(),
-          requesterID: credentials.data.userID,
-          requesterName: credentials.data.userName,
-          requesterType: credentials.data.role,
-        },
-      };
+        const data = {
+          sessionID: sessionData.SessionID,
+          scenarioID: sessionData.ScenarioID,
+          currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+          currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
+          currentStatus: "InProgress",
+          userID: credentials.data.userID,
+          currentTotalScore: 0,
+          requester: {
+            requestID: generateGUID(),
+            requesterID: credentials.data.userID,
+            requesterName: credentials.data.userName,
+            requesterType: credentials.data.role,
+          },
+        };
 
-      console.log("get next question data", data);
+        console.log("get next question data", data);
 
-      dispatch(getNextQuestionDetails(data));
+        dispatch(getNextQuestionDetails(data));
+      }
     }
   }, [callNextQuestion]);
 
@@ -319,46 +323,49 @@ const GamePlay = () => {
         return;
       }
 
-      const sessionData = JSON.parse(sessionDetails.data);
+      if (sessionDetails?.data) {
+        const sessionData = JSON.parse(sessionDetails.data);
 
-      const data = {
-        sessionID: sessionData.SessionID,
-        instanceID: sessionData.InstanceID,
-        scenarioID: sessionData.ScenarioID,
-        userID: credentials.data.userID,
-        questionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-        questionNo:
-          questionDetails?.data?.QuestionDetails?.QuestionNo.toString(),
-        answerID: selectedAnswer?.AnswerID,
-        score: selectedAnswer?.Score,
-        startedAt: startedAt.toString(),
-        finishedAt: Math.floor(Date.now() / 1000).toString(),
-        duration: "",
-        IsDeciderDecision: decider ? true : false,
-        IsAdminDecision: false,
-        isAnswerDeligated:
-          questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker,
-        delegatedUserID: questionDetails?.data?.QuestionDetails
-          ?.IsUserDecisionMaker
-          ? credentials.data.userID
-          : "",
-        isOptimal: selectedAnswer?.IsOptimalAnswer,
-        currentState: "InProgress",
-        requester: {
-          requestID: generateGUID(),
-          requesterID: credentials.data.userID,
-          requesterName: credentials.data.userName,
-          requesterType: credentials.data.role,
-        },
-      };
+        const data = {
+          sessionID: sessionData.SessionID,
+          instanceID: sessionData.InstanceID,
+          scenarioID: sessionData.ScenarioID,
+          userID: credentials.data.userID,
+          questionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+          questionNo:
+            questionDetails?.data?.QuestionDetails?.QuestionNo.toString(),
+          answerID: selectedAnswer?.AnswerID,
+          score: selectedAnswer?.Score,
+          startedAt: startedAt.toString(),
+          finishedAt: Math.floor(Date.now() / 1000).toString(),
+          duration: "",
+          IsDeciderDecision: decider ? true : false,
+          IsAdminDecision: false,
+          isAnswerDeligated:
+            questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker,
+          delegatedUserID: questionDetails?.data?.QuestionDetails
+            ?.IsUserDecisionMaker
+            ? credentials.data.userID
+            : "",
+          isOptimal: selectedAnswer?.IsOptimalAnswer,
+          currentState: "InProgress",
+          requester: {
+            requestID: generateGUID(),
+            requesterID: credentials.data.userID,
+            requesterName: credentials.data.userName,
+            requesterType: credentials.data.role,
+          },
+        };
 
-      dispatch(submitAnswerDetails(data));
+        dispatch(submitAnswerDetails(data));
+      }
     },
     [credentials, questionDetails, selectedAnswer, startedAt, sessionDetails]
   );
 
   const defaultAnswerSubmit = useCallback(
     (decider = false) => {
+      if (!sessionDetails?.data) return;
       const sessionData = JSON.parse(sessionDetails.data);
 
       const data = {
@@ -555,61 +562,65 @@ const GamePlay = () => {
   useEffect(() => {
     if (answerDetails === null || answerDetails === undefined) return;
     if (answerDetails.success && selectedAnswer) {
-      const sessionData = JSON.parse(sessionDetails.data);
+      if (sessionDetails?.data) {
+        const sessionData = JSON.parse(sessionDetails.data);
 
-      const data = {
-        InstanceID: sessionData.InstanceID,
-        SessionID: sessionData.SessionID,
-        UserID: credentials.data.userID,
-        UserName: credentials.data.userName,
-        UserRole: credentials.data.role,
-        ActionType: isDecision
-          ? "DeciderDecision"
-          : questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker
-          ? "DeciderVote"
-          : "UserVote",
-        Message: "Voting",
+        const data = {
+          InstanceID: sessionData.InstanceID,
+          SessionID: sessionData.SessionID,
+          UserID: credentials.data.userID,
+          UserName: credentials.data.userName,
+          UserRole: credentials.data.role,
+          ActionType: isDecision
+            ? "DeciderDecision"
+            : questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker
+            ? "DeciderVote"
+            : "UserVote",
+          Message: "Voting",
 
-        QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-        AnswerID: selectedAnswer.AnswerID,
-      };
+          QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+          AnswerID: selectedAnswer.AnswerID,
+        };
 
-      console.log("send vote data", data);
+        console.log("send vote data", data);
 
-      signalRService.SendVotes(data);
+        signalRService.SendVotes(data);
 
-      setCurrentQuestionSubmitted(true);
-      setSelectedAnswer(null);
-      setIsDecision(false);
-      dispatch(resetAnswerDetailsState());
+        setCurrentQuestionSubmitted(true);
+        setSelectedAnswer(null);
+        setIsDecision(false);
+        dispatch(resetAnswerDetailsState());
+      }
     } else if (answerDetails.success && selectedAnswer === null) {
-      const sessionData = JSON.parse(sessionDetails.data);
+      if (sessionDetails?.data) {
+        const sessionData = JSON.parse(sessionDetails.data);
 
-      const data = {
-        InstanceID: sessionData.InstanceID,
-        SessionID: sessionData.SessionID,
-        UserID: credentials.data.userID,
-        UserName: credentials.data.userName,
-        UserRole: credentials.data.role,
-        ActionType: isDecision
-          ? "DeciderDecision"
-          : questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker
-          ? "DeciderVote"
-          : "UserVote",
-        Message: "Voting",
+        const data = {
+          InstanceID: sessionData.InstanceID,
+          SessionID: sessionData.SessionID,
+          UserID: credentials.data.userID,
+          UserName: credentials.data.userName,
+          UserRole: credentials.data.role,
+          ActionType: isDecision
+            ? "DeciderDecision"
+            : questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker
+            ? "DeciderVote"
+            : "UserVote",
+          Message: "Voting",
 
-        QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-        AnswerID: "NA",
-      };
+          QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+          AnswerID: "NA",
+        };
 
-      console.log("send vote data", data);
+        console.log("send vote data", data);
 
-      signalRService.SendVotes(data);
+        signalRService.SendVotes(data);
 
-      setCurrentQuestionSubmitted(true);
-      setSelectedAnswer(null);
-      setIsDecision(false);
-      dispatch(resetAnswerDetailsState());
+        setCurrentQuestionSubmitted(true);
+        setSelectedAnswer(null);
+        setIsDecision(false);
+        dispatch(resetAnswerDetailsState());
+      }
     }
   }, [answerDetails, isDecision]);
 
@@ -693,7 +704,7 @@ const GamePlay = () => {
           <div className={styles.counter}>
             <div>Time elapsed</div>
             <CountDown initialTimestamp={initGlobaTimeOffset} />
-            <div>MIN</div>
+            {/* <div>MIN</div> */}
           </div>
           <div className={styles.vertical_line}></div>
           <div className={styles.score}>

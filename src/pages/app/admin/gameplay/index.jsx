@@ -44,23 +44,25 @@ const DecisionTree = ({ onCancel = () => {} }) => {
   console.log("instanceProgress", instanceProgress);
 
   useEffect(() => {
-    if (isJSONString(sessionDetails.data)) {
-      const sessionData = JSON.parse(sessionDetails.data);
+    if (sessionDetails?.data) {
+      if (isJSONString(sessionDetails.data)) {
+        const sessionData = JSON.parse(sessionDetails.data);
 
-      if (sessionData && credentials) {
-        const data = {
-          instanceID: sessionData.InstanceID,
-          userID: credentials.data.userID,
-          isAdmin: true,
-          requester: {
-            requestID: generateGUID(),
-            requesterID: credentials.data.userID,
-            requesterName: credentials.data.userName,
-            requesterType: credentials.data.role,
-          },
-        };
+        if (sessionData && credentials) {
+          const data = {
+            instanceID: sessionData.InstanceID,
+            userID: credentials.data.userID,
+            isAdmin: true,
+            requester: {
+              requestID: generateGUID(),
+              requesterID: credentials.data.userID,
+              requesterName: credentials.data.userName,
+              requesterType: credentials.data.role,
+            },
+          };
 
-        dispatch(getInstanceProgressyById(data));
+          dispatch(getInstanceProgressyById(data));
+        }
       }
     }
   }, []);
@@ -252,6 +254,8 @@ const GamePlay = () => {
       return;
     }
 
+    if (!sessionDetails?.data) return;
+
     const sessionData = JSON.parse(sessionDetails.data);
 
     const data = {
@@ -288,21 +292,23 @@ const GamePlay = () => {
   }, [credentials, questionDetails, selectedAnswer, startedAt, sessionDetails]);
 
   const onQuestionSkip = useCallback(() => {
-    const sessionData = JSON.parse(sessionDetails.data);
+    if (sessionDetails?.data) {
+      const sessionData = JSON.parse(sessionDetails.data);
 
-    const data = {
-      InstanceID: sessionData.InstanceID,
-      UserID: credentials.data.userID,
-      UserRole: credentials.data.role,
-      QuestionID: questionDetails.data.QuestionDetails.QuestionID,
-      GlobalTimer: "",
-      QuestionTimer: Date.now().toString(),
-      ActionType: "QuestionMediaSkip",
-    };
+      const data = {
+        InstanceID: sessionData.InstanceID,
+        UserID: credentials.data.userID,
+        UserRole: credentials.data.role,
+        QuestionID: questionDetails.data.QuestionDetails.QuestionID,
+        GlobalTimer: "",
+        QuestionTimer: Date.now().toString(),
+        ActionType: "QuestionMediaSkip",
+      };
 
-    console.log(" global skip data", data);
+      console.log(" global skip data", data);
 
-    signalRService.SkipMediaInvoke(data);
+      signalRService.SkipMediaInvoke(data);
+    }
   }, [sessionDetails, credentials, questionDetails]);
 
   useEffect(() => {
@@ -435,27 +441,29 @@ const GamePlay = () => {
 
   useEffect(() => {
     if (callNextQuestion) {
-      const sessionData = JSON.parse(sessionDetails.data);
+      if (sessionDetails.data) {
+        const sessionData = JSON.parse(sessionDetails.data);
 
-      const data = {
-        sessionID: sessionData.SessionID,
-        scenarioID: sessionData.ScenarioID,
-        currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-        currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
-        currentStatus: "InProgress",
-        userID: credentials.data.userID,
-        currentTotalScore: 0,
-        requester: {
-          requestID: generateGUID(),
-          requesterID: credentials.data.userID,
-          requesterName: credentials.data.userName,
-          requesterType: credentials.data.role,
-        },
-      };
+        const data = {
+          sessionID: sessionData.SessionID,
+          scenarioID: sessionData.ScenarioID,
+          currentQuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+          currentQuestionNo: questionDetails?.data?.QuestionDetails?.QuestionNo,
+          currentStatus: "InProgress",
+          userID: credentials.data.userID,
+          currentTotalScore: 0,
+          requester: {
+            requestID: generateGUID(),
+            requesterID: credentials.data.userID,
+            requesterName: credentials.data.userName,
+            requesterType: credentials.data.role,
+          },
+        };
 
-      console.log("get next question data", data);
+        console.log("get next question data", data);
 
-      dispatch(getNextQuestionDetails(data));
+        dispatch(getNextQuestionDetails(data));
+      }
     }
   }, [callNextQuestion]);
 
@@ -478,6 +486,7 @@ const GamePlay = () => {
 
   const NextQuestionInvoke = useCallback(() => {
     if (selectedAnswer) {
+      if (!sessionDetails.data) return;
       const sessionData = JSON.parse(sessionDetails.data);
 
       const data = {
@@ -588,28 +597,13 @@ const GamePlay = () => {
         toast.success("Please select a option");
       }
     }
-
-    // return;
-
-    // if (!isJSONString(sessionDetails.data)) return;
-    // const sessionData = JSON.parse(sessionDetails.data);
-
-    // const data = {
-    //   InstanceID: sessionData.InstanceID,
-    //   UserID: credentials.data.userID,
-    //   UserRole: credentials.data.role,
-    //   ActionType: "NextQuestion",
-    //   Message: "Success",
-    // };
-
-    // console.log(data);
-    // signalRService.ProceedToNextQuestionInvoke(data);
   }, [sessionDetails, credentials, decisionDetails, selectedAnswer]);
 
   useEffect(() => {
     if (answerDetails === null || answerDetails === undefined) return;
     if (answerDetails.success) {
       if (!isJSONString(sessionDetails.data)) return;
+      if (!sessionDetails?.data) return;
       const sessionData = JSON.parse(sessionDetails.data);
 
       if (answerDetails?.data?.NextQuestionID) {
@@ -755,7 +749,6 @@ const GamePlay = () => {
           <div className={styles.counter}>
             <div>Time elapsed</div>
             <CountDown initialTimestamp={initGlobaTimeOffset} />
-            <div>MIN</div>
           </div>
           <div className={styles.vertical_line}></div>
           <div className={styles.score}>

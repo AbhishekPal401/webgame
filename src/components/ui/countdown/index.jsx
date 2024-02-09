@@ -31,10 +31,20 @@ const CountDown = ({ initialTimestamp = Date.now() }) => {
     };
   }, [initialTimestamp]);
 
+  console.log("hours");
+
+  console.log("minutes", minutes);
+  console.log("seconds", seconds);
+
   return (
-    <div className={styles.timer} onClick={() => {}}>
-      {minutes} : {seconds}
-    </div>
+    <>
+      <div className={styles.timer} onClick={() => {}}>
+        {hours === 0 ? null : hours > 9 ? `${hours} :` : `0${hours} :`}{" "}
+        {minutes > 9 ? minutes : `0${minutes}`} :{" "}
+        {seconds > 9 ? seconds : `0${seconds}`}
+      </div>
+      <div>{hours === 0 ? "MIN" : "HRS"}</div>
+    </>
   );
 };
 

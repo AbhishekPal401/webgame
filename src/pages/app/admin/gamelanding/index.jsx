@@ -36,18 +36,20 @@ const AdminGameLanding = () => {
   const navigate = useNavigate();
 
   const startGame = useCallback(() => {
-    const sessionData = JSON.parse(sessionDetails.data);
+    if (sessionDetails?.data) {
+      const sessionData = JSON.parse(sessionDetails.data);
 
-    const payload = {
-      InstanceID: sessionData.InstanceID,
-      SessionID: sessionData.SessionID,
-      UserID: credentials.data.userID,
-      UserName: credentials.data.userName,
-      ActionType: "AdminPlayStart",
-      Message: "Success",
-    };
+      const payload = {
+        InstanceID: sessionData.InstanceID,
+        SessionID: sessionData.SessionID,
+        UserID: credentials.data.userID,
+        UserName: credentials.data.userName,
+        ActionType: "AdminPlayStart",
+        Message: "Success",
+      };
 
-    signalRService.AdminMessage(payload);
+      signalRService.AdminMessage(payload);
+    }
   }, [sessionDetails, credentials]);
 
   const fetchIntro = useCallback(() => {
@@ -75,22 +77,24 @@ const AdminGameLanding = () => {
   console.log("sessionDetails", sessionDetails);
 
   const joinRoom = useCallback(async () => {
-    if (!isJSONString(sessionDetails.data)) return;
-    const sessionData = JSON.parse(sessionDetails.data);
+    if (sessionDetails?.data) {
+      if (!isJSONString(sessionDetails.data)) return;
+      const sessionData = JSON.parse(sessionDetails.data);
 
-    const data = {
-      InstanceID: sessionData.InstanceID,
-      SessionID: sessionData.SessionID,
-      UserID: credentials.data.userID,
-      UserName: credentials.data.userName,
-      UserRole: credentials.data.role,
-      Designation: credentials?.data?.designation
-        ? credentials.data.designation
-        : "",
-    };
+      const data = {
+        InstanceID: sessionData.InstanceID,
+        SessionID: sessionData.SessionID,
+        UserID: credentials.data.userID,
+        UserName: credentials.data.userName,
+        UserRole: credentials.data.role,
+        Designation: credentials?.data?.designation
+          ? credentials.data.designation
+          : "",
+      };
 
-    console.log("Joining the room...", data);
-    await signalRService.joinSession(data);
+      console.log("Joining the room...", data);
+      await signalRService.joinSession(data);
+    }
   }, [sessionDetails, credentials]);
 
   useEffect(() => {
@@ -159,26 +163,27 @@ const AdminGameLanding = () => {
   }, [activeUsers]);
 
   const fetchFirstQuestion = useCallback(() => {
-    const sessionData = JSON.parse(sessionDetails.data);
+    if (sessionDetails?.data) {
+      const sessionData = JSON.parse(sessionDetails.data);
 
-    const data = {
-      sessionID: sessionData.SessionID,
-      scenarioID: sessionData.ScenarioID,
-      currentQuestionID: "",
-      ReConnection: false,
-      currentQuestionNo: 0,
-      currentStatus: "InProgress",
-      userID: credentials.data.userID,
-      currentTotalScore: 0,
-      requester: {
-        requestID: generateGUID(),
-        requesterID: credentials.data.userID,
-        requesterName: credentials.data.userName,
-        requesterType: credentials.data.role,
-      },
-    };
-
-    dispatch(getNextQuestionDetails(data));
+      const data = {
+        sessionID: sessionData.SessionID,
+        scenarioID: sessionData.ScenarioID,
+        currentQuestionID: "",
+        ReConnection: false,
+        currentQuestionNo: 0,
+        currentStatus: "InProgress",
+        userID: credentials.data.userID,
+        currentTotalScore: 0,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+      dispatch(getNextQuestionDetails(data));
+    }
   }, [sessionDetails, credentials]);
 
   const onSkip = useCallback(() => {
@@ -212,8 +217,10 @@ const AdminGameLanding = () => {
           navigate("/intro");
         } else {
           onSkip();
-          fetchFirstQuestion();
-          navigate("/gameplay");
+          if (!questionDetails.data.QuestionDetails.QuestionID) {
+            fetchFirstQuestion();
+            navigate("/gameplay");
+          }
         }
       }
     } else {
@@ -224,45 +231,47 @@ const AdminGameLanding = () => {
 
   const getCurrentQuestion = async () => {
     if (!isConnectedToServer) return;
-    const sessionData = JSON.parse(sessionDetails.data);
+    if (sessionDetails?.data) {
+      const sessionData = JSON.parse(sessionDetails.data);
 
-    const data = {
-      InstanceID: sessionData.InstanceID,
-      SessionID: sessionData.SessionID,
-      UserID: credentials.data.userID,
-      UserName: credentials.data.userName,
-      UserRole: credentials.data.role,
-      Designation: credentials?.data?.designation
-        ? credentials.data.designation
-        : "",
-    };
+      const data = {
+        InstanceID: sessionData.InstanceID,
+        SessionID: sessionData.SessionID,
+        UserID: credentials.data.userID,
+        UserName: credentials.data.userName,
+        UserRole: credentials.data.role,
+        Designation: credentials?.data?.designation
+          ? credentials.data.designation
+          : "",
+      };
 
-    await signalRService.joinSession(data);
-    setInProgress(true);
+      await signalRService.joinSession(data);
+      setInProgress(true);
 
-    signalRService.connectedUsers((users) => {
-      console.log("ConnectedUsers", users);
-      dispatch(setActiveUsers(users));
-    });
+      signalRService.connectedUsers((users) => {
+        console.log("ConnectedUsers", users);
+        dispatch(setActiveUsers(users));
+      });
 
-    const questionPayload = {
-      sessionID: sessionData.SessionID,
-      scenarioID: sessionData.ScenarioID,
-      currentQuestionID: "",
-      currentQuestionNo: 0,
-      currentStatus: "InProgress",
-      ReConnection: true,
-      userID: credentials.data.userID,
-      currentTotalScore: 0,
-      requester: {
-        requestID: generateGUID(),
-        requesterID: credentials.data.userID,
-        requesterName: credentials.data.userName,
-        requesterType: credentials.data.role,
-      },
-    };
+      const questionPayload = {
+        sessionID: sessionData.SessionID,
+        scenarioID: sessionData.ScenarioID,
+        currentQuestionID: "",
+        currentQuestionNo: 0,
+        currentStatus: "InProgress",
+        ReConnection: true,
+        userID: credentials.data.userID,
+        currentTotalScore: 0,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
 
-    dispatch(getNextQuestionDetails(questionPayload));
+      dispatch(getNextQuestionDetails(questionPayload));
+    }
   };
 
   return (

@@ -28,45 +28,49 @@ const UserHomePage = () => {
   const navigate = useNavigate();
 
   const fetchIntro = useCallback(() => {
-    const sessionData = JSON.parse(sessionDetails.data);
+    if (sessionData?.data) {
+      const sessionData = JSON.parse(sessionDetails.data);
 
-    const data = {
-      sessionID: sessionData.SessionID,
-      scenarioID: sessionData.ScenarioID,
-      currentQuestionID: "",
-      currentQuestionNo: 0,
-      currentStatus: "Play",
-      ReConnection: false,
-      userID: credentials.data.userID,
-      currentTotalScore: 0,
-      requester: {
-        requestID: generateGUID(),
-        requesterID: credentials.data.userID,
-        requesterName: credentials.data.userName,
-        requesterType: credentials.data.role,
-      },
-    };
+      const data = {
+        sessionID: sessionData.SessionID,
+        scenarioID: sessionData.ScenarioID,
+        currentQuestionID: "",
+        currentQuestionNo: 0,
+        currentStatus: "Play",
+        ReConnection: false,
+        userID: credentials.data.userID,
+        currentTotalScore: 0,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
 
-    dispatch(getNextQuestionDetails(data));
+      dispatch(getNextQuestionDetails(data));
+    }
   }, [sessionDetails, credentials]);
 
   const onsubmit = async () => {
     if (!ready || !isConnectedToServer) return;
-    const sessionData = JSON.parse(sessionDetails.data);
+    if (sessionDetails?.data) {
+      const sessionData = JSON.parse(sessionDetails.data);
 
-    const data = {
-      InstanceID: sessionData.InstanceID,
-      SessionID: sessionData.SessionID,
-      UserID: credentials.data.userID,
-      UserName: credentials.data.userName,
-      UserRole: credentials.data.role,
-      Designation: credentials?.data?.designation
-        ? credentials.data.designation
-        : "",
-    };
+      const data = {
+        InstanceID: sessionData.InstanceID,
+        SessionID: sessionData.SessionID,
+        UserID: credentials.data.userID,
+        UserName: credentials.data.userName,
+        UserRole: credentials.data.role,
+        Designation: credentials?.data?.designation
+          ? credentials.data.designation
+          : "",
+      };
 
-    await signalRService.joinSession(data);
-    setReady(false);
+      await signalRService.joinSession(data);
+      setReady(false);
+    }
   };
 
   useEffect(() => {
@@ -108,44 +112,48 @@ const UserHomePage = () => {
   }, [fetchIntro]);
 
   const fetchFirstQuestion = useCallback(() => {
-    const sessionData = JSON.parse(sessionDetails.data);
+    if (sessionDetails?.data) {
+      const sessionData = JSON.parse(sessionDetails.data);
 
-    const data = {
-      sessionID: sessionData.SessionID,
-      scenarioID: sessionData.ScenarioID,
-      currentQuestionID: "",
-      ReConnection: false,
-      currentQuestionNo: 0,
-      currentStatus: "InProgress",
-      userID: credentials.data.userID,
-      currentTotalScore: 0,
-      requester: {
-        requestID: generateGUID(),
-        requesterID: credentials.data.userID,
-        requesterName: credentials.data.userName,
-        requesterType: credentials.data.role,
-      },
-    };
+      const data = {
+        sessionID: sessionData.SessionID,
+        scenarioID: sessionData.ScenarioID,
+        currentQuestionID: "",
+        ReConnection: false,
+        currentQuestionNo: 0,
+        currentStatus: "InProgress",
+        userID: credentials.data.userID,
+        currentTotalScore: 0,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
 
-    dispatch(getNextQuestionDetails(data));
+      dispatch(getNextQuestionDetails(data));
+    }
   }, [sessionDetails, credentials]);
 
   const onSkip = useCallback(() => {
-    const sessionData = JSON.parse(sessionDetails.data);
+    if (sessionDetails?.data) {
+      const sessionData = JSON.parse(sessionDetails.data);
 
-    const data = {
-      InstanceID: sessionData.InstanceID,
-      UserID: credentials.data.userID,
-      UserRole: credentials.data.role,
-      QuestionID: questionDetails.data.QuestionDetails.QuestionID,
-      GlobalTimer: Date.now().toString(),
-      QuestionTimer: "",
-      ActionType: "IntroductionSkip",
-    };
+      const data = {
+        InstanceID: sessionData.InstanceID,
+        UserID: credentials.data.userID,
+        UserRole: credentials.data.role,
+        QuestionID: questionDetails.data.QuestionDetails.QuestionID,
+        GlobalTimer: Date.now().toString(),
+        QuestionTimer: "",
+        ActionType: "IntroductionSkip",
+      };
 
-    console.log(" global skip data", data);
+      console.log(" global skip data", data);
 
-    signalRService.SkipMediaInvoke(data);
+      signalRService.SkipMediaInvoke(data);
+    }
   }, [sessionDetails, credentials, questionDetails]);
 
   useEffect(() => {
@@ -172,41 +180,43 @@ const UserHomePage = () => {
 
   const getCurrentQuestion = async () => {
     if (!ready || !isConnectedToServer) return;
-    const sessionData = JSON.parse(sessionDetails.data);
+    if (sessionDetails?.data) {
+      const sessionData = JSON.parse(sessionDetails.data);
 
-    const data = {
-      InstanceID: sessionData.InstanceID,
-      SessionID: sessionData.SessionID,
-      UserID: credentials.data.userID,
-      UserName: credentials.data.userName,
-      UserRole: credentials.data.role,
-      Designation: credentials?.data?.designation
-        ? credentials.data.designation
-        : "",
-    };
+      const data = {
+        InstanceID: sessionData.InstanceID,
+        SessionID: sessionData.SessionID,
+        UserID: credentials.data.userID,
+        UserName: credentials.data.userName,
+        UserRole: credentials.data.role,
+        Designation: credentials?.data?.designation
+          ? credentials.data.designation
+          : "",
+      };
 
-    await signalRService.joinSession(data);
-    setReady(false);
-    setInProgress(true);
+      await signalRService.joinSession(data);
+      setReady(false);
+      setInProgress(true);
 
-    const questionPayload = {
-      sessionID: sessionData.SessionID,
-      scenarioID: sessionData.ScenarioID,
-      currentQuestionID: "",
-      currentQuestionNo: 0,
-      currentStatus: "InProgress",
-      ReConnection: true,
-      userID: credentials.data.userID,
-      currentTotalScore: 0,
-      requester: {
-        requestID: generateGUID(),
-        requesterID: credentials.data.userID,
-        requesterName: credentials.data.userName,
-        requesterType: credentials.data.role,
-      },
-    };
+      const questionPayload = {
+        sessionID: sessionData.SessionID,
+        scenarioID: sessionData.ScenarioID,
+        currentQuestionID: "",
+        currentQuestionNo: 0,
+        currentStatus: "InProgress",
+        ReConnection: true,
+        userID: credentials.data.userID,
+        currentTotalScore: 0,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
 
-    dispatch(getNextQuestionDetails(questionPayload));
+      dispatch(getNextQuestionDetails(questionPayload));
+    }
   };
 
   return (
