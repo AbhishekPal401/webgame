@@ -28,7 +28,7 @@ const UserHomePage = () => {
   const navigate = useNavigate();
 
   const fetchIntro = useCallback(() => {
-    if (sessionData?.data) {
+    if (sessionDetails?.data) {
       const sessionData = JSON.parse(sessionDetails.data);
 
       const data = {

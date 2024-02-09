@@ -145,6 +145,7 @@ const GamePlay = () => {
       dispatch(resetNextQuestionDetailsState());
       dispatch(resetAnswerDetailsState());
       dispatch(resetInstanceProgressByIDState());
+      console.log("refresh called");
       navigate(`/game/${JSON.parse(sessionDetails.data).InstanceID}`);
       dispatch(resetSessionDetailsState());
       localStorage.setItem("refresh", false);
@@ -441,7 +442,7 @@ const GamePlay = () => {
 
   useEffect(() => {
     if (callNextQuestion) {
-      if (sessionDetails.data) {
+      if (sessionDetails?.data) {
         const sessionData = JSON.parse(sessionDetails.data);
 
         const data = {

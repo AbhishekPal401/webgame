@@ -53,26 +53,28 @@ const AdminGameLanding = () => {
   }, [sessionDetails, credentials]);
 
   const fetchIntro = useCallback(() => {
-    const sessionData = JSON.parse(sessionDetails.data);
+    if (sessionDetails?.data) {
+      const sessionData = JSON.parse(sessionDetails.data);
 
-    const data = {
-      sessionID: sessionData.SessionID,
-      scenarioID: sessionData.ScenarioID,
-      currentQuestionID: "",
-      currentQuestionNo: 0,
-      currentStatus: "Play",
-      userID: credentials.data.userID,
-      ReConnection: false,
-      currentTotalScore: 0,
-      requester: {
-        requestID: generateGUID(),
-        requesterID: credentials.data.userID,
-        requesterName: credentials.data.userName,
-        requesterType: credentials.data.role,
-      },
-    };
+      const data = {
+        sessionID: sessionData.SessionID,
+        scenarioID: sessionData.ScenarioID,
+        currentQuestionID: "",
+        currentQuestionNo: 0,
+        currentStatus: "Play",
+        userID: credentials.data.userID,
+        ReConnection: false,
+        currentTotalScore: 0,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
 
-    dispatch(getNextQuestionDetails(data));
+      dispatch(getNextQuestionDetails(data));
+    }
   }, [sessionDetails, credentials]);
   console.log("sessionDetails", sessionDetails);
 
@@ -217,10 +219,8 @@ const AdminGameLanding = () => {
           navigate("/intro");
         } else {
           onSkip();
-          if (!questionDetails.data.QuestionDetails.QuestionID) {
-            fetchFirstQuestion();
-            navigate("/gameplay");
-          }
+          fetchFirstQuestion();
+          navigate("/gameplay");
         }
       }
     } else {

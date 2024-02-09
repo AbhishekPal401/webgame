@@ -31,10 +31,10 @@ const CountDown = ({ initialTimestamp = Date.now() }) => {
     };
   }, [initialTimestamp]);
 
-  console.log("hours");
+  // console.log("hours");
 
-  console.log("minutes", minutes);
-  console.log("seconds", seconds);
+  // console.log("minutes", minutes);
+  // console.log("seconds", seconds);
 
   return (
     <>
