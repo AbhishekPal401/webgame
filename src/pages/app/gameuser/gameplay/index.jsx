@@ -128,6 +128,7 @@ const GamePlay = () => {
   const [duration, setDuration] = useState(0);
   const [initGlobaTimeOffset, setInitGlobaTimeOffset] = useState(Date.now());
   const [MediaShown, setMediaShown] = useState(false);
+  const [message, setMessage] = useState("");
 
   const [showIntroMedia, setShowIntroMedia] = useState(false);
 
@@ -229,37 +230,41 @@ const GamePlay = () => {
   }, []);
 
   useEffect(() => {
+    if (message) {
+      const htmlElement = <div dangerouslySetInnerHTML={{ __html: message }} />;
+      toast.success(htmlElement, {
+        containerId: "alert_messages",
+        className: "notification",
+        position: "top-right",
+        style: {
+          top: `${position}px`,
+          borderRight: "0.4rem solid #ffb600",
+        },
+        closeButton: false,
+        autoClose: 3000,
+        icon: false,
+      });
+    }
+    setMessage("");
+  }, [message, position]);
+
+  useEffect(() => {
     const showNotifications = (ActionType, Message) => {
-      console.log("NotificationListener", ActionType, Message);
-
-      const htmlElement = <div dangerouslySetInnerHTML={{ __html: Message }} />;
-
       if (ActionType === "Nudges") {
         if (Message) {
-          toast.success(htmlElement, {
-            containerId: "alert_messages",
-            className: "notification",
-            position: "top-right",
-            style: {
-              top: `${position}px`,
-              borderRight: "0.4rem solid #ffb600",
-            },
-            closeButton: false,
-            autoClose: 3000,
-            icon: false,
-          });
+          console.log("message", Message);
+          setMessage(Message);
         }
       }
     };
 
-    if (position > 0) {
-      signalRService.NotificationListener(showNotifications);
-    }
+    signalRService.NotificationListener(showNotifications);
+    signalRService.NotificationListenerOff(showNotifications);
 
     return () => {
       signalRService.NotificationListenerOff(showNotifications);
     };
-  }, [position]);
+  }, []);
 
   useEffect(() => {
     const handleProceedToNextQuestion = (data) => {
