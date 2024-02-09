@@ -19,7 +19,6 @@ export const formatTime = (value) => {
 };
 
 export const formatDateString = (dateTimeString, formatType = "default") => {
-
   const formats = [
     {
       format: dateFormats.DATE_FORMAT_3,
@@ -117,7 +116,6 @@ export const formatDateString = (dateTimeString, formatType = "default") => {
   //   },
   // ];
 
-
   const months = [
     "Jan",
     "Feb",
@@ -156,20 +154,24 @@ export const formatDateString = (dateTimeString, formatType = "default") => {
 
   switch (formatType) {
     case dateFormats.DATE_FORMAT_8:
-      return `${parsedDate.getDate()}-${parsedDate.getMonth() + 1
-        }-${parsedDate.getFullYear()}`;
+      return `${parsedDate.getDate()}-${
+        parsedDate.getMonth() + 1
+      }-${parsedDate.getFullYear()}`;
 
     case dateFormats.DATE_FORMAT_1:
-      return `${parsedDate.getDate()}/${parsedDate.getMonth() + 1
-        }/${parsedDate.getFullYear()}`;
+      return `${parsedDate.getDate()}/${
+        parsedDate.getMonth() + 1
+      }/${parsedDate.getFullYear()}`;
 
     case dateFormats.DATE_FORMAT_9:
-      return `${parsedDate.getMonth() + 1
-        }-${parsedDate.getDate()}-${parsedDate.getFullYear()}`;
+      return `${
+        parsedDate.getMonth() + 1
+      }-${parsedDate.getDate()}-${parsedDate.getFullYear()}`;
 
     case dateFormats.DATE_FORMAT_2:
-      return `${parsedDate.getMonth() + 1
-        }/${parsedDate.getDate()}/${parsedDate.getFullYear()}`;
+      return `${
+        parsedDate.getMonth() + 1
+      }/${parsedDate.getDate()}/${parsedDate.getFullYear()}`;
 
     case dateFormats.DATE_FORMAT_7:
       formattedMonth = months[parsedDate.getMonth()];

@@ -13,6 +13,7 @@ import { resetNextQuestionDetailsState } from "../../../../store/app/user/questi
 import { resetAnswerDetailsState } from "../../../../store/app/user/answers/postAnswer";
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
 import { toPng } from "html-to-image";
+import { formatTime } from "../../../../utils/helper";
 
 const SelectTree = ({ clicked = 1, onSelect = () => {} }) => {
   return (
@@ -159,9 +160,7 @@ const MissionCompleted = () => {
               <div className={styles.right}>
                 <div>Time Spent</div>
                 <div className={styles.circle}>
-                  {instanceSummary?.data?.TimeTaken
-                    ? instanceSummary?.data?.TimeTaken
-                    : ""}{" "}
+                  {instanceSummary?.data?.TimeTaken ? formatTime("3660") : ""}
                   <span>min</span>
                 </div>
                 <div>Score</div>
