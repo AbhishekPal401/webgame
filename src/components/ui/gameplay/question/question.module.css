@@ -70,7 +70,7 @@
   font-size: 1.6rem;
   max-height: 5.5rem; /* Limit the maximum height */
   width: 100%;
-  overflow-y: scroll; /* Set vertical scrolling */
+  overflow-y: auto; /* Set vertical scrolling */
 }
 
 .question p {
