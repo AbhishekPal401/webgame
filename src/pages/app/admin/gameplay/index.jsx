@@ -30,6 +30,7 @@ import Nudges from "../../../../components/nudges/index.jsx";
 import { TIMER_STATES } from "../../../../constants/timer.js";
 import IntroMedia from "../../../../components/intromedia/index.jsx";
 import { Tooltip } from "react-tooltip";
+import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession.js";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -128,6 +129,25 @@ const GamePlay = () => {
   const alerRef = useRef();
 
   const { answerDetails, loading } = useSelector((state) => state.postAnswer);
+
+  const handlePageUnload = () => {
+    localStorage.setItem("refresh", true);
+  };
+
+  window.addEventListener("beforeunload", handlePageUnload);
+
+  useEffect(() => {
+    console.log("refresh", localStorage.getItem("refresh"));
+
+    if (localStorage.getItem("refresh") === "true") {
+      dispatch(resetNextQuestionDetailsState());
+      dispatch(resetAnswerDetailsState());
+      dispatch(resetInstanceProgressByIDState());
+      navigate(`/game/${JSON.parse(sessionDetails.data).InstanceID}`);
+      dispatch(resetSessionDetailsState());
+      localStorage.setItem("refresh", false);
+    }
+  }, [localStorage.getItem("refresh")]);
 
   useEffect(() => {
     const handleVotingDetails = (votesDetails) => {
@@ -366,8 +386,6 @@ const GamePlay = () => {
           }
 
           if (HubTimerData?.GlobalTimer) {
-            console.log("GlobalTimer", Number(HubTimerData?.GlobalTimer));
-
             setInitGlobaTimeOffset(Number(HubTimerData?.GlobalTimer));
           }
 

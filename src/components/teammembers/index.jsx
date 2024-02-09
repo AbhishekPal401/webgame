@@ -22,6 +22,7 @@ const TeamMembers = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!sessionDetails?.data) return;
     if (!isJSONString(sessionDetails.data)) return;
     const sessionData = JSON.parse(sessionDetails.data);
 

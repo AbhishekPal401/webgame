@@ -12,23 +12,24 @@ import Question from "../../../../components/ui/gameplay/question";
 import { useDispatch, useSelector } from "react-redux";
 import { signalRService } from "../../../../services/signalR";
 import { generateGUID, isJSONString } from "../../../../utils/common";
-import {
-  resetAnswerDetailsState,
-  submitAnswerDetails,
-} from "../../../../store/app/user/answers/postAnswer";
 import { toast } from "react-toastify";
 import { PlayingStates } from "../../../../constants/playingStates";
 import DecisionLoader from "../../../../components/loader/decisionloader";
 import {
+  resetAnswerDetailsState,
+  submitAnswerDetails,
+} from "../../../../store/app/user/answers/postAnswer";
+import {
   getNextQuestionDetails,
   resetNextQuestionDetailsState,
 } from "../../../../store/app/user/questions/getNextQuestion";
-import { useNavigate } from "react-router-dom";
-
+import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
 import {
   getInstanceProgressyById,
   resetInstanceProgressByIDState,
 } from "../../../../store/app/admin/gameinstances/getInstanceProgress";
+import { useNavigate } from "react-router-dom";
+
 import RealTimeTree from "../../../../components/trees/realtime";
 import Loader from "../../../../components/loader";
 import ModalContainer from "../../../../components/modal";
@@ -138,22 +139,26 @@ const GamePlay = () => {
 
   const alerRef = useRef();
 
-  window.onunload = () => {
+  const handlePageUnload = () => {
     localStorage.setItem("refresh", true);
   };
 
+  window.addEventListener("beforeunload", handlePageUnload);
+
   useEffect(() => {
-    const handleBackButton = (event) => {
-      event.preventDefault();
-    };
+    console.log("refresh", localStorage.getItem("refresh"));
 
-    window.history.pushState(null, null, window.location.pathname);
-    window.addEventListener("popstate", handleBackButton);
+    if (localStorage.getItem("refresh") === "true") {
+      // Navigate to the specific page
 
-    return () => {
-      window.removeEventListener("popstate", handleBackButton);
-    };
-  }, []);
+      dispatch(resetNextQuestionDetailsState());
+      dispatch(resetAnswerDetailsState());
+      dispatch(resetSessionDetailsState());
+      dispatch(resetInstanceProgressByIDState());
+      navigate("/");
+      localStorage.setItem("refresh", false);
+    }
+  }, [localStorage.getItem("refresh")]);
 
   useEffect(() => {
     if (alerRef.current) {
@@ -496,18 +501,14 @@ const GamePlay = () => {
             setCallNextQuestion(false);
           }
         } else {
-          if (localStorage.getItem("refresh")) {
-            localStorage.setItem("refresh", false);
-          } else {
-            setNextQuestionFetched(true);
-            setSelectedAnswer(null);
-            setStartedAt(Math.floor(Date.now() / 1000));
-            setCurrentQuestionSubmitted(false);
-            setCallNextQuestion(false);
-            setCurrentState(PlayingStates.UserVote);
-            setShowModal(false);
-            setIsDecision(false);
-          }
+          setNextQuestionFetched(true);
+          setSelectedAnswer(null);
+          setStartedAt(Math.floor(Date.now() / 1000));
+          setCurrentQuestionSubmitted(false);
+          setCallNextQuestion(false);
+          setCurrentState(PlayingStates.UserVote);
+          setShowModal(false);
+          setIsDecision(false);
         }
 
         //for global timer
