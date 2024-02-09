@@ -34,11 +34,11 @@
   font-family: "helvetica 400";
   color: var(--black);
   margin-top: 0.5rem;
-  max-height: 9rem;
+  /* max-height: 9rem;
   display: -webkit-box;
-  -webkit-line-clamp: 5; /* Number of lines to show */
+  -webkit-line-clamp: 5; 
   -webkit-box-orient: vertical;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; */
   overflow: auto;
 }
 

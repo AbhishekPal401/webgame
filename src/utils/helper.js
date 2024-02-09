@@ -453,64 +453,69 @@ export const extractTextContent = (html) => {
   return "";
 };
 
-export const extractFirstElementHTML = (html) => {
-  // if (!html) return '';
-  if (!html || typeof html !== "string") return html;
-
-  const sanitizedHTML = DOMPurify.sanitize(html);
-  const tempElement = document.createElement("div");
-  tempElement.innerHTML = sanitizedHTML;
-
-  // Get the first child node that is not a text node
-  let firstChild = tempElement.firstChild;
-  while (firstChild && firstChild.nodeType === 3) {
-    // 3: Text node
-    firstChild = firstChild.nextSibling;
-  }
-
-  // Extract HTML content of the first element
-  if (firstChild) {
-    // return firstChild.outerHTML; /// return formatted text
-    return firstChild.textContent; // return plain text
-  }
-  return "";
-};
-
 // export const extractFirstElementHTML = (html) => {
-//   if (!html || typeof html !== 'string') return html;
+//   // if (!html) return '';
+//   if (!html || typeof html !== "string") return html;
 
 //   const sanitizedHTML = DOMPurify.sanitize(html);
-//   const tempElement = document.createElement('div');
+//   const tempElement = document.createElement("div");
 //   tempElement.innerHTML = sanitizedHTML;
 
 //   // Get the first child node that is not a text node
 //   let firstChild = tempElement.firstChild;
-//   while (firstChild && firstChild.nodeType === 3) { // 3: Text node
+//   while (firstChild && firstChild.nodeType === 3) {
+//     // 3: Text node
 //     firstChild = firstChild.nextSibling;
 //   }
 
-//   console.log("Firstchild :",firstChild)
-
 //   // Extract HTML content of the first element
 //   if (firstChild) {
-//     const firstElementHTML = firstChild.outerHTML;
-//     const closingTagIndex = firstElementHTML.lastIndexOf('</');
-//     const ellipsisAppendedHTML = firstElementHTML.substring(0, closingTagIndex) + '...' + firstElementHTML.substring(closingTagIndex);
-//     return ellipsisAppendedHTML;
-
-//     // const firstElementHTML = firstChild.outerHTML;
-//     // if (firstElementHTML.includes('<li>')) {
-//     //   const openingLiTagIndex = firstElementHTML.indexOf('<li>');
-//     //   const closingLiTagIndex = firstElementHTML.indexOf('</li>', openingLiTagIndex);
-//     //   const ellipsisAppendedHTML = firstElementHTML.substring(0, closingLiTagIndex) + '...' + firstElementHTML.substring(closingLiTagIndex);
-//     //   console.log("ellipsisAppendedHTML :",ellipsisAppendedHTML)
-
-//     //   return ellipsisAppendedHTML;
-//     // } else {
-//     //   const closingTagIndex = firstElementHTML.lastIndexOf('</');
-//     //   const ellipsisAppendedHTML = firstElementHTML.substring(0, closingTagIndex) + '...' + firstElementHTML.substring(closingTagIndex);
-//     //   return ellipsisAppendedHTML;
-//     // }
+//     // return firstChild.outerHTML; /// return formatted text
+//     return firstChild.textContent; // return plain text
 //   }
-//   return '';
+//   return "";
 // };
+
+export const extractFirstElementHTML = (html) => {
+  if (!html || typeof html !== 'string') return html;
+
+  const sanitizedHTML = DOMPurify.sanitize(html);
+  const tempElement = document.createElement('div');
+  tempElement.innerHTML = sanitizedHTML;
+
+  // Get the first child node that is not a text node
+  let firstChild = tempElement.firstChild;
+  while (firstChild && firstChild.nodeType === 3) { // 3: Text node
+    firstChild = firstChild.nextSibling;
+  }
+
+  console.log("Firstchild :",firstChild)
+
+  // Extract HTML content of the first element
+  if (firstChild) {
+    // const firstElementHTML = firstChild.outerHTML;
+    // const closingTagIndex = firstElementHTML.lastIndexOf('</');
+    // const ellipsisAppendedHTML = firstElementHTML.substring(0, closingTagIndex) + '...' + firstElementHTML.substring(closingTagIndex);
+    // return ellipsisAppendedHTML;
+
+    const firstElementHTML = firstChild.outerHTML;
+    if (firstElementHTML.includes('<li>')) {
+      const openingLiTagIndex = firstElementHTML.indexOf('<li>');
+      const closingLiTagIndex = firstElementHTML.indexOf('</li>', openingLiTagIndex);
+      const ellipsisAppendedHTML = firstElementHTML.substring(0, closingLiTagIndex) + '...' + firstElementHTML.substring(closingLiTagIndex);
+      console.log("ellipsisAppendedHTML :",ellipsisAppendedHTML)
+
+      return ellipsisAppendedHTML;
+    } else {
+      const closingTagIndex = firstElementHTML.lastIndexOf('</');
+      const ellipsisAppendedHTML = firstElementHTML.substring(0, closingTagIndex) + '...' + firstElementHTML.substring(closingTagIndex);
+      return ellipsisAppendedHTML;
+    }
+  }
+  return '';
+};
+
+export const isHTML = (content) => {
+  const isHTML = /<[a-z][\s\S]*>/i.test(content);
+  return isHTML;
+}

@@ -121,7 +121,15 @@
 }
 
 .tableContentCell > div {
-  max-width: 50rem;
+  max-width: 30rem;
+  max-height: 1.5rem;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tablePlainCell {
+  max-width: 30rem;
   word-wrap: break-word;
   overflow: hidden;
   text-overflow: ellipsis;

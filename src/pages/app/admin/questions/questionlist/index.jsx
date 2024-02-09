@@ -17,7 +17,7 @@ import {
   resetDeleteQuestionState
 } from "../../../../../store/app/admin/questions/deleteQuestions.js";
 import { toast } from "react-toastify";
-import { extractTextContent} from "../../../../../utils/helper.js";
+import { extractFirstElementHTML, extractTextContent, isHTML } from "../../../../../utils/helper.js";
 
 
 function QuestionList() {
@@ -203,9 +203,17 @@ function QuestionList() {
                           {/* <td className={styles.tableContentCell}>
                             <div dangerouslySetInnerHTML={{ __html:  DOMPurify.sanitize(question.QuestionText) || '' }}></div>
                           </td> */}
-                          <td className={styles.tableContentCell}>
-                            <div dangerouslySetInnerHTML={{ __html:  extractTextContent(question.QuestionText) || '' }}></div>
-                          </td>
+
+                          {question.QuestionText && isHTML(question.QuestionText) ?
+                            (
+                              <td className={styles.tableContentCell}>
+                                <div dangerouslySetInnerHTML={{ __html: extractFirstElementHTML(question.QuestionText) || '' }}></div>
+                              </td>
+                            ) :
+                            (
+                              <div className={styles.tablePlainCell} >{question.QuestionText}</div>
+                            )
+                        }
                           {/* <td>
                             {question.QuestionText}
                           </td> */}
