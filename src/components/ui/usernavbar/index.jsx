@@ -175,15 +175,18 @@ const UserNavBar = ({ disable = false, role = "Player" }) => {
             <div className={styles.profileIcon2}>{initial}</div>
           </div>
           <hr></hr>
-          <div
-            onClick={() => {
-              setShowDropdown(false);
-              navigate(`/gameprofile/${credentials.data.userID}`);
-            }}
-            className={styles.row}
-          >
-            Edit Profile
-          </div>
+          {role === "Player" ? null : (
+            <div
+              onClick={() => {
+                setShowDropdown(false);
+                navigate(`/gameprofile/${credentials.data.userID}`);
+              }}
+              className={styles.row}
+            >
+              Edit Profile
+            </div>
+          )}
+
           <div
             className={styles.row}
             onClick={() => {

@@ -9,8 +9,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { generateGUID } from "../../../../utils/common";
 import { signalRService } from "../../../../services/signalR";
 import { useNavigate } from "react-router-dom";
+import { resetNextQuestionDetailsState } from "../../../../store/app/user/questions/getNextQuestion";
+import { resetAnswerDetailsState } from "../../../../store/app/user/answers/postAnswer";
+import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
 
-const SelectTree = ({ clicked = 0, onSelect = () => { } }) => {
+const SelectTree = ({ clicked = 0, onSelect = () => {} }) => {
   return (
     <div className={styles.selectTree}>
       <div className={styles.selectButtonContainer}>
@@ -88,15 +91,14 @@ const MissionCompleted = () => {
     >
       <div className={styles.missionContainer}>
         <div className={styles.innerCotainer}>
-
           <div
             className={styles.header}
             style={{ backgroundImage: 'url("/images/particles2.png")' }}
           >
             <div>Mission Accomplished!</div>
             <div>
-              Thank You For Taking Part In This Game, We Hope You Have Enjoyed It.
-              Here's A Summary Of How You Did.
+              Thank You For Taking Part In This Game, We Hope You Have Enjoyed
+              It. Here's A Summary Of How You Did.
             </div>
             <div className={styles.details_row}>
               <div>
@@ -165,7 +167,7 @@ const MissionCompleted = () => {
               customClassName={styles.end}
               onClick={() => {
                 resetAll();
-                console.log("navigte")
+                console.log("navigte");
                 navigate("/");
               }}
             >

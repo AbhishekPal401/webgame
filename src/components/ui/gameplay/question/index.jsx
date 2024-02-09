@@ -25,7 +25,7 @@ import { useSelector } from "react-redux";
 
 const renderer = ({ minutes, seconds, completed }) => {
   if (completed) {
-    return <span className={styles.countdown}>0 : 0</span>;
+    return <span className={styles.countdown}>00 : 00</span>;
   } else {
     const paddedMinutes = String(minutes).padStart(2, "0");
     const paddedSeconds = String(seconds).padStart(2, "0");
