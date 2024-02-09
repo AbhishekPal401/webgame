@@ -24,21 +24,46 @@ export const formatTime = (value) => {
   if (!value || value.trim() === "") {
     return "Invalid Time";
   }
-
+  console.log("Value : ",value)
   const seconds = parseInt(value);
   const hours = Math.floor(seconds / 3600);
   const remainingSeconds = seconds % 3600;
   const minutes = remainingSeconds / 60;
 
-  if (hours > 0) {
-    if (minutes === 0) {
-      return `${hours} hr`;
-    } else {
-      return `${hours} hr ${minutes.toFixed(2)} min`;
-    }
-  } else {
-    return `${minutes.toFixed(2)} min`;
-  }
+  // if (hours > 0) {
+  //   if (minutes === 0) {
+  //     return `${hours} hr`;
+  //   } else {
+  //     // Calculate total hours with decimal precision
+  //     const totalHours = hours + (minutes / 60);
+
+  //     // Round to two decimal places
+  //     const formattedHours = totalHours.toFixed(2);
+  //     return `${formattedHours} hr`;
+  //   }
+  // } else {
+  //   return `${minutes.toFixed(2)} min`;
+  // }
+
+   // Check if there are decimals in minutes
+   const hasDecimals = minutes % 1 !== 0;
+
+   if (hours > 0) {
+     if (minutes === 0) {
+       return `${hours} hr`;
+     } else {
+       // Calculate total hours with decimal precision
+       const totalHours = hours + (minutes / 60);
+ 
+       // Round to two decimal places if there are decimals, else just convert to integer
+       const formattedHours = hasDecimals ? totalHours.toFixed(2) : totalHours.toFixed(0);
+       return `${formattedHours} hr`;
+     }
+   } else {
+     // Round to two decimal places if there are decimals, else just convert to integer
+     const formattedMinutes = hasDecimals ? minutes.toFixed(2) : minutes.toFixed(0);
+     return `${formattedMinutes} min`;
+   }
 };
 
 

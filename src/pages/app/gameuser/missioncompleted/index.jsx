@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { resetNextQuestionDetailsState } from "../../../../store/app/user/questions/getNextQuestion";
 import { resetAnswerDetailsState } from "../../../../store/app/user/answers/postAnswer";
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
+import { formatTime } from "../../../../utils/helper";
 
 const SelectTree = ({ clicked = 0, onSelect = () => {} }) => {
   return (
@@ -147,9 +148,9 @@ const MissionCompleted = () => {
                 <div>Time Spent</div>
                 <div className={styles.circle}>
                   {instanceSummary?.data?.TimeTaken
-                    ? instanceSummary?.data?.TimeTaken
+                    ? formatTime(instanceSummary?.data?.TimeTaken)
                     : ""}{" "}
-                  <span>min</span>
+                  {/* <span>min</span> */}
                 </div>
                 <div>Score</div>
                 <div className={styles.circle}>
