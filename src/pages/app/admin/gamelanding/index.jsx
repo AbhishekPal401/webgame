@@ -158,6 +158,49 @@ const AdminGameLanding = () => {
     }
   }, [activeUsers]);
 
+  const fetchFirstQuestion = useCallback(() => {
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    const data = {
+      sessionID: sessionData.SessionID,
+      scenarioID: sessionData.ScenarioID,
+      currentQuestionID: "",
+      ReConnection: false,
+      currentQuestionNo: 0,
+      currentStatus: "InProgress",
+      userID: credentials.data.userID,
+      currentTotalScore: 0,
+      requester: {
+        requestID: generateGUID(),
+        requesterID: credentials.data.userID,
+        requesterName: credentials.data.userName,
+        requesterType: credentials.data.role,
+      },
+    };
+
+    dispatch(getNextQuestionDetails(data));
+  }, [sessionDetails, credentials]);
+
+  const onSkip = useCallback(() => {
+    if (sessionDetails?.data) {
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      const data = {
+        InstanceID: sessionData.InstanceID,
+        UserID: credentials.data.userID,
+        UserRole: credentials.data.role,
+        QuestionID: questionDetails.data.QuestionDetails.QuestionID,
+        GlobalTimer: Date.now().toString(),
+        QuestionTimer: Date.now().toString(),
+        ActionType: "IntroductionSkip",
+      };
+
+      console.log(" global skip data", data);
+
+      signalRService.SkipMediaInvoke(data);
+    }
+  }, [sessionDetails, credentials, questionDetails]);
+
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
@@ -165,7 +208,13 @@ const AdminGameLanding = () => {
       if (inProgress) {
         navigate("/gameplay");
       } else {
-        navigate("/intro");
+        if (questionDetails.data.IntroMediaURL) {
+          navigate("/intro");
+        } else {
+          onSkip();
+          fetchFirstQuestion();
+          navigate("/gameplay");
+        }
       }
     } else {
       toast.error(questionDetails.message);

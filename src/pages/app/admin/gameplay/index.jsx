@@ -287,6 +287,24 @@ const GamePlay = () => {
     dispatch(submitAnswerDetails(data));
   }, [credentials, questionDetails, selectedAnswer, startedAt, sessionDetails]);
 
+  const onQuestionSkip = useCallback(() => {
+    const sessionData = JSON.parse(sessionDetails.data);
+
+    const data = {
+      InstanceID: sessionData.InstanceID,
+      UserID: credentials.data.userID,
+      UserRole: credentials.data.role,
+      QuestionID: questionDetails.data.QuestionDetails.QuestionID,
+      GlobalTimer: "",
+      QuestionTimer: Date.now().toString(),
+      ActionType: "QuestionMediaSkip",
+    };
+
+    console.log(" global skip data", data);
+
+    signalRService.SkipMediaInvoke(data);
+  }, [sessionDetails, credentials, questionDetails]);
+
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
@@ -409,6 +427,8 @@ const GamePlay = () => {
           }
         }
       }
+
+      onQuestionSkip();
     } else if (questionDetails.success === false) {
     }
   }, [questionDetails]);

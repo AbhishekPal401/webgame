@@ -202,14 +202,16 @@ const Intro = () => {
               </>
             )}
 
-          <div
-            className={styles.buttonContainer}
-            style={{ backgroundImage: 'url("./images/grey_strip.png")' }}
-          >
-            <Button onClick={onSkip} customStyle={{ fontSize: "1.4rem" }}>
-              Skip
-            </Button>
-          </div>
+          {questionDetails?.data?.IntroMediaURL && (
+            <div
+              className={styles.buttonContainer}
+              style={{ backgroundImage: 'url("./images/grey_strip.png")' }}
+            >
+              <Button onClick={onSkip} customStyle={{ fontSize: "1.4rem" }}>
+                Skip
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </motion.div>
