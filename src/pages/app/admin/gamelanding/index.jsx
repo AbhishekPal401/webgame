@@ -219,7 +219,7 @@ const AdminGameLanding = () => {
           navigate("/intro");
         } else {
           onSkip();
-          fetchFirstQuestion();
+          // fetchFirstQuestion();
           navigate("/gameplay");
         }
       }

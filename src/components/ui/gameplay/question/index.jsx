@@ -41,8 +41,11 @@ const renderer = ({ minutes, seconds, completed }) => {
 const CountDown = memo(
   forwardRef(({ duration = 5000, onComplete = () => {}, QuestionNo }, ref) => {
     const countdownRef = useRef(null);
+    const onCompleteCalled = useRef(false);
 
     // Expose start, stop, and pause functions to Question component
+    console.log("called");
+
     useImperativeHandle(ref, () => ({
       start: () => countdownRef.current.start(),
       stop: () => countdownRef.current.stop(),
@@ -56,7 +59,9 @@ const CountDown = memo(
         date={Date.now() + duration}
         renderer={renderer}
         autoStart={false}
-        onComplete={onComplete}
+        onComplete={() => {
+          onComplete();
+        }}
       />
     );
   })
@@ -430,6 +435,30 @@ const Question = ({
     signalRService.SkipMediaInvoke(data);
   }, [sessionDetails, credentials, questionDetails]);
 
+  const completeInvoke = () => {
+    if (isAdmin) {
+      onAdminDecisionCompleteDefault();
+    } else {
+      if (!IsDecisionMaker) {
+        onComplete();
+      } else {
+        if (
+          CurrentState === PlayingStates.VotingInProgress ||
+          CurrentState === PlayingStates.UserVote
+        ) {
+          onComplete();
+        } else {
+          if (
+            CurrentState === PlayingStates.VotingCompleted ||
+            CurrentState === PlayingStates.DecisionInProgress
+          ) {
+            onDecisionCompleteDefault();
+          }
+        }
+      }
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -462,17 +491,18 @@ const Question = ({
               duration={Duration}
               QuestionNo={QuestionNo}
               onComplete={
-                isAdmin
-                  ? onAdminDecisionCompleteDefault
-                  : !IsDecisionMaker
-                  ? onComplete
-                  : CurrentState === PlayingStates.VotingInProgress ||
-                    CurrentState === PlayingStates.UserVote
-                  ? onComplete
-                  : CurrentState === PlayingStates.VotingCompleted ||
-                    CurrentState === PlayingStates.DecisionInProgress
-                  ? onDecisionCompleteDefault
-                  : () => {}
+                completeInvoke
+                // isAdmin
+                //   ? onAdminDecisionCompleteDefault
+                //   : !IsDecisionMaker
+                //   ? onComplete
+                //   : CurrentState === PlayingStates.VotingInProgress ||
+                //     CurrentState === PlayingStates.UserVote
+                //   ? onComplete
+                //   : CurrentState === PlayingStates.VotingCompleted ||
+                //     CurrentState === PlayingStates.DecisionInProgress
+                //   ? onDecisionCompleteDefault
+                //   : () => {}
               }
             />
             min
