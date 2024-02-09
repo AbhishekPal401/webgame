@@ -161,9 +161,11 @@
   border: 0.4rem dotted var(--primary);
   border-color: var(--primary);
   color: var(--innerbackground);
-  font-size: 2.6rem;
   font-family: "helvetica 700";
   padding-top: 0.2rem;
+  overflow: hidden; /* Hide overflow text */
+  text-wrap: nowrap;
+  font-size: 2rem;
 }
 .right span {
   font-size: 2rem;
