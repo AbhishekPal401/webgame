@@ -683,8 +683,8 @@ const GamePlay = () => {
                     ? styles.displayInline
                     : ""
                 }
-                data-tooltip-id="objective-tooltip"
-                data-tooltip-content={questionDetails?.data?.GameIntro}
+                // data-tooltip-id="objective-tooltip"
+                // data-tooltip-content={questionDetails?.data?.GameIntro}
                 dangerouslySetInnerHTML={{
                   __html: questionDetails?.data?.GameIntro,
                 }}

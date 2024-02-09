@@ -68,11 +68,15 @@
   color: var(--innerbackground);
   font-family: "Helvetica 300";
   font-size: 1.6rem;
-  max-height: 5.5rem; /* Limit the maximum height */
+  max-height: 5.5rem; 
   width: 100%;
-  overflow-y: auto; /* Set vertical scrolling */
+  overflow-y: auto; 
 }
-
+.question > div:nth-child(1) {
+  width: 100%;
+  overflow-y: auto; 
+  scroll-behavior: smooth;
+}
 .question p {
   color: var(--innerbackground);
   font-family: "Helvetica 700";
