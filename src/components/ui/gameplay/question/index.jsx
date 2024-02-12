@@ -95,8 +95,8 @@ const Timer = ({ Duration, onExpire = () => {}, status = "start" }) => {
     onExpire: onExpire,
   });
 
-  console.log("status", status);
-  console.log("time ", minutes, seconds);
+  // console.log("status", status);
+  // console.log("time ", minutes, seconds);
 
   useEffect(() => {
     if (status === "pause") {
@@ -564,7 +564,7 @@ const Question = ({
     onDecisionCompleteDefault,
   ]);
 
-  console.log("Duration", Duration / 1000);
+  // console.log("Duration", Duration / 1000);
 
   return (
     <div className={styles.container}>
