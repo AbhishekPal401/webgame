@@ -92,6 +92,7 @@ const UserHomePage = () => {
     };
 
     dispatch(getSessionDetails(data));
+    localStorage.setItem("refresh", false);
   }, []);
 
   useEffect(() => {

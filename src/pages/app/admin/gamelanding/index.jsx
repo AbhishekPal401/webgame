@@ -154,6 +154,7 @@ const AdminGameLanding = () => {
     };
 
     dispatch(getSessionDetails(data));
+    localStorage.setItem("refresh", false);
   }, [instanceID]);
 
   useEffect(() => {
