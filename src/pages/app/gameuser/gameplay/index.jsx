@@ -290,9 +290,9 @@ const GamePlay = () => {
     }
   }, [sessionDetails, credentials]);
 
-  useEffect(() => {
-    fetchFirstQuestion();
-  }, []);
+  // useEffect(() => {
+  //   fetchFirstQuestion();
+  // }, []);
 
   useEffect(() => {
     const handleProceedToNextQuestion = (data) => {
@@ -616,6 +616,8 @@ const GamePlay = () => {
 
         signalRService.SendVotes(data);
 
+        console.log("answer data state reset");
+
         setCurrentQuestionSubmitted(true);
         setSelectedAnswer(null);
         setIsDecision(false);
@@ -645,6 +647,8 @@ const GamePlay = () => {
         console.log("send vote data", data);
 
         signalRService.SendVotes(data);
+
+        console.log("answer data state reset");
 
         setCurrentQuestionSubmitted(true);
         setSelectedAnswer(null);

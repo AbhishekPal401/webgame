@@ -246,9 +246,9 @@ const GamePlay = () => {
     }
   }, [sessionDetails, credentials]);
 
-  useEffect(() => {
-    fetchFirstQuestion();
-  }, []);
+  // useEffect(() => {
+  //   fetchFirstQuestion();
+  // }, []);
 
   useEffect(() => {
     const handleProceedToNextQuestion = (data) => {
@@ -463,7 +463,9 @@ const GamePlay = () => {
         }
       }
 
-      onQuestionSkip();
+      if (!questionDetails?.data?.QuestionDetails?.QuestionIntroMediaURL) {
+        onQuestionSkip();
+      }
     } else if (questionDetails.success === false) {
     }
   }, [questionDetails]);

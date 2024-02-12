@@ -59,9 +59,7 @@ const CountDown = memo(
         date={Date.now() + duration}
         renderer={renderer}
         autoStart={false}
-        onComplete={() => {
-          onComplete();
-        }}
+        onComplete={onComplete}
       />
     );
   })
@@ -107,6 +105,11 @@ const Question = ({
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
 
   let mediaTypeText = "";
+
+  console.log("CurrentState", CurrentState);
+  console.log("MediaType", MediaType);
+  console.log("showMedia", showMedia);
+  console.log("QuestionIntroMediaURL", QuestionIntroMediaURL);
 
   if (MediaType === "Video" && QuestionIntroMediaURL) {
     mediaTypeText = "Replay Video";

@@ -161,12 +161,22 @@ const UserHomePage = () => {
 
     if (questionDetails.success) {
       // toast.success(questionDetails.message);
+      console.log("Intro Media data", questionDetails.data);
+
       if (inProgress) {
         setInProgress(false);
         navigate("/gameplay");
       } else {
         if (questionDetails.data.IntroMediaURL) {
-          navigate("/intro");
+          if (questionDetails?.data?.IntroSkipped) {
+            if (questionDetails?.data?.IntroSkipped === true) {
+              navigate("/gameplay");
+            } else {
+              navigate("/intro");
+            }
+          } else {
+            navigate("/intro");
+          }
         } else {
           onSkip();
           fetchFirstQuestion();
