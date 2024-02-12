@@ -41,10 +41,8 @@ const renderer = ({ minutes, seconds, completed }) => {
 const CountDown = memo(
   forwardRef(({ duration = 5000, onComplete = () => {}, QuestionNo }, ref) => {
     const countdownRef = useRef(null);
-    const onCompleteCalled = useRef(false);
 
     // Expose start, stop, and pause functions to Question component
-    console.log("called");
 
     useImperativeHandle(ref, () => ({
       start: () => countdownRef.current.start(),
@@ -52,10 +50,23 @@ const CountDown = memo(
       pause: () => countdownRef.current.pause(),
     }));
 
+    const handleMount = useCallback(
+      (timeDelta) => {
+        if (
+          timeDelta.completed &&
+          (timeDelta.seconds > 0 || timeDelta.minutes > 0)
+        ) {
+          onComplete();
+        }
+      },
+      [onComplete]
+    );
+
     return (
       <Countdown
         ref={countdownRef}
         key={duration}
+        onMount={handleMount}
         date={Date.now() + duration}
         renderer={renderer}
         autoStart={false}
@@ -106,10 +117,10 @@ const Question = ({
 
   let mediaTypeText = "";
 
-  console.log("CurrentState", CurrentState);
-  console.log("MediaType", MediaType);
-  console.log("showMedia", showMedia);
-  console.log("QuestionIntroMediaURL", QuestionIntroMediaURL);
+  // console.log("CurrentState", CurrentState);
+  // console.log("MediaType", MediaType);
+  // console.log("showMedia", showMedia);
+  // console.log("QuestionIntroMediaURL", QuestionIntroMediaURL);
 
   if (MediaType === "Video" && QuestionIntroMediaURL) {
     mediaTypeText = "Replay Video";
@@ -438,29 +449,97 @@ const Question = ({
     signalRService.SkipMediaInvoke(data);
   }, [sessionDetails, credentials, questionDetails]);
 
-  const completeInvoke = () => {
-    if (isAdmin) {
-      onAdminDecisionCompleteDefault();
+  let Timer = "";
+
+  if (isAdmin) {
+    Timer = (
+      <CountDown
+        ref={countDownRef}
+        duration={Duration}
+        QuestionNo={QuestionNo}
+        onComplete={onAdminDecisionCompleteDefault}
+      />
+    );
+  } else {
+    if (!IsDecisionMaker) {
+      Timer = (
+        <CountDown
+          ref={countDownRef}
+          duration={Duration}
+          QuestionNo={QuestionNo}
+          onComplete={onComplete}
+        />
+      );
     } else {
-      if (!IsDecisionMaker) {
-        onComplete();
+      if (
+        CurrentState === PlayingStates.VotingInProgress ||
+        CurrentState === PlayingStates.UserVote
+      ) {
+        Timer = (
+          <CountDown
+            ref={countDownRef}
+            duration={Duration}
+            QuestionNo={QuestionNo}
+            onComplete={onComplete}
+          />
+        );
       } else {
         if (
-          CurrentState === PlayingStates.VotingInProgress ||
-          CurrentState === PlayingStates.UserVote
+          CurrentState === PlayingStates.VotingCompleted ||
+          CurrentState === PlayingStates.DecisionInProgress
         ) {
-          onComplete();
+          Timer = (
+            <CountDown
+              ref={countDownRef}
+              duration={Duration}
+              QuestionNo={QuestionNo}
+              onComplete={onDecisionCompleteDefault}
+            />
+          );
         } else {
-          if (
-            CurrentState === PlayingStates.VotingCompleted ||
-            CurrentState === PlayingStates.DecisionInProgress
-          ) {
-            onDecisionCompleteDefault();
-          }
+          Timer = (
+            <CountDown
+              ref={countDownRef}
+              duration={Duration}
+              QuestionNo={QuestionNo}
+              onComplete={() => {}}
+            />
+          );
         }
       }
     }
-  };
+  }
+  // const completeInvoke = useCallback(() => {
+  //   console.log("completeInvoke called ");
+  //   if (isAdmin) {
+  //     onAdminDecisionCompleteDefault();
+  //   } else {
+  //     if (!IsDecisionMaker) {
+  //       onComplete();
+  //     } else {
+  //       if (
+  //         CurrentState === PlayingStates.VotingInProgress ||
+  //         CurrentState === PlayingStates.UserVote
+  //       ) {
+  //         onComplete();
+  //       } else {
+  //         if (
+  //           CurrentState === PlayingStates.VotingCompleted ||
+  //           CurrentState === PlayingStates.DecisionInProgress
+  //         ) {
+  //           onDecisionCompleteDefault();
+  //         }
+  //       }
+  //     }
+  //   }
+  // }, [
+  //   isAdmin,
+  //   IsDecisionMaker,
+  //   CurrentState,
+  //   onAdminDecisionCompleteDefault,
+  //   onComplete,
+  //   onDecisionCompleteDefault,
+  // ]);
 
   return (
     <div className={styles.container}>
@@ -488,24 +567,25 @@ const Question = ({
           </div>
 
           <div className={styles.timer}>
-            Time Left to Vote{" "}
+            Time Left to Vote
+            {/* {Timer} */}
             <CountDown
               ref={countDownRef}
               duration={Duration}
               QuestionNo={QuestionNo}
               // onComplete={
               //   completeInvoke
-              //   // isAdmin
-              //   //   ? onAdminDecisionCompleteDefault
-              //   //   : !IsDecisionMaker
-              //   //   ? onComplete
-              //   //   : CurrentState === PlayingStates.VotingInProgress ||
-              //   //     CurrentState === PlayingStates.UserVote
-              //   //   ? onComplete
-              //   //   : CurrentState === PlayingStates.VotingCompleted ||
-              //   //     CurrentState === PlayingStates.DecisionInProgress
-              //   //   ? onDecisionCompleteDefault
-              //   //   : () => {}
+              // isAdmin
+              //   ? onAdminDecisionCompleteDefault
+              //   : !IsDecisionMaker
+              //   ? onComplete
+              //   : CurrentState === PlayingStates.VotingInProgress ||
+              //     CurrentState === PlayingStates.UserVote
+              //   ? onComplete
+              //   : CurrentState === PlayingStates.VotingCompleted ||
+              //     CurrentState === PlayingStates.DecisionInProgress
+              //   ? onDecisionCompleteDefault
+              //   : () => {}
               // }
             />
             min

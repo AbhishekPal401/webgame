@@ -179,7 +179,8 @@ const UserHomePage = () => {
             navigate("/intro");
           }
         } else {
-          onSkip();
+          console.log("onSkip called");
+          // onSkip();
           fetchFirstQuestion();
           navigate("/gameplay");
         }
