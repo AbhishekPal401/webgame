@@ -490,20 +490,20 @@ const Question = ({
               ref={countDownRef}
               duration={Duration}
               QuestionNo={QuestionNo}
-              onComplete={
-                completeInvoke
-                // isAdmin
-                //   ? onAdminDecisionCompleteDefault
-                //   : !IsDecisionMaker
-                //   ? onComplete
-                //   : CurrentState === PlayingStates.VotingInProgress ||
-                //     CurrentState === PlayingStates.UserVote
-                //   ? onComplete
-                //   : CurrentState === PlayingStates.VotingCompleted ||
-                //     CurrentState === PlayingStates.DecisionInProgress
-                //   ? onDecisionCompleteDefault
-                //   : () => {}
-              }
+              // onComplete={
+              //   completeInvoke
+              //   // isAdmin
+              //   //   ? onAdminDecisionCompleteDefault
+              //   //   : !IsDecisionMaker
+              //   //   ? onComplete
+              //   //   : CurrentState === PlayingStates.VotingInProgress ||
+              //   //     CurrentState === PlayingStates.UserVote
+              //   //   ? onComplete
+              //   //   : CurrentState === PlayingStates.VotingCompleted ||
+              //   //     CurrentState === PlayingStates.DecisionInProgress
+              //   //   ? onDecisionCompleteDefault
+              //   //   : () => {}
+              // }
             />
             min
           </div>
