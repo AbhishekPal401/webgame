@@ -12,7 +12,7 @@ import { signalRService } from "../../../../services/signalR";
 import { resetNextQuestionDetailsState } from "../../../../store/app/user/questions/getNextQuestion";
 import { resetAnswerDetailsState } from "../../../../store/app/user/answers/postAnswer";
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
-import { toPng } from "html-to-image";
+import { toPng, toSvg } from "html-to-image";
 import { formatTime } from "../../../../utils/helper";
 
 const SelectTree = ({ clicked = 1, onSelect = () => {} }) => {
@@ -180,20 +180,24 @@ const MissionCompleted = () => {
             <Button
               customClassName={styles.export}
               onClick={() => {
-                var node = document.getElementById("my-node");
-
-                if (node) {
-                  toPng(node)
-                    .then(function (dataUrl) {
-                      var link = document.createElement("a");
-                      link.download = "tree.png";
-                      link.href = dataUrl;
-                      link.click();
-                    })
-                    .catch(function (error) {
-                      console.error("oops, something went wrong!", error);
-                    });
-                }
+                // var node = document.getElementsByClassName("rd3t-svg");
+                // console.log("node", node[0]);
+                // if (node[0]) {
+                //   toSvg(node[0], {
+                //     filter: (node) => {
+                //       return node.tagName !== "i";
+                //     },
+                //   })
+                //     .then(function (dataUrl) {
+                //       var link = document.createElement("a");
+                //       link.download = "tree.svg";
+                //       link.href = dataUrl;
+                //       link.click();
+                //     })
+                //     .catch(function (error) {
+                //       console.error("oops, something went wrong!", error);
+                //     });
+                // }
               }}
             >
               Export

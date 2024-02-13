@@ -504,14 +504,6 @@ const Question = ({
     onDecisionCompleteDefault,
   ]);
 
-  // handling the rare case of refreshing when question duration is nearing to end
-  useEffect(() => {
-    console.log("Duration", Duration / 1000);
-    console.log("Votes", Votes);
-  }, [Duration, Votes]);
-
-  // console.log("Duration", Duration / 1000);
-
   return (
     <div className={styles.container}>
       <div className={styles.header}>
