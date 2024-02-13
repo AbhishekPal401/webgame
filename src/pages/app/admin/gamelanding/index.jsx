@@ -154,6 +154,7 @@ const AdminGameLanding = () => {
     };
 
     dispatch(getSessionDetails(data));
+    localStorage.setItem("refresh", false);
   }, [instanceID]);
 
   useEffect(() => {
@@ -212,11 +213,20 @@ const AdminGameLanding = () => {
     if (questionDetails === null || questionDetails === undefined) return;
 
     if (questionDetails.success) {
+      console.log("inProgress", inProgress);
       if (inProgress) {
         navigate("/gameplay");
       } else {
         if (questionDetails.data.IntroMediaURL) {
-          navigate("/intro");
+          if (questionDetails?.data?.IntroSkipped) {
+            if (questionDetails?.data?.IntroSkipped === true) {
+              navigate("/gameplay");
+            } else {
+              navigate("/intro");
+            }
+          } else {
+            navigate("/intro");
+          }
         } else {
           onSkip();
           fetchFirstQuestion();

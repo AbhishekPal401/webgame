@@ -22,6 +22,7 @@ import PDFPreview from "../../../preview/pdfpreview";
 import { Tooltip } from "react-tooltip";
 import { signalRService } from "../../../../services/signalR";
 import { useSelector } from "react-redux";
+import { useTimer } from "react-timer-hook";
 
 const renderer = ({ minutes, seconds, completed }) => {
   if (completed) {
@@ -43,16 +44,30 @@ const CountDown = memo(
     const countdownRef = useRef(null);
 
     // Expose start, stop, and pause functions to Question component
+
     useImperativeHandle(ref, () => ({
       start: () => countdownRef.current.start(),
       stop: () => countdownRef.current.stop(),
       pause: () => countdownRef.current.pause(),
     }));
 
+    const handleMount = useCallback(
+      (timeDelta) => {
+        if (
+          timeDelta.completed &&
+          (timeDelta.seconds > 0 || timeDelta.minutes > 0)
+        ) {
+          onComplete();
+        }
+      },
+      [onComplete]
+    );
+
     return (
       <Countdown
         ref={countdownRef}
         key={duration}
+        onMount={handleMount}
         date={Date.now() + duration}
         renderer={renderer}
         autoStart={false}
@@ -61,6 +76,50 @@ const CountDown = memo(
     );
   })
 );
+
+const Timer = ({ Duration, onExpire = () => {}, status = "start" }) => {
+  const [expiryTimestamp, setExpiryTimestamp] = useState(new Date());
+  const {
+    totalSeconds,
+    seconds,
+    minutes,
+    hours,
+    days,
+    isRunning,
+    start,
+    pause,
+    resume,
+    restart,
+  } = useTimer({
+    expiryTimestamp,
+    onExpire: onExpire,
+  });
+
+  // console.log("status", status);
+  // console.log("time ", minutes, seconds);
+
+  useEffect(() => {
+    if (status === "pause") {
+      pause();
+    } else if (status === "start") {
+      const time = new Date();
+      time.setSeconds(time.getSeconds() + Duration);
+      restart(time);
+    }
+    const time = new Date();
+    time.setSeconds(time.getSeconds() + Duration);
+    setExpiryTimestamp(time);
+  }, [status, Duration]);
+
+  const paddedMinutes = String(minutes).padStart(2, "0");
+  const paddedSeconds = String(seconds).padStart(2, "0");
+
+  return (
+    <span className={styles.countdown}>
+      {paddedMinutes} : {paddedSeconds}
+    </span>
+  );
+};
 
 const Question = ({
   Duration = 10,
@@ -93,6 +152,7 @@ const Question = ({
   const [mediaShownOnce, setMediaShownOnce] = useState(false);
   const [showMedia, setShowMedia] = useState(true);
   const [showSkip, setShowSkip] = useState(false);
+  const [timerStatus, setTimerStatus] = useState("start");
 
   let CustomButtonRender = null;
   const countDownRef = useRef();
@@ -366,40 +426,22 @@ const Question = ({
   }, [QuestionText, QuestionNo, MediaType, QuestionIntroMediaURL]);
 
   useEffect(() => {
-    let timeoutId;
-
+    console.log("countdown", countdown);
     if (!mediaShownOnce && QuestionIntroMediaURL) {
-      timeoutId = setTimeout(() => {
-        countDownRef.current.stop();
-      }, 10);
+      setTimerStatus("pause");
     } else {
-      if (countDownRef.current) {
-        if (countdown === TIMER_STATES.STOP) {
-          timeoutId = setTimeout(() => {
-            countDownRef.current.stop();
-          }, 10);
-        } else if (countdown === TIMER_STATES.START) {
-          timeoutId = setTimeout(() => {
-            countDownRef.current.start();
-          }, 10);
-        } else if (countdown === TIMER_STATES.PAUSE) {
-          timeoutId = setTimeout(() => {
-            countDownRef.current.pause();
-          }, 10);
-        }
+      if (countdown === TIMER_STATES.STOP) {
+        setTimerStatus("pause");
+      } else if (countdown === TIMER_STATES.START) {
+        setTimerStatus("start");
+      } else if (countdown === TIMER_STATES.PAUSE) {
+        setTimerStatus("pause");
       }
     }
-
-    return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
-  }, [countdown, countDownRef.current, mediaShownOnce]);
+  }, [countdown, mediaShownOnce, QuestionIntroMediaURL]);
 
   useEffect(() => {
     const skipMedia = (data) => {
-      console.log("data", data);
       if (data.actionType && data.actionType === "QuestionMediaSkip") {
         if (!mediaShownOnce) {
           setMediaShownOnce(true);
@@ -430,6 +472,100 @@ const Question = ({
     signalRService.SkipMediaInvoke(data);
   }, [sessionDetails, credentials, questionDetails]);
 
+  // let Timer = "";
+
+  // if (isAdmin) {
+  //   Timer = (
+  //     <CountDown
+  //       ref={countDownRef}
+  //       duration={Duration}
+  //       QuestionNo={QuestionNo}
+  //       onComplete={onAdminDecisionCompleteDefault}
+  //     />
+  //   );
+  // } else {
+  //   if (!IsDecisionMaker) {
+  //     Timer = (
+  //       <CountDown
+  //         ref={countDownRef}
+  //         duration={Duration}
+  //         QuestionNo={QuestionNo}
+  //         onComplete={onComplete}
+  //       />
+  //     );
+  //   } else {
+  //     if (
+  //       CurrentState === PlayingStates.VotingInProgress ||
+  //       CurrentState === PlayingStates.UserVote
+  //     ) {
+  //       Timer = (
+  //         <CountDown
+  //           ref={countDownRef}
+  //           duration={Duration}
+  //           QuestionNo={QuestionNo}
+  //           onComplete={onComplete}
+  //         />
+  //       );
+  //     } else {
+  //       if (
+  //         CurrentState === PlayingStates.VotingCompleted ||
+  //         CurrentState === PlayingStates.DecisionInProgress
+  //       ) {
+  //         Timer = (
+  //           <CountDown
+  //             ref={countDownRef}
+  //             duration={Duration}
+  //             QuestionNo={QuestionNo}
+  //             onComplete={onDecisionCompleteDefault}
+  //           />
+  //         );
+  //       } else {
+  //         Timer = (
+  //           <CountDown
+  //             ref={countDownRef}
+  //             duration={Duration}
+  //             QuestionNo={QuestionNo}
+  //             onComplete={() => {}}
+  //           />
+  //         );
+  //       }
+  //     }
+  //   }
+  // }
+  const completeInvoke = useCallback(() => {
+    console.log("completeInvoke called ");
+    if (isAdmin) {
+      onAdminDecisionCompleteDefault();
+    } else {
+      if (!IsDecisionMaker) {
+        onComplete();
+      } else {
+        if (
+          CurrentState === PlayingStates.VotingInProgress ||
+          CurrentState === PlayingStates.UserVote
+        ) {
+          onComplete();
+        } else {
+          if (
+            CurrentState === PlayingStates.VotingCompleted ||
+            CurrentState === PlayingStates.DecisionInProgress
+          ) {
+            onDecisionCompleteDefault();
+          }
+        }
+      }
+    }
+  }, [
+    isAdmin,
+    IsDecisionMaker,
+    CurrentState,
+    onAdminDecisionCompleteDefault,
+    onComplete,
+    onDecisionCompleteDefault,
+  ]);
+
+  // console.log("Duration", Duration / 1000);
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -456,25 +592,41 @@ const Question = ({
           </div>
 
           <div className={styles.timer}>
-            Time Left to Vote{" "}
-            <CountDown
+            Time Left to Vote
+            <Timer
+              Duration={Duration / 1000}
+              // initialExpiryTimestamp={() => {
+              //   const time = new Date();
+              //   time.setSeconds(time.getSeconds() + Duration / 1000);
+              //   return time;
+              // }}
+              onExpire={() => {
+                if (Duration / 1000 > 0) {
+                  completeInvoke();
+                }
+              }}
+              status={timerStatus}
+            />
+            {/* {Timer} */}
+            {/* <CountDown
               ref={countDownRef}
               duration={Duration}
               QuestionNo={QuestionNo}
-              onComplete={
-                isAdmin
-                  ? onAdminDecisionCompleteDefault
-                  : !IsDecisionMaker
-                  ? onComplete
-                  : CurrentState === PlayingStates.VotingInProgress ||
-                    CurrentState === PlayingStates.UserVote
-                  ? onComplete
-                  : CurrentState === PlayingStates.VotingCompleted ||
-                    CurrentState === PlayingStates.DecisionInProgress
-                  ? onDecisionCompleteDefault
-                  : () => {}
-              }
-            />
+              // onComplete={
+              //   completeInvoke
+              // isAdmin
+              //   ? onAdminDecisionCompleteDefault
+              //   : !IsDecisionMaker
+              //   ? onComplete
+              //   : CurrentState === PlayingStates.VotingInProgress ||
+              //     CurrentState === PlayingStates.UserVote
+              //   ? onComplete
+              //   : CurrentState === PlayingStates.VotingCompleted ||
+              //     CurrentState === PlayingStates.DecisionInProgress
+              //   ? onDecisionCompleteDefault
+              //   : () => {}
+              // }
+            /> */}
             min
           </div>
         </div>

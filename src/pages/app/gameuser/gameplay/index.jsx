@@ -266,6 +266,34 @@ const GamePlay = () => {
     };
   }, []);
 
+  const fetchFirstQuestion = useCallback(() => {
+    if (sessionDetails?.data) {
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      const data = {
+        sessionID: sessionData.SessionID,
+        scenarioID: sessionData.ScenarioID,
+        currentQuestionID: "",
+        ReConnection: false,
+        currentQuestionNo: 0,
+        currentStatus: "InProgress",
+        userID: credentials.data.userID,
+        currentTotalScore: 0,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+      dispatch(getNextQuestionDetails(data));
+    }
+  }, [sessionDetails, credentials]);
+
+  // useEffect(() => {
+  //   fetchFirstQuestion();
+  // }, []);
+
   useEffect(() => {
     const handleProceedToNextQuestion = (data) => {
       if (
@@ -404,8 +432,6 @@ const GamePlay = () => {
         },
       };
 
-      console.log("answer data", data);
-
       dispatch(submitAnswerDetails(data));
     },
     [credentials, questionDetails, startedAt, sessionDetails]
@@ -416,7 +442,6 @@ const GamePlay = () => {
   }, [defaultAnswerSubmit]);
 
   const onDecisionCompleteDefault = useCallback(() => {
-    console.log("onDecisionCompleteDefault");
     setIsDecision(true);
     defaultAnswerSubmit(true);
   }, [defaultAnswerSubmit]);
@@ -591,6 +616,8 @@ const GamePlay = () => {
 
         signalRService.SendVotes(data);
 
+        console.log("answer data state reset");
+
         setCurrentQuestionSubmitted(true);
         setSelectedAnswer(null);
         setIsDecision(false);
@@ -620,6 +647,8 @@ const GamePlay = () => {
         console.log("send vote data", data);
 
         signalRService.SendVotes(data);
+
+        console.log("answer data state reset");
 
         setCurrentQuestionSubmitted(true);
         setSelectedAnswer(null);

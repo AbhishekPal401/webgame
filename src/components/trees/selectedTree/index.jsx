@@ -147,8 +147,11 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
 
         optimalElements.forEach((element) => {
           const parent = element.parentElement;
+
           parent.appendChild(element.cloneNode(true));
-          parent.removeChild(element);
+          if (parent.contains(element)) {
+            parent.removeChild(element);
+          }
         });
       } else {
         const optimalElements = containerRef.current.querySelectorAll(
@@ -158,7 +161,9 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
         optimalElements.forEach((element) => {
           const parent = element.parentElement;
           parent.appendChild(element.cloneNode(true));
-          parent.removeChild(element);
+          if (parent.contains(element)) {
+            parent.removeChild(element);
+          }
         });
       }
 
@@ -167,7 +172,9 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
       gElements.forEach((element) => {
         const parent = element.parentElement;
         parent.appendChild(element.cloneNode(true));
-        parent.removeChild(element);
+        if (parent.contains(element)) {
+          parent.removeChild(element);
+        }
       });
 
       const leafElements =
@@ -176,7 +183,9 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
       leafElements.forEach((element) => {
         const parent = element.parentElement;
         parent.appendChild(element.cloneNode(true));
-        parent.removeChild(element);
+        if (parent.contains(element)) {
+          parent.removeChild(element);
+        }
       });
 
       const { width, height } = containerRef.current.getBoundingClientRect();
