@@ -3,6 +3,8 @@ import styles from "./realtime.module.css";
 import Tree from "react-d3-tree";
 import { Tooltip } from "react-tooltip";
 import ReactDOMServer from "react-dom/server";
+import { isHTML, truncateHtml } from "../../../utils/helper";
+import DOMPurify from "dompurify";
 
 const trimTextWithEllipsis = (text, maxLength) => {
   if (text.length > maxLength) {
@@ -12,8 +14,31 @@ const trimTextWithEllipsis = (text, maxLength) => {
 };
 
 const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
-  const padding = 10;
-  const label = trimTextWithEllipsis(nodeDatum.name, 115);
+  // const padding = 10;
+  // const label = trimTextWithEllipsis(nodeDatum.name, 115);
+
+  let padding;
+  let label;
+  let truncatedLabel;
+
+  const contentIsHTML = isHTML(nodeDatum.name);
+
+  if (!contentIsHTML) {
+    padding = 10;
+    label = trimTextWithEllipsis(nodeDatum.name, 115);
+  } else {
+    // const labelHtml = ReactDOMServer.renderToStaticMarkup(
+    //   <span
+    //     dangerouslySetInnerHTML={{
+    //       __html: truncateHtml(nodeDatum.name, 115),
+    //     }}
+    //   />
+    // );
+    padding = 15;
+    // Truncate HTML content
+    truncatedLabel = truncateHtml(nodeDatum.name, 115); // Maximum length for truncated HTML and content
+  }
+
 
   let nodeClassName = styles.node;
 
@@ -52,9 +77,17 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
                 <div>{nodeDatum.attributes.ToolTipDescr}</div>
               </div>
             )}
-            style={{ padding: `${padding * 0.5}px ${padding}px` }}
+            // style={{ padding: `${padding * 0.5}px ${padding}px` }}
+            style={{
+              padding: !contentIsHTML ?
+                `${padding * 0.5}px ${padding}px` : `${padding * 0.2}px ${padding}px ${padding * 0.2}px ${padding + 5}px`
+            }}
           >
-            {label}
+            {/* {label} */}
+            {
+              !contentIsHTML ? label :
+                (truncatedLabel && <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(truncatedLabel) }} />)
+            }
           </div>
         </div>
       </foreignObject>

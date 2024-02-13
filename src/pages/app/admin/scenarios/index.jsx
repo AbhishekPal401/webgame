@@ -7,7 +7,7 @@ import Checkbox from "../../../../components/ui/checkbox/index.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { generateGUID, isJSONString } from "../../../../utils/common.js";
 import { getScenarioByPage } from "../../../../store/app/admin/scenario/scenario.js";
-import { formatDateString } from "../../../../utils/helper.js";
+import { extractDate, formatDateString } from "../../../../utils/helper.js";
 import { useNavigate } from "react-router-dom";
 import ModalContainer from "../../../../components/modal/index.jsx";
 import {
@@ -172,11 +172,18 @@ const Scenarios = () => {
                       </td>
                       <td>{formatDateString(scenario.CreatedAt)}</td>
                       <td>{scenario.GamesPlayed}</td>
-                      <td>{scenario.LastPlayed != null || scenario.LastPlayed != undefined ?
-                        formatDateString(scenario.LastPlayed) :
+                      <td>
+                        {
+                          scenario.LastPlayed &&
+                          formatDateString(scenario.LastPlayed) !== "Invalid Date" &&
+                          formatDateString(scenario.LastPlayed)
+                        }
+                      </td>
+                      {/* <td>{scenario.LastPlayed != null || scenario.LastPlayed != undefined ?
+                        extractDate(scenario.LastPlayed) :
                         ""
                       }
-                      </td>
+                      </td> */}
                       <td>{scenario.Status}</td>
                       <td>
                         <div className={styles.actions}>

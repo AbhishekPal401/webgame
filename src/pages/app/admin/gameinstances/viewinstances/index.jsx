@@ -278,7 +278,10 @@ const ViewInstances = () => {
                                                 <div className={styles.treeRightTop}>
                                                     <div>
                                                         <div>Game Played On</div>
-                                                        <div>- {data.GamePlayedOn && formatDateString(data.GamePlayedOn)}</div>
+                                                        <div>- {data.GamePlayedOn && 
+                                                            formatDateString(data.GamePlayedOn) !== "Invalid Date" && 
+                                                            formatDateString(data.GamePlayedOn)}
+                                                        </div>
                                                     </div>
                                                     <div>
                                                         <div>Time Spend</div>

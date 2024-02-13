@@ -211,7 +211,9 @@ function QuestionList() {
                               </td>
                             ) :
                             (
-                              <div className={styles.tablePlainCell} >{question.QuestionText}</div>
+                              <td>
+                                <div className={styles.tablePlainCell} >{question.QuestionText}</div>
+                              </td>
                             )
                         }
                           {/* <td>

@@ -666,7 +666,7 @@ const MasterList = () => {
                       <th>Designation</th>
                       <th>Description</th>
                       <th>Date Created</th>
-                      <th>Scenario</th>
+                      <th>Scenarios</th>
                       <th>Status</th>
                       <th></th>
                     </tr>

@@ -14,6 +14,7 @@ import {
   validateEmail,
   validatePhone,
   validatePassword,
+  validateUsername,
 } from "../../../../utils/validators";
 import { baseUrl } from "../../../../middleware/url";
 import { toast } from "react-toastify";
@@ -332,6 +333,16 @@ const CreateUser = () => {
         },
       };
 
+      valid = false;
+    } else if (!validateUsername(userData.username.value)) {
+      console.log("!validateUsername :", userData?.username?.value);
+      data = {
+        ...data,
+        username: {
+          ...data.username,
+          error: "Please enter a valid username",
+        },
+      };
       valid = false;
     }
 

@@ -9,7 +9,7 @@ import { getScenarioByPage } from "../../../../store/app/admin/scenario/scenario
 import { getSessionHistoryByType } from "../../../../store/app/admin/session/session.js";
 import { generateGUID, isJSONString } from "../../../../utils/common.js";
 import { Link } from "react-router-dom";
-import { formatDateString } from "../../../../utils/helper.js";
+import { extractDate, formatDateString } from "../../../../utils/helper.js";
 import { useNavigate } from "react-router-dom";
 import { dateFormats } from "../../../../constants/date.js";
 import {
@@ -253,7 +253,7 @@ const Homepage = () => {
                                 scenario.Status === "InProgress") &&
                               <Button
                                 onClick={() => {
-                                    setShowClearModal(scenario.InstanceID);
+                                  setShowClearModal(scenario.InstanceID);
                                 }}
                               >
                                 Clear
@@ -327,11 +327,18 @@ const Homepage = () => {
                             >{scenario.Description}</td>
                             <td>{formatDateString(scenario.CreatedAt)}</td>
                             <td>{scenario.GamesPlayed}</td>
-                            <td>{scenario.LastPlayed != null || scenario.LastPlayed != undefined ?
-                              formatDateString(scenario.LastPlayed) :
+                            <td>
+                              {
+                                scenario.LastPlayed &&
+                                formatDateString(scenario.LastPlayed) !== "Invalid Date" &&
+                                formatDateString(scenario.LastPlayed)
+                              }
+                            </td>
+                            {/* <td>{scenario.LastPlayed != null || scenario.LastPlayed != undefined ?
+                              extractDate(scenario.LastPlayed) :
                               ""
                             }
-                            </td>
+                            </td> */}
                             <td>{scenario.Status}</td>
                             <td>
                               <div className={styles.actions}>
