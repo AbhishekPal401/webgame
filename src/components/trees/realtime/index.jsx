@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./realtime.module.css";
 import Tree from "react-d3-tree";
 import { Tooltip } from "react-tooltip";
@@ -17,23 +17,14 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
   // const padding = 10;
   // const label = trimTextWithEllipsis(nodeDatum.name, 115);
 
-  let padding;
-  let label;
-  let truncatedLabel;
+  let padding = 10;
+  let truncatedLabel = "N/A";
+  let contentIsHTML = false;
 
-  const contentIsHTML = isHTML(nodeDatum.name);
+  let label = trimTextWithEllipsis(nodeDatum.name, 115);
+  contentIsHTML = isHTML(nodeDatum.name);
 
-  if (!contentIsHTML) {
-    padding = 10;
-    label = trimTextWithEllipsis(nodeDatum.name, 115);
-  } else {
-    // const labelHtml = ReactDOMServer.renderToStaticMarkup(
-    //   <span
-    //     dangerouslySetInnerHTML={{
-    //       __html: truncateHtml(nodeDatum.name, 115),
-    //     }}
-    //   />
-    // );
+  if (contentIsHTML) {
     padding = 15;
     // Truncate HTML content
     truncatedLabel = truncateHtml(nodeDatum.name, 115); // Maximum length for truncated HTML and content
@@ -80,7 +71,7 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
             // style={{ padding: `${padding * 0.5}px ${padding}px` }}
             style={{
               padding: !contentIsHTML ?
-                `${padding * 0.5}px ${padding}px` : `${padding * 0.2}px ${padding}px ${padding * 0.2}px ${padding + 5}px`
+                `${padding * 0.5}px ${padding}px` : `${padding * 0.1}px ${padding}px ${padding * 0.1}px ${padding + 5}px`
             }}
           >
             {/* {label} */}
@@ -105,7 +96,7 @@ const RealTimeTree = ({ data = {}, userType = "admin" }) => {
     height: nodeSize.y,
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (containerRef.current) {
       const optimalElements = containerRef.current.querySelectorAll(
         `path.${styles.selectedEdge}`

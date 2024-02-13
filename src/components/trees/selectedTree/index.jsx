@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./selectedTree.module.css";
 import Tree from "react-d3-tree";
 import { Tooltip } from "react-tooltip";
@@ -35,16 +35,14 @@ const trimTextWithEllipsis = (text, maxLength) => {
 // };
 
 const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
-  let padding;
-  let label;
-  let truncatedLabel;
+  let padding = 10;
+  let truncatedLabel = "N/A";
+  let contentIsHTML = false;
 
-  const contentIsHTML = isHTML(nodeDatum.name);
+  let label = trimTextWithEllipsis(nodeDatum.name, 115);
+  contentIsHTML = isHTML(nodeDatum.name);
 
-  if (!contentIsHTML) {
-    padding = 10;
-    label = trimTextWithEllipsis(nodeDatum.name, 115);
-  } else {
+  if (contentIsHTML) {
     // const labelHtml = ReactDOMServer.renderToStaticMarkup(
     //   <span
     //     dangerouslySetInnerHTML={{
@@ -110,15 +108,18 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
               </div>
             )}
             style={{
-              padding: !contentIsHTML ? 
-                `${padding * 0.5}px ${padding}px` : `${padding * 0.2}px ${padding}px ${padding * 0.2}px ${padding + 5}px`
+              padding: !contentIsHTML ?
+                `${padding * 0.5}px ${padding}px` : `${padding * 0.1}px ${padding}px ${padding * 0.1}px ${padding + 5}px`
             }}
           >
             {/* {label} */}
             {/* <span dangerouslySetInnerHTML={{ __html: labelHtml }} /> */}
             {
               !contentIsHTML ? label :
-                (truncatedLabel && <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(truncatedLabel) }} />)
+                (
+                  truncatedLabel && 
+                  <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(truncatedLabel) }} />
+                )
             }
 
           </div>
@@ -138,7 +139,7 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
     height: nodeSize.y,
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (containerRef.current) {
       if (userType === "admin") {
         const optimalElements = containerRef.current.querySelectorAll(
