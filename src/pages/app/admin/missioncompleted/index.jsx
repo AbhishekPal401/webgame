@@ -13,9 +13,9 @@ import { resetNextQuestionDetailsState } from "../../../../store/app/user/questi
 import { resetAnswerDetailsState } from "../../../../store/app/user/answers/postAnswer";
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
 import { toPng } from "html-to-image";
-import { formatTime} from "../../../../utils/helper";
+import { formatTime } from "../../../../utils/helper";
 
-const SelectTree = ({ clicked = 1, onSelect = () => { } }) => {
+const SelectTree = ({ clicked = 1, onSelect = () => {} }) => {
   return (
     <div className={styles.selectTree}>
       <div className={styles.selectButtonContainer}>
@@ -177,7 +177,27 @@ const MissionCompleted = () => {
             </div>
           </div>
           <div className={styles.buttonContainer}>
-            <Button customClassName={styles.export}>Export</Button>
+            <Button
+              customClassName={styles.export}
+              onClick={() => {
+                var node = document.getElementById("my-node");
+
+                if (node) {
+                  toPng(node)
+                    .then(function (dataUrl) {
+                      var link = document.createElement("a");
+                      link.download = "tree.png";
+                      link.href = dataUrl;
+                      link.click();
+                    })
+                    .catch(function (error) {
+                      console.error("oops, something went wrong!", error);
+                    });
+                }
+              }}
+            >
+              Export
+            </Button>
             <Button
               customClassName={styles.end}
               onClick={() => {

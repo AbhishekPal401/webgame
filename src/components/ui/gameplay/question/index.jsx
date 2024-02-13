@@ -472,66 +472,6 @@ const Question = ({
     signalRService.SkipMediaInvoke(data);
   }, [sessionDetails, credentials, questionDetails]);
 
-  // let Timer = "";
-
-  // if (isAdmin) {
-  //   Timer = (
-  //     <CountDown
-  //       ref={countDownRef}
-  //       duration={Duration}
-  //       QuestionNo={QuestionNo}
-  //       onComplete={onAdminDecisionCompleteDefault}
-  //     />
-  //   );
-  // } else {
-  //   if (!IsDecisionMaker) {
-  //     Timer = (
-  //       <CountDown
-  //         ref={countDownRef}
-  //         duration={Duration}
-  //         QuestionNo={QuestionNo}
-  //         onComplete={onComplete}
-  //       />
-  //     );
-  //   } else {
-  //     if (
-  //       CurrentState === PlayingStates.VotingInProgress ||
-  //       CurrentState === PlayingStates.UserVote
-  //     ) {
-  //       Timer = (
-  //         <CountDown
-  //           ref={countDownRef}
-  //           duration={Duration}
-  //           QuestionNo={QuestionNo}
-  //           onComplete={onComplete}
-  //         />
-  //       );
-  //     } else {
-  //       if (
-  //         CurrentState === PlayingStates.VotingCompleted ||
-  //         CurrentState === PlayingStates.DecisionInProgress
-  //       ) {
-  //         Timer = (
-  //           <CountDown
-  //             ref={countDownRef}
-  //             duration={Duration}
-  //             QuestionNo={QuestionNo}
-  //             onComplete={onDecisionCompleteDefault}
-  //           />
-  //         );
-  //       } else {
-  //         Timer = (
-  //           <CountDown
-  //             ref={countDownRef}
-  //             duration={Duration}
-  //             QuestionNo={QuestionNo}
-  //             onComplete={() => {}}
-  //           />
-  //         );
-  //       }
-  //     }
-  //   }
-  // }
   const completeInvoke = useCallback(() => {
     console.log("completeInvoke called ");
     if (isAdmin) {
@@ -564,6 +504,12 @@ const Question = ({
     onDecisionCompleteDefault,
   ]);
 
+  // handling the rare case of refreshing when question duration is nearing to end
+  useEffect(() => {
+    console.log("Duration", Duration / 1000);
+    console.log("Votes", Votes);
+  }, [Duration, Votes]);
+
   // console.log("Duration", Duration / 1000);
 
   return (
@@ -592,41 +538,14 @@ const Question = ({
           </div>
 
           <div className={styles.timer}>
-            Time Left to Vote
+            Time Left to Vote{" "}
             <Timer
-              Duration={Duration / 1000}
-              // initialExpiryTimestamp={() => {
-              //   const time = new Date();
-              //   time.setSeconds(time.getSeconds() + Duration / 1000);
-              //   return time;
-              // }}
+              Duration={Duration / 1000 <= 0.5 ? 0.5 : Duration / 1000}
               onExpire={() => {
-                if (Duration / 1000 > 0) {
-                  completeInvoke();
-                }
+                completeInvoke();
               }}
               status={timerStatus}
             />
-            {/* {Timer} */}
-            {/* <CountDown
-              ref={countDownRef}
-              duration={Duration}
-              QuestionNo={QuestionNo}
-              // onComplete={
-              //   completeInvoke
-              // isAdmin
-              //   ? onAdminDecisionCompleteDefault
-              //   : !IsDecisionMaker
-              //   ? onComplete
-              //   : CurrentState === PlayingStates.VotingInProgress ||
-              //     CurrentState === PlayingStates.UserVote
-              //   ? onComplete
-              //   : CurrentState === PlayingStates.VotingCompleted ||
-              //     CurrentState === PlayingStates.DecisionInProgress
-              //   ? onDecisionCompleteDefault
-              //   : () => {}
-              // }
-            /> */}
             min
           </div>
         </div>
