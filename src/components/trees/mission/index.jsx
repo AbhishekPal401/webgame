@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./mission.module.css";
 import Tree from "react-d3-tree";
 import { Tooltip } from "react-tooltip";
 import ReactDOMServer from "react-dom/server";
+import { isHTML, truncateHtml } from "../../../utils/helper";
+import DOMPurify from "dompurify";
 
 const trimTextWithEllipsis = (text, maxLength) => {
   if (text.length > maxLength) {
@@ -12,8 +14,21 @@ const trimTextWithEllipsis = (text, maxLength) => {
 };
 
 const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
-  const padding = 10;
-  const label = trimTextWithEllipsis(nodeDatum.name, 115);
+  // const padding = 10;
+  // const label = trimTextWithEllipsis(nodeDatum.name, 115);
+
+  let padding = 10;
+  let truncatedLabel = "N/A";
+  let contentIsHTML = false;
+
+  let label = trimTextWithEllipsis(nodeDatum.name, 115);
+  contentIsHTML = isHTML(nodeDatum.name);
+
+  if (contentIsHTML) {
+    padding = 15;
+    // Truncate HTML content
+    truncatedLabel = truncateHtml(nodeDatum.name, 115); // Maximum length for truncated HTML and content
+  }
 
   return (
     <g transform={`translate(-150, 0)`}>
@@ -24,8 +39,8 @@ const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
               nodeDatum.attributes.isQuestion
                 ? styles.node
                 : nodeDatum.attributes.isOptimal
-                ? styles.isOptimalNode
-                : styles.isNotOptimalNode
+                  ? styles.isOptimalNode
+                  : styles.isNotOptimalNode
             }
             data-tooltip-id="my-tooltip"
             data-tooltip-html={ReactDOMServer.renderToStaticMarkup(
@@ -34,9 +49,17 @@ const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
                 <div>{nodeDatum.attributes.ToolTipDescr}</div>
               </div>
             )}
-            style={{ padding: `${padding * 0.5}px ${padding}px` }}
+            // style={{ padding: `${padding * 0.5}px ${padding}px` }}
+            style={{
+              padding: !contentIsHTML ?
+                `${padding * 0.5}px ${padding}px` : `${padding * 0.1}px ${padding}px ${padding * 0.1}px ${padding + 5}px`
+            }}
           >
-            {label}
+            {/* {label} */}
+            {
+              !contentIsHTML ? label :
+                (truncatedLabel && <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(truncatedLabel) }} />)
+            }
           </div>
         </div>
       </foreignObject>
@@ -54,7 +77,7 @@ const OptimalTree = ({ data = {} }) => {
     height: nodeSize.y,
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (containerRef.current) {
       const optimalElements = containerRef.current.querySelectorAll(
         `path.${styles.isOptimal}`

@@ -86,6 +86,21 @@ export const formatMissionTime = (value) => {
   }
 };
 
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 export const formatDateString = (dateTimeString, formatType = "default") => {
   const formats = [
     {
@@ -184,20 +199,20 @@ export const formatDateString = (dateTimeString, formatType = "default") => {
   //   },
   // ];
 
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+  // const months = [
+  //   "Jan",
+  //   "Feb",
+  //   "Mar",
+  //   "Apr",
+  //   "May",
+  //   "Jun",
+  //   "Jul",
+  //   "Aug",
+  //   "Sep",
+  //   "Oct",
+  //   "Nov",
+  //   "Dec",
+  // ];
 
   let formattedMonth;
   let parsedDate;
@@ -211,7 +226,7 @@ export const formatDateString = (dateTimeString, formatType = "default") => {
     const matches = dateTimeString.match(dateFormat.regex);
     if (matches) {
       parsedDate = createDateFromMatches(matches, dateFormat.format);
-      // console.log("parsedDate :",parsedDate);
+      console.log("incoming date : " + dateTimeString + ", parsedDate : " + parsedDate + " matches : " + matches);
       break;
     }
   }
@@ -222,24 +237,20 @@ export const formatDateString = (dateTimeString, formatType = "default") => {
 
   switch (formatType) {
     case dateFormats.DATE_FORMAT_8:
-      return `${parsedDate.getDate()}-${
-        parsedDate.getMonth() + 1
-      }-${parsedDate.getFullYear()}`;
+      return `${parsedDate.getDate()}-${parsedDate.getMonth() + 1
+        }-${parsedDate.getFullYear()}`;
 
     case dateFormats.DATE_FORMAT_1:
-      return `${parsedDate.getDate()}/${
-        parsedDate.getMonth() + 1
-      }/${parsedDate.getFullYear()}`;
+      return `${parsedDate.getDate()}/${parsedDate.getMonth() + 1
+        }/${parsedDate.getFullYear()}`;
 
     case dateFormats.DATE_FORMAT_9:
-      return `${
-        parsedDate.getMonth() + 1
-      }-${parsedDate.getDate()}-${parsedDate.getFullYear()}`;
+      return `${parsedDate.getMonth() + 1
+        }-${parsedDate.getDate()}-${parsedDate.getFullYear()}`;
 
     case dateFormats.DATE_FORMAT_2:
-      return `${
-        parsedDate.getMonth() + 1
-      }/${parsedDate.getDate()}/${parsedDate.getFullYear()}`;
+      return `${parsedDate.getMonth() + 1
+        }/${parsedDate.getDate()}/${parsedDate.getFullYear()}`;
 
     case dateFormats.DATE_FORMAT_7:
       formattedMonth = months[parsedDate.getMonth()];
@@ -267,13 +278,19 @@ export const formatDateString = (dateTimeString, formatType = "default") => {
 const createDateFromMatches = (matches, format) => {
   try {
     const [, ...parsedMatches] = matches.map((match) => parseInt(match, 10));
+    // const [, ...parsedMatches] = matches;
 
     const formatParts = format.split(/\W+/); // Split format by non-word characters
+    console.log("date parsedMatches :", parsedMatches);
+    console.log("date formatParts :", formatParts);
 
     const yearIndex = formatParts.findIndex((part) => part === "YYYY");
     const monthIndex = formatParts.findIndex(
-      (part) => part === "MM" || part === "M"
+      (part) => part === "MM" || part === "M" 
     );
+    // const monthIndex = formatParts.findIndex(
+    //   (part) => part === "MM" || part === "M" || part === "MMM"
+    // );
     const dayIndex = formatParts.findIndex(
       (part) => part === "DD" || part === "D"
     );
@@ -293,6 +310,20 @@ const createDateFromMatches = (matches, format) => {
 
     const year = yearIndex !== -1 ? parsedMatches[yearIndex] : 0;
     const month = monthIndex !== -1 ? parsedMatches[monthIndex] - 1 : 0;
+
+    // let month;
+    // if (monthIndex !== -1) {
+    //   const parsedMonth = parsedMatches[monthIndex];
+    //   if (!isNaN(parsedMonth)) { // Check if the parsed month is numeric
+    //     month = parseInt(parsedMonth, 10) - 1;
+    //   } else { // If the parsed month is not numeric, assume it's an alphabetical month abbreviation
+    //     const monthAbbreviation = parsedMonth.substring(0, 3); // Extract the first three characters
+    //     month = months.findIndex(m => m.startsWith(monthAbbreviation)); // Find the index of the month abbreviation in the months array
+    //   }
+    // } else {
+    //   month = 0; // Default to January if no month is found
+    // }
+
     const day = dayIndex !== -1 ? parsedMatches[dayIndex] : 1;
 
     let hour = hourIndex !== -1 ? parsedMatches[hourIndex] : 0;
@@ -308,14 +339,25 @@ const createDateFromMatches = (matches, format) => {
         hour = 0;
       }
     }
-
+    // console.log("month : " + month + " , monthIndex :", monthIndex)
     const date = new Date(year, month, day, hour, minute, second);
-    // console.log("date formated :",date);
+    // console.log("date formated :", date);
     return date;
   } catch (error) {
     console.log("date formated error:", error);
     return null;
   }
+};
+
+export const extractDate = (input) => {
+  // Split the input string by space
+  const parts = input.split(/\s+/);
+
+  // Rearrange the parts to swap month and day
+  const date = [parts[1], parts[0], parts[2]].join(' ');
+
+  console.log(" Incoming : "+input+", date :",date)
+  return date;
 };
 
 // extract mimeType from file source
@@ -336,6 +378,10 @@ const createDateFromMatches = (matches, format) => {
 // }
 
 export const extractFileType = (fileSrc) => {
+  if(fileSrc === null || fileSrc === undefined) {
+    console.log(" null or undefined file SRC");
+    return;
+  }
   if (fileSrc.startsWith("data:")) {
     // For data URL
     const semicolonIndex = fileSrc.indexOf(";");
@@ -366,6 +412,10 @@ export const extractFileType = (fileSrc) => {
 };
 
 export const extractFileInfo = (fileSrc) => {
+  if(fileSrc === null || fileSrc === undefined) {
+    console.log(" null or undefined file SRC");
+    return;
+  }
   if (fileSrc.startsWith("data:")) {
     // For data URL
     const semicolonIndex = fileSrc.indexOf(";");
@@ -453,69 +503,104 @@ export const extractTextContent = (html) => {
   return "";
 };
 
-// export const extractFirstElementHTML = (html) => {
-//   // if (!html) return '';
-//   if (!html || typeof html !== "string") return html;
-
-//   const sanitizedHTML = DOMPurify.sanitize(html);
-//   const tempElement = document.createElement("div");
-//   tempElement.innerHTML = sanitizedHTML;
-
-//   // Get the first child node that is not a text node
-//   let firstChild = tempElement.firstChild;
-//   while (firstChild && firstChild.nodeType === 3) {
-//     // 3: Text node
-//     firstChild = firstChild.nextSibling;
-//   }
-
-//   // Extract HTML content of the first element
-//   if (firstChild) {
-//     // return firstChild.outerHTML; /// return formatted text
-//     return firstChild.textContent; // return plain text
-//   }
-//   return "";
-// };
-
 export const extractFirstElementHTML = (html) => {
-  if (!html || typeof html !== 'string') return html;
+  // if (!html) return '';
+  if (!html || typeof html !== "string") return html;
 
   const sanitizedHTML = DOMPurify.sanitize(html);
-  const tempElement = document.createElement('div');
+  const tempElement = document.createElement("div");
   tempElement.innerHTML = sanitizedHTML;
 
   // Get the first child node that is not a text node
   let firstChild = tempElement.firstChild;
-  while (firstChild && firstChild.nodeType === 3) { // 3: Text node
+  while (firstChild && firstChild.nodeType === 3) {
+    // 3: Text node
     firstChild = firstChild.nextSibling;
   }
 
-  console.log("Firstchild :",firstChild)
-
   // Extract HTML content of the first element
   if (firstChild) {
-    // const firstElementHTML = firstChild.outerHTML;
-    // const closingTagIndex = firstElementHTML.lastIndexOf('</');
-    // const ellipsisAppendedHTML = firstElementHTML.substring(0, closingTagIndex) + '...' + firstElementHTML.substring(closingTagIndex);
-    // return ellipsisAppendedHTML;
-
-    const firstElementHTML = firstChild.outerHTML;
-    if (firstElementHTML.includes('<li>')) {
-      const openingLiTagIndex = firstElementHTML.indexOf('<li>');
-      const closingLiTagIndex = firstElementHTML.indexOf('</li>', openingLiTagIndex);
-      const ellipsisAppendedHTML = firstElementHTML.substring(0, closingLiTagIndex) + '...' + firstElementHTML.substring(closingLiTagIndex);
-      console.log("ellipsisAppendedHTML :",ellipsisAppendedHTML)
-
-      return ellipsisAppendedHTML;
-    } else {
-      const closingTagIndex = firstElementHTML.lastIndexOf('</');
-      const ellipsisAppendedHTML = firstElementHTML.substring(0, closingTagIndex) + '...' + firstElementHTML.substring(closingTagIndex);
-      return ellipsisAppendedHTML;
-    }
+    // return firstChild.outerHTML; // return formatted text
+    return firstChild.textContent; // return plain text
   }
-  return '';
+  return "";
 };
+
+// export const extractFirstElementHTML = (html) => {
+//   if (!html || typeof html !== 'string') return html;
+
+//   const sanitizedHTML = DOMPurify.sanitize(html);
+//   const tempElement = document.createElement('div');
+//   tempElement.innerHTML = sanitizedHTML;
+
+//   // Get the first child node that is not a text node
+//   let firstChild = tempElement.firstChild;
+//   while (firstChild && firstChild.nodeType === 3) { // 3: Text node
+//     firstChild = firstChild.nextSibling;
+//   }
+
+//   console.log("Firstchild :", firstChild)
+
+//   // Extract HTML content of the first element
+//   if (firstChild) {
+//     // const firstElementHTML = firstChild.outerHTML;
+//     // const closingTagIndex = firstElementHTML.lastIndexOf('</');
+//     // const ellipsisAppendedHTML = firstElementHTML.substring(0, closingTagIndex) + '...' + firstElementHTML.substring(closingTagIndex);
+//     // return ellipsisAppendedHTML;
+
+//     const firstElementHTML = firstChild.outerHTML;
+//     if (firstElementHTML.includes('<li>')) {
+//       const openingLiTagIndex = firstElementHTML.indexOf('<li>');
+//       const closingLiTagIndex = firstElementHTML.indexOf('</li>', openingLiTagIndex);
+//       const ellipsisAppendedHTML = firstElementHTML.substring(0, closingLiTagIndex) + '...' + firstElementHTML.substring(closingLiTagIndex);
+//       console.log("ellipsisAppendedHTML :", ellipsisAppendedHTML)
+
+//       return ellipsisAppendedHTML;
+//     } else {
+//       const closingTagIndex = firstElementHTML.lastIndexOf('</');
+//       const ellipsisAppendedHTML = firstElementHTML.substring(0, closingTagIndex) + '...' + firstElementHTML.substring(closingTagIndex);
+//       return ellipsisAppendedHTML;
+//     }
+//   }
+//   return '';
+// };
 
 export const isHTML = (content) => {
   const isHTML = /<[a-z][\s\S]*>/i.test(content);
   return isHTML;
 }
+
+// Function to truncate HTML content
+export const truncateHtml = (html, maxLength) => {
+  let truncatedHtml = '';
+  let charCount = 0;
+  let inTag = false;
+
+  for (let i = 0; i < html.length; i++) {
+    const char = html[i];
+    truncatedHtml += char;
+
+    // Increment character count only if not inside a tag
+    if (!inTag) {
+      charCount++;
+    }
+
+    // If current character is '<', set inTag to true
+    if (char === '<') {
+      inTag = true;
+    }
+
+    // If current character is '>', set inTag to false
+    if (char === '>') {
+      inTag = false;
+    }
+
+    // If character count exceeds maxLength, break the loop
+    if (charCount >= maxLength) {
+      truncatedHtml += '...';
+      break;
+    }
+  }
+
+  return truncatedHtml;
+};

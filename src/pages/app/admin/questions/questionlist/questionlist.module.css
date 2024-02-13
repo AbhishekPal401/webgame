@@ -116,12 +116,15 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.table_content tbody tr > td:nth-child(3) {
+/* .table_content tbody tr > td:nth-child(3) {
   max-width: 30rem;  
+} */
+.tableContentCell {
+  max-width: 30rem !important;
 }
-
 .tableContentCell > div {
-  max-width: 30rem;
+  /* max-width: 20rem; */
+  width: 95%;
   max-height: 1.5rem;
   word-wrap: break-word;
   overflow: hidden;
