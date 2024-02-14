@@ -64,6 +64,10 @@ const UserProfile = () => {
       value: "",
       error: "",
     },
+    status: {
+      value: "",
+      error: "",
+    },
   });
 
   const [defaultUrl, setDefaultUrl] = useState(null);
@@ -132,6 +136,10 @@ const UserProfile = () => {
         error: "",
       },
       profileImage: {
+        value: "",
+        error: "",
+      },
+      status: {
         value: "",
         error: "",
       },
@@ -245,6 +253,10 @@ const UserProfile = () => {
         },
         profileImage: {
           value: "",
+          error: "",
+        },
+        status: {
+          value: data.Status,
           error: "",
         },
       };
@@ -506,6 +518,7 @@ const UserProfile = () => {
               designation: userData.designation.value,
               organizationName: userData.organizationName.value,
               profileImage: url,
+              status: userData.status.value,
               requester: {
                 requestID: generateGUID(),
                 requesterID: credentials.data.userID,
@@ -534,6 +547,7 @@ const UserProfile = () => {
             designation: userData.designation.value,
             organizationName: userData.organizationName.value,
             profileImage: url,
+            status: userData.status.value,
             requester: {
               requestID: generateGUID(),
               requesterID: credentials.data.userID,
