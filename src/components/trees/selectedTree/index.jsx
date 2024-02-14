@@ -55,7 +55,6 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
     truncatedLabel = truncateHtml(nodeDatum.name, 115); // Maximum length for truncated HTML and content
   }
 
-
   let nodeClassName = styles.node;
 
   if (userType === "admin") {
@@ -108,20 +107,24 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
               </div>
             )}
             style={{
-              padding: !contentIsHTML ?
-                `${padding * 0.5}px ${padding}px` : `${padding * 0.1}px ${padding}px ${padding * 0.1}px ${padding + 5}px`
+              padding: !contentIsHTML
+                ? `${padding * 0.5}px ${padding}px`
+                : `${padding * 0.1}px ${padding}px ${padding * 0.1}px ${
+                    padding + 5
+                  }px`,
             }}
           >
             {/* {label} */}
             {/* <span dangerouslySetInnerHTML={{ __html: labelHtml }} /> */}
-            {
-              !contentIsHTML ? label :
-                (
-                  truncatedLabel && 
-                  <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(truncatedLabel) }} />
-                )
-            }
-
+            {!contentIsHTML
+              ? label
+              : truncatedLabel && (
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(truncatedLabel),
+                    }}
+                  />
+                )}
           </div>
         </div>
       </foreignObject>
@@ -149,8 +152,8 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
         optimalElements.forEach((element) => {
           const parent = element.parentElement;
 
-          parent.appendChild(element.cloneNode(true));
           if (parent.contains(element)) {
+            parent.appendChild(element.cloneNode(true));
             parent.removeChild(element);
           }
         });
@@ -161,8 +164,8 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
 
         optimalElements.forEach((element) => {
           const parent = element.parentElement;
-          parent.appendChild(element.cloneNode(true));
           if (parent.contains(element)) {
+            parent.appendChild(element.cloneNode(true));
             parent.removeChild(element);
           }
         });
@@ -172,8 +175,8 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
 
       gElements.forEach((element) => {
         const parent = element.parentElement;
-        parent.appendChild(element.cloneNode(true));
         if (parent.contains(element)) {
+          parent.appendChild(element.cloneNode(true));
           parent.removeChild(element);
         }
       });
@@ -185,6 +188,7 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
         const parent = element.parentElement;
         parent.appendChild(element.cloneNode(true));
         if (parent.contains(element)) {
+          parent.appendChild(element.cloneNode(true));
           parent.removeChild(element);
         }
       });
@@ -192,6 +196,10 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
       const { width, height } = containerRef.current.getBoundingClientRect();
       setTranslate({ x: width / 2, y: 0 });
     }
+
+    return () => {
+      containerRef.current = null;
+    };
   }, [containerRef]);
 
   const getDynamicPathClass = ({ source, target }, orientation) => {

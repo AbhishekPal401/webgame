@@ -180,24 +180,24 @@ const MissionCompleted = () => {
             <Button
               customClassName={styles.export}
               onClick={() => {
-                // var node = document.getElementsByClassName("rd3t-svg");
-                // console.log("node", node[0]);
-                // if (node[0]) {
-                //   toSvg(node[0], {
-                //     filter: (node) => {
-                //       return node.tagName !== "i";
-                //     },
-                //   })
-                //     .then(function (dataUrl) {
-                //       var link = document.createElement("a");
-                //       link.download = "tree.svg";
-                //       link.href = dataUrl;
-                //       link.click();
-                //     })
-                //     .catch(function (error) {
-                //       console.error("oops, something went wrong!", error);
-                //     });
-                // }
+                var node = document.getElementsByClassName("rd3t-svg");
+                console.log("node", node[0]);
+                if (node[0]) {
+                  toSvg(node[0], {
+                    filter: (node) => {
+                      return node.tagName !== "i";
+                    },
+                  })
+                    .then(function (dataUrl) {
+                      var link = document.createElement("a");
+                      link.download = "tree.svg";
+                      link.href = dataUrl;
+                      link.click();
+                    })
+                    .catch(function (error) {
+                      console.error("oops, something went wrong!", error);
+                    });
+                }
               }}
             >
               Export
