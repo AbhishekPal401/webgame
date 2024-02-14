@@ -568,6 +568,8 @@ const GamePlay = () => {
           Array.isArray(answerDetails.votersInfo)
         ) {
           let isDeciderDecsionAnswer = false;
+          if (answerDetails.answer === "NA" || answerDetails.answer === "na")
+          return;
           answerDetails.votersInfo.forEach((userDetails) => {
             if (userDetails.userID) {
               isDeciderDecsionAnswer = true;
