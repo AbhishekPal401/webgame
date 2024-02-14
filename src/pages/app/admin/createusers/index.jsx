@@ -61,6 +61,10 @@ const CreateUser = () => {
       value: "",
       error: "",
     },
+    status: {
+      value: "",
+      error: "",
+    },
   });
 
   const [defaultUrl, setDefaultUrl] = useState(null);
