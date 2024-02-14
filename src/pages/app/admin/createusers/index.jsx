@@ -356,7 +356,7 @@ const CreateUser = () => {
         },
       };
 
-      valid = false;
+     valid = false;
     } else if (!validateEmail(userData.email.value)) {
       console.log("!validateEmail :", userData?.email?.value);
       data = {

@@ -13,8 +13,8 @@ export const validatePassword = (password) => {
     // const re =
     //   /[a-z0-9!#$%&'*+=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
     // const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // email changes min 6 
-    const re = /^[a-zA-Z0-9._-]{6,254}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // email changes min 6 and max 254 characters
-    // const re = /^(?=.{1,254}$)[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // email changes with max 254 and min 6 chars
+    // const re = /^[a-zA-Z0-9._-]{6,254}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // email changes min 6 and max 254 characters
+    const re = /^(?=.{6,254}$)[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // email changes with max 254 and min 6 chars
     return re.test(email);
   };
 
