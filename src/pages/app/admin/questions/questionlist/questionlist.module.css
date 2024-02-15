@@ -132,7 +132,15 @@
   white-space: nowrap;
 }
 .tablePlainCell {
-  max-width: 30rem;
+  max-width: 30rem !important;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tablePlainCell > div {
+  width: 95%;
+  max-height: 1.5rem;
   word-wrap: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
