@@ -8,11 +8,32 @@ const interpolate = (lowestValue, highestValue, minValue, maxValue, value) => {
   return lowestValue + (highestValue - lowestValue) * percentage;
 };
 
-const progress = ({ progress = 0 }) => {
+const scoreMasterDefault = [
+  {
+    ScoreDisplay: "Bad",
+  },
+  {
+    ScoreDisplay: "Below Average",
+  },
+  {
+    ScoreDisplay: "Average",
+  },
+  {
+    ScoreDisplay: "Above Average",
+  },
+  {
+    ScoreDisplay: "Good",
+  },
+];
+
+const progress = ({ progress = 0, scoreMaster = [] }) => {
   const [rotationDegree, setRotationDegree] = useState(0);
   const [pointerPosition, setPointerPosition] = useState(0);
 
   const [showTooltip, setShowTooltip] = useState(false);
+
+  console.log("progress", progress);
+  console.log("scoreMaster", scoreMaster);
 
   useEffect(() => {
     const targetDegree = interpolate(-85, 85, 0, 100, progress); // Assuming progress ranges from 0 to 1
@@ -66,11 +87,21 @@ const progress = ({ progress = 0 }) => {
             </svg>
           </div>
           <div className={styles.progresslabels}>
-            <div className={styles.label}>Bad</div>
-            <div className={styles.label}>Below Average</div>
-            <div className={styles.label}>Average</div>
-            <div className={styles.label}>Above Average</div>
-            <div className={styles.label}>Good</div>
+            {scoreMaster && Array.isArray(scoreMaster) && scoreMaster.length > 0
+              ? scoreMaster.map((scoreMasterItem, index) => {
+                  return (
+                    <div className={styles.label} key={index}>
+                      {scoreMasterItem.ScoreDisplay}
+                    </div>
+                  );
+                })
+              : scoreMasterDefault.map((scoreMasterItem, index) => {
+                  return (
+                    <div className={styles.label} key={index}>
+                      {scoreMasterItem.ScoreDisplay}
+                    </div>
+                  );
+                })}
           </div>
         </div>
       )}

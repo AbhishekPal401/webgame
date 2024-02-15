@@ -715,13 +715,18 @@ const GamePlay = () => {
           </div>
           <div className={styles.vertical_line}></div>
           <div className={styles.score}>
-            <Progress />
-            {/* <div>Score</div>
-            <div>
-              {questionDetails?.data?.CurrentScore
-                ? questionDetails?.data?.CurrentScore
-                : 0}
-            </div> */}
+            <Progress
+              progress={
+                questionDetails?.data?.ScorePercentage
+                  ? Number(questionDetails?.data?.ScorePercentage)
+                  : 0
+              }
+              scoreMaster={
+                questionDetails?.data?.ScoreMaster
+                  ? questionDetails?.data?.ScoreMaster
+                  : []
+              }
+            />
           </div>
         </div>
       </div>
