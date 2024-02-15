@@ -38,6 +38,7 @@ import TeamMembers from "../../../../components/teammembers";
 import { TIMER_STATES } from "../../../../constants/timer";
 import IntroMedia from "../../../../components/intromedia";
 import { Tooltip } from "react-tooltip";
+import Progress from "../../../../components/progress";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -714,12 +715,13 @@ const GamePlay = () => {
           </div>
           <div className={styles.vertical_line}></div>
           <div className={styles.score}>
-            <div>Score</div>
+            <Progress />
+            {/* <div>Score</div>
             <div>
               {questionDetails?.data?.CurrentScore
                 ? questionDetails?.data?.CurrentScore
                 : 0}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

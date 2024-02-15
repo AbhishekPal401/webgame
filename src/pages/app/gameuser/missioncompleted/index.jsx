@@ -133,16 +133,10 @@ const MissionCompleted = () => {
                 instanceProgress &&
                 instanceProgress.data &&
                 instanceProgress.data.Summary && (
-                  <>
-                    {currentTab === 0 ? (
-                      <SelectedTree
-                        data={instanceProgress.data.Summary}
-                        userType="normal"
-                      />
-                    ) : (
-                      <OptimalTree data={instanceSummary.data.Summary} />
-                    )}
-                  </>
+                  <SelectedTree
+                    data={instanceProgress.data.Summary}
+                    userType="normal"
+                  />
                 )}
               <div className={styles.right}>
                 <div>Time Spent</div>

@@ -149,12 +149,10 @@ const MissionCompleted = () => {
                 instanceProgress &&
                 instanceProgress.data &&
                 instanceProgress.data.Summary && (
-                  <>
-                    <SelectedTree
-                      data={instanceProgress.data.Summary}
-                      userType="admin"
-                    />
-                  </>
+                  <SelectedTree
+                    data={instanceProgress.data.Summary}
+                    userType="admin"
+                  />
                 )}
               <div className={styles.right}>
                 <div>Time Spent</div>

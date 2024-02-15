@@ -31,6 +31,7 @@ import { TIMER_STATES } from "../../../../constants/timer.js";
 import IntroMedia from "../../../../components/intromedia/index.jsx";
 import { Tooltip } from "react-tooltip";
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession.js";
+import Progress from "../../../../components/progress";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -221,34 +222,6 @@ const GamePlay = () => {
       setPosition(topPosition);
     }
   }, []);
-
-  const fetchFirstQuestion = useCallback(() => {
-    if (sessionDetails?.data) {
-      const sessionData = JSON.parse(sessionDetails.data);
-
-      const data = {
-        sessionID: sessionData.SessionID,
-        scenarioID: sessionData.ScenarioID,
-        currentQuestionID: "",
-        ReConnection: false,
-        currentQuestionNo: 0,
-        currentStatus: "InProgress",
-        userID: credentials.data.userID,
-        currentTotalScore: 0,
-        requester: {
-          requestID: generateGUID(),
-          requesterID: credentials.data.userID,
-          requesterName: credentials.data.userName,
-          requesterType: credentials.data.role,
-        },
-      };
-      dispatch(getNextQuestionDetails(data));
-    }
-  }, [sessionDetails, credentials]);
-
-  // useEffect(() => {
-  //   fetchFirstQuestion();
-  // }, []);
 
   useEffect(() => {
     const handleProceedToNextQuestion = (data) => {
@@ -568,6 +541,7 @@ const GamePlay = () => {
           Array.isArray(answerDetails.votersInfo)
         ) {
           let isDeciderDecsionAnswer = false;
+
           answerDetails.votersInfo.forEach((userDetails) => {
             if (userDetails.userID) {
               isDeciderDecsionAnswer = true;
@@ -783,12 +757,13 @@ const GamePlay = () => {
           </div>
           <div className={styles.vertical_line}></div>
           <div className={styles.score}>
-            <div>Score</div>
+            <Progress />
+            {/* <div>Score</div>
             <div>
               {questionDetails?.data?.CurrentScore
                 ? questionDetails?.data?.CurrentScore
                 : 0}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

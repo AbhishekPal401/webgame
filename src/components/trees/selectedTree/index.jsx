@@ -1,4 +1,10 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useInsertionEffect,
+} from "react";
 import styles from "./selectedTree.module.css";
 import Tree from "react-d3-tree";
 import { Tooltip } from "react-tooltip";
@@ -152,7 +158,7 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
         optimalElements.forEach((element) => {
           const parent = element.parentElement;
 
-          if (parent.contains(element)) {
+          if (parent && parent.contains(element)) {
             parent.appendChild(element.cloneNode(true));
             parent.removeChild(element);
           }
@@ -164,7 +170,7 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
 
         optimalElements.forEach((element) => {
           const parent = element.parentElement;
-          if (parent.contains(element)) {
+          if (parent && parent.contains(element)) {
             parent.appendChild(element.cloneNode(true));
             parent.removeChild(element);
           }
@@ -175,7 +181,7 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
 
       gElements.forEach((element) => {
         const parent = element.parentElement;
-        if (parent.contains(element)) {
+        if (parent && parent.contains(element)) {
           parent.appendChild(element.cloneNode(true));
           parent.removeChild(element);
         }
@@ -187,7 +193,7 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
       leafElements.forEach((element) => {
         const parent = element.parentElement;
         parent.appendChild(element.cloneNode(true));
-        if (parent.contains(element)) {
+        if (parent && parent.contains(element)) {
           parent.appendChild(element.cloneNode(true));
           parent.removeChild(element);
         }

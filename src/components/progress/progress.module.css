@@ -1,0 +1,93 @@
+.container {
+  width: 18rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.meter {
+  width: 100%;
+}
+.tick {
+  position: absolute;
+  bottom: 0.5rem;
+  height: 8rem;
+  transform-origin: bottom;
+  transform: rotate(-85deg);
+  transition: transform 0.5s ease;
+}
+.info {
+  position: absolute;
+  right: -0.5rem;
+  bottom: 0;
+  width: 1rem;
+  height: 1rem;
+}
+.detailContainer {
+  position: absolute;
+  bottom: -12rem;
+  right: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 32rem;
+  background-color: var(--black);
+  backdrop-filter: 1rem;
+  padding: 2rem 0.25rem 2rem 0.25rem;
+}
+.progressBar {
+  width: 80%;
+  height: 3.6rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+}
+.progressBarItem {
+  width: 25%;
+  height: 100%;
+}
+
+.progressBarItem:first-child {
+  border-top-left-radius: 5rem;
+  border-bottom-left-radius: 5rem;
+}
+
+.progressBarItem:nth-child(4) {
+  border-top-right-radius: 5rem;
+  border-bottom-right-radius: 5rem;
+}
+.line {
+  width: 98%;
+  right: 0.25rem;
+  bottom: 0.9rem;
+  height: 0.2rem;
+  background-color: #616161;
+  position: absolute;
+  margin: 0 auto;
+}
+.pointer {
+  width: 3rem;
+  height: 3rem;
+  left: -5%;
+  position: absolute;
+  bottom: -1rem;
+  transition: left 0.5s ease;
+}
+.progresslabels {
+  margin-top: 0.5rem;
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.label {
+  width: 22.5%;
+  color: #fff;
+  font-size: 1rem;
+}
+.label:last-child {
+  width: 10%;
+}
