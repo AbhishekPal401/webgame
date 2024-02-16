@@ -161,6 +161,28 @@ const Question = ({
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
 
+  const getDecisionCount = useCallback(() => {
+    let decisionCount = 0;
+
+    decisionDetails.forEach((answerDetails) => {
+      if (answerDetails.votersInfo && Array.isArray(answerDetails.votersInfo)) {
+        let isDeciderDecsionAnswer = false;
+        if (answerDetails.answer === "NA" || answerDetails.answer === "na")
+          return;
+        answerDetails.votersInfo.forEach((userDetails) => {
+          if (userDetails.userID) {
+            isDeciderDecsionAnswer = true;
+          }
+        });
+        if (isDeciderDecsionAnswer) {
+          decisionCount++;
+        }
+      }
+    });
+
+    return decisionCount;
+  }, [decisionDetails]);
+
   let mediaTypeText = "";
 
   if (MediaType === "Video" && QuestionIntroMediaURL) {
@@ -327,7 +349,13 @@ const Question = ({
     if (isAdmin) {
       CustomButtonRender = (
         <div className={styles.buttonContainer}>
-          <div>Decision Made by {delegatedTo}</div>
+          {getDecisionCount() === 0 ? (
+            <div>Decision is not Made </div>
+          ) : getDecisionCount() === 1 ? (
+            <div>Decision Made by {delegatedTo} </div>
+          ) : (
+            <div>Decision Made by {delegatedTo}s </div>
+          )}
           <Button customClassName={styles.button} onClick={onNextQuestion}>
             Approve & Next Question
           </Button>
@@ -598,13 +626,14 @@ const Question = ({
                       decisionDetails.length > 0 &&
                       getDeciderDecisionById(item?.AnswerID) &&
                       getDeciderDecisionById(item?.AnswerID).userName.map(
-                        (username) => {
+                        (username, index) => {
                           const shortenedDesignation = username.substring(0, 3);
                           return (
                             <div
                               className={styles.userbadge}
                               data-tooltip-id="des-tooltip"
                               data-tooltip-content={username}
+                              key={index}
                             >
                               {shortenedDesignation}
                             </div>

@@ -143,10 +143,7 @@ const MissionCompleted = () => {
               }}
             />
             <div className={styles.tree}>
-              {instanceSummary &&
-                instanceSummary.data &&
-                instanceSummary.data.Summary &&
-                instanceProgress &&
+              {instanceProgress &&
                 instanceProgress.data &&
                 instanceProgress.data.Summary && (
                   <SelectedTree
