@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { signalRService } from "../../../../services/signalR";
 import { setActiveUsers } from "../../../../store/local/gameplay";
 import { Tooltip } from "react-tooltip";
+import { getCurrentTimeStamp } from "../../../../utils/helper";
 
 const AdminGameLanding = () => {
   const [ready, setReady] = useState(false);
@@ -202,8 +203,8 @@ const AdminGameLanding = () => {
         UserID: credentials.data.userID,
         UserRole: credentials.data.role,
         QuestionID: questionDetails.data.QuestionDetails.QuestionID,
-        GlobalTimer: Date.now().toString(),
-        QuestionTimer: Date.now().toString(),
+        GlobalTimer: getCurrentTimeStamp(),
+        QuestionTimer: getCurrentTimeStamp(),
         ActionType: "IntroductionSkip",
       };
 

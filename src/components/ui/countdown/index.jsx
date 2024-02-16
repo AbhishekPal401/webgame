@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import styles from "./countdown.module.css";
 import { useStopwatch } from "react-timer-hook";
+import { getCurrentTimeStamp } from "../../../utils/helper";
 
 const CountDown = ({ initialTimestamp = Date.now() }) => {
   const {
@@ -16,10 +17,12 @@ const CountDown = ({ initialTimestamp = Date.now() }) => {
   } = useStopwatch({ autoStart: true });
 
   useEffect(() => {
-    const currentTimestamp = Date.now() / 1000;
+    const currentTimeInIndia = Number(getCurrentTimeStamp());
+
+    const currentTimestamp = currentTimeInIndia / 1000;
     const offsetTimestamp = initialTimestamp / 1000 - currentTimestamp;
 
-    const stopwatchOffset = new Date();
+    const stopwatchOffset = new Date(currentTimeInIndia);
     stopwatchOffset.setSeconds(
       stopwatchOffset.getSeconds() + Math.abs(offsetTimestamp)
     );

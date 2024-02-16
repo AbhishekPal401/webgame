@@ -11,7 +11,6 @@ import React, {
 import styles from "./question.module.css";
 import SmallCountDown from "../smallcountdown";
 import Button from "../../../common/button";
-import Countdown from "react-countdown";
 
 import VideoController from "../../../media/videocontroller";
 import AudioController from "../../../media/audiocontroller";
@@ -24,59 +23,7 @@ import { signalRService } from "../../../../services/signalR";
 import { useSelector } from "react-redux";
 import { useTimer } from "react-timer-hook";
 import ImageController from "../../../media/imagecontroller";
-
-const renderer = ({ minutes, seconds, completed }) => {
-  if (completed) {
-    return <span className={styles.countdown}>00 : 00</span>;
-  } else {
-    const paddedMinutes = String(minutes).padStart(2, "0");
-    const paddedSeconds = String(seconds).padStart(2, "0");
-
-    return (
-      <span className={styles.countdown}>
-        {paddedMinutes} : {paddedSeconds}
-      </span>
-    );
-  }
-};
-
-const CountDown = memo(
-  forwardRef(({ duration = 5000, onComplete = () => {}, QuestionNo }, ref) => {
-    const countdownRef = useRef(null);
-
-    // Expose start, stop, and pause functions to Question component
-
-    useImperativeHandle(ref, () => ({
-      start: () => countdownRef.current.start(),
-      stop: () => countdownRef.current.stop(),
-      pause: () => countdownRef.current.pause(),
-    }));
-
-    const handleMount = useCallback(
-      (timeDelta) => {
-        if (
-          timeDelta.completed &&
-          (timeDelta.seconds > 0 || timeDelta.minutes > 0)
-        ) {
-          onComplete();
-        }
-      },
-      [onComplete]
-    );
-
-    return (
-      <Countdown
-        ref={countdownRef}
-        key={duration}
-        onMount={handleMount}
-        date={Date.now() + duration}
-        renderer={renderer}
-        autoStart={false}
-        onComplete={onComplete}
-      />
-    );
-  })
-);
+import { getCurrentTimeStamp } from "../../../../utils/helper";
 
 const Timer = ({ Duration, onExpire = () => {}, status = "start" }) => {
   const [expiryTimestamp, setExpiryTimestamp] = useState(new Date());
@@ -100,14 +47,18 @@ const Timer = ({ Duration, onExpire = () => {}, status = "start" }) => {
   // console.log("time ", minutes, seconds);
 
   useEffect(() => {
+    const currentTimeInIndia = new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Kolkata",
+    });
+
     if (status === "pause") {
       pause();
     } else if (status === "start") {
-      const time = new Date();
+      const time = new Date(currentTimeInIndia);
       time.setSeconds(time.getSeconds() + Duration);
       restart(time);
     }
-    const time = new Date();
+    const time = new Date(currentTimeInIndia);
     time.setSeconds(time.getSeconds() + Duration);
     setExpiryTimestamp(time);
   }, [status, Duration]);
@@ -502,7 +453,7 @@ const Question = ({
       UserRole: credentials.data.role,
       QuestionID: questionDetails.data.QuestionDetails.QuestionID,
       GlobalTimer: "",
-      QuestionTimer: Date.now().toString(),
+      QuestionTimer: getCurrentTimeStamp(),
       ActionType: "QuestionMediaSkip",
     };
 

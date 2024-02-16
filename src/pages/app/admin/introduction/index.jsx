@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { generateGUID, isJSONString } from "../../../../utils/common";
 import { getNextQuestionDetails } from "../../../../store/app/user/questions/getNextQuestion";
 import { toast } from "react-toastify";
-import { extractFileType } from "../../../../utils/helper";
+import { extractFileType, getCurrentTimeStamp } from "../../../../utils/helper";
 import PDFPreview from "../../../../components/preview/pdfpreview";
 import { signalRService } from "../../../../services/signalR";
 // import PDFPreview from "../../../../components/preview/pdfpreview";
@@ -55,7 +55,7 @@ const Intro = () => {
       UserID: credentials.data.userID,
       UserRole: credentials.data.role,
       QuestionID: questionDetails.data.QuestionDetails.QuestionID,
-      GlobalTimer: Date.now().toString(),
+      GlobalTimer: getCurrentTimeStamp(),
       QuestionTimer: "",
       ActionType: "IntroductionSkip",
     };

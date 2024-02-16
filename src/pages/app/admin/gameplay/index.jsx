@@ -32,6 +32,7 @@ import IntroMedia from "../../../../components/intromedia/index.jsx";
 import { Tooltip } from "react-tooltip";
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession.js";
 import Progress from "../../../../components/progress";
+import { getCurrentTimeStamp } from "../../../../utils/helper.js";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -303,7 +304,7 @@ const GamePlay = () => {
         UserRole: credentials.data.role,
         QuestionID: questionDetails.data.QuestionDetails.QuestionID,
         GlobalTimer: "",
-        QuestionTimer: Date.now().toString(),
+        QuestionTimer: getCurrentTimeStamp(),
         ActionType: "QuestionMediaSkip",
       };
 

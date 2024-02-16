@@ -15,6 +15,7 @@ import {
 } from "../../../../store/app/user/questions/getNextQuestion";
 import { toast } from "react-toastify";
 import { signalRService } from "../../../../services/signalR";
+import { getCurrentTimeStamp } from "../../../../utils/helper";
 
 const UserHomePage = () => {
   const [ready, setReady] = useState(true);
@@ -140,26 +141,6 @@ const UserHomePage = () => {
       dispatch(getNextQuestionDetails(data));
     }
   }, [sessionDetails, credentials]);
-
-  const onSkip = useCallback(() => {
-    if (sessionDetails?.data) {
-      const sessionData = JSON.parse(sessionDetails.data);
-
-      const data = {
-        InstanceID: sessionData.InstanceID,
-        UserID: credentials.data.userID,
-        UserRole: credentials.data.role,
-        QuestionID: questionDetails.data.QuestionDetails.QuestionID,
-        GlobalTimer: Date.now().toString(),
-        QuestionTimer: "",
-        ActionType: "IntroductionSkip",
-      };
-
-      console.log(" global skip data", data);
-
-      signalRService.SkipMediaInvoke(data);
-    }
-  }, [sessionDetails, credentials, questionDetails]);
 
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;

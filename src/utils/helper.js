@@ -608,3 +608,14 @@ export const truncateHtml = (html, maxLength) => {
 
   return truncatedHtml;
 };
+
+export const getCurrentTimeStamp = () => {
+  const currentTimeInIndia = new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Kolkata",
+  });
+
+  // Convert the formatted date string back to timestamp
+  const timestamp = new Date(currentTimeInIndia).getTime();
+
+  return timestamp.toString();
+};
