@@ -194,7 +194,15 @@ const Question = ({
     (MediaType === "pdf" || MediaType === "Pdf") &&
     QuestionIntroMediaURL
   ) {
-    mediaTypeText = "Replay PDF";
+    mediaTypeText = "show PDF";
+  } else if (
+    MediaType === "Image" ||
+    MediaType === "image" ||
+    MediaType === "png" ||
+    MediaType === "jpg" ||
+    MediaType === "jpeg"
+  ) {
+    mediaTypeText = "show Image";
   }
 
   if (CurrentState === PlayingStates.VotingInProgress) {
