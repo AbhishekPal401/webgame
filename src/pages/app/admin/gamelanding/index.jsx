@@ -52,6 +52,10 @@ const AdminGameLanding = () => {
     }
   }, [sessionDetails, credentials]);
 
+  useEffect(() => {
+    dispatch(resetNextQuestionDetailsState());
+  }, []);
+
   const fetchIntro = useCallback(() => {
     if (sessionDetails?.data) {
       const sessionData = JSON.parse(sessionDetails.data);

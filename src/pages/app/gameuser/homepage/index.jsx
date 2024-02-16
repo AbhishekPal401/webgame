@@ -74,6 +74,10 @@ const UserHomePage = () => {
   };
 
   useEffect(() => {
+    dispatch(resetNextQuestionDetailsState());
+  }, []);
+
+  useEffect(() => {
     if (!credentials) return;
 
     const data = {

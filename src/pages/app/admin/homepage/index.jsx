@@ -14,14 +14,16 @@ import { useNavigate } from "react-router-dom";
 import { dateFormats } from "../../../../constants/date.js";
 import {
   deleteScenarioByID,
-  resetDeleteScenarioState
+  resetDeleteScenarioState,
 } from "../../../../store/app/admin/scenario/deleteScenario.js";
 import {
   clearGameInstanceByID,
-  resetClearGameInstanceState
+  resetClearGameInstanceState,
 } from "../../../../store/app/admin/gameinstances/clearInstanceById.js";
 import { toast } from "react-toastify";
 import ModalContainer from "../../../../components/modal/index.jsx";
+import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
+import { resetNextQuestionDetailsState } from "../../../../store/app/user/questions/getNextQuestion";
 
 const Homepage = () => {
   const [pageCount, setPageCount] = useState(5);
@@ -40,8 +42,12 @@ const Homepage = () => {
     (state) => state.sessionHistory
   );
   const { scenarioByPage } = useSelector((state) => state.scenarios);
-  const { deleteScenarioResponse } = useSelector((state) => state.deleteScenario);
-  const { clearGameInstanceByIdResponse } = useSelector((state) => state.clearInstanceById);
+  const { deleteScenarioResponse } = useSelector(
+    (state) => state.deleteScenario
+  );
+  const { clearGameInstanceByIdResponse } = useSelector(
+    (state) => state.clearInstanceById
+  );
 
   useEffect(() => {
     if (credentials) {
@@ -90,7 +96,8 @@ const Homepage = () => {
   }, [scenarioByPage]);
 
   useEffect(() => {
-    if (deleteScenarioResponse === null || deleteScenarioResponse === undefined) return;
+    if (deleteScenarioResponse === null || deleteScenarioResponse === undefined)
+      return;
 
     if (deleteScenarioResponse.success) {
       toast.success(deleteScenarioResponse.message);
@@ -115,7 +122,11 @@ const Homepage = () => {
   }, [deleteScenarioResponse]);
 
   useEffect(() => {
-    if (clearGameInstanceByIdResponse === null || clearGameInstanceByIdResponse === undefined) return;
+    if (
+      clearGameInstanceByIdResponse === null ||
+      clearGameInstanceByIdResponse === undefined
+    )
+      return;
 
     if (clearGameInstanceByIdResponse.success) {
       // toast.success(clearGameInstanceByIdResponse.message);
@@ -134,6 +145,9 @@ const Homepage = () => {
 
       dispatch(getSessionHistoryByType(data));
       dispatch(resetClearGameInstanceState());
+      dispatch(resetSessionDetailsState());
+      dispatch(resetNextQuestionDetailsState());
+
       setShowClearModal(null);
     } else if (!clearGameInstanceByIdResponse.success) {
       toast.error(clearGameInstanceByIdResponse.message);
@@ -180,7 +194,6 @@ const Homepage = () => {
     dispatch(clearGameInstanceByID(data));
   };
 
-
   return (
     <PageContainer>
       <div className={styles.container}>
@@ -221,7 +234,8 @@ const Homepage = () => {
                         <div className={styles.cardBottomContainer}>
                           <div className={styles.cardBottomContainerLeft}>
                             <p>
-                              Updated : {formatDateString(
+                              Updated :{" "}
+                              {formatDateString(
                                 scenario.UpdatedAt,
                                 dateFormats.DATE_FORMAT_8
                               )}
@@ -244,13 +258,12 @@ const Homepage = () => {
                                 ? "Start"
                                 : scenario.Status === "Start" ||
                                   scenario.Status === "InProgress"
-                                  ? "Join"
-                                  : "Report"}
+                                ? "Join"
+                                : "Report"}
                             </Button>
 
-                            {
-                              (scenario.Status === "Start" ||
-                                scenario.Status === "InProgress") &&
+                            {(scenario.Status === "Start" ||
+                              scenario.Status === "InProgress") && (
                               <Button
                                 onClick={() => {
                                   setShowClearModal(scenario.InstanceID);
@@ -258,8 +271,7 @@ const Homepage = () => {
                               >
                                 Clear
                               </Button>
-                            }
-
+                            )}
                           </div>
                         </div>
                       </div>
@@ -306,33 +318,36 @@ const Homepage = () => {
                     scenarioByPage.data &&
                     JSON.parse(scenarioByPage?.data)?.ScenarioDetails.map(
                       (scenario, index) => {
-                        const isSelected = selectedCheckboxes.includes(scenario.ScenarioID);
+                        const isSelected = selectedCheckboxes.includes(
+                          scenario.ScenarioID
+                        );
                         return (
                           <tr key={index}>
                             <td>
                               <Checkbox
                                 checked={isSelected}
-                                onChange={() => handleCheckboxChange(scenario.ScenarioID)}
+                                onChange={() =>
+                                  handleCheckboxChange(scenario.ScenarioID)
+                                }
                               />
                             </td>
                             <td>{index + 1}</td>
-                            <td>
-                              {scenario.ScenarioName}
-                            </td>
+                            <td>{scenario.ScenarioName}</td>
                             <td
                               className={styles.scenarioDescription}
                               onClick={() => {
                                 navigate(`/questions/${scenario.ScenarioID}`);
                               }}
-                            >{scenario.Description}</td>
+                            >
+                              {scenario.Description}
+                            </td>
                             <td>{formatDateString(scenario.CreatedAt)}</td>
                             <td>{scenario.GamesPlayed}</td>
                             <td>
-                              {
-                                scenario.LastPlayed &&
-                                formatDateString(scenario.LastPlayed) !== "Invalid Date" &&
-                                formatDateString(scenario.LastPlayed)
-                              }
+                              {scenario.LastPlayed &&
+                                formatDateString(scenario.LastPlayed) !==
+                                  "Invalid Date" &&
+                                formatDateString(scenario.LastPlayed)}
                             </td>
                             {/* <td>{scenario.LastPlayed != null || scenario.LastPlayed != undefined ?
                               extractDate(scenario.LastPlayed) :
@@ -342,17 +357,22 @@ const Homepage = () => {
                             <td>{scenario.Status}</td>
                             <td>
                               <div className={styles.actions}>
-                                <div className={styles.circleSvg}
+                                <div
+                                  className={styles.circleSvg}
                                   onClick={() => {
                                     if (isSelected) {
-                                      navigate(`/scenario/updatescenarios/${scenario.ScenarioID}`);
+                                      navigate(
+                                        `/scenario/updatescenarios/${scenario.ScenarioID}`
+                                      );
                                     }
                                   }}
                                 >
                                   <svg
                                     height="14"
                                     width="14"
-                                    style={{ opacity: isSelected ? "1" : "0.3" }}
+                                    style={{
+                                      opacity: isSelected ? "1" : "0.3",
+                                    }}
                                   >
                                     <use xlinkHref="sprite.svg#edit_icon" />
                                   </svg>
@@ -368,7 +388,9 @@ const Homepage = () => {
                                   <svg
                                     height="14"
                                     width="14"
-                                    style={{ opacity: isSelected ? "1" : "0.3" }}
+                                    style={{
+                                      opacity: isSelected ? "1" : "0.3",
+                                    }}
                                   >
                                     <use xlinkHref="sprite.svg#delete_icon" />
                                   </svg>
@@ -501,7 +523,6 @@ const Homepage = () => {
         </ModalContainer>
       )}
       {/* Clear instance :: end */}
-
     </PageContainer>
   );
 };
