@@ -50,10 +50,14 @@ const MissionCompleted = () => {
     (state) => state.getInstanceProgress
   );
 
-  console.log("instanceSummary", instanceSummary);
+  // console.log("instanceSummary", instanceSummary);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(resetNextQuestionDetailsState());
+  }, []);
 
   useEffect(() => {
     const sessionData = JSON.parse(sessionDetails.data);

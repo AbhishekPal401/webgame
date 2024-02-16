@@ -154,6 +154,11 @@ const Homepage = () => {
     }
   }, [clearGameInstanceByIdResponse]);
 
+  useEffect(() => {
+    dispatch(resetSessionDetailsState());
+    dispatch(resetNextQuestionDetailsState());
+  }, []);
+
   const navigateTo = () => {
     navigate("/scenario/createscenarios");
   };

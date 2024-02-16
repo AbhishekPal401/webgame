@@ -65,6 +65,10 @@ const MissionCompleted = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(resetNextQuestionDetailsState());
+  }, []);
+
+  useEffect(() => {
     const sessionData = JSON.parse(sessionDetails.data);
 
     if (sessionData && credentials) {
