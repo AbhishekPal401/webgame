@@ -302,40 +302,46 @@ const AdminGameLanding = () => {
         <h3>Welcome to</h3>
         <h1>Game of Risks</h1>
         <div className={styles.players}>
-          <div>
-            {sessionDetails &&
-            sessionDetails.data &&
-            isJSONString(sessionDetails.data) &&
-            JSON.parse(sessionDetails.data)?.SessionID &&
-            JSON.parse(sessionDetails.data)?.CurrentState === "InProgress" ? (
-              <Button
-                onClick={() => {
-                  if (!joinClick) {
-                    getCurrentQuestion();
-                    setJoinClick(false);
+          {sessionDetails && sessionDetails.success ? (
+            <div>
+              {sessionDetails &&
+              sessionDetails.data &&
+              isJSONString(sessionDetails.data) &&
+              JSON.parse(sessionDetails.data)?.SessionID &&
+              JSON.parse(sessionDetails.data)?.CurrentState === "InProgress" ? (
+                <Button
+                  onClick={() => {
+                    if (!joinClick) {
+                      getCurrentQuestion();
+                      setJoinClick(false);
+                    }
+                  }}
+                  customClassName={
+                    !joinClick && isConnectedToServer
+                      ? styles.button
+                      : styles.buttonDisabled
                   }
-                }}
-                customClassName={
-                  !joinClick && isConnectedToServer
-                    ? styles.button
-                    : styles.buttonDisabled
-                }
-              >
-                Join Game
-              </Button>
-            ) : (
-              <Button
-                onClick={() => {
-                  if (ready) {
-                    startGame();
+                >
+                  Join Game
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    if (ready) {
+                      startGame();
+                    }
+                  }}
+                  customClassName={
+                    ready ? styles.button : styles.buttonDisabled
                   }
-                }}
-                customClassName={ready ? styles.button : styles.buttonDisabled}
-              >
-                Start
-              </Button>
-            )}
-          </div>
+                >
+                  Start
+                </Button>
+              )}
+            </div>
+          ) : (
+            <div></div>
+          )}
           {sessionDetails &&
           sessionDetails.data &&
           isJSONString(sessionDetails.data) &&
@@ -344,32 +350,42 @@ const AdminGameLanding = () => {
             <div></div>
           ) : (
             <div className={styles.wait}>
-              <div>Waiting for players to join</div>
-              <div className={styles.users}>
-                {activeUsers &&
-                  Array.isArray(activeUsers) &&
-                  activeUsers.map((userDetails, index) => {
-                    if (userDetails.userID === credentials.data.userID)
-                      return null;
+              {sessionDetails && sessionDetails.success ? (
+                <>
+                  <div>Waiting for players to join</div>
+                  <div className={styles.users}>
+                    {activeUsers &&
+                      Array.isArray(activeUsers) &&
+                      activeUsers.map((userDetails, index) => {
+                        if (userDetails.userID === credentials.data.userID)
+                          return null;
 
-                    const shortenedDesignation =
-                      userDetails.designation.substring(0, 3);
-                    return (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, x: "6em" }}
-                        animate={{ opacity: 1, x: "0" }}
-                        exit={{ opacity: 0, x: "-6rem" }}
-                        transition={{ duration: 0.8, damping: 10 }}
-                        className={styles.userbadge}
-                        data-tooltip-id="my-tooltip"
-                        data-tooltip-content={userDetails.designation}
-                      >
-                        {shortenedDesignation}
-                      </motion.div>
-                    );
-                  })}
-              </div>
+                        const shortenedDesignation =
+                          userDetails.designation.substring(0, 3);
+                        return (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, x: "6em" }}
+                            animate={{ opacity: 1, x: "0" }}
+                            exit={{ opacity: 0, x: "-6rem" }}
+                            transition={{ duration: 0.8, damping: 10 }}
+                            className={styles.userbadge}
+                            data-tooltip-id="my-tooltip"
+                            data-tooltip-content={userDetails.designation}
+                          >
+                            {shortenedDesignation}
+                          </motion.div>
+                        );
+                      })}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    {sessionDetails?.message ? sessionDetails.message : ""}
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>
