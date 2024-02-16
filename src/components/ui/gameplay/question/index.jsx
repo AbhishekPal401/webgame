@@ -23,6 +23,7 @@ import { Tooltip } from "react-tooltip";
 import { signalRService } from "../../../../services/signalR";
 import { useSelector } from "react-redux";
 import { useTimer } from "react-timer-hook";
+import ImageController from "../../../media/imagecontroller";
 
 const renderer = ({ minutes, seconds, completed }) => {
   if (completed) {
@@ -721,6 +722,29 @@ const Question = ({
             ) : MediaType === "Audio" && QuestionIntroMediaURL ? (
               <AudioController
                 audioUrl={QuestionIntroMediaURL}
+                showButton={isAdmin ? true : mediaShownOnce ? true : false}
+                onButtonClick={() => {
+                  if (isAdmin) {
+                    if (mediaShownOnce) {
+                      setShowMedia(false);
+                    } else {
+                      skipInvoke();
+                    }
+                  } else {
+                    if (mediaShownOnce) {
+                      setShowMedia(false);
+                    }
+                  }
+                }}
+              />
+            ) : (MediaType === "Image" ||
+                MediaType === "image" ||
+                MediaType === "png" ||
+                MediaType === "jpg" ||
+                MediaType === "jpeg") &&
+              QuestionIntroMediaURL ? (
+              <ImageController
+                imageUrl={QuestionIntroMediaURL}
                 showButton={isAdmin ? true : mediaShownOnce ? true : false}
                 onButtonClick={() => {
                   if (isAdmin) {

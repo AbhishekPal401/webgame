@@ -23,7 +23,7 @@ export const formatTime = (value) => {
   if (!value || value.trim() === "") {
     return "Invalid Time";
   }
-  console.log("Value : ",value)
+  console.log("Value : ", value);
   const seconds = parseInt(value);
   const hours = Math.floor(seconds / 3600);
   const remainingSeconds = seconds % 3600;
@@ -34,7 +34,7 @@ export const formatTime = (value) => {
       return `${hours} hr`;
     } else {
       // Calculate total hours with decimal precision
-      const totalHours = hours + (minutes / 60);
+      const totalHours = hours + minutes / 60;
 
       // Round to two decimal places
       const formattedHours = totalHours.toFixed(2);
@@ -44,7 +44,7 @@ export const formatTime = (value) => {
     return `${minutes.toFixed(2)} min`;
   }
 
-   // Check if there are decimals in minutes
+  // Check if there are decimals in minutes
   //  const hasDecimals = minutes % 1 !== 0;
 
   //  if (hours > 0) {
@@ -53,7 +53,7 @@ export const formatTime = (value) => {
   //    } else {
   //      // Calculate total hours with decimal precision
   //      const totalHours = hours + (minutes / 60);
- 
+
   //      // Round to two decimal places if there are decimals, else just convert to integer
   //      const formattedHours = hasDecimals ? totalHours.toFixed(2) : totalHours.toFixed(0);
   //      return `${formattedHours} hr`;
@@ -226,7 +226,7 @@ export const formatDateString = (dateTimeString, formatType = "default") => {
     const matches = dateTimeString.match(dateFormat.regex);
     if (matches) {
       parsedDate = createDateFromMatches(matches, dateFormat.format);
-      console.log("incoming date : " + dateTimeString + ", parsedDate : " + parsedDate + " matches : " + matches);
+      // console.log("incoming date : " + dateTimeString + ", parsedDate : " + parsedDate + " matches : " + matches);
       break;
     }
   }
@@ -237,20 +237,24 @@ export const formatDateString = (dateTimeString, formatType = "default") => {
 
   switch (formatType) {
     case dateFormats.DATE_FORMAT_8:
-      return `${parsedDate.getDate()}-${parsedDate.getMonth() + 1
-        }-${parsedDate.getFullYear()}`;
+      return `${parsedDate.getDate()}-${
+        parsedDate.getMonth() + 1
+      }-${parsedDate.getFullYear()}`;
 
     case dateFormats.DATE_FORMAT_1:
-      return `${parsedDate.getDate()}/${parsedDate.getMonth() + 1
-        }/${parsedDate.getFullYear()}`;
+      return `${parsedDate.getDate()}/${
+        parsedDate.getMonth() + 1
+      }/${parsedDate.getFullYear()}`;
 
     case dateFormats.DATE_FORMAT_9:
-      return `${parsedDate.getMonth() + 1
-        }-${parsedDate.getDate()}-${parsedDate.getFullYear()}`;
+      return `${
+        parsedDate.getMonth() + 1
+      }-${parsedDate.getDate()}-${parsedDate.getFullYear()}`;
 
     case dateFormats.DATE_FORMAT_2:
-      return `${parsedDate.getMonth() + 1
-        }/${parsedDate.getDate()}/${parsedDate.getFullYear()}`;
+      return `${
+        parsedDate.getMonth() + 1
+      }/${parsedDate.getDate()}/${parsedDate.getFullYear()}`;
 
     case dateFormats.DATE_FORMAT_7:
       formattedMonth = months[parsedDate.getMonth()];
@@ -281,12 +285,12 @@ const createDateFromMatches = (matches, format) => {
     // const [, ...parsedMatches] = matches;
 
     const formatParts = format.split(/\W+/); // Split format by non-word characters
-    console.log("date parsedMatches :", parsedMatches);
-    console.log("date formatParts :", formatParts);
+    // console.log("date parsedMatches :", parsedMatches);
+    // console.log("date formatParts :", formatParts);
 
     const yearIndex = formatParts.findIndex((part) => part === "YYYY");
     const monthIndex = formatParts.findIndex(
-      (part) => part === "MM" || part === "M" 
+      (part) => part === "MM" || part === "M"
     );
     // const monthIndex = formatParts.findIndex(
     //   (part) => part === "MM" || part === "M" || part === "MMM"
@@ -354,9 +358,9 @@ export const extractDate = (input) => {
   const parts = input.split(/\s+/);
 
   // Rearrange the parts to swap month and day
-  const date = [parts[1], parts[0], parts[2]].join(' ');
+  const date = [parts[1], parts[0], parts[2]].join(" ");
 
-  console.log(" Incoming : "+input+", date :",date)
+  console.log(" Incoming : " + input + ", date :", date);
   return date;
 };
 
@@ -378,7 +382,7 @@ export const extractDate = (input) => {
 // }
 
 export const extractFileType = (fileSrc) => {
-  if(fileSrc === null || fileSrc === undefined) {
+  if (fileSrc === null || fileSrc === undefined) {
     console.log(" null or undefined file SRC");
     return;
   }
@@ -412,7 +416,7 @@ export const extractFileType = (fileSrc) => {
 };
 
 export const extractFileInfo = (fileSrc) => {
-  if(fileSrc === null || fileSrc === undefined) {
+  if (fileSrc === null || fileSrc === undefined) {
     console.log(" null or undefined file SRC");
     return;
   }
@@ -568,11 +572,11 @@ export const extractFirstElementHTML = (html) => {
 export const isHTML = (content) => {
   const isHTML = /<[a-z][\s\S]*>/i.test(content);
   return isHTML;
-}
+};
 
 // Function to truncate HTML content
 export const truncateHtml = (html, maxLength) => {
-  let truncatedHtml = '';
+  let truncatedHtml = "";
   let charCount = 0;
   let inTag = false;
 
@@ -586,18 +590,18 @@ export const truncateHtml = (html, maxLength) => {
     }
 
     // If current character is '<', set inTag to true
-    if (char === '<') {
+    if (char === "<") {
       inTag = true;
     }
 
     // If current character is '>', set inTag to false
-    if (char === '>') {
+    if (char === ">") {
       inTag = false;
     }
 
     // If character count exceeds maxLength, break the loop
     if (charCount >= maxLength) {
-      truncatedHtml += '...';
+      truncatedHtml += "...";
       break;
     }
   }
