@@ -624,7 +624,7 @@ export const getCurrentTimeStamp = () => {
   const time = new Date();
 
   const currentTime = new Date(
-    time.getTime() - time.getTimezoneOffset() * 60000
+    time.getTime() + time.getTimezoneOffset() * 60000
   );
 
   return currentTime.getTime().toString();

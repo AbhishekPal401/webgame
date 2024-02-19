@@ -555,7 +555,7 @@ const GamePlay = () => {
 
             console.log("prev", prev);
 
-            const offsetTimestampinSeconds = currentTime / 1000 - prev / 1000;
+            const offsetTimestampinSeconds = (currentTime - prev) / 1000;
 
             console.log("offsetTimestampinSeconds", offsetTimestampinSeconds);
 
