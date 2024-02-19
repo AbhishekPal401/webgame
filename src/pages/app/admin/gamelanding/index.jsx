@@ -210,6 +210,8 @@ const AdminGameLanding = () => {
 
       console.log(" global skip data", data);
 
+      console.log("SkipMediaInvoke admin", data);
+
       signalRService.SkipMediaInvoke(data);
     }
   }, [sessionDetails, credentials, questionDetails]);

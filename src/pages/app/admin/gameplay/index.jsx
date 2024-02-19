@@ -310,6 +310,8 @@ const GamePlay = () => {
 
       console.log(" global skip data", data);
 
+      console.log("SkipMediaInvoke", data);
+
       signalRService.SkipMediaInvoke(data);
     }
   }, [sessionDetails, credentials, questionDetails]);

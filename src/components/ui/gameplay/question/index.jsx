@@ -450,6 +450,8 @@ const Question = ({
       ActionType: "QuestionMediaSkip",
     };
 
+    console.log("SkipMediaInvoke", data);
+
     signalRService.SkipMediaInvoke(data);
   }, [sessionDetails, credentials, questionDetails]);
 
