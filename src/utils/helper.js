@@ -621,11 +621,18 @@ export const getCurrentTimeStamp = () => {
 
   // return timestamp.toString();
 
+  // const time = new Date();
+
+  // const currentTime = new Date(
+  //   time.getTime() + time.getTimezoneOffset() * 60000
+  // );
+
+  // return currentTime.getTime().toString(); // timestamp  in gmt 00::00
+
   const time = new Date();
 
-  const currentTime = new Date(
-    time.getTime() + time.getTimezoneOffset() * 60000
-  );
+  // Adjust the time to GMT 00:00 by adding the current timezone offset
+  const gmtTime = new Date(time.getTime() + time.getTimezoneOffset() * 60000);
 
-  return currentTime.getTime().toString(); // timestamp  in gmt 00::00
+  return gmtTime.setUTCHours(0, 0, 0, 0).toString();
 };
