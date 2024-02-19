@@ -20,14 +20,15 @@ const CountDown = ({ initialTimestamp = null }) => {
     if (initialTimestamp) {
       const currentTime = Number(getCurrentTimeStamp());
 
-      // console.log("currentTime", currentTime);
-      // console.log("initialTimestamp", initialTimestamp);
+      console.log("currentTime in global", currentTime);
+
+      console.log("initialTimestamp in global", initialTimestamp);
 
       const currentTimestamp = currentTime / 1000;
       const offsetTimestamp =
-        currentTimestamp - Number(initialTimestamp) / 1000;
+        (currentTimestamp - Number(initialTimestamp)) / 1000;
 
-      // console.log("offsetTimestamp", offsetTimestamp);
+      console.log("offsetTimestamp in global", offsetTimestamp);
 
       const stopwatchOffset = new Date();
 

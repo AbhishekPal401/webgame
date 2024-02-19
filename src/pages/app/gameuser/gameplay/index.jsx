@@ -551,7 +551,7 @@ const GamePlay = () => {
 
             console.log("currentTime", currentTime);
 
-            const prev = Number(HubTimerData.QuestionTimer); //in milliseconds
+            const prev = Number(HubTimerData.QuestionTimer);
 
             console.log("prev", prev);
 
@@ -561,6 +561,9 @@ const GamePlay = () => {
 
             if (prev) {
               duration = Math.max(0, duration - offsetTimestampinSeconds);
+
+              console.log("duration", duration);
+
               setMediaShown(true);
             }
           }

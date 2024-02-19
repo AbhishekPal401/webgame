@@ -627,5 +627,5 @@ export const getCurrentTimeStamp = () => {
     time.getTime() + time.getTimezoneOffset() * 60000
   );
 
-  return currentTime.getTime().toString();
+  return currentTime.getTime().toString(); // timestamp  in gmt 00::00
 };
