@@ -3,7 +3,7 @@ import styles from "./countdown.module.css";
 import { useStopwatch } from "react-timer-hook";
 import { getCurrentTimeStamp } from "../../../utils/helper";
 
-const CountDown = ({ initialTimestamp = Date.now() }) => {
+const CountDown = ({ initialTimestamp = null }) => {
   const {
     totalSeconds,
     seconds,
@@ -17,27 +17,36 @@ const CountDown = ({ initialTimestamp = Date.now() }) => {
   } = useStopwatch({ autoStart: true });
 
   useEffect(() => {
-    const currentTimeInIndia = Number(getCurrentTimeStamp());
+    if (initialTimestamp) {
+      const currentTime = Number(getCurrentTimeStamp());
 
-    const currentTimestamp = currentTimeInIndia / 1000;
-    const offsetTimestamp = initialTimestamp / 1000 - currentTimestamp;
+      // console.log("currentTime", currentTime);
+      // console.log("initialTimestamp", initialTimestamp);
 
-    const stopwatchOffset = new Date(currentTimeInIndia);
-    stopwatchOffset.setSeconds(
-      stopwatchOffset.getSeconds() + Math.abs(offsetTimestamp)
-    );
+      const currentTimestamp = currentTime / 1000;
+      const offsetTimestamp =
+        currentTimestamp - Number(initialTimestamp) / 1000;
 
-    reset(stopwatchOffset, true);
+      // console.log("offsetTimestamp", offsetTimestamp);
+
+      const stopwatchOffset = new Date();
+
+      stopwatchOffset.setSeconds(
+        stopwatchOffset.getSeconds() + offsetTimestamp
+      );
+
+      reset(stopwatchOffset, true);
+    } else {
+      const stopwatchOffset = new Date();
+
+      stopwatchOffset.setSeconds(stopwatchOffset.getSeconds());
+      reset(stopwatchOffset, true);
+    }
 
     return () => {
       pause();
     };
   }, [initialTimestamp]);
-
-  // console.log("hours");
-
-  // console.log("minutes", minutes);
-  // console.log("seconds", seconds);
 
   return (
     <>

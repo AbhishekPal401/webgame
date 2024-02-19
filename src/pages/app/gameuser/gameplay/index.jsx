@@ -39,6 +39,7 @@ import { TIMER_STATES } from "../../../../constants/timer";
 import IntroMedia from "../../../../components/intromedia";
 import { Tooltip } from "react-tooltip";
 import Progress from "../../../../components/progress";
+import { getCurrentTimeStamp } from "../../../../utils/helper";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -127,7 +128,7 @@ const GamePlay = () => {
   const [position, setPosition] = useState(0);
   const [countdown, setCoundown] = useState(TIMER_STATES.STOP);
   const [duration, setDuration] = useState(0);
-  const [initGlobaTimeOffset, setInitGlobaTimeOffset] = useState(Date.now());
+  const [initGlobaTimeOffset, setInitGlobaTimeOffset] = useState(null);
   const [MediaShown, setMediaShown] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -432,8 +433,7 @@ const GamePlay = () => {
     if (questionDetails === null || questionDetails === undefined) return;
 
     if (questionDetails.success) {
-      let duration =
-        Number(questionDetails.data.QuestionDetails.Duration) * 1000;
+      let duration = Number(questionDetails.data.QuestionDetails.Duration);
 
       if (callNextQuestion) {
         setNextQuestionFetched(true);
@@ -547,11 +547,20 @@ const GamePlay = () => {
             HubTimerData.QuestionID ===
             questionDetails?.data?.QuestionDetails?.QuestionID
           ) {
-            const prev = Number(HubTimerData.QuestionTimer);
-            const offset = Date.now() - prev;
+            const currentTime = Number(getCurrentTimeStamp());
+
+            console.log("currentTime", currentTime);
+
+            const prev = Number(HubTimerData.QuestionTimer); //in milliseconds
+
+            console.log("prev", prev);
+
+            const offsetTimestampinSeconds = currentTime / 1000 - prev / 1000;
+
+            console.log("offsetTimestampinSeconds", offsetTimestampinSeconds);
 
             if (prev) {
-              duration = Math.max(0, duration - offset);
+              duration = Math.max(0, duration - offsetTimestampinSeconds);
               setMediaShown(true);
             }
           }

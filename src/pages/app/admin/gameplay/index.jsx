@@ -119,7 +119,7 @@ const GamePlay = () => {
   const [position, setPosition] = useState(0);
   const [countdown, setcoundown] = useState(TIMER_STATES.STOP);
   const [duration, setDuration] = useState(0);
-  const [initGlobaTimeOffset, setInitGlobaTimeOffset] = useState(Date.now());
+  const [initGlobaTimeOffset, setInitGlobaTimeOffset] = useState(null);
   const [MediaShown, setMediaShown] = useState(false);
 
   const [showDecisionTree, setShowDecisionTree] = useState(false);
@@ -318,8 +318,7 @@ const GamePlay = () => {
     if (questionDetails === null || questionDetails === undefined) return;
 
     if (questionDetails.success) {
-      const duration =
-        Number(questionDetails.data.QuestionDetails.Duration) * 1000;
+      let duration = Number(questionDetails.data.QuestionDetails.Duration);
       setDuration(duration);
 
       if (callNextQuestion) {
@@ -426,10 +425,20 @@ const GamePlay = () => {
               HubTimerData.QuestionID ===
               questionDetails?.data?.QuestionDetails?.QuestionID
             ) {
-              const prev = Number(HubTimerData.QuestionTimer);
-              const offset = Date.now() - prev;
+              const currentTime = Number(getCurrentTimeStamp());
+
+              console.log("currentTime", currentTime);
+
+              const prev = Number(HubTimerData.QuestionTimer); //in milliseconds
+
+              console.log("prev", prev);
+
+              const offsetTimestampinSeconds = currentTime / 1000 - prev / 1000;
+
+              console.log("offsetTimestampinSeconds", offsetTimestampinSeconds);
 
               if (prev) {
+                duration = Math.max(0, duration - offsetTimestampinSeconds);
                 setMediaShown(true);
               }
             }

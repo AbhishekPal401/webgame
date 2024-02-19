@@ -43,22 +43,15 @@ const Timer = ({ Duration, onExpire = () => {}, status = "start" }) => {
     onExpire: onExpire,
   });
 
-  // console.log("status", status);
-  // console.log("time ", minutes, seconds);
-
   useEffect(() => {
-    const currentTimeInIndia = new Date().toLocaleString("en-US", {
-      timeZone: "Asia/Kolkata",
-    });
-
     if (status === "pause") {
       pause();
     } else if (status === "start") {
-      const time = new Date(currentTimeInIndia);
+      const time = new Date();
       time.setSeconds(time.getSeconds() + Duration);
       restart(time);
     }
-    const time = new Date(currentTimeInIndia);
+    const time = new Date();
     time.setSeconds(time.getSeconds() + Duration);
     setExpiryTimestamp(time);
   }, [status, Duration]);

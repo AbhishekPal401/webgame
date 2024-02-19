@@ -610,12 +610,22 @@ export const truncateHtml = (html, maxLength) => {
 };
 
 export const getCurrentTimeStamp = () => {
-  const currentTimeInIndia = new Date().toLocaleString("en-US", {
-    timeZone: "Asia/Kolkata",
-  });
+  // const currentTimeInIndia = new Date().toLocaleString("en-US", {
+  //   timeZone: "Asia/Kolkata",
+  // });
 
-  // Convert the formatted date string back to timestamp
-  const timestamp = new Date(currentTimeInIndia).getTime();
+  // // Convert the formatted date string back to timestamp
+  // const timestamp = new Date(currentTimeInIndia).getTime();
 
-  return timestamp.toString();
+  // console.log("timestamp", timestamp);
+
+  // return timestamp.toString();
+
+  const time = new Date();
+
+  const currentTime = new Date(
+    time.getTime() - time.getTimezoneOffset() * 60000
+  );
+
+  return currentTime.getTime().toString();
 };
