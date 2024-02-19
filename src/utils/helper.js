@@ -1,3 +1,4 @@
+import moment from "moment";
 import { dateFormats } from "../constants/date";
 import DOMPurify from "dompurify";
 
@@ -610,44 +611,7 @@ export const truncateHtml = (html, maxLength) => {
 };
 
 export const getCurrentTimeStamp = () => {
-  // const currentTimeInIndia = new Date().toLocaleString("en-US", {
-  //   timeZone: "Asia/Kolkata",
-  // });
+  const timestamp = Date.now();
 
-  // // Convert the formatted date string back to timestamp
-  // const timestamp = new Date(currentTimeInIndia).getTime();
-
-  // console.log("timestamp", timestamp);
-
-  // return timestamp.toString();
-
-  // const time = new Date();
-
-  // const currentTime = new Date(
-  //   time.getTime() + time.getTimezoneOffset() * 60000
-  // );
-
-  // return currentTime.getTime().toString(); // timestamp  in gmt 00::00
-
-  // const time = new Date();
-
-  // // Adjust the time to GMT 00:00 by adding the current timezone offset
-  // const gmtTime = new Date(time.getTime() + time.getTimezoneOffset() * 60000);
-
-  // return gmtTime.setUTCHours(0, 0, 0, 0).toString();
-
-  var currentDate = new Date();
-
-  // Get the current time in milliseconds
-  var currentTimeMillis = currentDate.getTime();
-
-  // Get the current timezone offset in minutes and convert it to milliseconds
-  var timezoneOffsetMillis = currentDate.getTimezoneOffset() * 60 * 1000;
-
-  // Calculate the GMT 00:00 timestamp by subtracting the timezone offset from the current time
-  var gmtTimestampMillis = currentTimeMillis - timezoneOffsetMillis;
-
-  const string = gmtTimestampMillis.toString();
-
-  return string;
+  return timestamp.toString();
 };

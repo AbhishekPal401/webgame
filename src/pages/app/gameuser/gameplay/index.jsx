@@ -40,6 +40,7 @@ import IntroMedia from "../../../../components/intromedia";
 import { Tooltip } from "react-tooltip";
 import Progress from "../../../../components/progress";
 import { getCurrentTimeStamp } from "../../../../utils/helper";
+import momentTimezone from "moment-timezone";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -529,7 +530,21 @@ const GamePlay = () => {
           }
 
           if (HubTimerData?.GlobalTimer) {
-            setInitGlobaTimeOffset(Number(HubTimerData?.GlobalTimer));
+            var timestampForTimezone = momentTimezone
+              .tz(HubTimerData.TimeZone)
+              .valueOf();
+
+            console.log(" current time", timestampForTimezone);
+            console.log(" prev time", HubTimerData?.GlobalTimer);
+
+            let offset =
+              Number(timestampForTimezone) - Number(HubTimerData?.GlobalTimer);
+
+            offset = offset / 1000;
+
+            console.log("offset for global timer", offset);
+
+            setInitGlobaTimeOffset(offset);
           }
         }
         //for question timer
@@ -540,29 +555,28 @@ const GamePlay = () => {
             HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
           }
 
-          // console.log("HubTimerData", HubTimerData);
-          // console.log("questionDetails", questionDetails);
-
           if (
             HubTimerData.QuestionID ===
             questionDetails?.data?.QuestionDetails?.QuestionID
           ) {
-            const currentTime = Number(getCurrentTimeStamp());
-
-            console.log("currentTime", currentTime);
-
             const prev = Number(HubTimerData.QuestionTimer);
 
-            console.log("prev", prev);
+            var timestampForTimezone = momentTimezone
+              .tz(HubTimerData.TimeZone)
+              .valueOf();
 
-            const offsetTimestampinSeconds = (currentTime - prev) / 1000;
+            let offset = Number(timestampForTimezone) - prev;
 
-            console.log("offsetTimestampinSeconds", offsetTimestampinSeconds);
+            offset = offset / 1000; //seconds
+
+            console.log("offset for question timer", offset);
 
             if (prev) {
-              duration = Math.max(0, duration - offsetTimestampinSeconds);
+              console.log("duration for question before", duration);
 
-              console.log("duration", duration);
+              duration = Math.max(0, duration - offset);
+
+              console.log("duration for question after", duration);
 
               setMediaShown(true);
             }
@@ -656,7 +670,7 @@ const GamePlay = () => {
       }
     } else if (currentState === PlayingStates.VotingCompleted) {
       if (questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker) {
-        setDuration(30 * 1000); // 30 seconds
+        setDuration(30); // 30 seconds
         setCoundown(TIMER_STATES.START);
         setStartedAt(Math.floor(Date.now() / 1000));
       } else {

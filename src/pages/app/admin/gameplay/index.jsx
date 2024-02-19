@@ -33,6 +33,7 @@ import { Tooltip } from "react-tooltip";
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession.js";
 import Progress from "../../../../components/progress";
 import { getCurrentTimeStamp } from "../../../../utils/helper.js";
+import momentTimezone from "moment-timezone";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -305,10 +306,9 @@ const GamePlay = () => {
         QuestionID: questionDetails.data.QuestionDetails.QuestionID,
         GlobalTimer: "",
         QuestionTimer: getCurrentTimeStamp(),
+        TimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         ActionType: "QuestionMediaSkip",
       };
-
-      console.log(" global skip data", data);
 
       console.log("SkipMediaInvoke", data);
 
@@ -414,7 +414,16 @@ const GamePlay = () => {
           }
 
           if (HubTimerData?.GlobalTimer) {
-            setInitGlobaTimeOffset(Number(HubTimerData?.GlobalTimer));
+            var timestampForTimezone = momentTimezone
+              .tz(HubTimerData.TimeZone)
+              .valueOf();
+
+            let offset =
+              Number(timestampForTimezone) - Number(HubTimerData?.GlobalTimer);
+
+            offset = offset / 1000;
+
+            setInitGlobaTimeOffset(offset);
           }
 
           if (questionDetails?.data?.HubTimerData) {
@@ -427,22 +436,24 @@ const GamePlay = () => {
               HubTimerData.QuestionID ===
               questionDetails?.data?.QuestionDetails?.QuestionID
             ) {
-              const currentTime = Number(getCurrentTimeStamp());
+              const prev = Number(HubTimerData.QuestionTimer);
 
-              console.log("currentTime", currentTime);
+              var timestampForTimezone = momentTimezone
+                .tz(HubTimerData.TimeZone)
+                .valueOf();
 
-              const prev = Number(HubTimerData.QuestionTimer); //in milliseconds
+              let offset = Number(timestampForTimezone) - prev;
 
-              console.log("prev", prev);
+              offset = offset / 1000; //seconds
 
-              const offsetTimestampinSeconds = (currentTime - prev) / 1000;
-
-              console.log("offsetTimestampinSeconds", offsetTimestampinSeconds);
+              console.log("offset", offset);
 
               if (prev) {
-                duration = Math.max(0, duration - offsetTimestampinSeconds);
+                console.log("duration for question before", duration);
 
-                console.log("duration", duration);
+                duration = Math.max(0, duration - offset);
+
+                console.log("duration for question after", duration);
 
                 setMediaShown(true);
               }
@@ -700,7 +711,7 @@ const GamePlay = () => {
     } else if (currentState === PlayingStates.VotingCompleted) {
       setcoundown(TIMER_STATES.STOP);
     } else if (currentState === PlayingStates.DecisionCompleted) {
-      setDuration(30 * 1000); //30 seconds
+      setDuration(30); //30 seconds
       setcoundown(TIMER_STATES.START);
       setStartedAt(Math.floor(Date.now() / 1000));
     } else {

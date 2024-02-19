@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 import { useTimer } from "react-timer-hook";
 import ImageController from "../../../media/imagecontroller";
 import { getCurrentTimeStamp } from "../../../../utils/helper";
+import moment from "moment";
 
 const Timer = ({ Duration, onExpire = () => {}, status = "start" }) => {
   const [expiryTimestamp, setExpiryTimestamp] = useState(new Date());
@@ -447,6 +448,7 @@ const Question = ({
       QuestionID: questionDetails.data.QuestionDetails.QuestionID,
       GlobalTimer: "",
       QuestionTimer: getCurrentTimeStamp(),
+      TimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       ActionType: "QuestionMediaSkip",
     };
 
@@ -487,6 +489,9 @@ const Question = ({
     onDecisionCompleteDefault,
   ]);
 
+  console.log("Duration in question ", Duration);
+  console.log("countdown in question", countdown);
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -515,7 +520,7 @@ const Question = ({
           <div className={styles.timer}>
             Time Left to Vote{" "}
             <Timer
-              Duration={Duration / 1000 <= 0.5 ? 0.5 : Duration / 1000}
+              Duration={Duration <= 0.5 ? 0.5 : Duration}
               onExpire={() => {
                 completeInvoke();
               }}

@@ -18,6 +18,7 @@ import { signalRService } from "../../../../services/signalR";
 import { setActiveUsers } from "../../../../store/local/gameplay";
 import { Tooltip } from "react-tooltip";
 import { getCurrentTimeStamp } from "../../../../utils/helper";
+import moment from "moment";
 
 const AdminGameLanding = () => {
   const [ready, setReady] = useState(false);
@@ -205,12 +206,11 @@ const AdminGameLanding = () => {
         QuestionID: questionDetails.data.QuestionDetails.QuestionID,
         GlobalTimer: getCurrentTimeStamp(),
         QuestionTimer: getCurrentTimeStamp(),
+        TimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         ActionType: "IntroductionSkip",
       };
 
-      console.log(" global skip data", data);
-
-      console.log("SkipMediaInvoke admin", data);
+      console.log("SkipMediaInvoke for  admin", data);
 
       signalRService.SkipMediaInvoke(data);
     }

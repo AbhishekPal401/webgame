@@ -18,22 +18,11 @@ const CountDown = ({ initialTimestamp = null }) => {
 
   useEffect(() => {
     if (initialTimestamp) {
-      const currentTime = Number(getCurrentTimeStamp());
-
-      console.log("currentTime in global", currentTime);
-
-      console.log("initialTimestamp in global", initialTimestamp);
-
-      const currentTimestamp = currentTime / 1000;
-      const offsetTimestamp =
-        (currentTimestamp - Number(initialTimestamp)) / 1000;
-
-      console.log("offsetTimestamp in global", offsetTimestamp);
-
+      console.log("duration for global", initialTimestamp);
       const stopwatchOffset = new Date();
 
       stopwatchOffset.setSeconds(
-        stopwatchOffset.getSeconds() + offsetTimestamp
+        stopwatchOffset.getSeconds() + initialTimestamp
       );
 
       reset(stopwatchOffset, true);

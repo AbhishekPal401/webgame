@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { extractFileType, getCurrentTimeStamp } from "../../../../utils/helper";
 import PDFPreview from "../../../../components/preview/pdfpreview";
 import { signalRService } from "../../../../services/signalR";
+import moment from "moment";
 // import PDFPreview from "../../../../components/preview/pdfpreview";
 
 const Intro = () => {
@@ -57,10 +58,9 @@ const Intro = () => {
       QuestionID: questionDetails.data.QuestionDetails.QuestionID,
       GlobalTimer: getCurrentTimeStamp(),
       QuestionTimer: "",
+      TimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       ActionType: "IntroductionSkip",
     };
-
-    console.log(" global skip data", data);
 
     console.log("SkipMediaInvoke admin", data);
 
