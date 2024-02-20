@@ -99,6 +99,8 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
     }
   }
 
+  console.log("nodeDatum", nodeDatum);
+
   return (
     <g transform={`translate(-150, 0)`}>
       <foreignObject width={300} height={30 + 2 * padding}>
@@ -108,8 +110,7 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
             data-tooltip-id="my-tooltip"
             data-tooltip-html={ReactDOMServer.renderToStaticMarkup(
               <div className={styles.tooltipContent}>
-                <div>{nodeDatum.attributes.ToolTipTitle}</div>
-                <div>{nodeDatum.attributes.ToolTipDescr}</div>
+                <div dangerouslySetInnerHTML={{ __html: nodeDatum.name }}></div>
               </div>
             )}
             style={{
@@ -298,7 +299,7 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
         depthFactor={120}
         orientation="vertical"
       />
-      {/* <Tooltip id="my-tooltip" place="right" /> */}
+      <Tooltip id="my-tooltip" place="right" />
     </div>
   );
 };
