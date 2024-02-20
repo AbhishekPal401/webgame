@@ -96,21 +96,23 @@ const MissionCompleted = () => {
     navigate("/");
   }, []);
 
-  useEffect(() => {
-    const homescreen = () => {
-      resetAll();
-    };
+  // useEffect(() => {
+  //   const homescreen = () => {
+  //     resetAll();
+  //   };
 
-    signalRService.HomeScreenListener(homescreen);
+  //   signalRService.HomeScreenListener(homescreen);
 
-    return () => {
-      signalRService.HomeScreenListenerOff(homescreen);
-    };
-  }, [resetAll]);
+  //   return () => {
+  //     signalRService.HomeScreenListenerOff(homescreen);
+  //   };
+  // }, [resetAll]);
 
   const missionCompleted = useCallback(() => {
     if (sessionDetails?.data) {
       const sessionData = JSON.parse(sessionDetails.data);
+
+      resetAll();
 
       signalRService.MissionCompletedInvoke(sessionData.InstanceID);
     }

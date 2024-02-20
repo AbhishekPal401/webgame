@@ -74,11 +74,21 @@ const UserHomePage = () => {
     }
   };
 
+  const JoinWithUserID = useCallback(() => {
+    const data = {
+      UserID: credentials.data.userID,
+      UserRole: credentials.data.role,
+    };
+
+    console.log("user joined ", data);
+    signalRService.joinWithUserId(data);
+  }, [credentials]);
+
   useEffect(() => {
     dispatch(resetNextQuestionDetailsState());
   }, []);
 
-  useEffect(() => {
+  const fetchSession = () => {
     if (!credentials) return;
 
     const data = {
@@ -97,6 +107,27 @@ const UserHomePage = () => {
     };
 
     dispatch(getSessionDetails(data));
+  };
+
+  useEffect(() => {
+    JoinWithUserID();
+  }, [JoinWithUserID]);
+
+  useEffect(() => {
+    const gameavailable = () => {
+      fetchSession();
+      setReady(true);
+    };
+
+    signalRService.GameAvailable(gameavailable);
+
+    return () => {
+      signalRService.GameAvailableOff(gameavailable);
+    };
+  }, [fetchSession]);
+
+  useEffect(() => {
+    fetchSession();
     localStorage.setItem("refresh", false);
   }, []);
 

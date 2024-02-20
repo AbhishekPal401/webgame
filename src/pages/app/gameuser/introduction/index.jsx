@@ -5,11 +5,16 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { generateGUID, isJSONString } from "../../../../utils/common";
-import { getNextQuestionDetails } from "../../../../store/app/user/questions/getNextQuestion";
+import {
+  getNextQuestionDetails,
+  resetNextQuestionDetailsState,
+} from "../../../../store/app/user/questions/getNextQuestion";
 import { toast } from "react-toastify";
 import { extractFileType } from "../../../../utils/helper";
 import PDFPreview from "../../../../components/preview/pdfpreview";
 import { signalRService } from "../../../../services/signalR";
+import { resetAnswerDetailsState } from "../../../../store/app/user/answers/postAnswer";
+import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
 
 const Intro = () => {
   const [skipData, setSkipData] = useState(null);
@@ -60,6 +65,25 @@ const Intro = () => {
       signalRService.SkipMediaOff(skipMedia);
     };
   }, []);
+
+  const resetAll = useCallback(() => {
+    dispatch(resetNextQuestionDetailsState());
+    dispatch(resetAnswerDetailsState());
+    dispatch(resetSessionDetailsState());
+    navigate("/");
+  }, []);
+
+  useEffect(() => {
+    const homescreen = () => {
+      resetAll();
+    };
+
+    signalRService.HomeScreenListener(homescreen);
+
+    return () => {
+      signalRService.HomeScreenListenerOff(homescreen);
+    };
+  }, [resetAll]);
 
   useEffect(() => {
     if (skipData) {

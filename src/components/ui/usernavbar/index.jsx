@@ -9,6 +9,9 @@ import Button from "../../common/button";
 import { signalRService } from "../../../services/signalR";
 import { setConnectionState } from "../../../store/local/gameplay";
 import { isJSONString } from "../../../utils/common";
+import { resetNextQuestionDetailsState } from "../../../store/app/user/questions/getNextQuestion";
+import { resetAnswerDetailsState } from "../../../store/app/user/answers/postAnswer";
+import { resetSessionDetailsState } from "../../../store/app/user/session/getSession";
 
 const UserNavBar = ({ disable = false, role = "Player" }) => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -82,6 +85,25 @@ const UserNavBar = ({ disable = false, role = "Player" }) => {
 
     startConnection();
   }, []);
+
+  const resetAll = useCallback(() => {
+    dispatch(resetNextQuestionDetailsState());
+    dispatch(resetAnswerDetailsState());
+    dispatch(resetSessionDetailsState());
+    navigate("/");
+  }, []);
+
+  useEffect(() => {
+    const homescreen = () => {
+      resetAll();
+    };
+
+    signalRService.HomeScreenListener(homescreen);
+
+    return () => {
+      signalRService.HomeScreenListenerOff(homescreen);
+    };
+  }, [resetAll]);
 
   const joinRoom = useCallback(async () => {
     if (!isJSONString(sessionDetails.data)) return;

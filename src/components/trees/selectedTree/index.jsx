@@ -149,7 +149,7 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
   };
 
   useLayoutEffect(() => {
-    if (containerRef.current) {
+    if (containerRef.current && data) {
       try {
         if (userType === "admin") {
           const optimalElements = containerRef.current.querySelectorAll(
@@ -162,8 +162,8 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
             console.log("parent in optimal elements", parent);
 
             if (parent && parent.contains(element)) {
-              parent.appendChild(element.cloneNode(true));
               parent.removeChild(element);
+              parent.appendChild(element.cloneNode(true));
             }
           });
         } else {
@@ -177,8 +177,8 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
             console.log("parent in optimal elements for user", parent);
 
             if (parent && parent.contains(element)) {
-              parent.appendChild(element.cloneNode(true));
               parent.removeChild(element);
+              parent.appendChild(element.cloneNode(true));
             }
           });
         }
@@ -191,8 +191,8 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
           console.log("parent in g elements", parent);
 
           if (parent && parent.contains(element)) {
-            parent.appendChild(element.cloneNode(true));
             parent.removeChild(element);
+            parent.appendChild(element.cloneNode(true));
           }
         });
 
@@ -205,8 +205,8 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
           console.log("parent in leaf elements", parent);
 
           if (parent && parent.contains(element)) {
-            parent.appendChild(element.cloneNode(true));
             parent.removeChild(element);
+            parent.appendChild(element.cloneNode(true));
           }
         });
 
@@ -218,7 +218,7 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
     return () => {
       containerRef.current = null;
     };
-  }, [containerRef]);
+  }, [containerRef, data]);
 
   const getDynamicPathClass = ({ source, target }, orientation) => {
     if (userType === "admin") {

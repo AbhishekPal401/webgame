@@ -36,7 +36,6 @@ class SignalRService {
       }
     } catch (error) {
       console.error("Error while establishing connection:", error);
-      throw error;
     }
   }
 
@@ -50,6 +49,38 @@ class SignalRService {
     }
   }
 
+  async joinWithUserId(data) {
+    try {
+      if (this.hubConnection.state === signalR.HubConnectionState.Connected) {
+        await this.hubConnection.invoke("JoinWithUserID", data);
+        console.log("Joined the server with user id successfully!");
+      }
+    } catch (error) {
+      console.error("Error while joining server with user id ", error);
+    }
+  }
+
+  async NotifyPlayers(data) {
+    try {
+      if (this.hubConnection.state === signalR.HubConnectionState.Connected) {
+        await this.hubConnection.invoke("NotifyPlayers", data);
+        console.log("NotifyPlayers invoke is  successfully!");
+      }
+    } catch (error) {
+      console.error("Error while NotifyPlayers ", error);
+    }
+  }
+
+  async GameAvailable(callback = () => {}) {
+    try {
+      this.hubConnection.on("GameAvailable", () => {
+        callback();
+      });
+    } catch (error) {
+      console.error("Error while listening to GameAvailable", error);
+    }
+  }
+
   async joinSession(joinSessionRequest) {
     try {
       if (this.hubConnection.state === signalR.HubConnectionState.Connected) {
@@ -58,7 +89,6 @@ class SignalRService {
       }
     } catch (error) {
       console.error("Error while joining the session:", error);
-      throw error;
     }
   }
 
@@ -69,7 +99,6 @@ class SignalRService {
       });
     } catch (error) {
       console.error("Error while joining the session:", error);
-      throw error;
     }
   }
 
@@ -80,7 +109,6 @@ class SignalRService {
       });
     } catch (error) {
       console.error("Error while joining the session:", error);
-      throw error;
     }
   }
 
@@ -89,7 +117,6 @@ class SignalRService {
       await this.hubConnection.invoke("AdminMessage", data);
     } catch (error) {
       console.error("Error while joining the session:", error);
-      throw error;
     }
   }
 
@@ -99,7 +126,6 @@ class SignalRService {
       console.log("Vote Submitted");
     } catch (error) {
       console.error("Error while sending Submiting Vote:", error);
-      throw error;
     }
   }
 
@@ -110,7 +136,6 @@ class SignalRService {
       });
     } catch (error) {
       console.error("Error while Getting Vote:", error);
-      throw error;
     }
   }
 
@@ -193,6 +218,10 @@ class SignalRService {
       console.error("Error while sending SkipMedia:", error);
       throw error;
     }
+  }
+
+  GameAvailableOff(callback = () => {}) {
+    this.hubConnection.off("GameAvailable", callback);
   }
 
   SkipMediaOff(callback = () => {}) {

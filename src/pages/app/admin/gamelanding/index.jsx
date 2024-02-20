@@ -105,6 +105,14 @@ const AdminGameLanding = () => {
     }
   }, [sessionDetails, credentials]);
 
+  const JoinWithUserID = useCallback(() => {
+    const data = {
+      UserID: credentials.data.userID,
+      UserRole: credentials.data.role,
+    };
+    signalRService.joinWithUserId(data);
+  }, [credentials]);
+
   useEffect(() => {
     const startJoiningRoom = async () => {
       try {
@@ -137,11 +145,23 @@ const AdminGameLanding = () => {
     ) {
       isReconnection = true;
     }
+    if (
+      sessionDetails &&
+      sessionDetails.data &&
+      isJSONString(sessionDetails.data) &&
+      JSON.parse(sessionDetails.data)?.SessionID &&
+      JSON.parse(sessionDetails.data)?.CurrentState === "Start"
+    ) {
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      signalRService.NotifyPlayers(sessionData.InstanceID);
+    }
 
     if (isConnectedToServer && !isReconnection) {
       startJoiningRoom();
+      JoinWithUserID();
     }
-  }, [sessionDetails, isConnectedToServer]);
+  }, [sessionDetails, isConnectedToServer, JoinWithUserID]);
 
   useEffect(() => {
     if (!credentials) return;
