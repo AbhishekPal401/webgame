@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./missioncompleted.module.css";
 import Button from "../../../../components/common/button";
 import OptimalTree from "../../../../components/trees/mission";
@@ -75,19 +75,30 @@ const MissionCompleted = () => {
         },
       };
 
-      signalRService.MissionCompletedInvoke(sessionData.InstanceID);
-
       dispatch(getInstanceProgressyById(data));
 
       dispatch(getInstanceSummaryById(data));
     }
   }, []);
 
-  const resetAll = () => {
+  const resetAll = useCallback(() => {
     dispatch(resetNextQuestionDetailsState());
     dispatch(resetAnswerDetailsState());
     dispatch(resetSessionDetailsState());
-  };
+    navigate("/");
+  }, []);
+
+  useEffect(() => {
+    const homescreen = () => {
+      resetAll();
+    };
+
+    signalRService.HomeScreenListener(homescreen);
+
+    return () => {
+      signalRService.HomeScreenListenerOff(homescreen);
+    };
+  }, [resetAll]);
 
   return (
     <div
@@ -166,8 +177,6 @@ const MissionCompleted = () => {
               customClassName={styles.end}
               onClick={() => {
                 resetAll();
-                console.log("navigte");
-                navigate("/");
               }}
             >
               End

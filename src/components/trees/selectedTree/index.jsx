@@ -150,56 +150,69 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
 
   useLayoutEffect(() => {
     if (containerRef.current) {
-      if (userType === "admin") {
-        const optimalElements = containerRef.current.querySelectorAll(
-          `path.${styles.selectedEdge}`
-        );
+      try {
+        if (userType === "admin") {
+          const optimalElements = containerRef.current.querySelectorAll(
+            `path.${styles.selectedEdge}`
+          );
 
-        optimalElements.forEach((element) => {
+          optimalElements.forEach((element) => {
+            const parent = element.parentElement;
+
+            console.log("parent in optimal elements", parent);
+
+            if (parent && parent.contains(element)) {
+              parent.appendChild(element.cloneNode(true));
+              parent.removeChild(element);
+            }
+          });
+        } else {
+          const optimalElements = containerRef.current.querySelectorAll(
+            `path.${styles.selectedEdge}`
+          );
+
+          optimalElements.forEach((element) => {
+            const parent = element.parentElement;
+
+            console.log("parent in optimal elements for user", parent);
+
+            if (parent && parent.contains(element)) {
+              parent.appendChild(element.cloneNode(true));
+              parent.removeChild(element);
+            }
+          });
+        }
+
+        const gElements = containerRef.current.querySelectorAll(`g.rd3t-node`);
+
+        gElements.forEach((element) => {
           const parent = element.parentElement;
+
+          console.log("parent in g elements", parent);
 
           if (parent && parent.contains(element)) {
             parent.appendChild(element.cloneNode(true));
             parent.removeChild(element);
           }
         });
-      } else {
-        const optimalElements = containerRef.current.querySelectorAll(
-          `path.${styles.selectedEdge}`
-        );
 
-        optimalElements.forEach((element) => {
+        const leafElements =
+          containerRef.current.querySelectorAll(`g.rd3t-leaf-node`);
+
+        leafElements.forEach((element) => {
           const parent = element.parentElement;
+
+          console.log("parent in leaf elements", parent);
+
           if (parent && parent.contains(element)) {
             parent.appendChild(element.cloneNode(true));
             parent.removeChild(element);
           }
         });
-      }
 
-      const gElements = containerRef.current.querySelectorAll(`g.rd3t-node`);
-
-      gElements.forEach((element) => {
-        const parent = element.parentElement;
-        if (parent && parent.contains(element)) {
-          parent.appendChild(element.cloneNode(true));
-          parent.removeChild(element);
-        }
-      });
-
-      const leafElements =
-        containerRef.current.querySelectorAll(`g.rd3t-leaf-node`);
-
-      leafElements.forEach((element) => {
-        const parent = element.parentElement;
-        if (parent && parent.contains(element)) {
-          parent.appendChild(element.cloneNode(true));
-          parent.removeChild(element);
-        }
-      });
-
-      const { width, height } = containerRef.current.getBoundingClientRect();
-      setTranslate({ x: width / 2, y: 0 });
+        const { width, height } = containerRef.current.getBoundingClientRect();
+        setTranslate({ x: width / 2, y: 0 });
+      } catch (e) {}
     }
 
     return () => {

@@ -122,6 +122,17 @@ class SignalRService {
     }
   }
 
+  async HomeScreenListener(callback = () => {}) {
+    try {
+      this.hubConnection.on("HomeScreen", () => {
+        callback();
+      });
+    } catch (error) {
+      console.error("Error while listening HomeScreen:", error);
+      throw error;
+    }
+  }
+
   async ProceedToNextQuestionInvoke(data) {
     try {
       await this.hubConnection.invoke("ProceedToNextQuestion", data);
@@ -186,6 +197,10 @@ class SignalRService {
 
   SkipMediaOff(callback = () => {}) {
     this.hubConnection.off("SkipMedia", callback);
+  }
+
+  HomeScreenListenerOff(callback = () => {}) {
+    this.hubConnection.off("HomeScreen", callback);
   }
 
   GetVotingDetailsOff(callback) {

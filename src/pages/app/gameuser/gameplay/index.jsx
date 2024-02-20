@@ -41,6 +41,7 @@ import { Tooltip } from "react-tooltip";
 import Progress from "../../../../components/progress";
 import { getCurrentTimeStamp } from "../../../../utils/helper";
 import momentTimezone from "moment-timezone";
+import DOMPurify from "dompurify";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -89,9 +90,15 @@ const DecisionTree = ({ onCancel = () => {} }) => {
         {!loading &&
         instanceProgress &&
         instanceProgress.data &&
-        instanceProgress.data.GameIntro
-          ? instanceProgress.data.GameIntro
-          : ""}
+        instanceProgress.data.GameIntro ? (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(instanceProgress.data.GameIntro),
+            }}
+          ></div>
+        ) : (
+          ""
+        )}
       </div>
 
       <div style={{ height: "72vh" }}>

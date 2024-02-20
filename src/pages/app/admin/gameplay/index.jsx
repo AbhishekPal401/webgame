@@ -34,6 +34,7 @@ import { resetSessionDetailsState } from "../../../../store/app/user/session/get
 import Progress from "../../../../components/progress";
 import { getCurrentTimeStamp } from "../../../../utils/helper.js";
 import momentTimezone from "moment-timezone";
+import DOMPurify from "dompurify";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -84,9 +85,15 @@ const DecisionTree = ({ onCancel = () => {} }) => {
         {!loading &&
         instanceProgress &&
         instanceProgress.data &&
-        instanceProgress.data.GameIntro
-          ? instanceProgress.data.GameIntro
-          : ""}
+        instanceProgress.data.GameIntro ? (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(instanceProgress.data.GameIntro),
+            }}
+          ></div>
+        ) : (
+          ""
+        )}
       </div>
 
       <div style={{ height: "72vh" }}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./missioncompleted.module.css";
 import Button from "../../../../components/common/button";
@@ -84,18 +84,37 @@ const MissionCompleted = () => {
         },
       };
 
-      signalRService.MissionCompletedInvoke(sessionData.InstanceID);
-
       dispatch(getInstanceProgressyById(data));
       dispatch(getInstanceSummaryById(data));
     }
   }, []);
 
-  const resetAll = () => {
+  const resetAll = useCallback(() => {
     dispatch(resetNextQuestionDetailsState());
     dispatch(resetAnswerDetailsState());
     dispatch(resetSessionDetailsState());
-  };
+    navigate("/");
+  }, []);
+
+  useEffect(() => {
+    const homescreen = () => {
+      resetAll();
+    };
+
+    signalRService.HomeScreenListener(homescreen);
+
+    return () => {
+      signalRService.HomeScreenListenerOff(homescreen);
+    };
+  }, [resetAll]);
+
+  const missionCompleted = useCallback(() => {
+    if (sessionDetails?.data) {
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      signalRService.MissionCompletedInvoke(sessionData.InstanceID);
+    }
+  }, [sessionDetails]);
 
   return (
     <div
@@ -201,13 +220,7 @@ const MissionCompleted = () => {
             >
               Export
             </Button>
-            <Button
-              customClassName={styles.end}
-              onClick={() => {
-                resetAll();
-                navigate("/");
-              }}
-            >
+            <Button customClassName={styles.end} onClick={missionCompleted}>
               End
             </Button>
           </div>

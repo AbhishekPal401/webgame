@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./intromedia.module.css";
 import { extractFileType } from "../../utils/helper";
 import PDFPreview from "../preview/pdfpreview";
+import DOMPurify from "dompurify";
 
 const IntroMedia = ({
   onCancel = () => {},
@@ -33,7 +34,7 @@ const IntroMedia = ({
 
   // console.log("mediaURL", mediaURL);
   // console.log("description", description);
-  console.log("resourceType", resourceType);
+  // console.log("resourceType", resourceType);
 
   return (
     <div className={"modal_content"} style={{ width: "80vw", height: "85vh" }}>
@@ -46,7 +47,15 @@ const IntroMedia = ({
         </div>
       </div>
       <div className={"modal_description"} style={{ marginBottom: "2rem" }}>
-        {description ? description : ""}
+        {description ? (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(description),
+            }}
+          ></div>
+        ) : (
+          ""
+        )}
       </div>
 
       <div style={{ height: "72vh" }}>
