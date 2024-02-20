@@ -140,6 +140,7 @@ const UserHomePage = () => {
     };
 
     signalRService.ReceiveNotificationOff(notification);
+
     signalRService.ReceiveNotification(notification);
 
     return () => {
