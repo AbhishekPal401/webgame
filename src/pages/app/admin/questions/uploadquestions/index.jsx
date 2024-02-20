@@ -23,6 +23,7 @@ function UploadQuestion() {
     },
   });
   const [excelFileDisplay, setExcelFileDisplay] = useState(null);
+  const [uploading, setUploading] = useState(false); // New state for tracking upload operation
 
   const [resetFile, setResetFile] = useState(false);
 
@@ -125,6 +126,7 @@ function UploadQuestion() {
     }
 
     if (valid) {
+      setUploading(true); // Set uploading state to true when starting upload
       const formData = new FormData();
 
       formData.append("Module", "questions");
@@ -139,32 +141,41 @@ function UploadQuestion() {
       formData.append("Requester.RequesterName", credentials.data.userName);
       formData.append("Requester.RequesterType", credentials.data.role);
 
-      const response = await axios.post(
-        `${baseUrl}/api/Scenario/ExcelQuestionUploads`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+      try {
+        const response = await axios.post(
+          `${baseUrl}/api/Scenario/ExcelQuestionUploads`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        if (response.data && response.data.success) {
+          const serializedData = JSON.parse(response.data.data);
+
+          const data = JSON.parse(serializedData.Data);
+          console.log("response data : ", data);
+          toast.success("Excel uploaded successfully.");
+          // navigateTo("/scenario");
+          navigateTo(`/questions/${scenarioID}`);
         }
-      );
+        // else if(response.data && !response.data.success) {
+        //     toast.error(response.data.message);
+        //     console.log("error message :",response.data.message)
+        // }
+        else {
+          toast.error("Excel upload failed.");
+          console.log("not uploaded");
+        }
+      } catch (error) {
 
-      if (response.data && response.data.success) {
-        const serializedData = JSON.parse(response.data.data);
+        toast.error("An error occurred while uploading the file.");
+        console.error("Error uploading file:", error);
 
-        const data = JSON.parse(serializedData.Data);
-        console.log("response data : ", data);
-        toast.success("Excel uploaded successfully.");
-        // navigateTo("/scenario");
-        navigateTo(`/questions/${scenarioID}`);
-      }
-      // else if(response.data && !response.data.success) {
-      //     toast.error(response.data.message);
-      //     console.log("error message :",response.data.message)
-      // }
-      else {
-        toast.error("Excel upload failed.");
-        console.log("not uploaded");
+      } finally {
+        setUploading(false); // Set uploading state to false after upload completion or failure
       }
     } else {
       toast.error("Please upload an excel file.");
@@ -184,9 +195,20 @@ function UploadQuestion() {
           >
             <img src="./images/questions.png" />
             <div className={styles.buttonContainer}>
-              <Button onClick={onSubmit} buttonType="cancel">
+              {/* <Button onClick={onSubmit} buttonType="cancel">
+                Upload Questions
+              </Button> */}
+              <Button
+                onClick={onSubmit}
+                buttonType="cancel"
+                disabled={uploading} // Disable the button when uploading
+                customStyle={{
+                  color: uploading ? "var(--disabled_label)" : null // Change color when disabled
+                }}
+              >
                 Upload Questions
               </Button>
+
               <Button onClick={handleDownload}>Download Template</Button>
             </div>
           </div>
