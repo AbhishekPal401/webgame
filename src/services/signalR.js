@@ -220,32 +220,46 @@ class SignalRService {
     }
   }
 
-  GameAvailableOff(callback = () => {}) {
-    this.hubConnection.off("GameAvailable", callback);
+  GameAvailableOff(callback) {
+    if (typeof callback === "function") {
+      this.hubConnection.off("GameAvailable", callback);
+    }
   }
 
-  SkipMediaOff(callback = () => {}) {
-    this.hubConnection.off("SkipMedia", callback);
+  SkipMediaOff(callback) {
+    if (typeof callback === "function") {
+      this.hubConnection.off("SkipMedia", callback);
+    }
   }
 
-  HomeScreenListenerOff(callback = () => {}) {
-    this.hubConnection.off("HomeScreen", callback);
+  HomeScreenListenerOff(callback) {
+    if (typeof callback === "function") {
+      this.hubConnection.off("HomeScreen", callback);
+    }
   }
 
   GetVotingDetailsOff(callback) {
-    this.hubConnection.off("ReceiveVotingInfo", callback);
+    if (typeof callback === "function") {
+      this.hubConnection.off("ReceiveVotingInfo", callback);
+    }
   }
 
   ProceedToNextQuestionListenerOff(callback) {
-    this.hubConnection.off("ProceedToNextQuestion", callback);
+    if (typeof callback === "function") {
+      this.hubConnection.off("ProceedToNextQuestion", callback);
+    }
   }
 
-  NotificationListenerOff(callback = () => {}) {
-    this.hubConnection.off("Notifications", callback);
+  NotificationListenerOff(callback) {
+    if (typeof callback === "function") {
+      this.hubConnection.off("Notifications", callback);
+    }
   }
 
-  ReceiveNotificationOff(callback = () => {}) {
-    this.hubConnection.off("ReceiveNotification", callback);
+  ReceiveNotificationOff(callback) {
+    if (typeof callback === "function") {
+      this.hubConnection.off("ReceiveNotification", callback);
+    }
   }
 
   // Ensure a single instance of SignalRService is used

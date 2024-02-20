@@ -88,7 +88,7 @@ const UserHomePage = () => {
     dispatch(resetNextQuestionDetailsState());
   }, []);
 
-  const fetchSession = () => {
+  const fetchSession = useCallback(() => {
     if (!credentials) return;
 
     const data = {
@@ -107,11 +107,16 @@ const UserHomePage = () => {
     };
 
     dispatch(getSessionDetails(data));
-  };
+  }, []);
 
   useEffect(() => {
     JoinWithUserID();
   }, [JoinWithUserID]);
+
+  useEffect(() => {
+    fetchSession();
+    localStorage.setItem("refresh", false);
+  }, []);
 
   useEffect(() => {
     const gameavailable = () => {
@@ -119,6 +124,7 @@ const UserHomePage = () => {
       setReady(true);
     };
 
+    signalRService.GameAvailableOff(gameavailable);
     signalRService.GameAvailable(gameavailable);
 
     return () => {
@@ -127,17 +133,13 @@ const UserHomePage = () => {
   }, [fetchSession, isConnectedToServer]);
 
   useEffect(() => {
-    fetchSession();
-    localStorage.setItem("refresh", false);
-  }, []);
-
-  useEffect(() => {
     const notification = (actionType, message) => {
       if (actionType === "AdminPlayStart") {
         fetchIntro();
       }
     };
 
+    signalRService.ReceiveNotificationOff(notification);
     signalRService.ReceiveNotification(notification);
 
     return () => {
@@ -175,7 +177,7 @@ const UserHomePage = () => {
 
     if (questionDetails.success) {
       // toast.success(questionDetails.message);
-      console.log("Intro Media data", questionDetails.data);
+      // console.log("Intro Media data", questionDetails.data);
 
       if (inProgress) {
         setInProgress(false);
@@ -192,8 +194,6 @@ const UserHomePage = () => {
             navigate("/intro");
           }
         } else {
-          console.log("onSkip called");
-          // onSkip();
           fetchFirstQuestion();
           navigate("/gameplay");
         }

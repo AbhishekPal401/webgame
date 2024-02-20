@@ -82,7 +82,6 @@ const AdminGameLanding = () => {
       dispatch(getNextQuestionDetails(data));
     }
   }, [sessionDetails, credentials]);
-  console.log("sessionDetails", sessionDetails);
 
   const joinRoom = useCallback(async () => {
     if (sessionDetails?.data) {
