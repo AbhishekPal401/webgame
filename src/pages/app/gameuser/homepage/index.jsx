@@ -20,6 +20,9 @@ import { getCurrentTimeStamp } from "../../../../utils/helper";
 const UserHomePage = () => {
   const [ready, setReady] = useState(true);
   const [inProgress, setInProgress] = useState(false);
+  const [callSessionApi, setCallSessionApi] = useState(false);
+  const [callQuestionApi, setCallQuestionApi] = useState(false);
+
   const { credentials } = useSelector((state) => state.login);
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
@@ -119,8 +122,14 @@ const UserHomePage = () => {
   }, []);
 
   useEffect(() => {
-    const gameavailable = () => {
+    if (callQuestionApi) {
       fetchSession();
+    }
+  }, [fetchSession, callQuestionApi]);
+
+  useEffect(() => {
+    const gameavailable = () => {
+      setCallQuestionApi(true);
       setReady(true);
     };
 
@@ -133,9 +142,15 @@ const UserHomePage = () => {
   }, [fetchSession, isConnectedToServer]);
 
   useEffect(() => {
+    if (callSessionApi) {
+      fetchIntro();
+    }
+  }, [fetchIntro, callSessionApi]);
+
+  useEffect(() => {
     const notification = (actionType, message) => {
       if (actionType === "AdminPlayStart") {
-        fetchIntro();
+        setCallSessionApi(true);
       }
     };
 
@@ -199,10 +214,18 @@ const UserHomePage = () => {
           navigate("/gameplay");
         }
       }
+
+      setCallQuestionApi(false);
     } else {
       // toast.error(questionDetails.message);
     }
   }, [questionDetails]);
+
+  useEffect(() => {
+    if (sessionDetails && sessionDetails.success) {
+      setCallSessionApi(false);
+    }
+  }, [sessionDetails]);
 
   const getCurrentQuestion = async () => {
     if (!ready || !isConnectedToServer) return;
