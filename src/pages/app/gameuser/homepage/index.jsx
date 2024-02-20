@@ -124,7 +124,7 @@ const UserHomePage = () => {
     return () => {
       signalRService.GameAvailableOff(gameavailable);
     };
-  }, [fetchSession]);
+  }, [fetchSession, isConnectedToServer]);
 
   useEffect(() => {
     fetchSession();
@@ -133,9 +133,6 @@ const UserHomePage = () => {
 
   useEffect(() => {
     const notification = (actionType, message) => {
-      console.log("actionType", actionType);
-      console.log("message", message);
-
       if (actionType === "AdminPlayStart") {
         fetchIntro();
       }

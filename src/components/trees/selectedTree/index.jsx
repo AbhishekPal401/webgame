@@ -58,7 +58,7 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
     // );
     padding = 15;
     // Truncate HTML content
-    truncatedLabel = truncateHtml(nodeDatum.name, 115); // Maximum length for truncated HTML and content
+    truncatedLabel = truncateHtml(nodeDatum.name, 100); // Maximum length for truncated HTML and content
   }
 
   let nodeClassName = styles.node;

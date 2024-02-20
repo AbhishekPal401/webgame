@@ -114,6 +114,12 @@ const AdminGameLanding = () => {
   }, [credentials]);
 
   useEffect(() => {
+    const ReceiveNotification = (actionType, message) => {
+      if (actionType === "AdminPlayStart") {
+        fetchIntro();
+      }
+    };
+
     const startJoiningRoom = async () => {
       try {
         await joinRoom();
@@ -123,14 +129,7 @@ const AdminGameLanding = () => {
           dispatch(setActiveUsers(users));
         });
 
-        signalRService.ReceiveNotification((actionType, message) => {
-          console.log("actionType", actionType);
-          console.log("message", message);
-
-          if (actionType === "AdminPlayStart") {
-            fetchIntro();
-          }
-        });
+        signalRService.ReceiveNotification(ReceiveNotification);
       } catch (error) {
         console.error("Error during join room:", error);
       }
@@ -161,6 +160,10 @@ const AdminGameLanding = () => {
       startJoiningRoom();
       JoinWithUserID();
     }
+
+    return () => {
+      signalRService.ReceiveNotificationOff(ReceiveNotification);
+    };
   }, [sessionDetails, isConnectedToServer, JoinWithUserID]);
 
   useEffect(() => {

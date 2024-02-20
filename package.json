@@ -20,7 +20,6 @@
     "moment-timezone": "^0.5.45",
     "oidc-react": "^3.2.2",
     "react": "^18.2.0",
-    "react-countdown": "^2.3.5",
     "react-d3-tree": "^3.6.2",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
