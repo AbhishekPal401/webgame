@@ -129,6 +129,8 @@
 .gameIntroductionLeftInputs {
   flex: 4.5;
   height: 100%;
+  max-width: 90rem;
+  min-width: 30rem;
 }
 
 .gameIntroductionRightInputs {

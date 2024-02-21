@@ -75,6 +75,8 @@
 }
 .questionInputLeft {
   flex: 6;
+  max-width: 90rem;
+  min-width: 30rem;
 }
 .customRichTextEditorContaierClass {
   /* margin-top: 2rem; */
