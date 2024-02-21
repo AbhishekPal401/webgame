@@ -47,6 +47,8 @@ import updateOrganization from "../app/admin/masters/updateOrganization.js";
 import deleteMasterByTypeAndId from "../app/admin/masters/deleteMasterByTypeAndId.js";
 import getDesignationById from "../app/admin/masters/getDesignationById.js";
 import getOrganizationById from "../app/admin/masters/getOrganizationById.js";
+import getScoreMasters from "../app/admin/questions/scoremaster/getScoreMasters.js";
+import updateScoreMasterByScenario from "../app/admin/questions/scoremaster/updateScoreMasterByScenario.js";
 
 const reducers = combineReducers({
   login,
@@ -94,6 +96,8 @@ const reducers = combineReducers({
   deleteMasterByTypeAndId,
   getDesignationById,
   getOrganizationById,
+  getScoreMasters,
+  updateScoreMasterByScenario,
 });
 
 const rootReducer = (state, action) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import PageContainer from "../../../../components/ui/pagecontainer/index.jsx";
 import styles from "./scenarios.module.css";
 import Button from "../../../../components/common/button/index.jsx";
@@ -14,13 +14,45 @@ import {
   deleteScenarioByID,
   resetDeleteScenarioState
 } from "../../../../store/app/admin/scenario/deleteScenario.js";
+import {
+  getScoreMastersByScenarioID,
+  resetScoreMastersByScenarioIDState
+} from "../../../../store/app/admin/questions/scoremaster/getScoreMasters.js";
+import { 
+  updateScoreMaster, 
+  resetUpdateScoreMasterState 
+} from "../../../../store/app/admin/questions/scoremaster/updateScoreMasterByScenario.js";
 import { toast } from "react-toastify";
+import Input from "../../../../components/common/input/index.jsx";
 
 const Scenarios = () => {
   const [pageCount, setPageCount] = useState(10);
   const [pageNumber, setPageNumber] = useState(1);
   const [showDeleteModal, setShowDeleteModal] = useState(null);
+  const [showEditScoreMasterModal, setShowEditScoreMasterModal] = useState(null);
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+  const [updateScoreMasterData, setUpdateScoreMasterData] = useState({
+    orderOne: {
+      value: '',
+      error: ''
+    },
+    orderTwo: {
+      value: '',
+      error: ''
+    },
+    orderThree: {
+      value: '',
+      error: ''
+    },
+    orderFour: {
+      value: '',
+      error: ''
+    },
+    orderFive: {
+      value: '',
+      error: ''
+    },
+  });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,6 +60,33 @@ const Scenarios = () => {
   const { credentials } = useSelector((state) => state.login);
   const { scenarioByPage } = useSelector((state) => state.scenarios);
   const { deleteScenarioResponse } = useSelector((state) => state.deleteScenario);
+  const { scoreMastersByScenarioIdDetails } = useSelector((state) => state.getScoreMasters);
+  const { updateScoreMasterResponse } = useSelector((state) => state.updateScoreMasterByScenario);
+
+  const resetUpdateScoreMasterData = useCallback(() => {
+    setUpdateScoreMasterData({
+      orderOne: {
+        value: '',
+        error: ''
+      },
+      orderTwo: {
+        value: '',
+        error: ''
+      },
+      orderThree: {
+        value: '',
+        error: ''
+      },
+      orderFour: {
+        value: '',
+        error: ''
+      },
+      orderFive: {
+        value: '',
+        error: ''
+      },
+    });
+  }, []);
 
   useEffect(() => {
     if (credentials) {
@@ -58,6 +117,31 @@ const Scenarios = () => {
   }, [scenarioByPage]);
 
   useEffect(() => {
+    if (updateScoreMasterResponse === null || updateScoreMasterResponse === undefined)
+      return;
+
+    if (updateScoreMasterResponse?.success) {
+      toast.success(updateScoreMasterResponse.message);
+
+      setShowEditScoreMasterModal(null);
+      setSelectedCheckboxes([]);
+      resetUpdateScoreMasterData();
+      dispatch(resetUpdateScoreMasterState());
+      dispatch(resetScoreMastersByScenarioIDState());
+    } else if (!updateScoreMasterResponse?.success) {
+
+      toast.error(
+        (updateScoreMasterResponse?.message) ? 
+          updateScoreMasterResponse?.message : "An error occured while saving score master"
+      );
+      dispatch(resetUpdateScoreMasterState());
+    } else {v
+      dispatch(resetUpdateScoreMasterState());
+    }
+  }, [updateScoreMasterResponse]);
+
+
+  useEffect(() => {
     if (deleteScenarioResponse === null || deleteScenarioResponse === undefined) return;
 
     if (deleteScenarioResponse.success) {
@@ -82,6 +166,50 @@ const Scenarios = () => {
       toast.error(deleteScenarioResponse.message);
     }
   }, [deleteScenarioResponse]);
+
+  const setScoreMasterDetailState = useCallback(() => {
+    if (isJSONString(scoreMastersByScenarioIdDetails?.data)) {
+      const data = JSON.parse(scoreMastersByScenarioIdDetails?.data);
+      console.log("scoreMastersByScenarioIdDetails data:", data);
+
+      const newData = {
+        orderOne: {
+          value: data[0]?.ScoreDisplay || '',
+          error: ''
+        },
+        orderTwo: {
+          value: data[1]?.ScoreDisplay || '',
+          error: ''
+        },
+        orderThree: {
+          value: data[2]?.ScoreDisplay || '',
+          error: ''
+        },
+        orderFour: {
+          value: data[3]?.ScoreDisplay || '',
+          error: ''
+        },
+        orderFive: {
+          value: data[4]?.ScoreDisplay || '',
+          error: ''
+        },
+      };
+
+      setUpdateScoreMasterData((prevData) => ({
+        ...prevData,
+        ...newData,
+      }));
+    }
+  }, [scoreMastersByScenarioIdDetails]);
+
+  // update the update organization Data state with new data and render it
+  useEffect(() => {
+    if (scoreMastersByScenarioIdDetails === null || scoreMastersByScenarioIdDetails === undefined)
+      return;
+
+    setScoreMasterDetailState();
+  }, [scoreMastersByScenarioIdDetails]);
+
 
   const navigateTo = () => {
     navigate("/scenario/createscenarios");
@@ -109,6 +237,142 @@ const Scenarios = () => {
 
     dispatch(deleteScenarioByID(data));
   };
+
+  const handleScoreMasterClick = (scenario) => {
+    const data = {
+      scenarioID: scenario.ScenarioID,
+      requester: {
+        requestID: generateGUID(),
+        requesterID: credentials.data.userID,
+        requesterName: credentials.data.userName,
+        requesterType: credentials.data.role,
+      },
+    };
+
+    dispatch(getScoreMastersByScenarioID(data))
+    setShowEditScoreMasterModal(scenario);
+  };
+
+  const onUpdateScoreMasterDataChange = useCallback(
+    (event) => {
+      const { name, value } = event.target;
+      setUpdateScoreMasterData((prevData) => ({
+        ...prevData,
+        [name]: { value, error: '' },
+      }));
+    },
+    [setUpdateScoreMasterData]
+  );
+
+  // on add master details
+  const onUpdateScoreMasterData = () => {
+    console.log("onUpdateScoreMasterData")
+
+    let valid = true;
+    let data = { ...updateScoreMasterData };
+
+    if (updateScoreMasterData?.orderOne?.value?.trim() === "") {
+      console.log("orderOne:", data.orderOne);
+      data = {
+        ...data,
+        orderOne: {
+          ...data.orderOne,
+          error: "Please enter orderOne text",
+        },
+      };
+
+      valid = false;
+    }
+
+    if (updateScoreMasterData?.orderTwo?.value?.trim() === "") {
+      console.log("orderTwo:", data.orderTwo);
+      data = {
+        ...data,
+        orderTwo: {
+          ...data.orderTwo,
+          error: "Please enter orderTwo text",
+        },
+      };
+
+      valid = false;
+    }
+
+    if (updateScoreMasterData?.orderThree?.value?.trim() === "") {
+      console.log("orderThree:", data.orderThree);
+      data = {
+        ...data,
+        orderThree: {
+          ...data.orderThree,
+          error: "Please enter orderThree text",
+        },
+      };
+
+      valid = false;
+    }
+
+    if (updateScoreMasterData?.orderFour?.value?.trim() === "") {
+      console.log("orderFour:", data.orderFour);
+      data = {
+        ...data,
+        orderFour: {
+          ...data.orderFour,
+          error: "Please enter orderFour text",
+        },
+      };
+
+      valid = false;
+    }
+
+    if (updateScoreMasterData?.orderFive?.value?.trim() === "") {
+      console.log("orderFive:", data.orderFive);
+      data = {
+        ...data,
+        orderFive: {
+          ...data.orderFive,
+          error: "Please enter orderFive text",
+        },
+      };
+
+      valid = false;
+    }
+
+
+    // If all validations pass
+    try {
+      if (valid) {
+
+        const data = {
+          scenarioID: showEditScoreMasterModal.ScenarioID,
+          l1Display: updateScoreMasterData?.orderOne?.value,
+          l2Display: updateScoreMasterData?.orderTwo?.value,
+          l3Display: updateScoreMasterData?.orderThree?.value,
+          l4Display: updateScoreMasterData?.orderFour?.value,
+          l5Display: updateScoreMasterData?.orderFive?.value,
+          requester: {
+            requestID: generateGUID(),
+            requesterID: credentials.data.userID,
+            requesterName: credentials.data.userName,
+            requesterType: credentials.data.role,
+          },
+        };
+
+        console.log("data to edit in scre master : ", data);
+
+        dispatch(updateScoreMaster(data));
+
+
+
+
+      } else {
+        toast.error("Please fill all the details.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while saving the score master data.");
+      console.error("Saving score master data error:", error);
+    }
+  }
+
+
 
   return (
     <PageContainer>
@@ -190,6 +454,21 @@ const Scenarios = () => {
                           <div className={styles.circleSvg}
                             onClick={() => {
                               if (isSelected) {
+                                handleScoreMasterClick(scenario);
+                              }
+                            }}
+                          >
+                            <svg
+                              height="14"
+                              width="14"
+                              style={{ opacity: isSelected ? "1" : "0.3" }}
+                            >
+                              <use xlinkHref="sprite.svg#ratings_icon" />
+                            </svg>
+                          </div>
+                          <div className={styles.circleSvg}
+                            onClick={() => {
+                              if (isSelected) {
                                 navigate(`/scenario/updatescenarios/${scenario.ScenarioID}`);
                               }
                             }}
@@ -253,6 +532,109 @@ const Scenarios = () => {
 
       </div>
       {/* Scenario Table:: end */}
+
+      {/* Edit Score Master Modal :: start*/}
+      {showEditScoreMasterModal && (
+        <ModalContainer>
+          <div className="modal_content">
+            <div className="modal_header">
+              <div>
+                Edit Score Master
+              </div>
+              <div>
+                <svg
+                  className="modal_crossIcon"
+                  onClick={() => {
+                    setShowEditScoreMasterModal(null);
+                    resetUpdateScoreMasterData();
+                  }}
+                >
+                  <use xlinkHref={"sprite.svg#crossIcon"} />
+                </svg>
+              </div>
+            </div>
+            <div className={styles.modalInputContainer}>
+              <div>
+                <Input
+                  type="text"
+                  labelStyle={styles.inputLabel}
+                  label="0% Display Text"
+                  customStyle={{ marginTop: '1rem', }}
+                  value={updateScoreMasterData?.orderOne?.value}
+                  name={"orderOne"}
+                  placeholder="0% Display Text"
+                  onChange={onUpdateScoreMasterDataChange}
+                />
+                <Input
+                  type="text"
+                  labelStyle={styles.inputLabel}
+                  label="25% Display Text"
+                  customStyle={{ marginTop: '1rem', }}
+                  value={updateScoreMasterData?.orderTwo?.value}
+                  name={"orderTwo"}
+                  placeholder="25% Display Text"
+                  onChange={onUpdateScoreMasterDataChange}
+                />
+                <Input
+                  type="text"
+                  labelStyle={styles.inputLabel}
+                  label="50% Display Text"
+                  customStyle={{ marginTop: '1rem', }}
+                  value={updateScoreMasterData?.orderThree?.value}
+                  name={"orderThree"}
+                  placeholder="50% Display Text"
+                  onChange={onUpdateScoreMasterDataChange}
+                />
+                <Input
+                  type="text"
+                  labelStyle={styles.inputLabel}
+                  label="75% Display Text"
+                  customStyle={{ marginTop: '1rem', }}
+                  value={updateScoreMasterData?.orderFour?.value}
+                  name={"orderFour"}
+                  placeholder="75% Display Text"
+                  onChange={onUpdateScoreMasterDataChange}
+                />
+                <Input
+                  type="text"
+                  labelStyle={styles.inputLabel}
+                  label="100% Display Text"
+                  customStyle={{ marginTop: '1rem', }}
+                  value={updateScoreMasterData?.orderFive?.value}
+                  name={"orderFive"}
+                  placeholder="100% Display Text"
+                  onChange={onUpdateScoreMasterDataChange}
+                />
+              </div>
+
+
+            </div>
+
+            <div className="modal_buttonContainer">
+              <Button
+                buttonType={"cancel"}
+                onClick={() => {
+                  setShowEditScoreMasterModal(null);
+                  resetUpdateScoreMasterData();
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                customStyle={{
+                  marginLeft: "1rem",
+                }}
+              onClick={onUpdateScoreMasterData}
+              >
+                Save
+              </Button>
+            </div>
+          </div>
+        </ModalContainer>
+      )}
+      {/* Edit Score Master Modal :: end*/}
+
+
       {showDeleteModal && (
         <ModalContainer>
           <div className="modal_content">
