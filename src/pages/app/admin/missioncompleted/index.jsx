@@ -14,6 +14,10 @@ import { resetAnswerDetailsState } from "../../../../store/app/user/answers/post
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
 import { toPng, toSvg } from "html-to-image";
 import { formatTime } from "../../../../utils/helper";
+import {
+  getReport,
+  resetReportState,
+} from "../../../../store/app/admin/report/getReport";
 
 const SelectTree = ({ clicked = 1, onSelect = () => {} }) => {
   return (
@@ -48,6 +52,18 @@ const getFullTreeNode = (node) => {
   console.log("children", duplicate.children);
 };
 
+const downloadPDF = (pdf, name = "report") => {
+  console.log("pdf", pdf);
+  console.log("name", name);
+
+  const linkSource = `data:application/pdf;base64,${pdf}`;
+  const downloadLink = document.createElement("a");
+  const fileName = `${name}.pdf`;
+  downloadLink.href = linkSource;
+  downloadLink.download = fileName;
+  downloadLink.click();
+};
+
 const MissionCompleted = () => {
   const [currentTab, setCurrentTab] = useState(0);
 
@@ -58,9 +74,13 @@ const MissionCompleted = () => {
     (state) => state.getInstanceProgress
   );
 
-  const navigate = useNavigate();
+  const { reportData, loading: reportLoading } = useSelector(
+    (state) => state.getReport
+  );
 
-  // console.log("instanceSummary", instanceSummary);
+  const { progressImage } = useSelector((state) => state.gameplay);
+
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -96,18 +116,6 @@ const MissionCompleted = () => {
     navigate("/");
   }, []);
 
-  // useEffect(() => {
-  //   const homescreen = () => {
-  //     resetAll();
-  //   };
-
-  //   signalRService.HomeScreenListener(homescreen);
-
-  //   return () => {
-  //     signalRService.HomeScreenListenerOff(homescreen);
-  //   };
-  // }, [resetAll]);
-
   const missionCompleted = useCallback(() => {
     if (sessionDetails?.data) {
       const sessionData = JSON.parse(sessionDetails.data);
@@ -117,6 +125,18 @@ const MissionCompleted = () => {
       signalRService.MissionCompletedInvoke(sessionData.InstanceID);
     }
   }, [sessionDetails]);
+
+  useEffect(() => {
+    if (reportData && reportData.success) {
+      if (reportData?.data?.Report) {
+        const name = instanceSummary?.data?.GameInstance
+          ? instanceSummary?.data?.GameInstance
+          : "report";
+        downloadPDF(reportData?.data?.Report, name);
+      }
+      dispatch(resetReportState());
+    }
+  }, [reportData, instanceSummary]);
 
   return (
     <div
@@ -151,14 +171,6 @@ const MissionCompleted = () => {
                   : ""}
               </div>
             </div>
-            {/* <div>
-            Player Name{" "}
-            <span>
-              {credentials?.data?.designation
-                ? credentials.data.designation
-                : ""}
-            </span>
-          </div> */}
           </div>
           <div className={styles.treeContainer}>
             <SelectTree
@@ -200,27 +212,49 @@ const MissionCompleted = () => {
             <Button
               customClassName={styles.export}
               onClick={() => {
-                // var node = document.getElementsByClassName("rd3t-svg");
-                // console.log("node", node[0]);
-                // if (node[0]) {
-                //   toSvg(node[0], {
-                //     filter: (node) => {
-                //       return node.tagName !== "i";
-                //     },
-                //   })
-                //     .then(function (dataUrl) {
-                //       var link = document.createElement("a");
-                //       link.download = "tree.svg";
-                //       link.href = dataUrl;
-                //       link.click();
-                //     })
-                //     .catch(function (error) {
-                //       console.error("oops, something went wrong!", error);
-                //     });
-                // }
+                var node = document.getElementsByClassName("rd3t-svg");
+                if (node[0]) {
+                  toPng(node[0], {
+                    filter: (node) => {
+                      return node.tagName !== "i";
+                    },
+                  })
+                    .then(function (dataUrl) {
+                      const sessionData = JSON.parse(sessionDetails.data);
+
+                      const data = {
+                        instanceID: sessionData.InstanceID,
+                        scoreImage: progressImage,
+                        treeImage: dataUrl,
+                        requester: {
+                          requestID: generateGUID(),
+                          requesterID: credentials.data.userID,
+                          requesterName: credentials.data.userName,
+                          requesterType: credentials.data.role,
+                        },
+                      };
+
+                      // var link = document.createElement("a");
+                      // link.download = "tree.png";
+                      // link.href = dataUrl;
+                      // link.click();
+
+                      // var link = document.createElement("a");
+                      // link.download = "progress.png";
+                      // link.href = progressImage;
+                      // link.click();
+
+                      console.log("data", data);
+
+                      dispatch(getReport(data));
+                    })
+                    .catch(function (error) {
+                      console.error("oops, something went wrong!", error);
+                    });
+                }
               }}
             >
-              Export
+              {reportLoading ? "Downloading.." : "Export"}
             </Button>
             <Button customClassName={styles.end} onClick={missionCompleted}>
               End

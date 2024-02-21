@@ -47,6 +47,7 @@ import updateOrganization from "../app/admin/masters/updateOrganization.js";
 import deleteMasterByTypeAndId from "../app/admin/masters/deleteMasterByTypeAndId.js";
 import getDesignationById from "../app/admin/masters/getDesignationById.js";
 import getOrganizationById from "../app/admin/masters/getOrganizationById.js";
+import getReport from "../app/admin/report/getReport.js";
 
 const reducers = combineReducers({
   login,
@@ -94,6 +95,7 @@ const reducers = combineReducers({
   deleteMasterByTypeAndId,
   getDesignationById,
   getOrganizationById,
+  getReport,
 });
 
 const rootReducer = (state, action) => {

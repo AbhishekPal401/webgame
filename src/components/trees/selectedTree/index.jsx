@@ -99,8 +99,6 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
     }
   }
 
-  console.log("nodeDatum", nodeDatum);
-
   return (
     <g transform={`translate(-150, 0)`}>
       <foreignObject width={300} height={30 + 2 * padding}>

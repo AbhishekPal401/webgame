@@ -35,6 +35,8 @@ import Progress from "../../../../components/progress";
 import { getCurrentTimeStamp } from "../../../../utils/helper.js";
 import momentTimezone from "moment-timezone";
 import DOMPurify from "dompurify";
+import { setProgressImageData } from "../../../../store/local/gameplay.js";
+import { toPng, toSvg } from "html-to-image";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -244,6 +246,21 @@ const GamePlay = () => {
         data.ActionType === "IsCompleted" ||
         data.actionType === "IsCompleted"
       ) {
+        var node = document.getElementById("progressmeter");
+        if (node) {
+          toPng(node, {
+            filter: (node) => {
+              return node.tagName !== "i";
+            },
+          })
+            .then(function (dataUrl) {
+              dispatch(setProgressImageData(dataUrl));
+            })
+            .catch(function (error) {
+              console.error("cannot set setProgressImageData!", error);
+            });
+        }
+
         navigate("/missioncompleted");
       } else {
         console.log("ProceedToNextQuestionListener ActionType", data);
