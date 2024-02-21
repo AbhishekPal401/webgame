@@ -129,17 +129,21 @@ const UserHomePage = () => {
 
   useEffect(() => {
     const gameavailable = () => {
+      console.log("game available called");
       setCallQuestionApi(true);
       setReady(true);
     };
 
     signalRService.GameAvailableOff(gameavailable);
+
+    console.log("game available listener");
+
     signalRService.GameAvailable(gameavailable);
 
     return () => {
       signalRService.GameAvailableOff(gameavailable);
     };
-  }, [fetchSession, isConnectedToServer]);
+  }, []);
 
   useEffect(() => {
     if (callSessionApi) {
@@ -161,7 +165,7 @@ const UserHomePage = () => {
     return () => {
       signalRService.ReceiveNotificationOff(notification);
     };
-  }, [fetchIntro]);
+  }, []);
 
   const fetchFirstQuestion = useCallback(() => {
     if (sessionDetails?.data) {
