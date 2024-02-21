@@ -193,18 +193,6 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
           }
         });
 
-        // const leafElements =
-        //   containerRef.current.querySelectorAll(`g.rd3t-leaf-node`);
-
-        // leafElements.forEach((element) => {
-        //   const parent = element.parentElement;
-
-        //   if (parent && parent.contains(element)) {
-        //     parent.appendChild(element.cloneNode(true));
-        //     parent.removeChild(element);
-        //   }
-        // });
-
         const { width, height } = containerRef.current.getBoundingClientRect();
         setTranslate({ x: width / 2, y: 0 });
       } catch (e) {}
