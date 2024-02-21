@@ -120,11 +120,11 @@
   margin-left: 4rem;
   height: 40rem !important;
 }
-
+/* 
 .tree > div:nth-child(1) svg {
   width: 100% !important;
   height: 100% !important;
-}
+} */
 
 .tree > div:nth-child(2) {
   width: 25%;
