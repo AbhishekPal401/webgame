@@ -159,6 +159,10 @@
   width: 2.4rem; */
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
+.inputLabel {
+  color: var(--input_label_dark);
+}
+
 
 /* pagination */
 
