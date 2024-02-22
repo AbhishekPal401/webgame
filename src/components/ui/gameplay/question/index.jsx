@@ -25,6 +25,7 @@ import { useTimer } from "react-timer-hook";
 import ImageController from "../../../media/imagecontroller";
 import { getCurrentTimeStamp } from "../../../../utils/helper";
 import moment from "moment";
+import DOMPurify from "dompurify";
 
 const Timer = ({ Duration, onExpire = () => {}, status = "start" }) => {
   const [expiryTimestamp, setExpiryTimestamp] = useState(new Date());
@@ -534,7 +535,7 @@ const Question = ({
         <div>{QuestionNo}.</div>
         <div className={styles.question}>
           {QuestionText && (
-            <div dangerouslySetInnerHTML={{ __html: QuestionText }}></div>
+            <div dangerouslySetInnerHTML={{ __html:  DOMPurify.sanitize(QuestionText) }}></div>
           )}
         </div>
       </div>
