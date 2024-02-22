@@ -39,8 +39,8 @@ const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
               nodeDatum.attributes.isQuestion
                 ? styles.node
                 : nodeDatum.attributes.isOptimal
-                  ? styles.isOptimalNode
-                  : styles.isNotOptimalNode
+                ? styles.isOptimalNode
+                : styles.isNotOptimalNode
             }
             data-tooltip-id="my-tooltip"
             data-tooltip-html={ReactDOMServer.renderToStaticMarkup(
@@ -51,15 +51,23 @@ const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
             )}
             // style={{ padding: `${padding * 0.5}px ${padding}px` }}
             style={{
-              padding: !contentIsHTML ?
-                `${padding * 0.5}px ${padding}px` : `${padding * 0.1}px ${padding}px ${padding * 0.1}px ${padding + 5}px`
+              padding: !contentIsHTML
+                ? `${padding * 0.5}px ${padding}px`
+                : `${padding * 0.1}px ${padding}px ${padding * 0.1}px ${
+                    padding + 5
+                  }px`,
             }}
           >
             {/* {label} */}
-            {
-              !contentIsHTML ? label :
-                (truncatedLabel && <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(truncatedLabel) }} />)
-            }
+            {!contentIsHTML
+              ? label
+              : truncatedLabel && (
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(truncatedLabel),
+                    }}
+                  />
+                )}
           </div>
         </div>
       </foreignObject>
@@ -85,26 +93,39 @@ const OptimalTree = ({ data = {} }) => {
 
       optimalElements.forEach((element) => {
         const parent = element.parentElement;
-        parent.appendChild(element.cloneNode(true));
-        parent.removeChild(element);
+        if (parent && parent.contains(element)) {
+          const clonedNode = element.cloneNode(true);
+          if (clonedNode) {
+            parent.appendChild(clonedNode);
+            parent.removeChild(element);
+          }
+        }
       });
 
       const gElements = containerRef.current.querySelectorAll(`g.rd3t-node`);
 
       gElements.forEach((element) => {
         const parent = element.parentElement;
-        parent.appendChild(element.cloneNode(true));
-        parent.removeChild(element);
+
+        if (parent && parent.contains(element)) {
+          const clonedNode = element.cloneNode(true);
+          if (clonedNode) {
+            parent.appendChild(clonedNode);
+            parent.removeChild(element);
+          }
+        }
       });
 
-      const leafElements =
-        containerRef.current.querySelectorAll(`g.rd3t-leaf-node`);
+      // const leafElements =
+      //   containerRef.current.querySelectorAll(`g.rd3t-leaf-node`);
 
-      leafElements.forEach((element) => {
-        const parent = element.parentElement;
-        parent.appendChild(element.cloneNode(true));
-        parent.removeChild(element);
-      });
+      // leafElements.forEach((element) => {
+      //   const parent = element.parentElement;
+      //   if (parent && parent.contains(element)) {
+      //     parent.appendChild(element.cloneNode(true));
+      //     parent.removeChild(element);
+      //   }
+      // });
 
       const { width, height } = containerRef.current.getBoundingClientRect();
       setTranslate({ x: width / 2, y: 0 });

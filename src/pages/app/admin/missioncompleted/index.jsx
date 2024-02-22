@@ -18,6 +18,7 @@ import {
   getReport,
   resetReportState,
 } from "../../../../store/app/admin/report/getReport";
+import Progress from "../../../../components/progress";
 
 const SelectTree = ({ clicked = 1, onSelect = () => {} }) => {
   return (
@@ -53,8 +54,8 @@ const getFullTreeNode = (node) => {
 };
 
 const downloadPDF = (pdf, name = "report") => {
-  console.log("pdf", pdf);
-  console.log("name", name);
+  // console.log("pdf", pdf);
+  // console.log("name", name);
 
   const linkSource = `data:application/pdf;base64,${pdf}`;
   const downloadLink = document.createElement("a");
@@ -79,6 +80,8 @@ const MissionCompleted = () => {
   );
 
   const { progressImage } = useSelector((state) => state.gameplay);
+
+  // console.log("instanceSummary", instanceSummary);
 
   const navigate = useNavigate();
 
@@ -198,13 +201,25 @@ const MissionCompleted = () => {
                   </div>
                   {/* <span>min</span> */}
                 </div>
-                <div>Score</div>
+                <Progress
+                  progress={
+                    instanceSummary?.data?.ScorePercentage
+                      ? Number(instanceSummary?.data?.ScorePercentage)
+                      : 0
+                  }
+                  scoreMaster={
+                    instanceSummary?.data?.ScoreMaster
+                      ? instanceSummary?.data?.ScoreMaster
+                      : []
+                  }
+                />
+                {/* <div>Score</div>
                 <div className={styles.circle}>
                   {" "}
                   {instanceSummary?.data?.GroupScore
                     ? instanceSummary?.data?.GroupScore
                     : ""}
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -246,7 +261,7 @@ const MissionCompleted = () => {
 
                       console.log("data", data);
 
-                      dispatch(getReport(data));
+                      // dispatch(getReport(data));
                     })
                     .catch(function (error) {
                       console.error("oops, something went wrong!", error);

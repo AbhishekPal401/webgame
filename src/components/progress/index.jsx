@@ -33,8 +33,8 @@ const progress = ({ progress = 0, scoreMaster = [] }) => {
 
   const [showTooltip, setShowTooltip] = useState(false);
 
-  console.log("progress", progress);
-  console.log("scoreMaster", scoreMaster);
+  // console.log("progress", progress);
+  // console.log("scoreMaster", scoreMaster);
 
   useEffect(() => {
     const targetDegree = interpolate(-85, 85, 0, 100, progress); // Assuming progress ranges from 0 to 1
@@ -42,28 +42,10 @@ const progress = ({ progress = 0, scoreMaster = [] }) => {
     const targetPosition = interpolate(-5, 93, 0, 100, progress);
     setPointerPosition(targetPosition);
   }, [progress, pointerPosition]);
+
   return (
     <div
       id="progressmeter"
-      onClick={() => {
-        var node = document.getElementById("progressmeter");
-        if (node) {
-          toPng(node, {
-            filter: (node) => {
-              return node.tagName !== "i";
-            },
-          })
-            .then(function (dataUrl) {
-              var link = document.createElement("a");
-              link.download = "progress.png";
-              link.href = dataUrl;
-              link.click();
-            })
-            .catch(function (error) {
-              console.error("cannot set setProgressImageData!", error);
-            });
-        }
-      }}
       className={styles.container}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
@@ -96,53 +78,56 @@ const progress = ({ progress = 0, scoreMaster = [] }) => {
       <svg className={styles.info}>
         <use xlinkHref={"sprite.svg#info"} />
       </svg>
-      {showTooltip && (
-        <div className={styles.detailContainer}>
-          <div className={styles.progressBar}>
-            <div
-              className={styles.progressBarItem}
-              style={{ backgroundColor: "#D04A02" }}
-            ></div>
-            <div
-              className={styles.progressBarItem}
-              style={{ backgroundColor: "#FFB600" }}
-            ></div>
-            <div
-              className={styles.progressBarItem}
-              style={{ backgroundColor: "#3DD5B0" }}
-            ></div>
-            <div
-              className={styles.progressBarItem}
-              style={{ backgroundColor: "#299D8F" }}
-            ></div>
 
-            <div className={styles.line}></div>
-            <svg
-              className={styles.pointer}
-              style={{ left: `${pointerPosition}%` }}
-            >
-              <use xlinkHref={"sprite.svg#progress-pointer"} />
-            </svg>
-          </div>
-          <div className={styles.progresslabels}>
-            {scoreMaster && Array.isArray(scoreMaster) && scoreMaster.length > 0
-              ? scoreMaster.map((scoreMasterItem, index) => {
-                  return (
-                    <div className={styles.label} key={index}>
-                      {scoreMasterItem.ScoreDisplay}
-                    </div>
-                  );
-                })
-              : scoreMasterDefault.map((scoreMasterItem, index) => {
-                  return (
-                    <div className={styles.label} key={index}>
-                      {scoreMasterItem.ScoreDisplay}
-                    </div>
-                  );
-                })}
-          </div>
+      <div
+        id="progressbar_tooltip"
+        className={styles.detailContainer}
+        style={{ display: showTooltip ? "flex" : "none" }}
+      >
+        <div className={styles.progressBar}>
+          <div
+            className={styles.progressBarItem}
+            style={{ backgroundColor: "#D04A02" }}
+          ></div>
+          <div
+            className={styles.progressBarItem}
+            style={{ backgroundColor: "#FFB600" }}
+          ></div>
+          <div
+            className={styles.progressBarItem}
+            style={{ backgroundColor: "#3DD5B0" }}
+          ></div>
+          <div
+            className={styles.progressBarItem}
+            style={{ backgroundColor: "#299D8F" }}
+          ></div>
+
+          <div className={styles.line}></div>
+          <svg
+            className={styles.pointer}
+            style={{ left: `${pointerPosition ? pointerPosition : 0}%` }}
+          >
+            <use xlinkHref={"sprite.svg#progress-pointer"} />
+          </svg>
         </div>
-      )}
+        <div className={styles.progresslabels}>
+          {scoreMaster && Array.isArray(scoreMaster) && scoreMaster.length > 0
+            ? scoreMaster.map((scoreMasterItem, index) => {
+                return (
+                  <div className={styles.label} key={index}>
+                    {scoreMasterItem.ScoreDisplay}
+                  </div>
+                );
+              })
+            : scoreMasterDefault.map((scoreMasterItem, index) => {
+                return (
+                  <div className={styles.label} key={index}>
+                    {scoreMasterItem.ScoreDisplay}
+                  </div>
+                );
+              })}
+        </div>
+      </div>
     </div>
   );
 };

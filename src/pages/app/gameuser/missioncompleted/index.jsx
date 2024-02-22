@@ -13,6 +13,7 @@ import { resetNextQuestionDetailsState } from "../../../../store/app/user/questi
 import { resetAnswerDetailsState } from "../../../../store/app/user/answers/postAnswer";
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
 import { formatTime } from "../../../../utils/helper";
+import Progress from "../../../../components/progress";
 
 const SelectTree = ({ clicked = 0, onSelect = () => {} }) => {
   return (
@@ -161,13 +162,25 @@ const MissionCompleted = () => {
                     : ""}{" "}
                   {/* <span>min</span> */}
                 </div>
-                <div>Score</div>
+                <Progress
+                  progress={
+                    instanceSummary?.data?.ScorePercentage
+                      ? Number(instanceSummary?.data?.ScorePercentage)
+                      : 0
+                  }
+                  scoreMaster={
+                    instanceSummary?.data?.ScoreMaster
+                      ? instanceSummary?.data?.ScoreMaster
+                      : []
+                  }
+                />
+                {/* <div>Score</div>
                 <div className={styles.circle}>
                   {" "}
                   {instanceSummary?.data?.IndividualScore
                     ? instanceSummary?.data?.IndividualScore
                     : ""}
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

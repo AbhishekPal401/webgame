@@ -151,7 +151,7 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
     height: nodeSize.y,
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (containerRef.current && data) {
       try {
         if (userType === "admin") {
@@ -163,8 +163,11 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
             const parent = element.parentElement;
 
             if (parent && parent.contains(element)) {
-              parent.appendChild(element.cloneNode(true));
-              parent.removeChild(element);
+              const clonedNode = element.cloneNode(true);
+              if (clonedNode) {
+                parent.appendChild(clonedNode);
+                parent.removeChild(element);
+              }
             }
           });
         } else {
@@ -176,8 +179,11 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
             const parent = element.parentElement;
 
             if (parent && parent.contains(element)) {
-              parent.appendChild(element.cloneNode(true));
-              parent.removeChild(element);
+              const clonedNode = element.cloneNode(true);
+              if (clonedNode) {
+                parent.appendChild(clonedNode);
+                parent.removeChild(element);
+              }
             }
           });
         }
@@ -188,10 +194,25 @@ const SelectedTree = ({ data = {}, userType = "admin" }) => {
           const parent = element.parentElement;
 
           if (parent && parent.contains(element)) {
-            parent.appendChild(element.cloneNode(true));
-            parent.removeChild(element);
+            const clonedNode = element.cloneNode(true);
+            if (clonedNode) {
+              parent.appendChild(clonedNode);
+              parent.removeChild(element);
+            }
           }
         });
+
+        // const leafElements =
+        //   containerRef.current.querySelectorAll(`g.rd3t-leaf-node`);
+
+        // leafElements.forEach((element) => {
+        //   const parent = element.parentElement;
+
+        //   if (parent && parent.contains(element)) {
+        //     parent.appendChild(element.cloneNode(true));
+        //     parent.removeChild(element);
+        //   }
+        // });
 
         const { width, height } = containerRef.current.getBoundingClientRect();
         setTranslate({ x: width / 2, y: 0 });
