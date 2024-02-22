@@ -33,9 +33,6 @@ const progress = ({ progress = 0, scoreMaster = [] }) => {
 
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // console.log("progress", progress);
-  // console.log("scoreMaster", scoreMaster);
-
   useEffect(() => {
     const targetDegree = interpolate(-85, 85, 0, 100, progress); // Assuming progress ranges from 0 to 1
     setRotationDegree(targetDegree);

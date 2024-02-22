@@ -259,9 +259,7 @@ const MissionCompleted = () => {
                       // link.href = progressImage;
                       // link.click();
 
-                      console.log("data", data);
-
-                      // dispatch(getReport(data));
+                      dispatch(getReport(data));
                     })
                     .catch(function (error) {
                       console.error("oops, something went wrong!", error);
