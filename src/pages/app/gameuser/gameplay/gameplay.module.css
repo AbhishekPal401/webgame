@@ -49,6 +49,8 @@
   -webkit-box-orient: vertical;
   text-overflow: ellipsis; */
   overflow: auto;
+  word-wrap: break-word;
+  white-space: break-spaces;
 }
 
 .displayInline {
