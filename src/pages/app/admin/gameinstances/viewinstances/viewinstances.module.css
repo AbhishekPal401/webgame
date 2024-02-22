@@ -15,7 +15,7 @@
   font-size: 4rem;
   color: var(--label);
   font-weight: bold;
-  font-family: 'Helvetica 500';
+  font-family: "Helvetica 500";
 }
 .right {
 }
@@ -116,10 +116,10 @@
   height: 40rem !important;
   width: 100%;
 }
-.treeLeft > div:nth-child(1) svg {
+/* .treeLeft > div:nth-child(1) svg {
   width: 100% !important;
   height: 100% !important;
-}
+} */
 .verticalLine {
   height: 100%;
   width: 0.1rem;
