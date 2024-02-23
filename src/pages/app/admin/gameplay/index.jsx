@@ -607,7 +607,7 @@ const GamePlay = () => {
       console.log("decisionCount", decisionCount);
 
       if (decisionCount === 0) {
-        toast.success("Please select a option");
+        toast.success("Please select an option");
       } else if (decisionCount === 1) {
         const sessionData = JSON.parse(sessionDetails.data);
 
@@ -650,7 +650,7 @@ const GamePlay = () => {
           dispatch(submitAnswerDetails(data));
         }
       } else if (decisionCount > 1) {
-        toast.success("Please select a option");
+        toast.success("Please select an option");
       }
     }
   }, [sessionDetails, credentials, decisionDetails, selectedAnswer]);
@@ -768,7 +768,7 @@ const GamePlay = () => {
     >
       <div className={styles.header}>
         <div className={styles.header_left}>
-          <div>Objectives</div>
+          <div>Introduction</div>
           <div>
             {questionDetails?.data?.GameIntro ? (
               <p

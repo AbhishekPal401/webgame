@@ -731,7 +731,7 @@ const GamePlay = () => {
     >
       <div className={styles.header}>
         <div className={styles.header_left}>
-          <div>Objectives</div>
+          <div>Introduction</div>
           <div>
             {questionDetails?.data?.GameIntro ? (
               <p

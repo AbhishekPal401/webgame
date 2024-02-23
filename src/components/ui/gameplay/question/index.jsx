@@ -311,11 +311,11 @@ const Question = ({
       CustomButtonRender = (
         <div className={styles.buttonContainer}>
           {getDecisionCount() === 0 ? (
-            <div>Decision is not Made </div>
+            <div>No decision made </div>
           ) : getDecisionCount() === 1 ? (
-            <div>Decision Made by {delegatedTo} </div>
+            <div>Decision made by {delegatedTo} </div>
           ) : (
-            <div>Decision Made by {delegatedTo}s </div>
+            <div>Decision made by {delegatedTo}s </div>
           )}
           <Button customClassName={styles.button} onClick={onNextQuestion}>
             Approve & Next Question
