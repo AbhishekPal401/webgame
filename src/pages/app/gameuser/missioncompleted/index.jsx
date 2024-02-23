@@ -14,6 +14,7 @@ import { resetAnswerDetailsState } from "../../../../store/app/user/answers/post
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
 import { formatTime } from "../../../../utils/helper";
 import Progress from "../../../../components/progress";
+import QuestionLoader from "../../../../components/loader/questionLoader";
 
 const SelectTree = ({ clicked = 0, onSelect = () => {} }) => {
   return (
@@ -46,8 +47,10 @@ const MissionCompleted = () => {
 
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { credentials } = useSelector((state) => state.login);
-  const { instanceSummary } = useSelector((state) => state.instanceSummary);
-  const { instanceProgress } = useSelector(
+  const { instanceSummary, loading: instanceinstanceSummary } = useSelector(
+    (state) => state.instanceSummary
+  );
+  const { instanceProgress, loading: instanceProgressLoading } = useSelector(
     (state) => state.getInstanceProgress
   );
 
@@ -107,95 +110,90 @@ const MissionCompleted = () => {
       style={{ backgroundImage: 'url("/images/user_background.png")' }}
     >
       <div className={styles.missionContainer}>
-        <div className={styles.innerCotainer}>
-          <div
-            className={styles.header}
-            style={{ backgroundImage: 'url("/images/particles2.png")' }}
-          >
-            <div>Mission Accomplished!</div>
-            <div>
-              Thank You For Taking Part In This Game, We Hope You Have Enjoyed
-              It. Here's A Summary Of How You Did.
-            </div>
-            <div className={styles.details_row}>
-              <div>
-                {instanceSummary?.data?.GameInstance
-                  ? instanceSummary?.data?.GameInstance
-                  : ""}
-              </div>
-              <div>
-                {instanceSummary?.data?.OrganizationName
-                  ? instanceSummary?.data?.OrganizationName
-                  : ""}
-              </div>
-              <div>
-                {instanceSummary?.data?.GameScenario
-                  ? instanceSummary?.data?.GameScenario
-                  : ""}
-              </div>
-            </div>
-          </div>
-          <div className={styles.treeContainer}>
-            <SelectTree
-              clicked={currentTab}
-              onSelect={(value) => {
-                setCurrentTab(value);
-              }}
-            />
-            <div className={styles.tree}>
-              {instanceSummary &&
-                instanceSummary.data &&
-                instanceSummary.data.Summary &&
-                instanceProgress &&
-                instanceProgress.data &&
-                instanceProgress.data.Summary && (
-                  <SelectedTree
-                    data={instanceProgress.data.Summary}
-                    userType="normal"
-                  />
-                )}
-              <div className={styles.right}>
-                <div>Time Spent</div>
-                <div className={styles.circle}>
-                  {instanceSummary?.data?.TimeTaken
-                    ? formatTime(instanceSummary?.data?.TimeTaken)
-                    : ""}{" "}
-                  {/* <span>min</span> */}
-                </div>
-                <Progress
-                  progress={
-                    instanceSummary?.data?.ScorePercentage
-                      ? Number(instanceSummary?.data?.ScorePercentage)
-                      : 0
-                  }
-                  scoreMaster={
-                    instanceSummary?.data?.ScoreMaster
-                      ? instanceSummary?.data?.ScoreMaster
-                      : []
-                  }
-                />
-                {/* <div>Score</div>
-                <div className={styles.circle}>
-                  {" "}
-                  {instanceSummary?.data?.IndividualScore
-                    ? instanceSummary?.data?.IndividualScore
-                    : ""}
-                </div> */}
-              </div>
-            </div>
-          </div>
-          <div className={styles.buttonContainer}>
-            {/* <Button customClassName={styles.export}>Export</Button> */}
-            <Button
-              customClassName={styles.end}
-              onClick={() => {
-                resetAll();
-              }}
+        {instanceinstanceSummary || instanceProgressLoading ? (
+          <QuestionLoader size={160} />
+        ) : (
+          <div className={styles.innerCotainer}>
+            <div
+              className={styles.header}
+              style={{ backgroundImage: 'url("/images/particles2.png")' }}
             >
-              End
-            </Button>
+              <div>Mission Accomplished!</div>
+              <div>
+                Thank You For Taking Part In This Game, We Hope You Have Enjoyed
+                It. Here's A Summary Of How You Did.
+              </div>
+              <div className={styles.details_row}>
+                <div>
+                  {instanceSummary?.data?.GameInstance
+                    ? instanceSummary?.data?.GameInstance
+                    : ""}
+                </div>
+                <div>
+                  {instanceSummary?.data?.OrganizationName
+                    ? instanceSummary?.data?.OrganizationName
+                    : ""}
+                </div>
+                <div>
+                  {instanceSummary?.data?.GameScenario
+                    ? instanceSummary?.data?.GameScenario
+                    : ""}
+                </div>
+              </div>
+            </div>
+            <div className={styles.treeContainer}>
+              <SelectTree
+                clicked={currentTab}
+                onSelect={(value) => {
+                  setCurrentTab(value);
+                }}
+              />
+              <div className={styles.tree}>
+                {instanceSummary &&
+                  instanceSummary.data &&
+                  instanceSummary.data.Summary &&
+                  instanceProgress &&
+                  instanceProgress.data &&
+                  instanceProgress.data.Summary && (
+                    <SelectedTree
+                      data={instanceProgress.data.Summary}
+                      userType="normal"
+                    />
+                  )}
+                <div className={styles.right}>
+                  <div>Time Spent</div>
+                  <div className={styles.circle}>
+                    {instanceSummary?.data?.TimeTaken
+                      ? formatTime(instanceSummary?.data?.TimeTaken)
+                      : ""}{" "}
+                  </div>
+                  <Progress
+                    progress={
+                      instanceSummary?.data?.ScorePercentage
+                        ? Number(instanceSummary?.data?.ScorePercentage)
+                        : 0
+                    }
+                    scoreMaster={
+                      instanceSummary?.data?.ScoreMaster
+                        ? instanceSummary?.data?.ScoreMaster
+                        : []
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={styles.buttonContainer}>
+              <Button
+                customClassName={styles.end}
+                onClick={() => {
+                  resetAll();
+                }}
+              >
+                End
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -26,6 +26,7 @@ import ImageController from "../../../media/imagecontroller";
 import { getCurrentTimeStamp } from "../../../../utils/helper";
 import moment from "moment";
 import DOMPurify from "dompurify";
+import QuestionLoader from "../../../loader/questionLoader";
 
 const Timer = ({ Duration, onExpire = () => {}, status = "start" }) => {
   const [expiryTimestamp, setExpiryTimestamp] = useState(new Date());
@@ -106,7 +107,9 @@ const Question = ({
 
   const { credentials } = useSelector((state) => state.login);
   const { sessionDetails } = useSelector((state) => state.getSession);
-  const { questionDetails } = useSelector((state) => state.getNextQuestion);
+  const { questionDetails, loading: questionLoading } = useSelector(
+    (state) => state.getNextQuestion
+  );
 
   const getDecisionCount = useCallback(() => {
     let decisionCount = 0;
@@ -492,122 +495,190 @@ const Question = ({
 
   console.log("Duration in question ", Duration);
   console.log("countdown in question", countdown);
+  console.log("CurrentState", CurrentState);
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <div>Make a decision</div>
-        <div>
-          <div className={styles.smallCountContainer}>
-            <div></div>
-            <SmallCountDown
-              height={16}
-              width={16}
-              duration={Duration}
-              loops={1}
-              reverse={true}
-              inverse={false}
-              isPaused={
-                QuestionIntroMediaURL && !mediaShownOnce
-                  ? true
-                  : countdown === TIMER_STATES.START
-                  ? false
-                  : true
-              }
-              QuestionNo={QuestionNo}
-            />
-          </div>
+      {questionLoading ? (
+        <QuestionLoader size={140} />
+      ) : (
+        <>
+          <div className={styles.header}>
+            <div>Make a decision</div>
+            <div>
+              <div className={styles.smallCountContainer}>
+                <div></div>
+                <SmallCountDown
+                  height={16}
+                  width={16}
+                  duration={Duration}
+                  loops={1}
+                  reverse={true}
+                  inverse={false}
+                  isPaused={
+                    QuestionIntroMediaURL && !mediaShownOnce
+                      ? true
+                      : countdown === TIMER_STATES.START
+                      ? false
+                      : true
+                  }
+                  QuestionNo={QuestionNo}
+                />
+              </div>
 
-          <div className={styles.timer}>
-            Time Left to Vote{" "}
-            <Timer
-              Duration={Duration <= 0.5 ? 0.5 : Duration}
-              onExpire={() => {
-                completeInvoke();
-              }}
-              status={timerStatus}
-            />
-            min
-          </div>
-        </div>
-      </div>
-      <div className={styles.questionContainer}>
-        <div>{QuestionNo}.</div>
-        <div className={styles.question}>
-          {QuestionText && (
-            <div dangerouslySetInnerHTML={{ __html:  DOMPurify.sanitize(QuestionText) }}></div>
-          )}
-        </div>
-      </div>
-      <div className={styles.mainContent}>
-        <div className={styles.answerContainer}>
-          {Options &&
-            Array.isArray(Options) &&
-            Options.map((item, index) => {
-              return (
-                <div
-                  className={`${styles.answer} ${
-                    selectedAnswer?.AnswerID === item?.AnswerID
-                      ? styles.selected
-                      : selectedAnswer
-                      ? ""
-                      : getDecisionDetailsById(item?.AnswerID, delegatedTo) &&
-                        CurrentState === PlayingStates.DecisionCompleted
-                      ? styles.selected
-                      : ""
-                  }`}
-                  key={index}
-                  onClick={() => {
-                    setSelectedAnswer(item);
+              <div className={styles.timer}>
+                Time Left to Vote{" "}
+                <Timer
+                  Duration={Duration <= 0.5 ? 0.5 : Duration}
+                  onExpire={() => {
+                    completeInvoke();
                   }}
-                >
-                  <div>
-                    {String.fromCharCode(64 + (index + 1))}. {item.AnswerText}
-                  </div>
-                  <div className={styles.vote}>
-                    {showVotes &&
-                      Votes &&
-                      Array.isArray(Votes) &&
-                      Votes.length > 0 &&
-                      getVotesDetailsById(item?.AnswerID) &&
-                      getVotesDetailsById(item?.AnswerID).voteCount > 0 && (
-                        <div className={styles.voteCount}>
-                          {`${
-                            getVotesDetailsById(item?.AnswerID).voteCount === 1
-                              ? "1 Vote"
-                              : `${
-                                  getVotesDetailsById(item?.AnswerID).voteCount
-                                } Votes`
-                          } `}
-                        </div>
-                      )}
-                    {showVotes &&
-                      decisionDetails &&
-                      Array.isArray(decisionDetails) &&
-                      decisionDetails.length > 0 &&
-                      getDeciderDecisionById(item?.AnswerID) &&
-                      getDeciderDecisionById(item?.AnswerID).userName.map(
-                        (username, index) => {
-                          const shortenedDesignation = username.substring(0, 3);
-                          return (
-                            <div
-                              className={styles.userbadge}
-                              data-tooltip-id="des-tooltip"
-                              data-tooltip-content={username}
-                              key={index}
-                            >
-                              {shortenedDesignation}
-                            </div>
-                          );
+                  status={timerStatus}
+                />
+                min
+              </div>
+            </div>
+          </div>
+          <div className={styles.questionContainer}>
+            <div>{QuestionNo}.</div>
+            <div className={styles.question}>
+              {QuestionText && (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(QuestionText),
+                  }}
+                ></div>
+              )}
+            </div>
+          </div>
+          <div className={styles.mainContent}>
+            <div className={styles.answerContainer}>
+              {Options &&
+                Array.isArray(Options) &&
+                Options.map((item, index) => {
+                  return (
+                    <div
+                      className={`${styles.answer} ${
+                        selectedAnswer?.AnswerID === item?.AnswerID
+                          ? styles.selected
+                          : selectedAnswer
+                          ? ""
+                          : getDecisionDetailsById(
+                              item?.AnswerID,
+                              delegatedTo
+                            ) &&
+                            CurrentState === PlayingStates.DecisionCompleted
+                          ? styles.selected
+                          : ""
+                      }`}
+                      key={index}
+                      onClick={() => {
+                        console.log("isAdmin", isAdmin);
+                        console.log("CurrentState", CurrentState);
+                        console.log("IsDecisionMaker", IsDecisionMaker);
+                        console.log(
+                          "isCurrentQuestionVotted",
+                          isCurrentQuestionVotted
+                        );
+                        console.log(
+                          "isCurrentDecisionVotted",
+                          isCurrentDecisionVotted
+                        );
+
+                        if (
+                          isAdmin &&
+                          CurrentState === PlayingStates.DecisionCompleted
+                        ) {
+                          console.log("reached admin");
+
+                          setSelectedAnswer(item);
+                        } else if (!isAdmin) {
+                          console.log("reached");
+                          if (IsDecisionMaker) {
+                            if (
+                              CurrentState === PlayingStates.VotingInProgress ||
+                              CurrentState === PlayingStates.UserVote
+                            ) {
+                              if (!isCurrentQuestionVotted) {
+                                setSelectedAnswer(item);
+                              }
+                            } else if (
+                              CurrentState === PlayingStates.VotingCompleted ||
+                              CurrentState === PlayingStates.DecisionInProgress
+                            ) {
+                              if (!isCurrentDecisionVotted) {
+                                setSelectedAnswer(item);
+                              }
+                            }
+                          } else {
+                            if (
+                              CurrentState === PlayingStates.VotingInProgress ||
+                              CurrentState === PlayingStates.UserVote
+                            ) {
+                              if (!isCurrentQuestionVotted) {
+                                setSelectedAnswer(item);
+                              }
+                            }
+                          }
                         }
-                      )}
-                  </div>
-                </div>
-              );
-            })}
-        </div>
-        {CustomButtonRender}
-      </div>
+                      }}
+                    >
+                      <div>
+                        {String.fromCharCode(64 + (index + 1))}.{" "}
+                        {item.AnswerText}
+                      </div>
+                      <div className={styles.vote}>
+                        {showVotes &&
+                          Votes &&
+                          Array.isArray(Votes) &&
+                          Votes.length > 0 &&
+                          getVotesDetailsById(item?.AnswerID) &&
+                          getVotesDetailsById(item?.AnswerID).voteCount > 0 && (
+                            <div className={styles.voteCount}>
+                              {`${
+                                getVotesDetailsById(item?.AnswerID)
+                                  .voteCount === 1
+                                  ? "1 Vote"
+                                  : `${
+                                      getVotesDetailsById(item?.AnswerID)
+                                        .voteCount
+                                    } Votes`
+                              } `}
+                            </div>
+                          )}
+                        {showVotes &&
+                          decisionDetails &&
+                          Array.isArray(decisionDetails) &&
+                          decisionDetails.length > 0 &&
+                          getDeciderDecisionById(item?.AnswerID) &&
+                          getDeciderDecisionById(item?.AnswerID).userName.map(
+                            (username, index) => {
+                              const shortenedDesignation = username.substring(
+                                0,
+                                3
+                              );
+                              return (
+                                <div
+                                  className={styles.userbadge}
+                                  data-tooltip-id="des-tooltip"
+                                  data-tooltip-content={username}
+                                  key={index}
+                                >
+                                  {shortenedDesignation}
+                                </div>
+                              );
+                            }
+                          )}
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+            {CustomButtonRender}
+          </div>
+        </>
+      )}
+
       {showMedia && QuestionIntroMediaURL && (
         <div className={styles.mediaContainer}>
           <div>Incoming Media</div>

@@ -687,7 +687,7 @@ const GamePlay = () => {
       }
 
       dispatch(resetAnswerDetailsState());
-      setSelectedAnswer({});
+      setSelectedAnswer(null);
 
       // const data = {
       //   InstanceID: sessionData.InstanceID,

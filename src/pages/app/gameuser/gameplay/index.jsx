@@ -142,7 +142,9 @@ const GamePlay = () => {
 
   const [showIntroMedia, setShowIntroMedia] = useState(false);
 
-  const { questionDetails } = useSelector((state) => state.getNextQuestion);
+  const { questionDetails, loading: questionLoading } = useSelector(
+    (state) => state.getNextQuestion
+  );
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { credentials } = useSelector((state) => state.login);
   const { answerDetails, loading } = useSelector((state) => state.postAnswer);
@@ -188,15 +190,31 @@ const GamePlay = () => {
       if (!votesDetails) return;
 
       if (votesDetails.decisionDisplayType === PlayingStates.VotingInProgress) {
+        let currentQuestionSubmitted = false;
+
+        if (Array.isArray(votesDetails.votes)) {
+          votesDetails.votes.forEach((answersubmitDetails) => {
+            answersubmitDetails.votersInfo.forEach((userDetails) => {
+              if (userDetails.userID === credentials.data.userID) {
+                currentQuestionSubmitted = true;
+              }
+            });
+          });
+        }
+
+        setCurrentQuestionSubmitted(currentQuestionSubmitted);
+
         setCurrentState(PlayingStates.VotingInProgress);
         setShowModal(false);
         setNextQuestionFetched(false);
+        setCurrentDecisionSubmitted(false);
       } else if (
         votesDetails.decisionDisplayType === PlayingStates.VotingCompleted
       ) {
         setCurrentState(PlayingStates.VotingCompleted);
         setShowModal(true);
         setNextQuestionFetched(false);
+        setCurrentDecisionSubmitted(false);
       } else if (
         votesDetails.decisionDisplayType === PlayingStates.DecisionInProgress
       ) {
