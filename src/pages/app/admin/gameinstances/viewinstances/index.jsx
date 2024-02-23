@@ -16,6 +16,8 @@ import {
 } from "../../../../../store/app/admin/gameinstances/getOverviewGameDetails";
 import { formatDateString, formatTime } from "../../../../../utils/helper";
 import { toast } from "react-toastify";
+import { toPng } from "html-to-image";
+import { getReport, resetReportState } from "../../../../../store/app/admin/report/getReport";
 
 const Tabs = ({
     activeTab,
@@ -69,6 +71,18 @@ const Tabs = ({
     );
 }
 
+const downloadPDF = (pdf, name = "report") => {
+    console.log("pdf", pdf);
+    console.log("name", name);
+  
+    const linkSource = `data:application/pdf;base64,${pdf}`;
+    const downloadLink = document.createElement("a");
+    const fileName = `${name}.pdf`;
+    downloadLink.href = linkSource;
+    downloadLink.download = fileName;
+    downloadLink.click();
+  };
+
 const ViewInstances = () => {
 
     const [activeTab, setActiveTab] = useState('Selected');
@@ -82,6 +96,9 @@ const ViewInstances = () => {
     const { getOverviewGameByIdDetails } = useSelector((state) => state.getOverviewGameDetails);
     const { instanceProgress } = useSelector(
         (state) => state.getInstanceProgress
+    );
+    const { reportData, loading: reportLoading } = useSelector(
+        (state) => state.getReport
     );
 
     // console.log("instanceSummary :", instanceSummary);
@@ -114,6 +131,17 @@ const ViewInstances = () => {
         }
     }, []);
 
+    useEffect(() => {
+        if (reportData && reportData.success) {
+            if (reportData?.data?.Report) {
+                const name = instanceSummary?.data?.GameInstance
+                    ? instanceSummary?.data?.GameInstance
+                    : "report";
+                downloadPDF(reportData?.data?.Report, name);
+            }
+            dispatch(resetReportState());
+        }
+    }, [reportData, instanceSummary]);
 
     // useEffect(() => {
     //     if (getOverviewGameByIdDetails === undefined || getOverviewGameByIdDetails === null)
@@ -278,8 +306,8 @@ const ViewInstances = () => {
                                                 <div className={styles.treeRightTop}>
                                                     <div>
                                                         <div>Game Played On</div>
-                                                        <div>- {data.GamePlayedOn && 
-                                                            formatDateString(data.GamePlayedOn) !== "Invalid Date" && 
+                                                        <div>- {data.GamePlayedOn &&
+                                                            formatDateString(data.GamePlayedOn) !== "Invalid Date" &&
                                                             formatDateString(data.GamePlayedOn)}
                                                         </div>
                                                     </div>
@@ -351,10 +379,56 @@ const ViewInstances = () => {
                     >
                         Cancel
                     </Button>
-                    <Button
+                    {/* <Button
                     // onClick={onSubmit}
                     >
                         Export
+                    </Button> */}
+                    <Button
+                        customClassName={styles.export}
+                        onClick={() => {
+                            var node = document.getElementsByClassName("rd3t-svg");
+                            if (node[0]) {
+                                toPng(node[0], {
+                                    filter: (node) => {
+                                        return node.tagName !== "i";
+                                    },
+                                })
+                                    .then(function (dataUrl) {
+
+                                        const data = {
+                                            instanceID: instanceID,
+                                            scoreImage: "", // TODO :: Add progress Image
+                                            treeImage: dataUrl,
+                                            requester: {
+                                                requestID: generateGUID(),
+                                                requesterID: credentials.data.userID,
+                                                requesterName: credentials.data.userName,
+                                                requesterType: credentials.data.role,
+                                            },
+                                        };
+
+                                        // var link = document.createElement("a");
+                                        // link.download = "tree.png";
+                                        // link.href = dataUrl;
+                                        // link.click();
+
+                                        // var link = document.createElement("a");
+                                        // link.download = "progress.png";
+                                        // link.href = progressImage;
+                                        // link.click();
+
+                                        console.log("data", data);
+
+                                        dispatch(getReport(data));
+                                    })
+                                    .catch(function (error) {
+                                        console.error("oops, something went wrong!", error);
+                                    });
+                            }
+                        }}
+                    >
+                        {reportLoading ? "Downloading.." : "Export"}
                     </Button>
                 </div>
                 {/* Button container:: end */}
