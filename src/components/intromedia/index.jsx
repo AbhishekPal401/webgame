@@ -5,7 +5,7 @@ import PDFPreview from "../preview/pdfpreview";
 import DOMPurify from "dompurify";
 
 const IntroMedia = ({
-  onCancel = () => {},
+  onCancel = () => { },
   mediaURL = "",
   description = "",
   mediaType = "",
@@ -37,7 +37,12 @@ const IntroMedia = ({
   // console.log("resourceType", resourceType);
 
   return (
-    <div className={"modal_content"} style={{ width: "80vw", height: "85vh" }}>
+    <div className={"modal_content"}
+      style={{
+        width: "80vw",
+        height: "85vh",
+        overflowY: "auto",
+      }}>
       <div className={"modal_header"}>
         <div>Introduction Resource</div>
         <div>

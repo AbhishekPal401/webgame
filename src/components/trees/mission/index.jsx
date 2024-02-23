@@ -27,7 +27,7 @@ const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
   if (contentIsHTML) {
     padding = 15;
     // Truncate HTML content
-    truncatedLabel = truncateHtml(nodeDatum.name, 115); // Maximum length for truncated HTML and content
+    truncatedLabel = truncateHtml(nodeDatum.name, 100); // Maximum length for truncated HTML and content
   }
 
   return (
@@ -42,11 +42,22 @@ const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
                 ? styles.isOptimalNode
                 : styles.isNotOptimalNode
             }
+            // data-tooltip-id="my-tooltip"
+            // data-tooltip-html={ReactDOMServer.renderToStaticMarkup(
+            //   <div className={styles.tooltipContent}>
+            //     <div>{nodeDatum.attributes.ToolTipTitle}</div>
+            //     <div>{nodeDatum.attributes.ToolTipDescr}</div>
+            //   </div>
+            // )}
             data-tooltip-id="my-tooltip"
             data-tooltip-html={ReactDOMServer.renderToStaticMarkup(
-              <div className={styles.tooltipContent}>
-                <div>{nodeDatum.attributes.ToolTipTitle}</div>
-                <div>{nodeDatum.attributes.ToolTipDescr}</div>
+              <div className={styles.tooltipContent}
+                style={{
+                  maxWidth: '50rem',
+                  wordBreak: "break-all",
+                }}
+              >
+                <div dangerouslySetInnerHTML={{ __html: nodeDatum.name }}></div>
               </div>
             )}
             // style={{ padding: `${padding * 0.5}px ${padding}px` }}
@@ -167,7 +178,7 @@ const OptimalTree = ({ data = {} }) => {
         depthFactor={120}
         orientation="vertical"
       />
-      {/* <Tooltip id="my-tooltip" place="right" /> */}
+      <Tooltip id="my-tooltip" place="right" />
     </div>
   );
 };
