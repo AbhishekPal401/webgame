@@ -28,7 +28,7 @@ import moment from "moment";
 import DOMPurify from "dompurify";
 import QuestionLoader from "../../../loader/questionLoader";
 
-const Timer = ({ Duration, onExpire = () => {}, status = "start" }) => {
+const Timer = memo(({ Duration, onExpire = () => {}, status = "start" }) => {
   const [expiryTimestamp, setExpiryTimestamp] = useState(new Date());
   const {
     totalSeconds,
@@ -53,14 +53,16 @@ const Timer = ({ Duration, onExpire = () => {}, status = "start" }) => {
       const time = new Date();
       time.setSeconds(time.getSeconds() + Duration);
       restart(time);
+    } else {
+      pause();
     }
-    const time = new Date();
-    time.setSeconds(time.getSeconds() + Duration);
-    setExpiryTimestamp(time);
+    // const time = new Date();
+    // time.setSeconds(time.getSeconds() + Duration);
+    // setExpiryTimestamp(time);
   }, [status, Duration]);
 
-  console.log("duraion in Timer component", Duration);
-  console.log("status in Timer component", status);
+  // console.log("duraion in Timer component", Duration);
+  // console.log("status in Timer component", status);
 
   const paddedMinutes = String(minutes).padStart(2, "0");
   const paddedSeconds = String(seconds).padStart(2, "0");
@@ -70,7 +72,7 @@ const Timer = ({ Duration, onExpire = () => {}, status = "start" }) => {
       {paddedMinutes} : {paddedSeconds}
     </span>
   );
-};
+});
 
 const Question = ({
   Duration = 10,
@@ -520,17 +522,11 @@ const Question = ({
                 <SmallCountDown
                   height={16}
                   width={16}
-                  duration={Duration}
+                  duration={Number(Duration)}
                   loops={1}
                   reverse={true}
                   inverse={false}
-                  isPaused={
-                    QuestionIntroMediaURL && !mediaShownOnce
-                      ? true
-                      : countdown === TIMER_STATES.START
-                      ? false
-                      : true
-                  }
+                  isPaused={timerStatus === "start" ? false : true}
                   QuestionNo={QuestionNo}
                 />
               </div>
