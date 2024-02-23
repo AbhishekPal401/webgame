@@ -77,7 +77,12 @@ const DecisionTree = ({ onCancel = () => {} }) => {
   }, []);
 
   return (
-    <div className={"modal_content"} style={{ width: "80vw", height: "85vh" }}>
+    <div className={"modal_content"} 
+      style={{ 
+        width: "80vw", 
+        height: "85vh", 
+        overflowY: "auto",  
+      }}>
       <div className={"modal_header"}>
         <div>Decision Tree</div>
         <div>
@@ -86,7 +91,15 @@ const DecisionTree = ({ onCancel = () => {} }) => {
           </svg>
         </div>
       </div>
-      <div className={"modal_description"} style={{ marginBottom: "2rem" }}>
+      <div className={"modal_description"} 
+        style={{ 
+            marginBottom: "2rem",
+            width: '100%',
+            /* height: 100%; */
+            wordWrap: 'break-word',
+            // maxHeight: '10rem',
+            // overflowY: 'auto', 
+          }}>
         {!loading &&
         instanceProgress &&
         instanceProgress.data &&
@@ -101,7 +114,7 @@ const DecisionTree = ({ onCancel = () => {} }) => {
         )}
       </div>
 
-      <div style={{ height: "72vh" }}>
+      <div style={{ height: "72%" }}>
         {!loading &&
         instanceProgress &&
         instanceProgress.data &&
