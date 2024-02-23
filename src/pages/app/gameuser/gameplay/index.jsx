@@ -390,6 +390,8 @@ const GamePlay = () => {
           },
         };
 
+        console.log("answer submit 393", data);
+
         dispatch(submitAnswerDetails(data));
       }
     },
@@ -431,6 +433,8 @@ const GamePlay = () => {
           requesterType: credentials.data.role,
         },
       };
+
+      console.log("default answer submit 437", data);
 
       dispatch(submitAnswerDetails(data));
     },

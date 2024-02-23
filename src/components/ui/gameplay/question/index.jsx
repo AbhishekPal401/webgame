@@ -59,6 +59,9 @@ const Timer = ({ Duration, onExpire = () => {}, status = "start" }) => {
     setExpiryTimestamp(time);
   }, [status, Duration]);
 
+  console.log("duraion in Timer component", Duration);
+  console.log("status in Timer component", status);
+
   const paddedMinutes = String(minutes).padStart(2, "0");
   const paddedSeconds = String(seconds).padStart(2, "0");
 
@@ -462,23 +465,29 @@ const Question = ({
   }, [sessionDetails, credentials, questionDetails]);
 
   const completeInvoke = useCallback(() => {
-    console.log("completeInvoke called ");
     if (isAdmin) {
+      console.log("completeInvode onAdminDecisionCompleteDefault");
       onAdminDecisionCompleteDefault();
     } else {
       if (!IsDecisionMaker) {
+        console.log("completeInvode onComplete");
+
         onComplete();
       } else {
         if (
           CurrentState === PlayingStates.VotingInProgress ||
           CurrentState === PlayingStates.UserVote
         ) {
+          console.log("completeInvode onComplete");
+
           onComplete();
         } else {
           if (
             CurrentState === PlayingStates.VotingCompleted ||
             CurrentState === PlayingStates.DecisionInProgress
           ) {
+            console.log("completeInvode onDecisionCompleteDefault");
+
             onDecisionCompleteDefault();
           }
         }
@@ -531,6 +540,7 @@ const Question = ({
                 <Timer
                   Duration={Duration <= 0.5 ? 0.5 : Duration}
                   onExpire={() => {
+                    console.log("completeInvoke for default vote and decision");
                     completeInvoke();
                   }}
                   status={timerStatus}

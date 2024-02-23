@@ -75,7 +75,7 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
         nodeDatum.attributes.isAdminOptimal &&
         nodeDatum.attributes.isOptimal
       ) {
-        nodeClassName = styles.isNotOptimalNode;
+        nodeClassName = styles.selected;
       } else if (nodeDatum.attributes.isAdminOptimal) {
         nodeClassName = styles.selected;
       } else if (nodeDatum.attributes.isOptimal) {

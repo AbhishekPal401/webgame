@@ -157,7 +157,7 @@ const MissionCompleted = () => {
                   instanceProgress.data.Summary && (
                     <SelectedTree
                       data={instanceProgress.data.Summary}
-                      userType="normal"
+                      userType="admin"
                     />
                   )}
                 <div className={styles.right}>
