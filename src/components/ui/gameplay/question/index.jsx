@@ -664,12 +664,26 @@ const Question = ({
                               {getVotesDetailsById(item?.AnswerID).voteCount ===
                               1 ? (
                                 <div className={styles.voteCount}>
-                                  <span className={styles.userbadge}>1</span>
+                                  <span
+                                    className={styles.userbadge}
+                                    style={{
+                                      backgroundColor: "#415385",
+                                      color: "#fff",
+                                    }}
+                                  >
+                                    1
+                                  </span>
                                   <span>Vote</span>
                                 </div>
                               ) : (
                                 <div className={styles.voteCount}>
-                                  <span className={styles.userbadge}>
+                                  <span
+                                    className={styles.userbadge}
+                                    style={{
+                                      backgroundColor: "#415385",
+                                      color: "#fff",
+                                    }}
+                                  >
                                     {
                                       getVotesDetailsById(item?.AnswerID)
                                         .voteCount
