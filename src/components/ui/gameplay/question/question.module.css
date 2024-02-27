@@ -255,6 +255,13 @@
   background-position: right;
   background-repeat: no-repeat;
 }
+.voteCount {
+  display: flex;
+  flex-direction: row;
+  gap: 0.2rem;
+  margin-right: 0.3rem;
+  align-items: center;
+}
 
 /* @media (min-width: 576px) and (max-width: 992px) {
   .mainContent {

@@ -505,8 +505,7 @@ const Question = ({
   ]);
 
   console.log("showVotes ", showVotes);
-  console.log("isAdmin", !isAdmin);
-  console.log("Votes", Votes);
+  console.log("CurrentState", CurrentState);
 
   const getVoteUsername = (Id) => {
     let html = "";
@@ -643,7 +642,7 @@ const Question = ({
                         }
                       }}
                     >
-                      <div>
+                      <div style={{ display: "flex", flex: 1 }}>
                         {String.fromCharCode(64 + (index + 1))}.{" "}
                         {item.AnswerText}
                       </div>
@@ -662,15 +661,23 @@ const Question = ({
                                 item?.AnswerID
                               )}
                             >
-                              {`${
-                                getVotesDetailsById(item?.AnswerID)
-                                  .voteCount === 1
-                                  ? "1 Vote"
-                                  : `${
+                              {getVotesDetailsById(item?.AnswerID).voteCount ===
+                              1 ? (
+                                <div className={styles.voteCount}>
+                                  <span className={styles.userbadge}>1</span>
+                                  <span>Vote</span>
+                                </div>
+                              ) : (
+                                <div className={styles.voteCount}>
+                                  <span className={styles.userbadge}>
+                                    {
                                       getVotesDetailsById(item?.AnswerID)
                                         .voteCount
-                                    } Votes`
-                              } `}
+                                    }
+                                  </span>
+                                  <span>Votes</span>
+                                </div>
+                              )}
                             </div>
                           )}
                         {showVotes &&
@@ -697,8 +704,8 @@ const Question = ({
                               );
                             }
                           )}
-                        {showVotes &&
-                          !isAdmin &&
+                        {(CurrentState === PlayingStates.VotingCompleted ||
+                          CurrentState === PlayingStates.DecisionInProgress) &&
                           Array.isArray(Votes) &&
                           Votes.length > 0 &&
                           getVotesDetailsById(item?.AnswerID) &&
