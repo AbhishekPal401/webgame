@@ -223,7 +223,7 @@ const Question = ({
           <div></div>
           <div className={styles.makeDecision}>
             <div className={styles.label}>
-              Voting Complete - Waiting for Descision
+              Voting Complete - Waiting for Decision
             </div>
             <Button
               customStyle={{ marginLeft: "4rem" }}
@@ -262,7 +262,7 @@ const Question = ({
           <div></div>
           <div className={styles.makeDecision}>
             <div className={styles.label}>
-              Voting Completed - Waiting for Descision
+              Voting Completed - Waiting for Decision
             </div>
             <Button
               customStyle={{ marginLeft: "4rem" }}
