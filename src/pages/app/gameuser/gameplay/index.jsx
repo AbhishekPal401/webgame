@@ -77,12 +77,14 @@ const DecisionTree = ({ onCancel = () => {} }) => {
   }, []);
 
   return (
-    <div className={"modal_content"} 
-      style={{ 
-        width: "80vw", 
-        height: "85vh", 
-        overflowY: "auto",  
-      }}>
+    <div
+      className={"modal_content"}
+      style={{
+        width: "80vw",
+        height: "85vh",
+        overflowY: "auto",
+      }}
+    >
       <div className={"modal_header"}>
         <div>Decision Tree</div>
         <div>
@@ -91,15 +93,17 @@ const DecisionTree = ({ onCancel = () => {} }) => {
           </svg>
         </div>
       </div>
-      <div className={"modal_description"} 
-        style={{ 
-            marginBottom: "2rem",
-            width: '100%',
-            /* height: 100%; */
-            wordWrap: 'break-word',
-            // maxHeight: '10rem',
-            // overflowY: 'auto', 
-          }}>
+      <div
+        className={"modal_description"}
+        style={{
+          marginBottom: "2rem",
+          width: "100%",
+          /* height: 100%; */
+          wordWrap: "break-word",
+          // maxHeight: '10rem',
+          // overflowY: 'auto',
+        }}
+      >
         {!loading &&
         instanceProgress &&
         instanceProgress.data &&
@@ -154,6 +158,8 @@ const GamePlay = () => {
   const [message, setMessage] = useState("");
 
   const [showIntroMedia, setShowIntroMedia] = useState(false);
+
+  const [votesDetails, setVoteDetails] = useState([]);
 
   const { questionDetails, loading: questionLoading } = useSelector(
     (state) => state.getNextQuestion
@@ -221,6 +227,9 @@ const GamePlay = () => {
         setShowModal(false);
         setNextQuestionFetched(false);
         setCurrentDecisionSubmitted(false);
+        if (votesDetails.votes) {
+          setVoteDetails(votesDetails.votes);
+        }
       } else if (
         votesDetails.decisionDisplayType === PlayingStates.VotingCompleted
       ) {
@@ -228,6 +237,9 @@ const GamePlay = () => {
         setShowModal(true);
         setNextQuestionFetched(false);
         setCurrentDecisionSubmitted(false);
+        if (votesDetails.votes) {
+          setVoteDetails(votesDetails.votes);
+        }
       } else if (
         votesDetails.decisionDisplayType === PlayingStates.DecisionInProgress
       ) {
@@ -249,12 +261,18 @@ const GamePlay = () => {
         } else {
           setCurrentDecisionSubmitted(false);
         }
+        if (votesDetails.votes) {
+          setVoteDetails(votesDetails.votes);
+        }
       } else if (
         votesDetails.decisionDisplayType === PlayingStates.DecisionCompleted
       ) {
         setCurrentState(PlayingStates.DecisionCompleted);
         setShowModal(false);
         setNextQuestionFetched(false);
+        if (votesDetails.votes) {
+          setVoteDetails(votesDetails.votes);
+        }
       }
     };
 
@@ -858,6 +876,12 @@ const GamePlay = () => {
                   onDecisionCompleteDefault={onDecisionCompleteDefault}
                   countdown={countdown}
                   MediaShown={MediaShown}
+                  showVotes={
+                    (currentState === PlayingStates.VotingCompleted ||
+                      currentState === PlayingStates.DecisionInProgress) &&
+                    questionDetails.data.QuestionDetails.IsUserDecisionMaker
+                  }
+                  Votes={votesDetails}
                 />
               )}
           </div>

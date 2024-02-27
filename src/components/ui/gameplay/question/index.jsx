@@ -504,9 +504,23 @@ const Question = ({
     onDecisionCompleteDefault,
   ]);
 
-  console.log("Duration in question ", Duration);
-  console.log("countdown in question", countdown);
-  console.log("CurrentState", CurrentState);
+  console.log("showVotes ", showVotes);
+  console.log("isAdmin", !isAdmin);
+  console.log("Votes", Votes);
+
+  const getVoteUsername = (Id) => {
+    let html = "";
+
+    if (getVotesDetailsById(Id)) {
+      console.log("userName", getVotesDetailsById(Id).userName);
+
+      getVotesDetailsById(Id).userName.forEach((username, index) => {
+        html += `<div key=${index}>${username}</div>`;
+      });
+    }
+
+    return html;
+  };
 
   return (
     <div className={styles.container}>
@@ -635,12 +649,19 @@ const Question = ({
                       </div>
                       <div className={styles.vote}>
                         {showVotes &&
+                          isAdmin &&
                           Votes &&
                           Array.isArray(Votes) &&
                           Votes.length > 0 &&
                           getVotesDetailsById(item?.AnswerID) &&
                           getVotesDetailsById(item?.AnswerID).voteCount > 0 && (
-                            <div className={styles.voteCount}>
+                            <div
+                              className={styles.voteCount}
+                              data-tooltip-id="voteCountDetails-tooltip"
+                              data-tooltip-html={getVoteUsername(
+                                item?.AnswerID
+                              )}
+                            >
                               {`${
                                 getVotesDetailsById(item?.AnswerID)
                                   .voteCount === 1
@@ -653,11 +674,35 @@ const Question = ({
                             </div>
                           )}
                         {showVotes &&
+                          isAdmin &&
                           decisionDetails &&
                           Array.isArray(decisionDetails) &&
                           decisionDetails.length > 0 &&
                           getDeciderDecisionById(item?.AnswerID) &&
                           getDeciderDecisionById(item?.AnswerID).userName.map(
+                            (username, index) => {
+                              const shortenedDesignation = username.substring(
+                                0,
+                                3
+                              );
+                              return (
+                                <div
+                                  className={styles.userbadge}
+                                  data-tooltip-id="des-tooltip"
+                                  data-tooltip-content={username}
+                                  key={index}
+                                >
+                                  {shortenedDesignation}
+                                </div>
+                              );
+                            }
+                          )}
+                        {showVotes &&
+                          !isAdmin &&
+                          Array.isArray(Votes) &&
+                          Votes.length > 0 &&
+                          getVotesDetailsById(item?.AnswerID) &&
+                          getVotesDetailsById(item?.AnswerID).userName.map(
                             (username, index) => {
                               const shortenedDesignation = username.substring(
                                 0,
@@ -803,6 +848,8 @@ const Question = ({
       )}
 
       <Tooltip id="des-tooltip" />
+
+      <Tooltip id="voteCountDetails-tooltip" />
     </div>
   );
 };
