@@ -358,16 +358,18 @@ const GamePlay = () => {
   }, [sessionDetails, credentials, questionDetails]);
 
   useEffect(() => {
+    console.log("questionDetails in effect", questionDetails);
+
     if (questionDetails === null || questionDetails === undefined) return;
 
     if (questionDetails.success) {
       let duration = Number(questionDetails.data.QuestionDetails.Duration);
-      setDuration(duration);
+
+      console.log("duration", duration);
 
       if (callNextQuestion) {
         setNextQuestionFetched(true);
         setSelectedAnswer(null);
-        // setAdminState("MakeDecision");
         setShowDecision(false);
         setVoteDetails([]);
         setCurrentState(PlayingStates.VotingInProgress);
@@ -411,6 +413,8 @@ const GamePlay = () => {
             if (currentState === PlayingStates.DecisionCompleted) {
               setShowVotes(true);
               setcoundown(TIMER_STATES.START);
+            } else if (currentState === PlayingStates.VotingInProgress) {
+              setcoundown(TIMER_STATES.START);
             } else {
               setcoundown(TIMER_STATES.STOP);
               setShowVotes(false);
@@ -428,7 +432,6 @@ const GamePlay = () => {
           } else {
             setNextQuestionFetched(true);
             setSelectedAnswer(null);
-            // setAdminState("MakeDecision");
             setShowDecision(false);
             setVoteDetails([]);
             setCurrentState(PlayingStates.VotingInProgress);
@@ -439,7 +442,6 @@ const GamePlay = () => {
         } else {
           setNextQuestionFetched(true);
           setSelectedAnswer(null);
-          // setAdminState("MakeDecision");
           setShowDecision(false);
           setVoteDetails([]);
           setCurrentState(PlayingStates.VotingInProgress);
@@ -502,6 +504,8 @@ const GamePlay = () => {
           }
         }
       }
+
+      setDuration(duration);
 
       if (!questionDetails?.data?.QuestionDetails?.QuestionIntroMediaURL) {
         onQuestionSkip();
@@ -705,54 +709,16 @@ const GamePlay = () => {
 
       dispatch(resetAnswerDetailsState());
       setSelectedAnswer(null);
-
-      // const data = {
-      //   InstanceID: sessionData.InstanceID,
-      //   SessionID: sessionData.SessionID,
-      //   UserID: credentials.data.userID,
-      //   UserName: credentials.data.userName,
-      //   ActionType: "AdminDeciderDecision",
-
-      //   Message: "Admin decision",
-
-      //   QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-      //   AnswerID: selectedAnswer.AnswerID,
-      // };
-
-      // console.log("send vote data", data);
-
-      // signalRService.SendVotes(data);
-
-      // if (
-      //   answerDetails.data.IsPlayCompleted ||
-      //   answerDetails.data.NextQuestionID === ""
-      // ) {
-      //   const data = {
-      //     InstanceID: sessionData.InstanceID,
-      //     UserID: credentials.data.userID,
-      //     ActionType: "IsCompleted",
-      //     Message: "Success",
-      //   };
-
-      //   dispatch(resetAnswerDetailsState());
-      //   setSelectedAnswer({});
-
-      //   signalRService.ProceedToNextQuestionInvoke(data);
-      // } else {
-      //   setAdminState("RevealDecision");
-      //   setShowDecision(true);
-      //   setSelectedAnswer({});
-      // }
     }
   }, [answerDetails]);
 
   useEffect(() => {
     if (currentState === PlayingStates.VotingInProgress) {
-      setcoundown(TIMER_STATES.STOP);
+      setcoundown(TIMER_STATES.START);
     } else if (currentState === PlayingStates.VotingCompleted) {
       setcoundown(TIMER_STATES.STOP);
     } else if (currentState === PlayingStates.DecisionCompleted) {
-      setDuration(30); //30 seconds
+      setDuration(60); //30 seconds
       setcoundown(TIMER_STATES.START);
       setStartedAt(Math.floor(Date.now() / 1000));
     } else {
@@ -761,6 +727,7 @@ const GamePlay = () => {
   }, [currentState]);
 
   const showAlertMessage = useCallback(() => {
+    if (currentState === PlayingStates.VotingInProgress) return;
     toast.success("Time is up, Please make a decision", {
       containerId: "alert_messages",
       className: "notification",
@@ -773,7 +740,7 @@ const GamePlay = () => {
       autoClose: 3000,
       icon: false,
     });
-  }, [position]);
+  }, [position, currentState]);
 
   return (
     <motion.div

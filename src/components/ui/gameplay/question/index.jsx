@@ -504,8 +504,10 @@ const Question = ({
     onDecisionCompleteDefault,
   ]);
 
-  console.log("showVotes ", showVotes);
-  console.log("CurrentState", CurrentState);
+  // console.log("showVotes ", showVotes);
+  // console.log("CurrentState", CurrentState);
+  console.log("duration in question comp", Duration);
+  console.log("timerStatus", timerStatus);
 
   const getVoteUsername = (Id) => {
     let html = "";

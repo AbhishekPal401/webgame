@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import styles from "./countdown.module.css";
 import { useStopwatch } from "react-timer-hook";
-import { getCurrentTimeStamp } from "../../../utils/helper";
 
 const CountDown = ({ initialTimestamp = null }) => {
   const {
@@ -18,7 +17,6 @@ const CountDown = ({ initialTimestamp = null }) => {
 
   useEffect(() => {
     if (initialTimestamp) {
-      console.log("duration for global", initialTimestamp);
       const stopwatchOffset = new Date();
 
       stopwatchOffset.setSeconds(
