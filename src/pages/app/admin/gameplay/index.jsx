@@ -716,6 +716,7 @@ const GamePlay = () => {
     if (currentState === PlayingStates.VotingInProgress) {
       setcoundown(TIMER_STATES.START);
     } else if (currentState === PlayingStates.VotingCompleted) {
+      setDuration(0);
       setcoundown(TIMER_STATES.STOP);
     } else if (currentState === PlayingStates.DecisionCompleted) {
       setDuration(60); //30 seconds
