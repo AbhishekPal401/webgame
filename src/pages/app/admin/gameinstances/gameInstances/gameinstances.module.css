@@ -47,10 +47,28 @@
   display: flex;
   flex-direction: row;
   gap: 1rem;
-  
 }
 .mainTopContainerLeft {
+  display: flex;
+  justify-content: start;
+  align-items: baseline;
+  gap: 2.4rem;
 }
+.mainTopContainerLeft > div:first-child > label {
+  font-size: 1.6rem;
+  font-weight: bold;
+  font-family: Helvetica 500;
+  color: var(--input-label_dark);
+  align-self: flex-start;
+}
+.mainTopContainerLeft > div:nth-child(2) {
+  color: var(--label);
+
+}
+.mainTopContainerLeft > div:nth-child(2) > a {
+  font-size: 1.2rem;
+}
+
 .mainTableContainer {
   width: 100%;
   height: fit-content;

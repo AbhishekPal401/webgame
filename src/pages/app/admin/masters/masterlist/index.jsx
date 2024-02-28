@@ -724,8 +724,8 @@ const MasterList = () => {
                                 }}
                               >
                                 <svg
-                                  height="14"
-                                  width="14"
+                                  height="12"
+                                  width="12"
                                   style={{
                                     opacity: (isSelected && designation.Status) ? "1" : "0.3"
                                   }}
@@ -743,7 +743,7 @@ const MasterList = () => {
                               >
                                 <svg
                                   height="14"
-                                  width="14"
+                                  width="12"
                                   style={{
                                     opacity: (isSelected && designation.Status) ? "1" : "0.3"
                                   }}
@@ -788,8 +788,8 @@ const MasterList = () => {
                                 }}
                               >
                                 <svg
-                                  height="14"
-                                  width="14"
+                                  height="12"
+                                  width="12"
                                   style={{
                                     opacity: (isSelected && organization.Status) ? "1" : "0.3"
                                   }}
@@ -807,7 +807,7 @@ const MasterList = () => {
                               >
                                 <svg
                                   height="14"
-                                  width="14"
+                                  width="12"
                                   style={{
                                     opacity: (isSelected && organization.Status) ? "1" : "0.3"
                                   }}

@@ -973,7 +973,7 @@ const CreateInstances = () => {
                                             value={gameInstanceData.instanceName.value}
                                             customStyle={{ margin: '0' }}
                                             name={"instanceName"}
-                                            placeholder="Instance Name"
+                                            placeholder="Instance Name &#128900;"
                                             onChange={onChange}
                                         />
                                     </div>
@@ -986,7 +986,7 @@ const CreateInstances = () => {
                                                 className="select_input"
                                                 onChange={onOrganizationSelect}
                                             >
-                                                <option value={""} hidden> Select Organization</option>
+                                                <option value={""} hidden> Select Organization &#128900;</option>
 
                                                 {masters &&
                                                     masters.data &&
@@ -1017,7 +1017,7 @@ const CreateInstances = () => {
                                                     className="select_input"
                                                     onChange={onGroupNameSelect}
                                                 >
-                                                    <option value={""} hidden>Group Name</option>
+                                                    <option value={""} hidden>Group Name &#128900;</option>
 
                                                     {groupByOrgIdDetails &&
                                                         groupByOrgIdDetails.data &&
@@ -1075,7 +1075,7 @@ const CreateInstances = () => {
                                                 className="select_input"
                                                 onChange={onScenarioNameSelect}
                                             >
-                                                <option value={""} hidden>Select Scenario</option>
+                                                <option value={""} hidden>Select Scenario &#128900;</option>
 
                                                 {scenarioNameAndIdDetails &&
                                                     scenarioNameAndIdDetails.data &&

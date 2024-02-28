@@ -186,6 +186,12 @@ const GameInstances = () => {
                 <div className={styles.mainContainer}>
                     <div className={styles.mainTopContainer}>
                         <div className={styles.mainTopContainerLeft}>
+                            <div>
+                                <label>Users</label>
+                            </div>
+                            <div>
+                                <Link to="">See All</Link>
+                            </div>
                         </div>
                         <div className={styles.mainTopContainerRight}>
                             <Button
@@ -283,8 +289,8 @@ const GameInstances = () => {
                                                                 }}
                                                             >
                                                                 <svg
-                                                                    height="14"
-                                                                    width="14"
+                                                                    height="12"
+                                                                    width="12"
                                                                     style={{
                                                                         opacity: (isSelected &&
                                                                             gameInstance.Status === "Create") ? "1" : "0.3"
@@ -305,7 +311,7 @@ const GameInstances = () => {
                                                             >
                                                                 <svg
                                                                     height="14"
-                                                                    width="14"
+                                                                    width="12"
                                                                     style={{
                                                                         opacity: (isSelected &&
                                                                             (gameInstance.Status === "Create" ||

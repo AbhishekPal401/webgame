@@ -92,3 +92,13 @@
   gap: 1rem;
   margin-top: 1rem;
 }
+
+/* .inputStyleClass::placeholder {
+
+}
+.inputStyleClass::placeholder::after {
+  content: '';
+    background: #415385 0% 0% no-repeat padding-box;
+    opacity: 1;
+} */
+

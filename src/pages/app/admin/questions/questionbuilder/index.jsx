@@ -655,7 +655,7 @@ function QuestionBuilder() {
                         customContaierClass={styles.customRichTextEditorContaierClass}
                         customEditorStyles={styles.customRichTextEditorStyleClass}
                         onChange={onQuestionChange}
-                        placeholder="Add question"
+                        placeholder="Add question &#128900;"
                         value={questionData.question.value}
                       />
                     </div>
@@ -761,7 +761,8 @@ function QuestionBuilder() {
                             name={`option-${index}`}
                             value={answer.option.value}
                             onChange={(e) => onAnswerChange(e, index, "option")}
-                            placeholder={`Option ${index + 1}`}
+                            // placeholder={`Option ${index + 1}`}
+                            placeholder={`Option ${index + 1} \u{2022}`} 
                           />
                         </div>
                         {/* Option :: end */}
@@ -803,7 +804,7 @@ function QuestionBuilder() {
                             name={`score-${index}`}
                             value={answer.score.value}
                             onChange={(e) => onAnswerChange(e, index, "score")}
-                            placeholder={`Score ${index + 1}`}
+                            placeholder={`Score ${index + 1} \u{2022}`}
                           />
                         </div>
                         {/* Score :: end  */}
@@ -819,7 +820,7 @@ function QuestionBuilder() {
                               onChange={(e) =>
                                 onAnswerChange(e, index, "nextQuestion")
                               }
-                              placeholder={`Next Question ${index + 1}`}
+                              placeholder={`Next Question ${index + 1} \u{2022}`}
                             />
                           </div>
                         </div>
