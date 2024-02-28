@@ -1,4 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./missioncompleted.module.css";
 import Button from "../../../../components/common/button";
@@ -26,6 +31,10 @@ import {
 } from "../../../../store/app/admin/report/getReport";
 import Progress from "../../../../components/progress";
 import QuestionLoader from "../../../../components/loader/questionLoader";
+import {
+  postImage,
+  resetpostImageState,
+} from "../../../../store/app/admin/report/postImages";
 
 const SelectTree = ({ clicked = 1, onSelect = () => {} }) => {
   return (
@@ -91,19 +100,71 @@ const MissionCompleted = () => {
 
   const { progressImage } = useSelector((state) => state.gameplay);
 
+  const { postImageResponse } = useSelector((state) => state.postImages);
+
   // console.log("instanceSummary", instanceSummary);
+  console.log("postImageResponse", postImageResponse);
 
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     dispatch(resetNextQuestionDetailsState());
+
+    setTimeout(() => {
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      if (sessionData && credentials) {
+        var node = document.getElementById("progressmeter");
+
+        console.log("node", node);
+
+        if (node) {
+          toPng(node, {
+            filter: (node) => {
+              return node.tagName !== "i";
+            },
+          })
+            .then(function (dataUrl) {
+              if (dataUrl.includes("image/png")) {
+                // var link = document.createElement("a");
+                // link.download = "progress.png";
+                // link.href = dataUrl;
+                // link.click();
+
+                const data = {
+                  instanceID: sessionData.InstanceID,
+                  scoreMeterImage: dataUrl,
+                  treeImage: "",
+                  progressBarImage: "",
+
+                  requester: {
+                    requestID: generateGUID(),
+                    requesterID: credentials.data.userID,
+                    requesterName: credentials.data.userName,
+                    requesterType: credentials.data.role,
+                  },
+                };
+                dispatch(postImage(data));
+              }
+            })
+            .catch(function (error) {});
+        }
+      }
+    }, 1000);
+
     return () => {
       dispatch(resetInstanceSummaryByIDState());
       dispatch(resetInstanceProgressByIDState());
     };
-  }, []);
+  }, [sessionDetails, credentials]);
+
+  useEffect(() => {
+    if (postImageResponse?.success) {
+      dispatch(resetpostImageState());
+    }
+  }, [postImageResponse]);
 
   useEffect(() => {
     const sessionData = JSON.parse(sessionDetails.data);
@@ -231,13 +292,6 @@ const MissionCompleted = () => {
                         : []
                     }
                   />
-                  {/* <div>Score</div>
-              <div className={styles.circle}>
-                {" "}
-                {instanceSummary?.data?.GroupScore
-                  ? instanceSummary?.data?.GroupScore
-                  : ""}
-              </div> */}
                 </div>
               </div>
             </div>
@@ -257,7 +311,7 @@ const MissionCompleted = () => {
 
                         const data = {
                           instanceID: sessionData.InstanceID,
-                          scoreImage: progressImage,
+                          scoreImage: "",
                           treeImage: dataUrl,
                           requester: {
                             requestID: generateGUID(),

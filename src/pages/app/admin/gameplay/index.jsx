@@ -263,20 +263,20 @@ const GamePlay = () => {
         data.ActionType === "IsCompleted" ||
         data.actionType === "IsCompleted"
       ) {
-        var node = document.getElementById("progressmeter");
-        if (node) {
-          toPng(node, {
-            filter: (node) => {
-              return node.tagName !== "i";
-            },
-          })
-            .then(function (dataUrl) {
-              dispatch(setProgressImageData(dataUrl));
-            })
-            .catch(function (error) {
-              console.error("cannot set setProgressImageData!", error);
-            });
-        }
+        // var node = document.getElementById("progressmeter");
+        // if (node) {
+        //   toPng(node, {
+        //     filter: (node) => {
+        //       return node.tagName !== "i";
+        //     },
+        //   })
+        //     .then(function (dataUrl) {
+        //       dispatch(setProgressImageData(dataUrl));
+        //     })
+        //     .catch(function (error) {
+        //       console.error("cannot set setProgressImageData!", error);
+        //     });
+        // }
 
         navigate("/missioncompleted");
       } else {

@@ -42,15 +42,41 @@ const progress = ({ progress = 0, scoreMaster = [] }) => {
 
   return (
     <div
+      // onClick={() => {
+      //   var node = document.getElementById("progressmeter");
+
+      //   if (node) {
+      //     toPng(node, {
+      //       filter: (node) => {
+      //         return node.tagName !== "i";
+      //       },
+      //     })
+      //       .then(function (dataUrl) {
+      //         if (dataUrl.includes("image/png")) {
+      //           console.log("dataUrl", dataUrl);
+
+      //           var link = document.createElement("a");
+      //           link.download = "progress.png";
+      //           link.href = dataUrl;
+      //           link.click();
+      //         }
+      //       })
+      //       .catch(function (error) {
+      //         console.error("cannot set setProgressImageData!", error);
+      //       });
+      //   }
+      // }}
       id="progressmeter"
       className={styles.container}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
-      <img src="./images/meter.png" className={styles.meter} />
+      <img width={"100%"} src="./images/meter.png" className={styles.meter} />
 
       <svg
         className={styles.tick}
+        width={"4.5rem"}
+        height={"8rem"}
         style={{ transform: `rotate(${rotationDegree}deg)` }}
         viewBox="0 0 39 65"
       >
