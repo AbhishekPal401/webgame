@@ -108,6 +108,8 @@ const Intro = () => {
         });
     }
 
+    localStorage.setItem("refresh", false);
+
     return () => {};
   }, []);
 
