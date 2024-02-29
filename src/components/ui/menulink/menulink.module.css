@@ -1,0 +1,41 @@
+.iconContainer {
+  height: 5.2rem;
+  background-color: var(white);
+  width: 100%;
+  font-family: 'Helvetica 300';
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  text-decoration: none;
+  transition: width 0.4s ease;
+
+}
+
+.iconContainer:hover {
+  cursor: pointer;
+}
+
+.logoActive {
+  width: 30%;
+  height: 100%;
+  fill: var(--primary);
+}
+
+.logoInactive {
+  width: 30%;
+  height: 100%;
+  fill: white;
+}
+.labelContainer {
+  width: 70%;
+  height: 100%;
+  background-color: var(--primary);
+  font-size: 1.5rem;
+  color: var(--black);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 1rem;
+  transition: width 0.4s ease;
+
+}

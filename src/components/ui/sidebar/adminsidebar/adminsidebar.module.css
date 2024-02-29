@@ -1,15 +1,22 @@
 .container {
   position: absolute;
   top: 3rem;
-  width: 5.2rem;
   height: 88%;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: var(--innerbackground);
   box-shadow: 0rem 0.7rem 1.1rem #00000029;
+  transition: width 0.4s ease;
+}
+.collapsed {
+  width: 5.2rem;
+  transition: width 0.3s ease;
 }
 
+.notCollapsed {
+  width: 100%;
+}
 .iconContainer {
   height: 5.2rem;
 }

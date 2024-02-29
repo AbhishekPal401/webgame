@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "../../components/ui/navbar";
 import Sidebar from "../../components/ui/sidebar/adminsidebar/AdminSidebar";
@@ -26,6 +26,8 @@ import NotFound from "../../pages/app/common/notfound";
 import ViewInstances from "../../pages/app/admin/gameinstances/viewinstances";
 
 const Admin = () => {
+  const [isSideBarCollapsed, setIsSideBarCollapsed] = useState(true);
+
   const location = useLocation();
 
   return (
@@ -47,12 +49,23 @@ const Admin = () => {
         location.pathname.includes("/gameplay") ||
         location.pathname.includes("/missioncompleted") ||
         location.pathname.includes("/gameprofile") ? null : (
-          <div className={styles.leftContainer}>
-            <Sidebar />
+          <div 
+            className={styles.leftContainer}
+            style={{ width: isSideBarCollapsed ? '4%' : '15%'}}
+          >
+            <Sidebar 
+              isSideBarCollapsed={isSideBarCollapsed}
+              onCollapseClick={() => {
+                setIsSideBarCollapsed(!isSideBarCollapsed); 
+              }}
+            />
           </div>
         )}
 
-        <div className={styles.rightContainer}>
+        <div 
+          className={styles.rightContainer}
+          style={{ width: isSideBarCollapsed ? '96%' : '85%'  }}  
+        >
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/users" element={<Users />} />
