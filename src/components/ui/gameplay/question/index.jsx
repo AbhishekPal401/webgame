@@ -408,6 +408,8 @@ const Question = ({
     }
   }, [MediaShown]);
 
+  console.log("MediaShown", MediaShown);
+
   useEffect(() => {
     setShowSkip(false);
     if (MediaType && QuestionIntroMediaURL) {

@@ -524,11 +524,20 @@ const GamePlay = () => {
             Number(questionDetails?.data?.TimeConfig?.QuestionRemainingTime)
           );
 
-          setMediaShown(true);
+          // setMediaShown(true);
         }
       }
 
       console.log("duration in refresh", duration);
+      if (questionDetails?.data?.QuestionDetails?.QuestionIntroMediaURL) {
+        if (questionDetails?.data?.QuestionIntroSkipped) {
+          setMediaShown(true);
+        } else {
+          setMediaShown(false);
+        }
+      } else {
+        setMediaShown(true);
+      }
 
       setDuration(duration);
 
