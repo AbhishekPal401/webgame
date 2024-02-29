@@ -67,7 +67,11 @@ const Timer = memo(({ Duration, onExpire = () => {}, status = "start" }) => {
   const paddedMinutes = String(minutes).padStart(2, "0");
   const paddedSeconds = String(seconds).padStart(2, "0");
 
-  return (
+  return !isRunning ? (
+    <span className={styles.countdown}>
+      {"00"} : {"00"}
+    </span>
+  ) : (
     <span className={styles.countdown}>
       {paddedMinutes} : {paddedSeconds}
     </span>
