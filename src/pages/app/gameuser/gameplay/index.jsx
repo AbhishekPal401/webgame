@@ -763,8 +763,8 @@ const GamePlay = () => {
       }
     } else if (currentState === PlayingStates.VotingCompleted) {
       if (questionDetails?.data?.QuestionDetails?.IsUserDecisionMaker) {
-        setDuration(60); // 30 seconds
-        setCoundown(TIMER_STATES.START);
+        setDuration(0.5); // 30 seconds
+        setCoundown(TIMER_STATES.STOP);
         setStartedAt(Math.floor(Date.now() / 1000));
       } else {
         setCoundown(TIMER_STATES.PAUSE);

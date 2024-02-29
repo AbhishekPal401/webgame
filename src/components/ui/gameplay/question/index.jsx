@@ -225,11 +225,14 @@ const Question = ({
             <div className={styles.label}>
               Voting Complete - Waiting for Decision
             </div>
-            <Button
+            {/* <Button
               customStyle={{ marginLeft: "4rem" }}
               customClassName={styles.buttonDisabled}
             >
               Make Decision
+            </Button> */}
+            <Button customClassName={styles.button} onClick={onNextQuestion}>
+              Approve & Next Question
             </Button>
           </div>
         </div>
@@ -264,11 +267,14 @@ const Question = ({
             <div className={styles.label}>
               Voting Completed - Waiting for Decision
             </div>
-            <Button
+            {/* <Button
               customStyle={{ marginLeft: "4rem" }}
               customClassName={styles.buttonDisabled}
             >
               Make Decision
+            </Button> */}
+            <Button customClassName={styles.button} onClick={onNextQuestion}>
+              Approve & Next Question
             </Button>
           </div>
         </div>
@@ -408,8 +414,6 @@ const Question = ({
     }
   }, [MediaShown]);
 
-  console.log("MediaShown", MediaShown);
-
   useEffect(() => {
     setShowSkip(false);
     if (MediaType && QuestionIntroMediaURL) {
@@ -419,7 +423,6 @@ const Question = ({
   }, [QuestionText, QuestionNo, MediaType, QuestionIntroMediaURL]);
 
   useEffect(() => {
-    console.log("countdown", countdown);
     if (!mediaShownOnce && QuestionIntroMediaURL) {
       setTimerStatus("pause");
     } else {
@@ -508,8 +511,8 @@ const Question = ({
 
   // console.log("showVotes ", showVotes);
   // console.log("CurrentState", CurrentState);
-  console.log("duration in question comp", Duration);
-  console.log("timerStatus", timerStatus);
+  // console.log("duration in question comp", Duration);
+  // console.log("timerStatus", timerStatus);
 
   const getVoteUsername = (Id) => {
     let html = "";
@@ -596,21 +599,23 @@ const Question = ({
                       }`}
                       key={index}
                       onClick={() => {
-                        console.log("isAdmin", isAdmin);
-                        console.log("CurrentState", CurrentState);
-                        console.log("IsDecisionMaker", IsDecisionMaker);
-                        console.log(
-                          "isCurrentQuestionVotted",
-                          isCurrentQuestionVotted
-                        );
-                        console.log(
-                          "isCurrentDecisionVotted",
-                          isCurrentDecisionVotted
-                        );
+                        // console.log("isAdmin", isAdmin);
+                        // console.log("CurrentState", CurrentState);
+                        // console.log("IsDecisionMaker", IsDecisionMaker);
+                        // console.log(
+                        //   "isCurrentQuestionVotted",
+                        //   isCurrentQuestionVotted
+                        // );
+                        // console.log(
+                        //   "isCurrentDecisionVotted",
+                        //   isCurrentDecisionVotted
+                        // );
 
                         if (
                           isAdmin &&
-                          CurrentState === PlayingStates.DecisionCompleted
+                          (CurrentState === PlayingStates.DecisionCompleted ||
+                            CurrentState === PlayingStates.VotingCompleted ||
+                            CurrentState === PlayingStates.DecisionInProgress)
                         ) {
                           console.log("reached admin");
 
@@ -727,23 +732,46 @@ const Question = ({
                           Array.isArray(Votes) &&
                           Votes.length > 0 &&
                           getVotesDetailsById(item?.AnswerID) &&
-                          getVotesDetailsById(item?.AnswerID).userName.map(
-                            (username, index) => {
-                              const shortenedDesignation = username.substring(
-                                0,
-                                3
-                              );
-                              return (
-                                <div
-                                  className={styles.userbadge}
-                                  data-tooltip-id="des-tooltip"
-                                  data-tooltip-content={username}
-                                  key={index}
-                                >
-                                  {shortenedDesignation}
+                          getVotesDetailsById(item?.AnswerID).voteCount > 0 && (
+                            <div
+                              className={styles.voteCount}
+                              data-tooltip-id="voteCountDetails-tooltip"
+                              data-tooltip-html={getVoteUsername(
+                                item?.AnswerID
+                              )}
+                            >
+                              {getVotesDetailsById(item?.AnswerID).voteCount ===
+                              1 ? (
+                                <div className={styles.voteCount}>
+                                  <span
+                                    className={styles.userbadge}
+                                    style={{
+                                      backgroundColor: "#415385",
+                                      color: "#fff",
+                                    }}
+                                  >
+                                    1
+                                  </span>
+                                  <span>Vote</span>
                                 </div>
-                              );
-                            }
+                              ) : (
+                                <div className={styles.voteCount}>
+                                  <span
+                                    className={styles.userbadge}
+                                    style={{
+                                      backgroundColor: "#415385",
+                                      color: "#fff",
+                                    }}
+                                  >
+                                    {
+                                      getVotesDetailsById(item?.AnswerID)
+                                        .voteCount
+                                    }
+                                  </span>
+                                  <span>Votes</span>
+                                </div>
+                              )}
+                            </div>
                           )}
                       </div>
                     </div>
