@@ -128,11 +128,6 @@ const MissionCompleted = () => {
           })
             .then(function (dataUrl) {
               if (dataUrl.includes("image/png")) {
-                // var link = document.createElement("a");
-                // link.download = "progress.png";
-                // link.href = dataUrl;
-                // link.click();
-
                 const data = {
                   instanceID: sessionData.InstanceID,
                   scoreMeterImage: dataUrl,

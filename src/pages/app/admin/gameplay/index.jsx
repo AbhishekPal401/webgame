@@ -450,60 +450,85 @@ const GamePlay = () => {
           setDecisionDetails([]);
         }
 
-        if (questionDetails?.data?.HubTimerData) {
-          let HubTimerData = questionDetails?.data?.HubTimerData;
-          if (isJSONString(questionDetails?.data?.HubTimerData)) {
-            HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
-          }
+        // if (questionDetails?.data?.HubTimerData) {
+        //   let HubTimerData = questionDetails?.data?.HubTimerData;
+        //   if (isJSONString(questionDetails?.data?.HubTimerData)) {
+        //     HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
+        //   }
 
-          if (HubTimerData?.GlobalTimer) {
-            var timestampForTimezone = momentTimezone
-              .tz(HubTimerData.TimeZone)
-              .valueOf();
+        //   if (HubTimerData?.GlobalTimer) {
+        //     var timestampForTimezone = momentTimezone
+        //       .tz(HubTimerData.TimeZone)
+        //       .valueOf();
 
-            let offset =
-              Number(timestampForTimezone) - Number(HubTimerData?.GlobalTimer);
+        //     let offset =
+        //       Number(timestampForTimezone) - Number(HubTimerData?.GlobalTimer);
 
-            offset = offset / 1000;
+        //     offset = offset / 1000;
 
-            setInitGlobaTimeOffset(offset);
-          }
+        //     setInitGlobaTimeOffset(offset);
+        //   }
 
-          if (questionDetails?.data?.HubTimerData) {
-            let HubTimerData = questionDetails?.data?.HubTimerData;
-            if (isJSONString(questionDetails?.data?.HubTimerData)) {
-              HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
-            }
+        //   if (questionDetails?.data?.HubTimerData) {
+        //     let HubTimerData = questionDetails?.data?.HubTimerData;
+        //     if (isJSONString(questionDetails?.data?.HubTimerData)) {
+        //       HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
+        //     }
 
-            if (
-              HubTimerData.QuestionID ===
-              questionDetails?.data?.QuestionDetails?.QuestionID
-            ) {
-              const prev = Number(HubTimerData.QuestionTimer);
+        //     if (
+        //       HubTimerData.QuestionID ===
+        //       questionDetails?.data?.QuestionDetails?.QuestionID
+        //     ) {
+        //       const prev = Number(HubTimerData.QuestionTimer);
 
-              var timestampForTimezone = momentTimezone
-                .tz(HubTimerData.TimeZone)
-                .valueOf();
+        //       var timestampForTimezone = momentTimezone
+        //         .tz(HubTimerData.TimeZone)
+        //         .valueOf();
 
-              let offset = Number(timestampForTimezone) - prev;
+        //       let offset = Number(timestampForTimezone) - prev;
 
-              offset = offset / 1000; //seconds
+        //       offset = offset / 1000; //seconds
 
-              console.log("offset", offset);
+        //       console.log("offset", offset);
 
-              if (prev) {
-                console.log("duration for question before", duration);
+        //       if (prev) {
+        //         console.log("duration for question before", duration);
 
-                duration = Math.max(0, duration - offset);
+        //         duration = Math.max(0, duration - offset);
 
-                console.log("duration for question after", duration);
+        //         console.log("duration for question after", duration);
 
-                setMediaShown(true);
-              }
-            }
-          }
+        //         setMediaShown(true);
+        //       }
+        //     }
+        //   }
+        // }
+
+        if (questionDetails?.data?.GameElapsedTime) {
+          setInitGlobaTimeOffset(
+            Number(questionDetails?.data?.GameElapsedTime)
+          );
+        }
+
+        if (
+          questionDetails?.data?.TimeConfig?.QuestionRemainingTime &&
+          questionDetails?.data?.QuestionDetails?.QuestionID ===
+            questionDetails?.data?.TimeConfig?.QuestionID
+        ) {
+          console.log(
+            "QuestionRemainingTime",
+            Number(questionDetails?.data?.TimeConfig?.QuestionRemainingTime)
+          );
+          duration = Math.max(
+            0,
+            Number(questionDetails?.data?.TimeConfig?.QuestionRemainingTime)
+          );
+
+          setMediaShown(true);
         }
       }
+
+      console.log("duration in refresh", duration);
 
       setDuration(duration);
 
