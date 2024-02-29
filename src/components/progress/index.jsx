@@ -47,10 +47,12 @@ const progress = ({ progress = 0, scoreMaster = [] }) => {
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
-      <img src="./images/meter.png" className={styles.meter} />
+      <img width={"100%"} src="./images/meter.png" className={styles.meter} />
 
       <svg
         className={styles.tick}
+        width={"4.5rem"}
+        height={"8rem"}
         style={{ transform: `rotate(${rotationDegree}deg)` }}
         viewBox="0 0 39 65"
       >

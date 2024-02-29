@@ -74,12 +74,14 @@ const DecisionTree = ({ onCancel = () => {} }) => {
   }, []);
 
   return (
-    <div className={"modal_content"} 
-      style={{ 
-        width: "80vw", 
-        height: "85vh", 
+    <div
+      className={"modal_content"}
+      style={{
+        width: "80vw",
+        height: "85vh",
         overflowY: "auto",
-      }}>
+      }}
+    >
       <div className={"modal_header"}>
         <div>Decision Tree</div>
         <div>
@@ -88,19 +90,21 @@ const DecisionTree = ({ onCancel = () => {} }) => {
           </svg>
         </div>
       </div>
-      <div className={"modal_description"}
+      <div
+        className={"modal_description"}
         style={{
           marginBottom: "2rem",
-          width: '100%',
+          width: "100%",
           /* height: 100%; */
-          wordWrap: 'break-word',
+          wordWrap: "break-word",
           // maxHeight: '10rem',
           // overflowY: 'auto',
-        }}>
+        }}
+      >
         {!loading &&
-          instanceProgress &&
-          instanceProgress.data &&
-          instanceProgress.data.GameIntro ? (
+        instanceProgress &&
+        instanceProgress.data &&
+        instanceProgress.data.GameIntro ? (
           <div
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(instanceProgress.data.GameIntro),
@@ -113,9 +117,9 @@ const DecisionTree = ({ onCancel = () => {} }) => {
 
       <div style={{ height: "72%" }}>
         {!loading &&
-          instanceProgress &&
-          instanceProgress.data &&
-          instanceProgress.data.Summary ? (
+        instanceProgress &&
+        instanceProgress.data &&
+        instanceProgress.data.Summary ? (
           <RealTimeTree data={instanceProgress.data.Summary} />
         ) : (
           <div className={styles.loaderContainer}>
@@ -259,20 +263,20 @@ const GamePlay = () => {
         data.ActionType === "IsCompleted" ||
         data.actionType === "IsCompleted"
       ) {
-        var node = document.getElementById("progressmeter");
-        if (node) {
-          toPng(node, {
-            filter: (node) => {
-              return node.tagName !== "i";
-            },
-          })
-            .then(function (dataUrl) {
-              dispatch(setProgressImageData(dataUrl));
-            })
-            .catch(function (error) {
-              console.error("cannot set setProgressImageData!", error);
-            });
-        }
+        // var node = document.getElementById("progressmeter");
+        // if (node) {
+        //   toPng(node, {
+        //     filter: (node) => {
+        //       return node.tagName !== "i";
+        //     },
+        //   })
+        //     .then(function (dataUrl) {
+        //       dispatch(setProgressImageData(dataUrl));
+        //     })
+        //     .catch(function (error) {
+        //       console.error("cannot set setProgressImageData!", error);
+        //     });
+        // }
 
         navigate("/missioncompleted");
       } else {
@@ -354,16 +358,18 @@ const GamePlay = () => {
   }, [sessionDetails, credentials, questionDetails]);
 
   useEffect(() => {
+    console.log("questionDetails in effect", questionDetails);
+
     if (questionDetails === null || questionDetails === undefined) return;
 
     if (questionDetails.success) {
       let duration = Number(questionDetails.data.QuestionDetails.Duration);
-      setDuration(duration);
+
+      console.log("duration", duration);
 
       if (callNextQuestion) {
         setNextQuestionFetched(true);
         setSelectedAnswer(null);
-        // setAdminState("MakeDecision");
         setShowDecision(false);
         setVoteDetails([]);
         setCurrentState(PlayingStates.VotingInProgress);
@@ -407,6 +413,8 @@ const GamePlay = () => {
             if (currentState === PlayingStates.DecisionCompleted) {
               setShowVotes(true);
               setcoundown(TIMER_STATES.START);
+            } else if (currentState === PlayingStates.VotingInProgress) {
+              setcoundown(TIMER_STATES.START);
             } else {
               setcoundown(TIMER_STATES.STOP);
               setShowVotes(false);
@@ -424,7 +432,6 @@ const GamePlay = () => {
           } else {
             setNextQuestionFetched(true);
             setSelectedAnswer(null);
-            // setAdminState("MakeDecision");
             setShowDecision(false);
             setVoteDetails([]);
             setCurrentState(PlayingStates.VotingInProgress);
@@ -435,7 +442,6 @@ const GamePlay = () => {
         } else {
           setNextQuestionFetched(true);
           setSelectedAnswer(null);
-          // setAdminState("MakeDecision");
           setShowDecision(false);
           setVoteDetails([]);
           setCurrentState(PlayingStates.VotingInProgress);
@@ -444,60 +450,87 @@ const GamePlay = () => {
           setDecisionDetails([]);
         }
 
-        if (questionDetails?.data?.HubTimerData) {
-          let HubTimerData = questionDetails?.data?.HubTimerData;
-          if (isJSONString(questionDetails?.data?.HubTimerData)) {
-            HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
-          }
+        // if (questionDetails?.data?.HubTimerData) {
+        //   let HubTimerData = questionDetails?.data?.HubTimerData;
+        //   if (isJSONString(questionDetails?.data?.HubTimerData)) {
+        //     HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
+        //   }
 
-          if (HubTimerData?.GlobalTimer) {
-            var timestampForTimezone = momentTimezone
-              .tz(HubTimerData.TimeZone)
-              .valueOf();
+        //   if (HubTimerData?.GlobalTimer) {
+        //     var timestampForTimezone = momentTimezone
+        //       .tz(HubTimerData.TimeZone)
+        //       .valueOf();
 
-            let offset =
-              Number(timestampForTimezone) - Number(HubTimerData?.GlobalTimer);
+        //     let offset =
+        //       Number(timestampForTimezone) - Number(HubTimerData?.GlobalTimer);
 
-            offset = offset / 1000;
+        //     offset = offset / 1000;
 
-            setInitGlobaTimeOffset(offset);
-          }
+        //     setInitGlobaTimeOffset(offset);
+        //   }
 
-          if (questionDetails?.data?.HubTimerData) {
-            let HubTimerData = questionDetails?.data?.HubTimerData;
-            if (isJSONString(questionDetails?.data?.HubTimerData)) {
-              HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
-            }
+        //   if (questionDetails?.data?.HubTimerData) {
+        //     let HubTimerData = questionDetails?.data?.HubTimerData;
+        //     if (isJSONString(questionDetails?.data?.HubTimerData)) {
+        //       HubTimerData = JSON.parse(questionDetails?.data?.HubTimerData);
+        //     }
 
-            if (
-              HubTimerData.QuestionID ===
-              questionDetails?.data?.QuestionDetails?.QuestionID
-            ) {
-              const prev = Number(HubTimerData.QuestionTimer);
+        //     if (
+        //       HubTimerData.QuestionID ===
+        //       questionDetails?.data?.QuestionDetails?.QuestionID
+        //     ) {
+        //       const prev = Number(HubTimerData.QuestionTimer);
 
-              var timestampForTimezone = momentTimezone
-                .tz(HubTimerData.TimeZone)
-                .valueOf();
+        //       var timestampForTimezone = momentTimezone
+        //         .tz(HubTimerData.TimeZone)
+        //         .valueOf();
 
-              let offset = Number(timestampForTimezone) - prev;
+        //       let offset = Number(timestampForTimezone) - prev;
 
-              offset = offset / 1000; //seconds
+        //       offset = offset / 1000; //seconds
 
-              console.log("offset", offset);
+        //       console.log("offset", offset);
 
-              if (prev) {
-                console.log("duration for question before", duration);
+        //       if (prev) {
+        //         console.log("duration for question before", duration);
 
-                duration = Math.max(0, duration - offset);
+        //         duration = Math.max(0, duration - offset);
 
-                console.log("duration for question after", duration);
+        //         console.log("duration for question after", duration);
 
-                setMediaShown(true);
-              }
-            }
-          }
+        //         setMediaShown(true);
+        //       }
+        //     }
+        //   }
+        // }
+
+        if (questionDetails?.data?.GameElapsedTime) {
+          setInitGlobaTimeOffset(
+            Number(questionDetails?.data?.GameElapsedTime)
+          );
+        }
+
+        if (
+          questionDetails?.data?.TimeConfig?.QuestionRemainingTime &&
+          questionDetails?.data?.QuestionDetails?.QuestionID ===
+            questionDetails?.data?.TimeConfig?.QuestionID
+        ) {
+          console.log(
+            "QuestionRemainingTime",
+            Number(questionDetails?.data?.TimeConfig?.QuestionRemainingTime)
+          );
+          duration = Math.max(
+            0,
+            Number(questionDetails?.data?.TimeConfig?.QuestionRemainingTime)
+          );
+
+          setMediaShown(true);
         }
       }
+
+      console.log("duration in refresh", duration);
+
+      setDuration(duration);
 
       if (!questionDetails?.data?.QuestionDetails?.QuestionIntroMediaURL) {
         onQuestionSkip();
@@ -701,54 +734,17 @@ const GamePlay = () => {
 
       dispatch(resetAnswerDetailsState());
       setSelectedAnswer(null);
-
-      // const data = {
-      //   InstanceID: sessionData.InstanceID,
-      //   SessionID: sessionData.SessionID,
-      //   UserID: credentials.data.userID,
-      //   UserName: credentials.data.userName,
-      //   ActionType: "AdminDeciderDecision",
-
-      //   Message: "Admin decision",
-
-      //   QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-      //   AnswerID: selectedAnswer.AnswerID,
-      // };
-
-      // console.log("send vote data", data);
-
-      // signalRService.SendVotes(data);
-
-      // if (
-      //   answerDetails.data.IsPlayCompleted ||
-      //   answerDetails.data.NextQuestionID === ""
-      // ) {
-      //   const data = {
-      //     InstanceID: sessionData.InstanceID,
-      //     UserID: credentials.data.userID,
-      //     ActionType: "IsCompleted",
-      //     Message: "Success",
-      //   };
-
-      //   dispatch(resetAnswerDetailsState());
-      //   setSelectedAnswer({});
-
-      //   signalRService.ProceedToNextQuestionInvoke(data);
-      // } else {
-      //   setAdminState("RevealDecision");
-      //   setShowDecision(true);
-      //   setSelectedAnswer({});
-      // }
     }
   }, [answerDetails]);
 
   useEffect(() => {
     if (currentState === PlayingStates.VotingInProgress) {
-      setcoundown(TIMER_STATES.STOP);
+      setcoundown(TIMER_STATES.START);
     } else if (currentState === PlayingStates.VotingCompleted) {
+      setDuration(0);
       setcoundown(TIMER_STATES.STOP);
     } else if (currentState === PlayingStates.DecisionCompleted) {
-      setDuration(30); //30 seconds
+      setDuration(60); //30 seconds
       setcoundown(TIMER_STATES.START);
       setStartedAt(Math.floor(Date.now() / 1000));
     } else {
@@ -757,6 +753,7 @@ const GamePlay = () => {
   }, [currentState]);
 
   const showAlertMessage = useCallback(() => {
+    if (currentState === PlayingStates.VotingInProgress) return;
     toast.success("Time is up, Please make a decision", {
       containerId: "alert_messages",
       className: "notification",
@@ -769,7 +766,7 @@ const GamePlay = () => {
       autoClose: 3000,
       icon: false,
     });
-  }, [position]);
+  }, [position, currentState]);
 
   return (
     <motion.div

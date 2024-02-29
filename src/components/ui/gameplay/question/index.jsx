@@ -223,7 +223,7 @@ const Question = ({
           <div></div>
           <div className={styles.makeDecision}>
             <div className={styles.label}>
-              Voting Complete - Waiting for Descision
+              Voting Complete - Waiting for Decision
             </div>
             <Button
               customStyle={{ marginLeft: "4rem" }}
@@ -262,7 +262,7 @@ const Question = ({
           <div></div>
           <div className={styles.makeDecision}>
             <div className={styles.label}>
-              Voting Completed - Waiting for Descision
+              Voting Completed - Waiting for Decision
             </div>
             <Button
               customStyle={{ marginLeft: "4rem" }}
@@ -504,9 +504,24 @@ const Question = ({
     onDecisionCompleteDefault,
   ]);
 
-  console.log("Duration in question ", Duration);
-  console.log("countdown in question", countdown);
-  console.log("CurrentState", CurrentState);
+  // console.log("showVotes ", showVotes);
+  // console.log("CurrentState", CurrentState);
+  console.log("duration in question comp", Duration);
+  console.log("timerStatus", timerStatus);
+
+  const getVoteUsername = (Id) => {
+    let html = "";
+
+    if (getVotesDetailsById(Id)) {
+      console.log("userName", getVotesDetailsById(Id).userName);
+
+      getVotesDetailsById(Id).userName.forEach((username, index) => {
+        html += `<div key=${index}>${username}</div>`;
+      });
+    }
+
+    return html;
+  };
 
   return (
     <div className={styles.container}>
@@ -629,35 +644,88 @@ const Question = ({
                         }
                       }}
                     >
-                      <div>
+                      <div style={{ display: "flex", flex: 1 }}>
                         {String.fromCharCode(64 + (index + 1))}.{" "}
                         {item.AnswerText}
                       </div>
                       <div className={styles.vote}>
                         {showVotes &&
+                          isAdmin &&
                           Votes &&
                           Array.isArray(Votes) &&
                           Votes.length > 0 &&
                           getVotesDetailsById(item?.AnswerID) &&
                           getVotesDetailsById(item?.AnswerID).voteCount > 0 && (
-                            <div className={styles.voteCount}>
-                              {`${
-                                getVotesDetailsById(item?.AnswerID)
-                                  .voteCount === 1
-                                  ? "1 Vote"
-                                  : `${
+                            <div
+                              className={styles.voteCount}
+                              data-tooltip-id="voteCountDetails-tooltip"
+                              data-tooltip-html={getVoteUsername(
+                                item?.AnswerID
+                              )}
+                            >
+                              {getVotesDetailsById(item?.AnswerID).voteCount ===
+                              1 ? (
+                                <div className={styles.voteCount}>
+                                  <span
+                                    className={styles.userbadge}
+                                    style={{
+                                      backgroundColor: "#415385",
+                                      color: "#fff",
+                                    }}
+                                  >
+                                    1
+                                  </span>
+                                  <span>Vote</span>
+                                </div>
+                              ) : (
+                                <div className={styles.voteCount}>
+                                  <span
+                                    className={styles.userbadge}
+                                    style={{
+                                      backgroundColor: "#415385",
+                                      color: "#fff",
+                                    }}
+                                  >
+                                    {
                                       getVotesDetailsById(item?.AnswerID)
                                         .voteCount
-                                    } Votes`
-                              } `}
+                                    }
+                                  </span>
+                                  <span>Votes</span>
+                                </div>
+                              )}
                             </div>
                           )}
                         {showVotes &&
+                          isAdmin &&
                           decisionDetails &&
                           Array.isArray(decisionDetails) &&
                           decisionDetails.length > 0 &&
                           getDeciderDecisionById(item?.AnswerID) &&
                           getDeciderDecisionById(item?.AnswerID).userName.map(
+                            (username, index) => {
+                              const shortenedDesignation = username.substring(
+                                0,
+                                3
+                              );
+                              return (
+                                <div
+                                  className={styles.userbadge}
+                                  data-tooltip-id="des-tooltip"
+                                  data-tooltip-content={username}
+                                  key={index}
+                                >
+                                  {shortenedDesignation}
+                                </div>
+                              );
+                            }
+                          )}
+                        {(CurrentState === PlayingStates.VotingCompleted ||
+                          CurrentState === PlayingStates.DecisionInProgress) &&
+                          Array.isArray(Votes) &&
+                          Votes.length > 0 &&
+                          getVotesDetailsById(item?.AnswerID) &&
+                          getVotesDetailsById(item?.AnswerID).userName.map(
                             (username, index) => {
                               const shortenedDesignation = username.substring(
                                 0,
@@ -803,6 +871,8 @@ const Question = ({
       )}
 
       <Tooltip id="des-tooltip" />
+
+      <Tooltip id="voteCountDetails-tooltip" />
     </div>
   );
 };
