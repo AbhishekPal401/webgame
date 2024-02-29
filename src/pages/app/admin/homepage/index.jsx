@@ -336,7 +336,8 @@ const Homepage = () => {
                                 }
                               />
                             </td>
-                            <td>{index + 1}</td>
+                            {/* <td>{index + 1}</td> */}
+                            <td>{index + pageCount * (pageNumber - 1) + 1}</td>
                             <td>{scenario.ScenarioName}</td>
                             <td
                               className={styles.scenarioDescription}

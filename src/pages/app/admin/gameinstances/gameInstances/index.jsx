@@ -235,7 +235,8 @@ const GameInstances = () => {
                                                             onChange={() => handleCheckboxChange(gameInstance.InstanceID)}
                                                         />
                                                     </td>
-                                                    <td>{index + 1}</td>
+                                                    {/* <td>{index + 1}</td> */}
+                                                    <td>{index + pageCount * (pageNumber - 1) + 1}</td>
                                                     <td>
                                                         {gameInstance.InstanceName}
                                                     </td>

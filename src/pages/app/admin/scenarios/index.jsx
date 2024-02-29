@@ -422,7 +422,8 @@ const Scenarios = () => {
                           onChange={() => handleCheckboxChange(scenario.ScenarioID)}
                         />
                       </td>
-                      <td>{index + 1}</td>
+                      {/* <td>{index + 1}</td> */}
+                      <td>{index + pageCount * (pageNumber - 1) + 1}</td>
                       <td>
                         {scenario.ScenarioName}
                       </td>
