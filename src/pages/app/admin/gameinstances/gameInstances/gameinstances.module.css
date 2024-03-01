@@ -67,6 +67,8 @@
 }
 .mainTopContainerLeft > div:nth-child(2) > a {
   font-size: 1.2rem;
+  color: var(--label);
+
 }
 
 .mainTableContainer {
@@ -193,4 +195,7 @@
 .username:hover {
   text-decoration: underline;
   cursor: pointer;
+}
+.inputStyleClass {
+  border: 1px solid #D1D1D1;
 }

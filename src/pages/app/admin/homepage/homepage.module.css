@@ -193,7 +193,7 @@
 .scenarioContainerLeft a {
   font-size: 1.2rem;
 }
-.scenarioContainerLeft > div:nth-child(2) {
+.scenarioContainerLeft > div:nth-child(2) > a {
   color: var(--label);
 }
 .mainTableContainer {
