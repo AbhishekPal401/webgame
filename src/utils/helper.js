@@ -21,6 +21,8 @@ import DOMPurify from "dompurify";
 // };
 
 export const formatTime = (value) => {
+  console.log("formatTime value", value);
+
   if (!value || value.trim() === "") {
     return "Invalid Time";
   }
