@@ -1,6 +1,6 @@
 .iconContainer {
   height: 5.2rem;
-  background-color: var(--primary);
+  background-color: white;
 }
 
 .iconContainer:hover {

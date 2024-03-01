@@ -599,8 +599,9 @@ const CreateUser = () => {
                 type="text"
                 value={userData.username.value}
                 name={"username"}
-                placeholder="User Name"
+                placeholder="User Name &#128900;"
                 onChange={onChange}
+                inputStyleClass={styles.inputStyleClass}
               />
               <div>
                 {/* <label htmlFor="dropdown_Organisation" className="select_label">
@@ -612,7 +613,7 @@ const CreateUser = () => {
                   className="select_input"
                   onChange={onOrganisationSelect}
                 >
-                  <option value="" hidden>Organization</option>
+                  <option value="" hidden>Organization &#128900;</option>
                   {masters &&
                     masters.data &&
                     isJSONString(masters.data) &&
@@ -642,7 +643,7 @@ const CreateUser = () => {
                   className="select_input"
                   onChange={onDesignationSelect}
                 >
-                  <option value="" hidden>Designation</option>
+                  <option value="" hidden>Designation &#128900;</option>
                   {masters &&
                     masters.data &&
                     isJSONString(masters.data) &&
@@ -668,7 +669,7 @@ const CreateUser = () => {
                   className="select_input"
                   onChange={onRoleSelect}
                 >
-                  <option value={""} hidden>Roles</option>
+                  <option value={""} hidden>Roles &#128900;</option>
 
                   {masters &&
                     masters.data &&
@@ -692,7 +693,7 @@ const CreateUser = () => {
                 type="text"
                 value={userData.email.value}
                 name={"email"}
-                placeholder="Email"
+                placeholder="Email &#128900;"
                 onChange={onChange}
               />
               <Input

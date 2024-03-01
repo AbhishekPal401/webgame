@@ -827,7 +827,7 @@ const UpdateInstances = () => {
                                             value={gameInstanceData?.instanceName?.value}
                                             customStyle={{ margin: '0' }}
                                             name={"instanceName"}
-                                            placeholder="Instance Name"
+                                            placeholder="Instance Name &#128900;"
                                             onChange={onChange}
                                         />
                                     </div>
@@ -840,7 +840,7 @@ const UpdateInstances = () => {
                                                 className="select_input"
                                                 onChange={onOrganizationSelect}
                                             >
-                                                <option value={""} hidden>Select Organization</option>
+                                                <option value={""} hidden>Select Organization &#128900;</option>
 
                                                 {masters &&
                                                     masters?.data &&
@@ -870,7 +870,7 @@ const UpdateInstances = () => {
                                                 className="select_input"
                                                 onChange={onGroupNameSelect}
                                             >
-                                                <option value={""} hidden>Group Name</option>
+                                                <option value={""} hidden>Group Name &#128900;</option>
 
                                                 {groupByOrgIdDetails &&
                                                     groupByOrgIdDetails?.data &&
@@ -918,7 +918,7 @@ const UpdateInstances = () => {
                                                 className="select_input"
                                                 onChange={onScenarioNameSelect}
                                             >
-                                                <option value={""} hidden>Select Scenario</option>
+                                                <option value={""} hidden>Select Scenario &#128900;</option>
 
                                                 {scenarioNameAndIdDetails &&
                                                     scenarioNameAndIdDetails?.data &&
@@ -987,7 +987,7 @@ const UpdateInstances = () => {
                                                         value={player?.playerName?.value}
                                                         customStyle={{ margin: '0' }}
                                                         name={"playerName"}
-                                                        placeholder="Player Name"
+                                                        placeholder="Player Name &#128900;"
                                                         onChange={(e) => onPlayerChange(e, index, 'playerName')}
                                                         disabled
                                                     />
@@ -1001,7 +1001,7 @@ const UpdateInstances = () => {
                                                         value={player?.playerGroupName?.value}
                                                         customStyle={{ margin: '0' }}
                                                         name={"playerGroupName"}
-                                                        placeholder="Assign Group"
+                                                        placeholder="Assign Group &#128900;"
                                                         onChange={(e) => onPlayerChange(e, index, 'playerGroupName')}
                                                         disabled
                                                     />
@@ -1043,7 +1043,7 @@ const UpdateInstances = () => {
                                                             onChange={(e) => onPlayerChange(e, index, 'playerDesignation')}
                                                             disabled
                                                         >
-                                                            <option value={""} hidden>Assign Role</option>
+                                                            <option value={""} hidden>Assign Role &#128900;</option>
 
                                                             {masters &&
                                                                 masters?.data &&

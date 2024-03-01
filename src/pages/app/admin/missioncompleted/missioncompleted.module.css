@@ -195,6 +195,7 @@
   margin: 0.5rem 0;
   background-color: var(--active);
   color: var(--black);
+  cursor: pointer;
 }
 .end {
   display: inline-block;

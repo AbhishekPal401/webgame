@@ -622,7 +622,7 @@ const UserProfile = () => {
                 type="text"
                 value={userData.username.value}
                 name={"username"}
-                placeholder="Username"
+                placeholder="Username &#128900;"
                 onChange={onChange}
                 disabled={credentials.data.role === "3"}
               />
@@ -638,7 +638,7 @@ const UserProfile = () => {
                     className="select_input"
                     onChange={onRoleSelect}
                   >
-                    <option value={""} hidden>Role</option>
+                    <option value={""} hidden>Role &#128900;</option>
 
                     {masters &&
                       masters.data &&
@@ -675,7 +675,7 @@ const UserProfile = () => {
                   className="select_input"
                   onChange={onOrganisationSelect}
                 >
-                  <option value="" hidden>Organisation</option>
+                  <option value="" hidden>Organisation &#128900;</option>
                   {masters &&
                     masters.data &&
                     isJSONString(masters.data) &&
@@ -705,7 +705,7 @@ const UserProfile = () => {
                 type="text"
                 value={userData.email.value}
                 name={"email"}
-                placeholder="Email"
+                placeholder="Email &#128900;"
                 disabled={true}
                 onChange={onChange}
               />
@@ -733,7 +733,7 @@ const UserProfile = () => {
                   className="select_input"
                   onChange={onDesignationSelect}
                 >
-                  <option value="" hidden>Designation</option>
+                  <option value="" hidden>Designation &#128900;</option>
                   {masters &&
                     masters.data &&
                     isJSONString(masters.data) &&

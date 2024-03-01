@@ -336,7 +336,8 @@ const Homepage = () => {
                                 }
                               />
                             </td>
-                            <td>{index + 1}</td>
+                            {/* <td>{index + 1}</td> */}
+                            <td>{index + pageCount * (pageNumber - 1) + 1}</td>
                             <td>{scenario.ScenarioName}</td>
                             <td
                               className={styles.scenarioDescription}
@@ -373,8 +374,8 @@ const Homepage = () => {
                                   }}
                                 >
                                   <svg
-                                    height="14"
-                                    width="14"
+                                    height="12"
+                                    width="12"
                                     style={{
                                       opacity: isSelected ? "1" : "0.3",
                                     }}
@@ -392,7 +393,7 @@ const Homepage = () => {
                                 >
                                   <svg
                                     height="14"
-                                    width="14"
+                                    width="12"
                                     style={{
                                       opacity: isSelected ? "1" : "0.3",
                                     }}

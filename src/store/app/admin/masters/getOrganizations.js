@@ -30,11 +30,11 @@ const { requested, success, failed, reset } = slice.actions;
 
 export default slice.reducer;
 
-export const getAllOrganizations = () =>
+export const getAllOrganizations = (data) =>
   apiCallBegan({
-    url: "api/User/GetOrganizationList",
+    url: "api/User/GetOrganizationListByPage",
     method: "POST",
-    data: {},
+    data,
     onStart: requested.type,
     onSuccess: success.type,
     onFailed: failed.type,

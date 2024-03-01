@@ -81,6 +81,10 @@ const MasterList = () => {
   const [showEditModal, setShowEditModal] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+  const [designationPageCount, setDesignationPageCount] = useState(10);
+  const [designationPageNumber, setDesignationPageNumber] = useState(1);
+  const [organizationPageCount, setOrganizationPageCount] = useState(10);
+  const [organizationPageNumber, setOrganizationPageNumber] = useState(1);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -140,28 +144,62 @@ const MasterList = () => {
 
   useEffect(() => {
     if (credentials) {
-      activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
+
+      const data = {
+        pageNumber: activeTab === 'Designation' ? designationPageNumber : organizationPageNumber,
+        pageCount: activeTab === 'Designation' ? designationPageCount : organizationPageCount,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      activeTab === 'Designation' ?
+        dispatch(getAllDesignations(data)) : dispatch(getAllOrganizations(data));
     }
   }, [activeTab, dispatch, credentials]);
 
+  useEffect(() => {
+    if (designations && isJSONString(designations?.data)) {
+      const newPageNumber = JSON.parse(designations?.data)?.CurrentPage;
+
+      if (newPageNumber && typeof newPageNumber === "number") {
+        setDesignationPageNumber(newPageNumber);
+      }
+    }
+  }, [designations]);
+
+  useEffect(() => {
+    if (organizations && isJSONString(organizations?.data)) {
+      const newPageNumber = JSON.parse(organizations?.data)?.CurrentPage;
+
+      if (newPageNumber && typeof newPageNumber === "number") {
+        setOrganizationPageNumber(newPageNumber);
+      }
+    }
+  }, [organizations]);
+
   //DEBUG :: start
 
-  useEffect(() => {
-    if (designations === null ||
-      designations === undefined ||
-      organizations === null ||
-      organizations === undefined) return;
+  // useEffect(() => {
+  //   if (designations === null ||
+  //     designations === undefined ||
+  //     organizations === null ||
+  //     organizations === undefined) return;
 
-    console.log(" designation :", JSON.parse(designations?.data))
-    console.log(" organizations :", JSON.parse(organizations?.data))
+  //   console.log(" designation :", JSON.parse(designations?.data))
 
-  }, [designations, organizations]);
+  //   console.log(" organizations :", JSON.parse(organizations?.data))
 
-  useEffect(() => {
-    console.log(" updateMasterData :", updateMasterData)
+  // }, [designations, organizations]);
+
+  // useEffect(() => {
+  //   console.log(" updateMasterData :", updateMasterData)
 
 
-  }, [updateMasterData]);
+  // }, [updateMasterData]);
 
   //DEBUG :: end
 
@@ -170,10 +208,24 @@ const MasterList = () => {
 
     if (createMasterResponse?.success) {
       console.log("Master created")
-      toast.success((activeTab === 'Designation') ? 
+      toast.success((activeTab === 'Designation') ?
         "Designation created successfully" : "Organization created successfully");
 
-      activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
+      // activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
+      const data = {
+        pageNumber: activeTab === 'Designation' ? designationPageNumber : organizationPageNumber,
+        pageCount: activeTab === 'Designation' ? designationPageCount : organizationPageCount,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      activeTab === 'Designation' ?
+        dispatch(getAllDesignations(data)) : dispatch(getAllOrganizations(data));
+
 
       resetAddMasterData();
       setShowModal(false);
@@ -195,7 +247,20 @@ const MasterList = () => {
 
     if (updateDesignationResponse?.success) {
       toast.success(updateDesignationResponse.message);
-      activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
+      // activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
+      const data = {
+        pageNumber: activeTab === 'Designation' ? designationPageNumber : organizationPageNumber,
+        pageCount: activeTab === 'Designation' ? designationPageCount : organizationPageCount,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      activeTab === 'Designation' ?
+        dispatch(getAllDesignations(data)) : dispatch(getAllOrganizations(data));
 
       setShowEditModal(null);
       setSelectedCheckboxes([]);
@@ -204,7 +269,21 @@ const MasterList = () => {
       // dispatch(resetDesignationsState()); TODO
     } else if (!updateDesignationResponse?.success) {
 
-      activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
+      // activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
+      const data = {
+        pageNumber: activeTab === 'Designation' ? designationPageNumber : organizationPageNumber,
+        pageCount: activeTab === 'Designation' ? designationPageCount : organizationPageCount,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      activeTab === 'Designation' ?
+        dispatch(getAllDesignations(data)) : dispatch(getAllOrganizations(data));
+
 
       toast.error(updateDesignationResponse?.message);
       dispatch(resetUpdateDesignationState());
@@ -219,7 +298,20 @@ const MasterList = () => {
 
     if (updateOrganizationResponse?.success) {
       toast.success(updateOrganizationResponse.message);
-      activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
+      // activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
+      const data = {
+        pageNumber: activeTab === 'Designation' ? designationPageNumber : organizationPageNumber,
+        pageCount: activeTab === 'Designation' ? designationPageCount : organizationPageCount,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      activeTab === 'Designation' ?
+        dispatch(getAllDesignations(data)) : dispatch(getAllOrganizations(data));
 
       setShowEditModal(null);
       setSelectedCheckboxes([]);
@@ -228,7 +320,20 @@ const MasterList = () => {
       // dispatch(resetDesignationsState()); TODO
     } else if (!updateOrganizationResponse?.success) {
 
-      activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
+      // activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
+      const data = {
+        pageNumber: activeTab === 'Designation' ? designationPageNumber : organizationPageNumber,
+        pageCount: activeTab === 'Designation' ? designationPageCount : organizationPageCount,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      activeTab === 'Designation' ?
+        dispatch(getAllDesignations(data)) : dispatch(getAllOrganizations(data));
 
       toast.error(updateOrganizationResponse?.message);
       dispatch(resetUpdateOrganizationState());
@@ -243,7 +348,20 @@ const MasterList = () => {
 
     if (deleteMasterByTypeAndIdResponse.success) {
       toast.success(deleteMasterByTypeAndIdResponse.message);
-      activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
+      // activeTab === 'Designation' ? dispatch(getAllDesignations()) : dispatch(getAllOrganizations());
+      const data = {
+        pageNumber: activeTab === 'Designation' ? designationPageNumber : organizationPageNumber,
+        pageCount: activeTab === 'Designation' ? designationPageCount : organizationPageCount,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      activeTab === 'Designation' ?
+        dispatch(getAllDesignations(data)) : dispatch(getAllOrganizations(data));
 
       dispatch(resetDeleteMasterByTypeAndIdState());
       setShowDeleteModal(null);
@@ -255,6 +373,12 @@ const MasterList = () => {
 
   const setDesignationDetailState = useCallback(() => {
     if (isJSONString(designationByIdDetails?.data)) {
+
+      if (!designationByIdDetails?.data) {
+        toast.error(designationByIdDetails?.message);
+        return;
+      }
+
       const data = JSON.parse(designationByIdDetails?.data);
       console.log("designationByIdDetails data:", data);
 
@@ -291,6 +415,11 @@ const MasterList = () => {
 
   const setOrganizationDetailState = useCallback(() => {
     if (isJSONString(organizationByIdDetails?.data)) {
+      if (!organizationByIdDetails?.data) {
+        toast.error(organizationByIdDetails?.message);
+        return;
+      }
+      
       const data = JSON.parse(organizationByIdDetails?.data);
       console.log("organizationByIdDetails data:", data);
 
@@ -336,6 +465,9 @@ const MasterList = () => {
     (tab) => {
       setActiveTab(tab);
       setSelectedCheckboxes([]);
+
+      setDesignationPageNumber(1);
+      setOrganizationPageNumber(1);
     },
     [setActiveTab]
   );
@@ -423,11 +555,11 @@ const MasterList = () => {
     }
   }
 
-  const handleCheckboxChange = (index) => {
-    const isSelected = selectedCheckboxes.includes(index);
+  const handleCheckboxChange = (id) => {
+    const isSelected = selectedCheckboxes.includes(id);
     const updatedRows = isSelected
-      ? selectedCheckboxes.filter((row) => row !== index)
-      : [...selectedCheckboxes, index];
+      ? selectedCheckboxes.filter((row) => row !== id)
+      : [...selectedCheckboxes, id];
 
     setSelectedCheckboxes(updatedRows);
   };
@@ -690,25 +822,36 @@ const MasterList = () => {
                     designations &&
                     designations?.success &&
                     designations?.data &&
-                    JSON.parse(designations?.data)?.map((designation, index) => {
-                      const isSelected = selectedCheckboxes.includes(index);
+                    JSON.parse(designations?.data).DesignationDetails?.map((designation, index) => {
+                      const isSelected = selectedCheckboxes.includes(designation.ID);
 
                       return (
                         <tr key={index}>
                           <td>
                             <Checkbox
                               checked={isSelected}
-                              onChange={() => handleCheckboxChange(index)}
+                              onChange={() => handleCheckboxChange(designation.ID)}
                             />
                           </td>
-                          <td>{index + 1}</td>
-                          <td>{designation.Designation}</td>
-                          <td
-                            className={styles.designationDescription}
-                          >{designation.Description}</td>
-                          <td>{formatDateString(designation.DateCreated)}</td>
-                          <td>{designation.Scenarios}</td>
-                          <td>{(designation.Status) ? 'Active' : 'Inactive'}</td>
+                          {/* <td>
+                            {index + 1}
+                          </td> */}
+                          <td>{index + designationPageCount * (designationPageNumber - 1) + 1}</td>
+                          <td>
+                            {designation.DesignationName}
+                          </td>
+                          <td className={styles.designationDescription}>
+                            {designation.Description}
+                          </td>
+                          <td>
+                            {formatDateString(designation.CreatedAt)}
+                          </td>
+                          <td>
+                            {(designation.Scenarios) ? designation.Scenarios : '0'}
+                          </td>
+                          <td>
+                            {(designation.IsActive) ? 'Active' : 'Inactive'}
+                          </td>
                           <td>
                             <div className={styles.actions}>
                               <div
@@ -718,16 +861,16 @@ const MasterList = () => {
                                 //   setShowEditModal(true);
                                 // }}
                                 onClick={() => {
-                                  if (isSelected && designation.Status) {
+                                  if (isSelected && designation.IsActive) {
                                     handleOnEditClick(designation.ID)
                                   }
                                 }}
                               >
                                 <svg
-                                  height="14"
-                                  width="14"
+                                  height="12"
+                                  width="12"
                                   style={{
-                                    opacity: (isSelected && designation.Status) ? "1" : "0.3"
+                                    opacity: (isSelected && designation.IsActive) ? "1" : "0.3"
                                   }}
                                 >
                                   <use xlinkHref="sprite.svg#edit_icon" />
@@ -736,16 +879,16 @@ const MasterList = () => {
                               <div
                                 className={styles.circleSvg}
                                 onClick={() => {
-                                  if (isSelected && designation.Status) {
+                                  if (isSelected && designation.IsActive) {
                                     setShowDeleteModal(designation);
                                   }
                                 }}
                               >
                                 <svg
                                   height="14"
-                                  width="14"
+                                  width="12"
                                   style={{
-                                    opacity: (isSelected && designation.Status) ? "1" : "0.3"
+                                    opacity: (isSelected && designation.IsActive) ? "1" : "0.3"
                                   }}
                                 >
                                   <use xlinkHref="sprite.svg#delete_icon" />
@@ -760,38 +903,51 @@ const MasterList = () => {
                     organizations &&
                     organizations?.success &&
                     organizations?.data &&
-                    JSON.parse(organizations?.data)?.map((organization, index) => {
-                      const isSelected = selectedCheckboxes.includes(index);
+                    JSON.parse(organizations?.data).organizationDetails?.map((organization, index) => {
+                      const isSelected = selectedCheckboxes.includes(organization.ID);
 
                       return (
                         <tr key={index}>
                           <td>
                             <Checkbox
                               checked={isSelected}
-                              onChange={() => handleCheckboxChange(index)}
+                              onChange={() => handleCheckboxChange(organization.ID)}
                             />
                           </td>
-                          <td>{index + 1}</td>
-                          <td>{organization.Organization}</td>
-                          <td>{organization.MemberUsers}</td>
-                          <td>{formatDateString(organization.DateCreated)}</td>
-                          <td>{organization.GamesPlayed}</td>
-                          <td>{(organization.Status) ? 'Active' : 'Inactive'}</td>
+                          {/* <td>
+                            {index + 1}
+                          </td> */}
+                          <td>{index + organizationPageCount * (organizationPageNumber - 1) + 1}</td>
+                          <td>
+                            {organization.OrganizationName}
+                          </td>
+                          <td>
+                            {organization.MemberUsers}
+                          </td>
+                          <td>
+                            {formatDateString(organization.CreatedAt)}
+                          </td>
+                          <td>
+                            {organization.GamesPlayed}
+                          </td>
+                          <td>
+                            {(organization.IsActive) ? 'Active' : 'Inactive'}
+                          </td>
                           <td>
                             <div className={styles.actions}>
                               <div
                                 className={styles.circleSvg}
                                 onClick={() => {
-                                  if (isSelected && organization.Status) {
+                                  if (isSelected && organization.IsActive) {
                                     handleOnEditClick(organization.ID);
                                   }
                                 }}
                               >
                                 <svg
-                                  height="14"
-                                  width="14"
+                                  height="12"
+                                  width="12"
                                   style={{
-                                    opacity: (isSelected && organization.Status) ? "1" : "0.3"
+                                    opacity: (isSelected && organization.IsActive) ? "1" : "0.3"
                                   }}
                                 >
                                   <use xlinkHref="sprite.svg#edit_icon" />
@@ -800,16 +956,16 @@ const MasterList = () => {
                               <div
                                 className={styles.circleSvg}
                                 onClick={() => {
-                                  if (isSelected && organization.Status) {
+                                  if (isSelected && organization.IsActive) {
                                     setShowDeleteModal(organization);
                                   }
                                 }}
                               >
                                 <svg
                                   height="14"
-                                  width="14"
+                                  width="12"
                                   style={{
-                                    opacity: (isSelected && organization.Status) ? "1" : "0.3"
+                                    opacity: (isSelected && organization.IsActive) ? "1" : "0.3"
                                   }}
                                 >
                                   <use xlinkHref="sprite.svg#delete_icon" />
@@ -824,6 +980,61 @@ const MasterList = () => {
                 }
               </tbody>
             </table>
+
+            {activeTab === 'Designation' ?
+              (
+                designations && designations.success && designations.data && (
+                  <div className={styles.paginationContainer}>
+                    <Pagination
+                      totalCount={JSON.parse(designations.data)?.TotalCount}
+                      pageNumber={designationPageNumber}
+                      countPerPage={designationPageCount}
+                      onPageChange={(pageNumber) => {
+                        const data = {
+                          pageNumber: pageNumber,
+                          pageCount: designationPageCount,
+                          type: "",
+                          requester: {
+                            requestID: generateGUID(),
+                            requesterID: credentials.data.userID,
+                            requesterName: credentials.data.userName,
+                            requesterType: credentials.data.role,
+                          },
+                        };
+
+                        dispatch(getAllDesignations(data));
+                      }}
+                    />
+                  </div>
+                )
+              ) : (
+                organizations && organizations.success && organizations.data && (
+                  <div className={styles.paginationContainer}>
+                    <Pagination
+                      totalCount={JSON.parse(organizations.data)?.TotalCount}
+                      pageNumber={organizationPageNumber}
+                      countPerPage={organizationPageCount}
+                      onPageChange={(pageNumber) => {
+                        const data = {
+                          pageNumber: pageNumber,
+                          pageCount: organizationPageCount,
+                          type: "",
+                          requester: {
+                            requestID: generateGUID(),
+                            requesterID: credentials.data.userID,
+                            requesterName: credentials.data.userName,
+                            requesterType: credentials.data.role,
+                          },
+                        };
+
+                        dispatch(getAllOrganizations(data));
+                      }}
+                    />
+                  </div>
+                )
+              )
+            }
+
           </div>
           {/* Master List Table:: end */}
         </div>
@@ -1017,7 +1228,7 @@ const MasterList = () => {
               </div>
             </div>
             <div className="modal_description">
-              Are you sure you want to delete this {activeTab === 'Designation' ? 
+              Are you sure you want to delete this {activeTab === 'Designation' ?
                 'designation' : 'organization'}
               ?
             </div>

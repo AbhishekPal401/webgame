@@ -422,7 +422,8 @@ const Scenarios = () => {
                           onChange={() => handleCheckboxChange(scenario.ScenarioID)}
                         />
                       </td>
-                      <td>{index + 1}</td>
+                      {/* <td>{index + 1}</td> */}
+                      <td>{index + pageCount * (pageNumber - 1) + 1}</td>
                       <td>
                         {scenario.ScenarioName}
                       </td>
@@ -474,8 +475,8 @@ const Scenarios = () => {
                             }}
                           >
                             <svg
-                              height="14"
-                              width="14"
+                              height="12"
+                              width="12"
                               style={{ opacity: isSelected ? "1" : "0.3" }}
                             >
                               <use xlinkHref="sprite.svg#edit_icon" />
@@ -491,7 +492,7 @@ const Scenarios = () => {
                           >
                             <svg
                               height="14"
-                              width="14"
+                              width="12"
                               style={{ opacity: isSelected ? "1" : "0.3" }}
                             >
                               <use xlinkHref="sprite.svg#delete_icon" />
@@ -626,7 +627,7 @@ const Scenarios = () => {
                 }}
               onClick={onUpdateScoreMasterData}
               >
-                Save
+                Add
               </Button>
             </div>
           </div>

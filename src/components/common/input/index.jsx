@@ -1,4 +1,5 @@
 import style from "./input.module.css";
+import React from 'react'; 
 
 const Input = ({
   textArea,

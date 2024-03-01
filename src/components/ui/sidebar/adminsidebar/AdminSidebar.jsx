@@ -8,80 +8,194 @@ import ModalContainer from "../../../modal";
 import Button from "../../../common/button/index.jsx";
 import { logoutUser } from "../../../../store/auth/login.js";
 import { useNavigate } from "react-router-dom";
+import MenuLink from "../../menulink/index.jsx";
 
-const AdminSidebar = () => {
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
+const AdminSidebar = ({
+  isSideBarCollapsed,
+  onCollapseClick = () => { },
+}) => {
+  // const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
 
   return (
-    <div className={styles.container}>
-      <ButtonLink
-        style={{
-          marginTop: "2rem",
-        }}
-        linkTo="/"
-        isActive={
-          location.pathname === "/" || location.pathname.includes("home")
-        }
-        svgSrc="sprite.svg#homepage"
-        onClick={() => {
-          dispatch(setCurrentActive("home"));
-        }}
-      />
-
-      <ButtonLink
-        linkTo="/masters"
-        isActive={location.pathname.includes("/masters")}
-        svgSrc="sprite.svg#masters"
-        onClick={() => {
-          dispatch(setCurrentActive("masters"));
-        }}
-      />
-
-      <ButtonLink
-        linkTo="/scenario"
-        isActive={location.pathname.includes("scenario") || 
-          location.pathname.includes("questions")
-        }
-        svgSrc="sprite.svg#scenario"
-        onClick={() => {
-          dispatch(setCurrentActive("scenario"));
-        }}
-      />
-
-      <ButtonLink
-        linkTo="/instances"
-        isActive={location.pathname.includes("instances")}
-        svgSrc="sprite.svg#instances"
-        onClick={() => {
-          dispatch(setCurrentActive("instances"));
-        }}
-      />
-
-      <ButtonLink
-        linkTo="/users"
-        isActive={location.pathname.includes("users")}
-        svgSrc="sprite.svg#users"
-        onClick={() => {
-          dispatch(setCurrentActive("users"));
-        }}
-      />
-
-      <div className={styles.bottomContainer}>
-        <ButtonLink
-          disabled={true}
-          isActive={showLogoutModal}
-          svgSrc="sprite.svg#logout"
+    <div
+      className={`
+          ${styles.container} ${isSideBarCollapsed ? styles.collapsed : styles.notCollapsed}
+        `}
+    >
+      <>
+        <MenuLink
+          style={{
+            marginTop: "2rem",
+          }}
+          linkTo="/"
+          isActive={
+            location.pathname === "/" || location.pathname.includes("home")
+          }
+          svgSrc="sprite.svg#homepage"
+          label="Home"
           onClick={() => {
-            setShowLogoutModal(true);
+            dispatch(setCurrentActive("home"));
+          }}
+          displayLabel={isSideBarCollapsed}
+          svgStyle={{ width: isSideBarCollapsed ? '100%' : '30%' }}
+          labelStyle={{
+            display: isSideBarCollapsed ? "none" : "",
+            transition: "display 0.5s ease-in",
           }}
         />
-      </div>
 
-      {showLogoutModal && (
+        <MenuLink
+          linkTo="/masters"
+          isActive={location.pathname.includes("/masters")}
+          svgSrc="sprite.svg#masters"
+          label="Masters"
+          onClick={() => {
+            dispatch(setCurrentActive("masters"));
+          }}
+          displayLabel={isSideBarCollapsed}
+          svgStyle={{ width: isSideBarCollapsed ? '100%' : '30%' }}
+          labelStyle={{
+            display: isSideBarCollapsed ? "none" : "",
+            transition: "display 0.5s ease-in",
+          }}
+
+        />
+
+        <MenuLink
+          linkTo="/scenario"
+          isActive={location.pathname.includes("scenario") ||
+            location.pathname.includes("questions")
+          }
+          svgSrc="sprite.svg#scenario"
+          label="Scenarios"
+          onClick={() => {
+            dispatch(setCurrentActive("scenario"));
+          }}
+          displayLabel={isSideBarCollapsed}
+          svgStyle={{ width: isSideBarCollapsed ? '100%' : '30%' }}
+          labelStyle={{
+            display: isSideBarCollapsed ? "none" : "",
+            transition: "display 0.5s ease-in",
+          }}
+        />
+
+        <MenuLink
+          linkTo="/instances"
+          isActive={location.pathname.includes("instances")}
+          svgSrc="sprite.svg#instances"
+          label="Instances"
+          onClick={() => {
+            dispatch(setCurrentActive("instances"));
+          }}
+          displayLabel={isSideBarCollapsed}
+          svgStyle={{ width: isSideBarCollapsed ? '100%' : '30%' }}
+          labelStyle={{
+            display: isSideBarCollapsed ? "none" : "",
+            transition: "display 0.5s ease-in",
+          }}
+        />
+
+        <MenuLink
+          linkTo="/users"
+          isActive={location.pathname.includes("users")}
+          svgSrc="sprite.svg#users"
+          label="Users"
+          onClick={() => {
+            dispatch(setCurrentActive("users"));
+          }}
+          displayLabel={isSideBarCollapsed}
+          svgStyle={{ width: isSideBarCollapsed ? '100%' : '30%' }}
+          labelStyle={{
+            display: isSideBarCollapsed ? "none" : "",
+            transition: "display 0.5s ease-in",
+          }}
+        />
+
+        <div className={styles.bottomContainer}>
+          <MenuLink
+            disabled={true}
+            // isActive={showLogoutModal}
+            svgSrc={isSideBarCollapsed ? "sprite.svg#expand" : "sprite.svg#collapse"}
+            label="Collapse"
+            onClick={onCollapseClick}
+            displayLabel={isSideBarCollapsed}
+            svgStyle={{ width: isSideBarCollapsed ? '100%' : '30%' }}
+            labelStyle={{
+              display: isSideBarCollapsed ? "none" : "",
+              transition: "display 0.5s ease-in",
+            }}
+          />
+        </div>
+      </>
+      {/*
+            <ButtonLink
+              style={{
+                marginTop: "2rem",
+              }}
+              linkTo="/"
+              isActive={
+                location.pathname === "/" || location.pathname.includes("home")
+              }
+              svgSrc="sprite.svg#homepage"
+              onClick={() => {
+                dispatch(setCurrentActive("home"));
+              }}
+            />
+
+            <ButtonLink
+              linkTo="/masters"
+              isActive={location.pathname.includes("/masters")}
+              svgSrc="sprite.svg#masters"
+              onClick={() => {
+                dispatch(setCurrentActive("masters"));
+              }}
+            />
+
+            <ButtonLink
+              linkTo="/scenario"
+              isActive={location.pathname.includes("scenario") ||
+                location.pathname.includes("questions")
+              }
+              svgSrc="sprite.svg#scenario"
+              onClick={() => {
+                dispatch(setCurrentActive("scenario"));
+              }}
+            />
+
+            <ButtonLink
+              linkTo="/instances"
+              isActive={location.pathname.includes("instances")}
+              svgSrc="sprite.svg#instances"
+              onClick={() => {
+                dispatch(setCurrentActive("instances"));
+              }}
+            />
+
+            <ButtonLink
+              linkTo="/users"
+              isActive={location.pathname.includes("users")}
+              svgSrc="sprite.svg#users"
+              onClick={() => {
+                dispatch(setCurrentActive("users"));
+              }}
+            />
+
+            <div className={styles.bottomContainer}>
+              <ButtonLink
+                disabled={true}
+                // isActive={showLogoutModal}
+                svgSrc="sprite.svg#logout"
+                onClick={onCollapseClick}
+              />
+            </div>
+
+            
+          </>
+          {showLogoutModal && (
         <ModalContainer>
           <div className={"modal_content"}>
             <div className={"modal_header"}>
@@ -125,7 +239,9 @@ const AdminSidebar = () => {
           </div>
         </ModalContainer>
       )}
-    </div>
+          */}
+
+    </div >
   );
 };
 

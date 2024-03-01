@@ -24,6 +24,8 @@ import MissionCompleted from "../../pages/app/admin/missioncompleted";
 
 
 const GameAdmin = () => {
+  const [isSideBarCollapsed, setIsSideBarCollapsed] = useState(true);
+
   const location = useLocation();
 
 
@@ -43,12 +45,27 @@ const GameAdmin = () => {
           location.pathname.includes("/intro") ||
           location.pathname.includes("/gameplay") ||
           location.pathname.includes("/missioncompleted") ? null : (
-          <div className={styles.leftContainer}>
-            <Sidebar />
+          // <div className={styles.leftContainer}>
+          //   <Sidebar />
+          // </div>
+          <div
+            className={styles.leftContainer}
+            style={{ width: isSideBarCollapsed ? '4%' : '15%' }}
+          >
+            <Sidebar
+              isSideBarCollapsed={isSideBarCollapsed}
+              onCollapseClick={() => {
+                setIsSideBarCollapsed(!isSideBarCollapsed);
+              }}
+            />
           </div>
         )}
 
-        <div className={styles.rightContainer}>
+        {/* <div className={styles.rightContainer}> */}
+        <div 
+          className={styles.rightContainer}
+          style={{ width: isSideBarCollapsed ? '96%' : '85%'  }}  
+        >
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/scenario" element={<Scenarios />} />

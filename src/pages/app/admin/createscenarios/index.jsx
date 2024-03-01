@@ -378,7 +378,7 @@ const CreateScenario = () => {
                   type="text"
                   name={"scenarioName"}
                   value={scenarioData?.scenarioName?.value}
-                  placeholder="Scenario Name"
+                  placeholder="Scenario Name &#128900;"
                   inputStyleClass={styles.inputStyleClass}
                   onChange={onChange}
                 />
@@ -388,7 +388,7 @@ const CreateScenario = () => {
                   labelStyle={styles.inputLabel}
                   customStyle={{ height: "15rem" }}
                   name={"scenarioDescription"}
-                  placeholder="Scenario Description"
+                  placeholder="Scenario Description &#128900;"
                   textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
                   onChange={onChange}
                   textArea
@@ -414,7 +414,7 @@ const CreateScenario = () => {
                   customContaierClass={styles.customRichTextEditorContaierClass}
                   customEditorStyles={styles.customRichTextEditorStyleClass}
                   onChange={onGameIntroTextChange}
-                  placeholder="Add question"
+                  placeholder="Add question &#128900;"
                   value={scenarioData?.gameIntroText?.value}
                 />
                 {/* <Input

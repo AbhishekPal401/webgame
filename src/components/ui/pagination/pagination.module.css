@@ -35,6 +35,10 @@
   margin-left: 0.5rem;
 }
 
+.pages_status input {
+  font-size: 1.3rem;
+}
+
 .previous,
 .next {
   font-size: 1.2rem;

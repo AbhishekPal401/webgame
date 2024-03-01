@@ -15,6 +15,11 @@ const Pagination = ({
     }
   };
 
+  // Function to pad single digits with leading zeros
+  const padSingleDigit = (number) => {
+    return number.toString().padStart(2, '0');
+  };
+
   return (
     <div className={styles.container}>
       <div
@@ -43,9 +48,12 @@ const Pagination = ({
         <input
           disabled
           type="number"
-          value={pageNumber}
-          min="1"
-          max={totalPages}
+          // value={pageNumber}
+          // min="1"
+          // max={totalPages}
+          value={padSingleDigit(pageNumber)} 
+          min="01" 
+          max={padSingleDigit(totalPages)} 
           onChange={(e) => {
             if (e.target.value <= totalPages) {
               handlePageChange(e.target.value);
@@ -69,7 +77,7 @@ const Pagination = ({
         disabled={pageNumber === totalPages}
       >
         <span
-          style={{marginRight: '0.5rem'}}
+          style={{ marginRight: '0.5rem' }}
         >
           Next{" "}
         </span>
