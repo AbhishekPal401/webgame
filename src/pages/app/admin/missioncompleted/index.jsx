@@ -103,7 +103,7 @@ const MissionCompleted = () => {
   const { postImageResponse } = useSelector((state) => state.postImages);
 
   // console.log("instanceSummary", instanceSummary);
-  console.log("postImageResponse", postImageResponse);
+  // console.log("postImageResponse", postImageResponse);
 
   const navigate = useNavigate();
 
@@ -118,8 +118,6 @@ const MissionCompleted = () => {
       if (sessionData && credentials) {
         var node = document.getElementById("progressmeter");
 
-        console.log("node", node);
-
         if (node) {
           toPng(node, {
             filter: (node) => {
@@ -127,6 +125,11 @@ const MissionCompleted = () => {
             },
           })
             .then(function (dataUrl) {
+              var link = document.createElement("a");
+              link.download = "progressmeter.png";
+              link.href = dataUrl;
+              link.click();
+
               if (dataUrl.includes("image/png")) {
                 const data = {
                   instanceID: sessionData.InstanceID,
@@ -277,9 +280,10 @@ const MissionCompleted = () => {
                   </div>
                   <Progress
                     progress={
-                      instanceSummary?.data?.ScorePercentage
-                        ? Number(instanceSummary?.data?.ScorePercentage)
-                        : 0
+                      100
+                      // instanceSummary?.data?.ScorePercentage
+                      //   ? Number(instanceSummary?.data?.ScorePercentage)
+                      //   : 0
                     }
                     scoreMaster={
                       instanceSummary?.data?.ScoreMaster
