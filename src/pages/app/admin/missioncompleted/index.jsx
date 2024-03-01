@@ -280,10 +280,9 @@ const MissionCompleted = () => {
                   </div>
                   <Progress
                     progress={
-                      100
-                      // instanceSummary?.data?.ScorePercentage
-                      //   ? Number(instanceSummary?.data?.ScorePercentage)
-                      //   : 0
+                      instanceSummary?.data?.ScorePercentage
+                        ? Number(instanceSummary?.data?.ScorePercentage)
+                        : 0
                     }
                     scoreMaster={
                       instanceSummary?.data?.ScoreMaster
