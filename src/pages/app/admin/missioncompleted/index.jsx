@@ -24,7 +24,7 @@ import { resetNextQuestionDetailsState } from "../../../../store/app/user/questi
 import { resetAnswerDetailsState } from "../../../../store/app/user/answers/postAnswer";
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
 import { toPng, toSvg } from "html-to-image";
-import { formatTime } from "../../../../utils/helper";
+import { convertSecondsToHMS, formatTime } from "../../../../utils/helper";
 import {
   getReport,
   resetReportState,
@@ -270,7 +270,7 @@ const MissionCompleted = () => {
                   <div className={styles.circle}>
                     <div>
                       {instanceSummary?.data?.TimeTaken
-                        ? formatTime(instanceSummary?.data?.TimeTaken)
+                        ? convertSecondsToHMS(instanceSummary?.data?.TimeTaken)
                         : ""}{" "}
                     </div>
                     {/* <span>min</span> */}
