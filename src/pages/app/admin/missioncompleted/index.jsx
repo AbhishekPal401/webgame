@@ -125,10 +125,10 @@ const MissionCompleted = () => {
             },
           })
             .then(function (dataUrl) {
-              var link = document.createElement("a");
-              link.download = "progressmeter.png";
-              link.href = dataUrl;
-              link.click();
+              // var link = document.createElement("a");
+              // link.download = "progressmeter.png";
+              // link.href = dataUrl;
+              // link.click();
 
               if (dataUrl.includes("image/png")) {
                 const data = {
