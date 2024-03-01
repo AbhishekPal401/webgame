@@ -465,7 +465,7 @@ function QuestionBuilder() {
         // valid = false;
       }
 
-      // TODO:: add choose narative file | not handled on backend
+      // TODO:: add choose Narrative file | not handled on backend
       // if (answer.narrative.value === "") {
       //     updatedAnswer.narrative.error = "Please choose the narrative file.";
       //     valid = false;
@@ -709,10 +709,10 @@ function QuestionBuilder() {
                     </div>
                     {/* Decisin Maker :: end */}
 
-                    {/* Narative Media :: start */}
+                    {/* Narrative Media :: start */}
                     <div className={styles.fileDropZone}>
                       <FileDropZone
-                        label="Narative Media"
+                        label="Narrative Media"
                         customstyle={{}}
                         customContainerClass={styles.customFileContianer}
                         hint="Eligible Formats: Mp4, Mp3, Image and PDF"
@@ -734,7 +734,7 @@ function QuestionBuilder() {
                         }
                       />
                     </div>
-                    {/* Narative Media :: end */}
+                    {/* Narrative Media :: end */}
                   </div>
                   <div className={styles.questionInputEmptyRight}></div>
                 </div>
