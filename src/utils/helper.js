@@ -73,12 +73,15 @@ export const  convertSecondsToHMS=(seconds) =>{
   var hours = Math.floor(seconds / 3600);
   var minutes = Math.floor((seconds % 3600) / 60);
   var remainingSeconds = seconds % 60;
-  if(hours){
-      return `${hours}:${minutes}:${remainingSeconds} hr`
-  }else{
-      return `${minutes}:${remainingSeconds} min`
-  }
-
+   // Pad minutes and seconds with leading zeros if necessary
+   var paddedMinutes = minutes < 10 ? "0" + minutes : minutes;
+   var paddedSeconds = remainingSeconds < 10 ? "0" + remainingSeconds : remainingSeconds;
+ 
+   if (hours) {
+     return `${hours}:${paddedMinutes}:${paddedSeconds} hr`;
+   } else {
+     return `${paddedMinutes}:${paddedSeconds} min`;
+   }
 
 };
 
