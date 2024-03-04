@@ -782,6 +782,28 @@ const GamePlay = () => {
     });
   }, [position, currentState]);
 
+  const sendDefaultVotesInvoke = () => {
+    if (sessionDetails?.data) {
+      const sessionData = JSON.parse(sessionDetails.data);
+
+      const data = {
+        InstanceID: sessionData.InstanceID,
+        SessionID: sessionData.SessionID,
+        UserID: credentials.data.userID,
+        UserName: credentials.data.userName,
+        UserRole: credentials.data.role,
+        ActionType: "UserVoteTimeout",
+        Message: "default voting submit by admin",
+        QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+        AnswerID: "NA",
+      };
+
+      console.log("default voting submit by admin", data);
+
+      signalRService.SendVotes(data);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 100 }}
@@ -910,6 +932,7 @@ const GamePlay = () => {
                   delegatedTo={
                     questionDetails?.data?.QuestionDetails?.DelegatedTo
                   }
+                  onComplete={sendDefaultVotesInvoke}
                   onAdminDecisionCompleteDefault={showAlertMessage}
                   countdown={countdown}
                   MediaShown={MediaShown}

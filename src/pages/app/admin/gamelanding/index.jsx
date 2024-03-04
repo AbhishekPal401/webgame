@@ -47,11 +47,11 @@ const AdminGameLanding = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (fileUrl) {
-      navigate("/intro");
-    }
-  }, [fileUrl]);
+  // useEffect(() => {
+  //   if (fileUrl) {
+  //     navigate("/intro");
+  //   }
+  // }, [fileUrl]);
 
   const startGame = useCallback(() => {
     if (sessionDetails?.data) {
@@ -276,18 +276,20 @@ const AdminGameLanding = () => {
             if (questionDetails?.data?.IntroSkipped === true) {
               navigate("/gameplay");
             } else {
-              if (questionDetails?.data?.IntroMediaURL) {
-                fileStream(questionDetails?.data?.IntroMediaURL);
-              } else {
-                navigate("/intro");
-              }
+              navigate("/intro");
+              // if (questionDetails?.data?.IntroMediaURL) {
+              //   fileStream(questionDetails?.data?.IntroMediaURL);
+              // } else {
+              //   navigate("/intro");
+              // }
             }
           } else {
-            if (questionDetails?.data?.IntroMediaURL) {
-              fileStream(questionDetails?.data?.IntroMediaURL);
-            } else {
-              navigate("/intro");
-            }
+            navigate("/intro");
+            // if (questionDetails?.data?.IntroMediaURL) {
+            //   fileStream(questionDetails?.data?.IntroMediaURL);
+            // } else {
+            //   navigate("/intro");
+            // }
           }
         } else {
           onSkip();

@@ -494,8 +494,17 @@ const Question = ({
 
   const completeInvoke = useCallback(() => {
     if (isAdmin) {
-      console.log("completeInvode onAdminDecisionCompleteDefault");
-      onAdminDecisionCompleteDefault();
+      if (
+        CurrentState === PlayingStates.VotingInProgress ||
+        CurrentState === PlayingStates.UserVote
+      ) {
+        console.log("completeInvode onComplete admin");
+
+        onComplete();
+      } else {
+        console.log("completeInvode onAdminDecisionCompleteDefault dmin");
+        onAdminDecisionCompleteDefault();
+      }
     } else {
       if (!IsDecisionMaker) {
         console.log("completeInvode onComplete");

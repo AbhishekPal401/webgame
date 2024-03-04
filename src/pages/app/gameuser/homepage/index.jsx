@@ -203,11 +203,11 @@ const UserHomePage = () => {
     }
   }, [sessionDetails, credentials]);
 
-  useEffect(() => {
-    if (fileUrl) {
-      navigate("/intro");
-    }
-  }, [fileUrl]);
+  // useEffect(() => {
+  //   if (fileUrl) {
+  //     navigate("/intro");
+  //   }
+  // }, [fileUrl]);
 
   const fileStream = (url) => {
     const data = {
@@ -233,18 +233,20 @@ const UserHomePage = () => {
             if (questionDetails?.data?.IntroSkipped === true) {
               navigate("/gameplay");
             } else {
-              if (questionDetails?.data?.IntroMediaURL) {
-                fileStream(questionDetails?.data?.IntroMediaURL);
-              } else {
-                navigate("/intro");
-              }
+              navigate("/intro");
+              // if (questionDetails?.data?.IntroMediaURL) {
+              //   fileStream(questionDetails?.data?.IntroMediaURL);
+              // } else {
+              //   navigate("/intro");
+              // }
             }
           } else {
-            if (questionDetails?.data?.IntroMediaURL) {
-              fileStream(questionDetails?.data?.IntroMediaURL);
-            } else {
-              navigate("/intro");
-            }
+            navigate("/intro");
+            // if (questionDetails?.data?.IntroMediaURL) {
+            //   fileStream(questionDetails?.data?.IntroMediaURL);
+            // } else {
+            //   navigate("/intro");
+            // }
           }
         } else {
           fetchFirstQuestion();
