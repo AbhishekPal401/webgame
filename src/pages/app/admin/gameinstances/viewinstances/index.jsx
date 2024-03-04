@@ -14,7 +14,7 @@ import {
     getOverviewGameDetailsById,
     resetOverviewGameDetailState
 } from "../../../../../store/app/admin/gameinstances/getOverviewGameDetails";
-import { formatDateString, formatTime } from "../../../../../utils/helper";
+import { convertSecondsToHMS, formatDateString, formatTime } from "../../../../../utils/helper";
 import { toast } from "react-toastify";
 import { toPng } from "html-to-image";
 import { getReport, resetReportState } from "../../../../../store/app/admin/report/getReport";
@@ -313,12 +313,12 @@ const ViewInstances = () => {
                                                     </div>
                                                     <div>
                                                         <div>Time Spend</div>
-                                                        <div>- {data.TimeSpend && formatTime(data.TimeSpend)}</div>
+                                                        <div>- {data.TimeSpend && convertSecondsToHMS(data.TimeSpend)}</div>
                                                     </div>
-                                                    <div>
+                                                    {/* <div>
                                                         <div>Score</div>
                                                         <div>- {data.Score}</div>
-                                                    </div>
+                                                    </div> */}
                                                     <div>
                                                         <div>Game Scenario</div>
                                                         <div>- {data.GameScenario}</div>
