@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { resetNextQuestionDetailsState } from "../../../../store/app/user/questions/getNextQuestion";
 import { resetAnswerDetailsState } from "../../../../store/app/user/answers/postAnswer";
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
-import { formatTime } from "../../../../utils/helper";
+import { convertSecondsToHMS, formatTime } from "../../../../utils/helper";
 import Progress from "../../../../components/progress";
 import QuestionLoader from "../../../../components/loader/questionLoader";
 
@@ -164,7 +164,7 @@ const MissionCompleted = () => {
                   <div>Time Spent</div>
                   <div className={styles.circle}>
                     {instanceSummary?.data?.TimeTaken
-                      ? formatTime(instanceSummary?.data?.TimeTaken)
+                      ? convertSecondsToHMS(instanceSummary?.data?.TimeTaken)
                       : ""}{" "}
                   </div>
                   <Progress

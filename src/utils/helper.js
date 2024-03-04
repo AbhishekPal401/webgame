@@ -47,6 +47,7 @@ export const formatTime = (value) => {
     return `${minutes.toFixed(2)} min`;
   }
 
+
   // Check if there are decimals in minutes
   //  const hasDecimals = minutes % 1 !== 0;
 
@@ -66,6 +67,24 @@ export const formatTime = (value) => {
   //    const formattedMinutes = hasDecimals ? minutes.toFixed(2) : minutes.toFixed(0);
   //    return `${formattedMinutes} min`;
   //  }
+};
+
+
+
+export const  convertSecondsToHMS=(seconds) =>{
+  var hours = Math.floor(seconds / 3600);
+  var minutes = Math.floor((seconds % 3600) / 60);
+  var remainingSeconds = seconds % 60;
+   // Pad minutes and seconds with leading zeros if necessary
+   var paddedMinutes = minutes < 10 ? "0" + minutes : minutes;
+   var paddedSeconds = remainingSeconds < 10 ? "0" + remainingSeconds : remainingSeconds;
+ 
+   if (hours) {
+     return `${hours}:${paddedMinutes}:${paddedSeconds} hr`;
+   } else {
+     return `${paddedMinutes}:${paddedSeconds} min`;
+   }
+
 };
 
 export const formatMissionTime = (value) => {

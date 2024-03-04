@@ -741,6 +741,7 @@ const GamePlay = () => {
           ActionType: "IsCompleted",
           Message: "Success",
         };
+        console.log("GlobalTimer", localStorage.getItem("globalTimer"));
 
         signalRService.ProceedToNextQuestionInvoke(data);
       }

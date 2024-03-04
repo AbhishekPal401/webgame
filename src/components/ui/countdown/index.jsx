@@ -18,7 +18,6 @@ const CountDown = ({ initialTimestamp = null }) => {
   if (totalSeconds) {
     localStorage.setItem("globalTimer", totalSeconds);
   }
-
   useEffect(() => {
     if (initialTimestamp) {
       const stopwatchOffset = new Date();
