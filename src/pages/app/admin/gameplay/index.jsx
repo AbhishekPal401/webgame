@@ -721,6 +721,7 @@ const GamePlay = () => {
         const data = {
           InstanceID: sessionData.InstanceID,
           UserID: credentials.data.userID,
+          TotalPlayTime: "0",
           UserRole: credentials.data.role,
           ActionType: "NextQuestion",
           Message: "Success",
@@ -731,12 +732,16 @@ const GamePlay = () => {
         answerDetails.data.IsPlayCompleted ||
         answerDetails.data.NextQuestionID === ""
       ) {
+        console.log("GlobalTimer", localStorage.getItem("globalTimer"));
+
         const data = {
           InstanceID: sessionData.InstanceID,
           UserID: credentials.data.userID,
+          TotalPlayTime: localStorage.getItem("globalTimer"),
           ActionType: "IsCompleted",
           Message: "Success",
         };
+        console.log("GlobalTimer", localStorage.getItem("globalTimer"));
 
         signalRService.ProceedToNextQuestionInvoke(data);
       }

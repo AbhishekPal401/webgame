@@ -61,7 +61,7 @@ const Pagination = ({
           }}
         />
         <div>
-          of <label>{totalPages}</label>
+          of <label>{padSingleDigit(totalPages)}</label>
         </div>
       </div>
       <div

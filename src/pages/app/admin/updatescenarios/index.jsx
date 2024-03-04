@@ -538,7 +538,7 @@ const UpdateScenarios = () => {
                   customContaierClass={styles.customRichTextEditorContaierClass}
                   customEditorStyles={styles.customRichTextEditorStyleClass}
                   onChange={onGameIntroTextChange}
-                  placeholder="Add question &#128900;"
+                  placeholder="Game Introduction &#128900;"
                   value={scenarioData?.gameIntroText?.value}
                 />
                 {/* <Input

@@ -24,7 +24,7 @@ import { resetNextQuestionDetailsState } from "../../../../store/app/user/questi
 import { resetAnswerDetailsState } from "../../../../store/app/user/answers/postAnswer";
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
 import { toPng, toSvg } from "html-to-image";
-import { formatTime } from "../../../../utils/helper";
+import { convertSecondsToHMS, formatTime } from "../../../../utils/helper";
 import {
   getReport,
   resetReportState,
@@ -103,7 +103,7 @@ const MissionCompleted = () => {
   const { postImageResponse } = useSelector((state) => state.postImages);
 
   // console.log("instanceSummary", instanceSummary);
-  console.log("postImageResponse", postImageResponse);
+  // console.log("postImageResponse", postImageResponse);
 
   const navigate = useNavigate();
 
@@ -118,8 +118,6 @@ const MissionCompleted = () => {
       if (sessionData && credentials) {
         var node = document.getElementById("progressmeter");
 
-        console.log("node", node);
-
         if (node) {
           toPng(node, {
             filter: (node) => {
@@ -127,6 +125,11 @@ const MissionCompleted = () => {
             },
           })
             .then(function (dataUrl) {
+              // var link = document.createElement("a");
+              // link.download = "progressmeter.png";
+              // link.href = dataUrl;
+              // link.click();
+
               if (dataUrl.includes("image/png")) {
                 const data = {
                   instanceID: sessionData.InstanceID,
@@ -270,7 +273,7 @@ const MissionCompleted = () => {
                   <div className={styles.circle}>
                     <div>
                       {instanceSummary?.data?.TimeTaken
-                        ? formatTime(instanceSummary?.data?.TimeTaken)
+                        ? convertSecondsToHMS(instanceSummary?.data?.TimeTaken)
                         : ""}{" "}
                     </div>
                     {/* <span>min</span> */}
