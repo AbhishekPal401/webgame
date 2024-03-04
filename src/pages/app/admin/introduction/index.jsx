@@ -11,6 +11,11 @@ import { extractFileType, getCurrentTimeStamp } from "../../../../utils/helper";
 import PDFPreview from "../../../../components/preview/pdfpreview";
 import { signalRService } from "../../../../services/signalR";
 import moment from "moment";
+import {
+  getFileStream,
+  resetFileStreamState,
+} from "../../../../store/app/admin/fileStream/getFileStream";
+import QuestionLoader from "../../../../components/loader/questionLoader";
 // import PDFPreview from "../../../../components/preview/pdfpreview";
 
 const Intro = () => {
@@ -20,7 +25,12 @@ const Intro = () => {
 
   const { credentials } = useSelector((state) => state.login);
   const { sessionDetails } = useSelector((state) => state.getSession);
-  const { questionDetails } = useSelector((state) => state.getNextQuestion);
+  const { questionDetails, loading: questionLoading } = useSelector(
+    (state) => state.getNextQuestion
+  );
+  const { fileStream, fileType, loading } = useSelector(
+    (state) => state.getFileStream
+  );
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -116,12 +126,27 @@ const Intro = () => {
       questionDetails?.data?.IsIntroFile === false
     ) {
       navigate("/gameplay");
-    } else if (!questionDetails.success) {
+    } else if (
+      questionDetails.success &&
+      questionDetails?.data?.IsIntroFile === true
+    ) {
+      const data = {
+        fileName: questionDetails?.data?.IntroMediaURL,
+        module: "Scenario",
+      };
+      dispatch(getFileStream(data));
       // toast.error(questionDetails.message);
     }
   }, [questionDetails]);
 
-  const fileType = extractFileType(questionDetails?.data?.IntroMediaURL);
+  // const fileType = extractFileType(questionDetails?.data?.IntroMediaURL);
+  // console.log(
+  //   "questionDetails?.data?.IntroMediaURL",
+  //   questionDetails?.data?.IntroMediaURL
+  // );
+
+  // console.log("fileType", fileType);
+  // console.log("fileStream", fileStream);
 
   return (
     <motion.div
@@ -131,92 +156,72 @@ const Intro = () => {
       transition={{ duration: 0.3, damping: 10 }}
     >
       <div className={styles.container}>
-        <div className={styles.videoContainer}>
-          {questionDetails &&
-            questionDetails.data &&
-            questionDetails.data.IsIntroFile && (
-              <>
-                {fileType.includes("mp3") && (
-                  <div className={styles.audioContainer}>
-                    <img
-                      src="./images/icon-audio.png"
-                      alt="Audio icon png"
-                      className={styles.previewAudioImage}
-                    />
-                    <audio ref={mediaRef} controls autoPlay>
-                      <source
-                        src={questionDetails.data.IntroMediaURL}
-                        type="audio/mp3"
+        {loading || questionLoading ? (
+          <QuestionLoader size={140} />
+        ) : (
+          <div className={styles.videoContainer}>
+            {questionDetails &&
+              questionDetails.data &&
+              questionDetails.data.IsIntroFile && (
+                <>
+                  {fileType.includes("mp3") && (
+                    <div className={styles.audioContainer}>
+                      <img
+                        src="./images/icon-audio.png"
+                        alt="Audio icon png"
+                        className={styles.previewAudioImage}
                       />
-                      Your browser does not support the audio tag.
-                    </audio>
-                  </div>
-                )}
+                      <audio ref={mediaRef} controls autoPlay>
+                        <source src={fileStream} type="audio/mp3" />
+                        Your browser does not support the audio tag.
+                      </audio>
+                    </div>
+                  )}
 
-                {fileType.includes("mp4") && (
-                  <video
-                    ref={mediaRef}
-                    width="100%"
-                    height="100%"
-                    controls={false}
-                  >
-                    <source
-                      src={questionDetails.data.IntroMediaURL}
-                      type="video/mp4"
-                    />
-                    Your browser does not support the video tag.
-                  </video>
-                )}
-
-                {fileType.includes("pdf") && (
-                  // <PDFPreview pdfUrl={questionDetails.data.IntroMediaURL}/>
-                  // <div className={styles.pdfPreviewContainer}>
-                  //   <iframe src={questionDetails.data.IntroMediaURL} width="100%" height="100%" />
-                  // </div>
-                  <div className={styles.customizedPDFPreviewContainer}>
-                    {/* <iframe
-                      src={questionDetails.data.IntroMediaURL}
+                  {fileType.includes("mp4") && (
+                    <video
+                      ref={mediaRef}
                       width="100%"
                       height="100%"
-                      style={{ border: 'none' }}
-                      allowFullScreen
-                      sandbox="allow-scripts allow-same-origin"
-                    /> */}
-                    {/* <embed
-                      src={questionDetails.data.IntroMediaURL}
-                      type="application/pdf"
-                      width="100%"
-                      height="100%"
-                    /> */}
-                    <PDFPreview pdfUrl={questionDetails.data.IntroMediaURL} />
-                  </div>
-                )}
+                      controls={false}
+                    >
+                      <source src={fileStream} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
 
-                {(fileType.includes("png") ||
-                  fileType.includes("jpg") ||
-                  fileType.includes("jpeg")) && (
-                  <div className={styles.previewContainer}>
-                    <img
-                      src={questionDetails.data.IntroMediaURL}
-                      alt="Intro Image"
-                      className={styles.previewImage}
-                    />
-                  </div>
-                )}
-              </>
+                  {fileType.includes("pdf") && (
+                    <div className={styles.customizedPDFPreviewContainer}>
+                      <PDFPreview pdfUrl={fileStream} />
+                    </div>
+                  )}
+
+                  {(fileType.includes("png") ||
+                    fileType.includes("jpg") ||
+                    fileType.includes("jpeg")) && (
+                    <div className={styles.previewContainer}>
+                      <img
+                        src={fileStream}
+                        alt="Intro Image"
+                        className={styles.previewImage}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+
+            {questionDetails?.data?.IntroMediaURL && (
+              <div
+                className={styles.buttonContainer}
+                style={{ backgroundImage: 'url("./images/grey_strip.png")' }}
+              >
+                <Button onClick={onSkip} customStyle={{ fontSize: "1.4rem" }}>
+                  Skip
+                </Button>
+              </div>
             )}
-
-          {questionDetails?.data?.IntroMediaURL && (
-            <div
-              className={styles.buttonContainer}
-              style={{ backgroundImage: 'url("./images/grey_strip.png")' }}
-            >
-              <Button onClick={onSkip} customStyle={{ fontSize: "1.4rem" }}>
-                Skip
-              </Button>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </motion.div>
   );

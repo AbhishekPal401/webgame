@@ -20,13 +20,14 @@ import { TIMER_STATES } from "../../../../constants/timer";
 import PDFPreview from "../../../preview/pdfpreview";
 import { Tooltip } from "react-tooltip";
 import { signalRService } from "../../../../services/signalR";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useTimer } from "react-timer-hook";
 import ImageController from "../../../media/imagecontroller";
 import { getCurrentTimeStamp } from "../../../../utils/helper";
 import moment from "moment";
 import DOMPurify from "dompurify";
 import QuestionLoader from "../../../loader/questionLoader";
+import { getFileStream } from "../../../../store/app/admin/fileStream/getFileStream";
 
 const Timer = memo(({ Duration, onExpire = () => {}, status = "start" }) => {
   const [expiryTimestamp, setExpiryTimestamp] = useState(new Date());
@@ -119,6 +120,12 @@ const Question = ({
   const { questionDetails, loading: questionLoading } = useSelector(
     (state) => state.getNextQuestion
   );
+
+  const { fileStream, fileType, loading } = useSelector(
+    (state) => state.getFileStream
+  );
+
+  const dispatch = useDispatch();
 
   const getDecisionCount = useCallback(() => {
     let decisionCount = 0;
@@ -456,6 +463,16 @@ const Question = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (QuestionIntroMediaURL) {
+      const data = {
+        fileName: QuestionIntroMediaURL,
+        module: "Question",
+      };
+      dispatch(getFileStream(data));
+    }
+  }, [QuestionIntroMediaURL]);
+
   const skipInvoke = useCallback(() => {
     const sessionData = JSON.parse(sessionDetails.data);
 
@@ -534,7 +551,7 @@ const Question = ({
 
   return (
     <div className={styles.container}>
-      {questionLoading ? (
+      {questionLoading || loading ? (
         <QuestionLoader size={140} />
       ) : (
         <>
@@ -787,13 +804,13 @@ const Question = ({
         </>
       )}
 
-      {showMedia && QuestionIntroMediaURL && (
+      {showMedia && fileStream && (
         <div className={styles.mediaContainer}>
           <div>Incoming Media</div>
           <div>
-            {MediaType === "Video" && QuestionIntroMediaURL ? (
+            {MediaType === "Video" && fileStream ? (
               <VideoController
-                videoUrl={QuestionIntroMediaURL}
+                videoUrl={fileStream}
                 showButton={isAdmin ? true : mediaShownOnce ? true : false}
                 onButtonClick={() => {
                   if (isAdmin) {
@@ -809,11 +826,10 @@ const Question = ({
                   }
                 }}
               />
-            ) : (MediaType === "pdf" || MediaType === "Pdf") &&
-              QuestionIntroMediaURL ? (
+            ) : (MediaType === "pdf" || MediaType === "Pdf") && fileStream ? (
               <div>
                 <PDFPreview
-                  pdfUrl={QuestionIntroMediaURL}
+                  pdfUrl={fileStream}
                   customStyles={styles.canvas}
                   scale={0.5}
                   onLoad={() => {
@@ -858,9 +874,9 @@ const Question = ({
                   ) : null
                 ) : null}
               </div>
-            ) : MediaType === "Audio" && QuestionIntroMediaURL ? (
+            ) : MediaType === "Audio" && fileStream ? (
               <AudioController
-                audioUrl={QuestionIntroMediaURL}
+                audioUrl={fileStream}
                 showButton={isAdmin ? true : mediaShownOnce ? true : false}
                 onButtonClick={() => {
                   if (isAdmin) {
@@ -881,9 +897,9 @@ const Question = ({
                 MediaType === "png" ||
                 MediaType === "jpg" ||
                 MediaType === "jpeg") &&
-              QuestionIntroMediaURL ? (
+              fileStream ? (
               <ImageController
-                imageUrl={QuestionIntroMediaURL}
+                imageUrl={fileStream}
                 showButton={isAdmin ? true : mediaShownOnce ? true : false}
                 onButtonClick={() => {
                   if (isAdmin) {

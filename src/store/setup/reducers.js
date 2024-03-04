@@ -51,6 +51,7 @@ import getReport from "../app/admin/report/getReport.js";
 import getScoreMasters from "../app/admin/questions/scoremaster/getScoreMasters.js";
 import updateScoreMasterByScenario from "../app/admin/questions/scoremaster/updateScoreMasterByScenario.js";
 import postImages from "../app/admin/report/postImages.js";
+import getFileStream from "../app/admin/fileStream/getFileStream.js";
 
 const reducers = combineReducers({
   login,
@@ -102,6 +103,7 @@ const reducers = combineReducers({
   getScoreMasters,
   updateScoreMasterByScenario,
   postImages,
+  getFileStream,
 });
 
 const rootReducer = (state, action) => {

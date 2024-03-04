@@ -164,6 +164,7 @@ const GamePlay = () => {
   const { questionDetails, loading: questionLoading } = useSelector(
     (state) => state.getNextQuestion
   );
+
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { credentials } = useSelector((state) => state.login);
   const { answerDetails, loading } = useSelector((state) => state.postAnswer);

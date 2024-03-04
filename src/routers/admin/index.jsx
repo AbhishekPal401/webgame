@@ -49,22 +49,22 @@ const Admin = () => {
         location.pathname.includes("/gameplay") ||
         location.pathname.includes("/missioncompleted") ||
         location.pathname.includes("/gameprofile") ? null : (
-          <div 
+          <div
             className={styles.leftContainer}
-            style={{ width: isSideBarCollapsed ? '4%' : '15%'}}
+            style={{ width: isSideBarCollapsed ? "4%" : "15%" }}
           >
-            <Sidebar 
+            <Sidebar
               isSideBarCollapsed={isSideBarCollapsed}
               onCollapseClick={() => {
-                setIsSideBarCollapsed(!isSideBarCollapsed); 
+                setIsSideBarCollapsed(!isSideBarCollapsed);
               }}
             />
           </div>
         )}
 
-        <div 
+        <div
           className={styles.rightContainer}
-          style={{ width: isSideBarCollapsed ? '96%' : '85%'  }}  
+          style={{ width: isSideBarCollapsed ? "100%" : "85%" }}
         >
           <Routes>
             <Route path="/" element={<Homepage />} />
