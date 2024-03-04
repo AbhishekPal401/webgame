@@ -811,10 +811,10 @@ const Question = ({
               />
             ) : (MediaType === "pdf" || MediaType === "Pdf") &&
               QuestionIntroMediaURL ? (
-              <div>
+              <div className={styles.pdfContainer}>
                 <PDFPreview
                   pdfUrl={QuestionIntroMediaURL}
-                  customStyles={styles.canvas}
+                  customStyles={isAdmin ? styles.canvas : styles.userCanvas}
                   scale={0.5}
                   onLoad={() => {
                     setShowSkip(true);

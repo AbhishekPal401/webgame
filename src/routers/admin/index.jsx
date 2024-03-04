@@ -64,7 +64,16 @@ const Admin = () => {
 
         <div 
           className={styles.rightContainer}
-          style={{ width: isSideBarCollapsed ? '96%' : '85%'  }}  
+          // style={{ width: isSideBarCollapsed ? '96%' : '85%'  }}  
+          style={
+            (location.pathname.includes("/game") ||
+              location.pathname.includes("/intro") ||
+              location.pathname.includes("/gameplay") ||
+              location.pathname.includes("/missioncompleted") ||
+              location.pathname.includes("/gameprofile")) 
+              ? { width: '100%' }
+              : { width: isSideBarCollapsed ? '96%' : '85%' }
+          }
         >
           <Routes>
             <Route path="/" element={<Homepage />} />
