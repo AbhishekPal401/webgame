@@ -19,6 +19,10 @@ import { setActiveUsers } from "../../../../store/local/gameplay";
 import { Tooltip } from "react-tooltip";
 import { getCurrentTimeStamp } from "../../../../utils/helper";
 import moment from "moment";
+import {
+  getFileStream,
+  resetFileStreamState,
+} from "../../../../store/app/admin/fileStream/getFileStream";
 
 const AdminGameLanding = () => {
   const [ready, setReady] = useState(false);
@@ -32,10 +36,22 @@ const AdminGameLanding = () => {
     (state) => state.gameplay
   );
 
+  const {
+    fileStream: fileUrl,
+    fileType,
+    loading,
+  } = useSelector((state) => state.getFileStream);
+
   const { instanceID } = useParams();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (fileUrl) {
+      navigate("/intro");
+    }
+  }, [fileUrl]);
 
   const startGame = useCallback(() => {
     if (sessionDetails?.data) {
@@ -56,6 +72,7 @@ const AdminGameLanding = () => {
 
   useEffect(() => {
     dispatch(resetNextQuestionDetailsState());
+    dispatch(resetFileStreamState());
   }, []);
 
   const fetchIntro = useCallback(() => {
@@ -238,6 +255,14 @@ const AdminGameLanding = () => {
     }
   }, [sessionDetails, credentials, questionDetails]);
 
+  const fileStream = (url) => {
+    const data = {
+      fileName: url,
+      module: "Scenario",
+    };
+    dispatch(getFileStream(data));
+  };
+
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
@@ -251,10 +276,18 @@ const AdminGameLanding = () => {
             if (questionDetails?.data?.IntroSkipped === true) {
               navigate("/gameplay");
             } else {
-              navigate("/intro");
+              if (questionDetails?.data?.IntroMediaURL) {
+                fileStream(questionDetails?.data?.IntroMediaURL);
+              } else {
+                navigate("/intro");
+              }
             }
           } else {
-            navigate("/intro");
+            if (questionDetails?.data?.IntroMediaURL) {
+              fileStream(questionDetails?.data?.IntroMediaURL);
+            } else {
+              navigate("/intro");
+            }
           }
         } else {
           onSkip();

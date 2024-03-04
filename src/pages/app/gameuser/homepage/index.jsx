@@ -16,6 +16,10 @@ import {
 import { toast } from "react-toastify";
 import { signalRService } from "../../../../services/signalR";
 import { getCurrentTimeStamp } from "../../../../utils/helper";
+import {
+  getFileStream,
+  resetFileStreamState,
+} from "../../../../store/app/admin/fileStream/getFileStream";
 
 const UserHomePage = () => {
   const [ready, setReady] = useState(true);
@@ -27,6 +31,12 @@ const UserHomePage = () => {
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { questionDetails } = useSelector((state) => state.getNextQuestion);
   const { isConnectedToServer } = useSelector((state) => state.gameplay);
+
+  const {
+    fileStream: fileUrl,
+    fileType,
+    loading,
+  } = useSelector((state) => state.getFileStream);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -89,6 +99,7 @@ const UserHomePage = () => {
 
   useEffect(() => {
     dispatch(resetNextQuestionDetailsState());
+    dispatch(resetFileStreamState());
   }, []);
 
   const fetchSession = useCallback(() => {
@@ -193,6 +204,20 @@ const UserHomePage = () => {
   }, [sessionDetails, credentials]);
 
   useEffect(() => {
+    if (fileUrl) {
+      navigate("/intro");
+    }
+  }, [fileUrl]);
+
+  const fileStream = (url) => {
+    const data = {
+      fileName: url,
+      module: "Scenario",
+    };
+    dispatch(getFileStream(data));
+  };
+
+  useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
     if (questionDetails.success) {
@@ -208,10 +233,18 @@ const UserHomePage = () => {
             if (questionDetails?.data?.IntroSkipped === true) {
               navigate("/gameplay");
             } else {
-              navigate("/intro");
+              if (questionDetails?.data?.IntroMediaURL) {
+                fileStream(questionDetails?.data?.IntroMediaURL);
+              } else {
+                navigate("/intro");
+              }
             }
           } else {
-            navigate("/intro");
+            if (questionDetails?.data?.IntroMediaURL) {
+              fileStream(questionDetails?.data?.IntroMediaURL);
+            } else {
+              navigate("/intro");
+            }
           }
         } else {
           fetchFirstQuestion();

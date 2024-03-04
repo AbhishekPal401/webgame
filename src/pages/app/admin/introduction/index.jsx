@@ -130,11 +130,11 @@ const Intro = () => {
       questionDetails.success &&
       questionDetails?.data?.IsIntroFile === true
     ) {
-      const data = {
-        fileName: questionDetails?.data?.IntroMediaURL,
-        module: "Scenario",
-      };
-      dispatch(getFileStream(data));
+      // const data = {
+      //   fileName: questionDetails?.data?.IntroMediaURL,
+      //   module: "Scenario",
+      // };
+      // dispatch(getFileStream(data));
       // toast.error(questionDetails.message);
     }
   }, [questionDetails]);
