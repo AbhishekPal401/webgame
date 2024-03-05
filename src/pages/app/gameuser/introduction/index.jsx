@@ -25,6 +25,8 @@ const Intro = () => {
   const [skipData, setSkipData] = useState(null);
   const mediaRef = useRef(null);
 
+  const [isPlaying, setPlaying] = useState(false);
+
   const { credentials } = useSelector((state) => state.login);
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { questionDetails, loading: questionLoading } = useSelector(
@@ -103,20 +105,20 @@ const Intro = () => {
   }, [skipData, fetchIntro]);
 
   useEffect(() => {
-    const handleEnded = () => {
-      onSkip();
-    };
+    // const handleEnded = () => {
+    //   onSkip();
+    // };
 
-    if (mediaRef.current) {
-      mediaRef.current.addEventListener("ended", handleEnded);
+    // if (mediaRef.current) {
+    //   mediaRef.current.addEventListener("ended", handleEnded);
 
-      mediaRef.current
-        .play()
-        .then(() => {})
-        .catch((error) => {
-          console.error("Autoplay failed:", error);
-        });
-    }
+    //   mediaRef.current
+    //     .play()
+    //     .then(() => {})
+    //     .catch((error) => {
+    //       console.error("Autoplay failed:", error);
+    //     });
+    // }
 
     localStorage.setItem("refresh", false);
 
@@ -143,6 +145,19 @@ const Intro = () => {
       // toast.error(questionDetails.message);
     }
   }, [questionDetails]);
+
+  const handlePlayPause = () => {
+    if (mediaRef.current.paused) {
+      mediaRef.current.play();
+    } else {
+      mediaRef.current.pause();
+    }
+    setPlaying(!isPlaying);
+  };
+
+  const handleVideoEnd = () => {
+    setPlaying(false);
+  };
 
   // console.log(
   //   "questionDetails?.data?.IntroMediaURL",
@@ -185,15 +200,26 @@ const Intro = () => {
                   )}
 
                   {fileType.includes("mp4") && (
-                    <video
-                      ref={mediaRef}
-                      width="100%"
-                      height="100%"
-                      controls={false}
-                    >
-                      <source src={fileStream} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
+                    <div className={styles.videoWrapper}>
+                      <video
+                        ref={mediaRef}
+                        width="100%"
+                        height="100%"
+                        controls={false}
+                        onClick={handlePlayPause}
+                        onEnded={handleVideoEnd}
+                      >
+                        <source src={fileStream} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                      {!isPlaying && (
+                        <div className={styles.overlay}>
+                          <svg onClick={handlePlayPause}>
+                            <use xlinkHref={"sprite.svg#video_play"} />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
                   )}
 
                   {fileType.includes("pdf") && (
