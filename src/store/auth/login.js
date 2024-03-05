@@ -43,6 +43,8 @@ const slice = createSlice({
       users.credentials = null;
       users.loading = false;
       users.status = "idle";
+      users.loginType= "default",
+      users.id_token= null,
     },
 
     loginType: (users, action) => {
@@ -145,6 +147,8 @@ export const logoutUser = () => async (dispatch, getState) => {
 
     try {
       const userManager = new UserManager(oidcConfig);
+
+      console.log("id_token", id_token);
 
       await userManager.signoutPopup({ id_token_hint: id_token });
       sessionStorage.clear();

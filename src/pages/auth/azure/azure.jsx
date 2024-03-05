@@ -20,11 +20,13 @@ const azure = () => {
       .signinPopup()
       .then((response) => {
         console.log("response", response);
+        console.log("id_token in popoup callback", response?.id_token);
+
         if (response && response.profile && response.profile.preferredMail) {
           dispatch(
             pwclogin(
               { emailID: response.profile.preferredMail },
-              { id_token: response.profile.id_token }
+              { id_token: response.id_token }
             )
           );
         }
