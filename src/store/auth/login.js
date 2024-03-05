@@ -114,7 +114,7 @@ export const pwclogin = (data, token) => async (dispatch) => {
   try {
     dispatch(requested());
 
-    dispatch(token(token.id_token));
+    console.log("data", data);
 
     const headers = { "Content-Type": "application/json" };
 
@@ -125,6 +125,8 @@ export const pwclogin = (data, token) => async (dispatch) => {
       data,
       headers,
     });
+
+    dispatch(token(token.id_token));
 
     dispatch(success(response.data));
     dispatch(loginType("pwc"));
