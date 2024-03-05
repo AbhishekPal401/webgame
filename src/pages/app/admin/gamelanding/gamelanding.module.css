@@ -70,6 +70,7 @@
   align-items: center;
   width: 2.4rem;
   height: 2.4rem;
+  flex: none !important;
   border-radius: 2.4rem;
   background-color: var(--primary);
   color: var(--black);
