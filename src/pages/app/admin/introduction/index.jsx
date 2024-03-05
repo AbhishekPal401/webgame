@@ -204,23 +204,24 @@ const Intro = () => {
                   {fileType.includes("mp4") && (
                     <div className={styles.videoWrapper}>
                       <video
+                        autoPlay={true}
                         ref={mediaRef}
                         width="100%"
                         height="100%"
                         controls={false}
-                        onClick={handlePlayPause}
-                        onEnded={handleVideoEnd}
+                        // onClick={handlePlayPause}
+                        // onEnded={handleVideoEnd}
                       >
                         <source src={fileStream} type="video/mp4" />
                         Your browser does not support the video tag.
                       </video>
-                      {!isPlaying && (
+                      {/* {!isPlaying && (
                         <div className={styles.overlay}>
                           <svg onClick={handlePlayPause}>
                             <use xlinkHref={"sprite.svg#video_play"} />
                           </svg>
                         </div>
-                      )}
+                      )} */}
                     </div>
                   )}
 

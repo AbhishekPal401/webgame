@@ -43,8 +43,8 @@ const slice = createSlice({
       users.credentials = null;
       users.loading = false;
       users.status = "idle";
-      users.loginType= "default",
-      users.id_token= null,
+      users.loginType = "default";
+      users.id_token = null;
     },
 
     loginType: (users, action) => {
