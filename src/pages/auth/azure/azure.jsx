@@ -27,7 +27,10 @@ const azure = () => {
           dispatch(
             pwclogin(
               { emailID: response.profile.preferredMail },
-              { id_token: response.id_token }
+              {
+                id_token: response.id_token,
+                settings: authInfo.userManager.settings,
+              }
             )
           );
         }

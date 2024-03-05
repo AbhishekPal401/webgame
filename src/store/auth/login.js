@@ -19,7 +19,9 @@ const slice = createSlice({
     loginType: "default",
     loading: false,
     status: "idle",
+
     id_token: null,
+    settings: null,
   },
   reducers: {
     requested: (users, action) => {
@@ -54,6 +56,9 @@ const slice = createSlice({
     setToken: (users, action) => {
       users.id_token = action.payload;
     },
+    setSettings: (users, action) => {
+      users.settings = action.payload;
+    },
   },
   // extraReducers(builder) {
   //   builder
@@ -79,6 +84,7 @@ export const {
   reset,
   loginType,
   setToken,
+  setSettings,
 } = slice.actions;
 
 export default slice.reducer;
@@ -126,8 +132,8 @@ export const pwclogin = (data, token) => async (dispatch) => {
       headers,
     });
 
-    dispatch(token(token.id_token));
-
+    dispatch(setToken(token.id_token));
+    dispatch(setSettings(token.settings));
     dispatch(success(response.data));
     dispatch(loginType("pwc"));
   } catch (err) {
@@ -141,14 +147,14 @@ export const pwclogin = (data, token) => async (dispatch) => {
 
 export const logoutUser = () => async (dispatch, getState) => {
   const {
-    login: { loginType, id_token },
+    login: { loginType, id_token, settings },
   } = getState();
 
   if (loginType === "pwc") {
     console.log("pwc logout");
 
     try {
-      const userManager = new UserManager(oidcConfig);
+      const userManager = new UserManager(settings);
 
       console.log("id_token", id_token);
 
