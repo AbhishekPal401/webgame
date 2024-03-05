@@ -19,8 +19,8 @@ const azure = () => {
       .signinPopup()
       .then((response) => {
         console.log("response", response);
-        if (response && response.profile && response.profile.email) {
-          dispatch(pwclogin({ email: response.profile.email }));
+        if (response && response.profile && response.profile.preferredMail) {
+          dispatch(pwclogin({ emailID: response.profile.preferredMail }));
         }
       })
       .catch((e) => {
