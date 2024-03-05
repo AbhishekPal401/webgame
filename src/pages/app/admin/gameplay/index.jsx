@@ -802,7 +802,7 @@ const GamePlay = () => {
         console.log("default voting submit by admin", data);
 
         signalRService.SendVotes(data);
-      }, 2000);
+      }, 1500);
     }
   };
 
