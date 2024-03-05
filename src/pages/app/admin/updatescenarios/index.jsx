@@ -56,7 +56,15 @@ const UpdateScenarios = () => {
     url: null,
     type: null,
   });
-  const [introFileDisplay, setIntroFileDisplay] = useState(null);
+  // const [introFileDisplay, setIntroFileDisplay] = useState(null);
+  const [introFileDisplay, setIntroFileDisplay] = useState({
+    url: null,
+    type: null,
+    name: null,
+  });
+
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
 
   const allowedFileTypesArray = [
     fileTypes.AUDIO_EXTENSION,
@@ -139,7 +147,12 @@ const UpdateScenarios = () => {
         dispatch(getScenarioDetailsByID(data));
         navigateTo(`/scenario`);
       } else {
-        introFileDisplay(null);
+        // introFileDisplay(null);
+        setIntroFileDisplay({
+          url: null,
+          type: null,
+          name: null,
+        });
         resetScenarioData();
       }
 
@@ -169,7 +182,12 @@ const UpdateScenarios = () => {
   useEffect(() => {
     if (scenarioID === null || scenarioID === undefined) {
       resetScenarioData();
-      setIntroFileDisplay(null);
+      // setIntroFileDisplay(null);
+      setIntroFileDisplay({
+        url: null,
+        type: null,
+        name: null,
+      });
     } else {
       const data = {
         scenarioID: scenarioID,
@@ -188,7 +206,7 @@ const UpdateScenarios = () => {
     }
   }, [scenarioID]);
 
-  const setScenarioDetailState = useCallback(() => {
+  const setScenarioDetailState = useCallback(async () => {
     if (isJSONString(scenarioByIdDetails.data)) {
       const data = JSON.parse(scenarioByIdDetails.data);
       console.log("data:", data);
@@ -220,7 +238,7 @@ const UpdateScenarios = () => {
         },
       };
 
-      setIntroFileDisplay(data.IntroFileDisplay);
+      // setIntroFileDisplay(data.IntroFileDisplay);
       setDefaultIntroFileUrl((previous) => ({
         ...previous,
         url: data.IntroFile,
@@ -228,6 +246,59 @@ const UpdateScenarios = () => {
       }));
 
       setScenarioData(newData);
+
+      // call the stream api to get the tram for the default url
+      if (data.IntroFile) {
+        try {
+          // Define the body parameters
+          const requestBody = {
+            fileName: data.IntroFile,
+            module: "Scenario"
+          };
+
+          // Make the API call
+          const response = await axios.post(
+            `${baseUrl}/api/Storage/GetFileStream`,
+            requestBody,
+            {
+              responseType: 'blob', // Set response type to blob
+              headers: {
+                "Content-Type": "application/json", // Update content type to JSON
+              },
+              cancelToken: source.token,
+            }
+          );
+
+          if (response.data) {
+            // Assuming the response contains the file stream data
+            console.log("responce  :", response.data)
+            const fileStream = response.data;
+
+            // Generate URL for the file stream
+            const fileUrl = URL.createObjectURL(new Blob([fileStream]));
+            console.log("fileUrl  :", fileUrl)
+            // Set the intro file display URL
+            // setIntroFileDisplay(fileUrl);
+            setIntroFileDisplay({
+              url: fileUrl,
+              type: extractFileType(data.IntroFile),
+              name: extractFileInfo(data.IntroFile).name,
+            });
+
+          } else {
+            // Handle API response errors
+            console.error("File upload failed:");
+          }
+        } catch (error) {
+          // Handle API call errors
+          // console.error("Error uploading file:", error);
+          if (axios.isCancel(error)) {
+            console.log("Request canceled:", error.message);
+          } else {
+            console.error("Error:", error.message);
+          }
+        }
+      }
     }
   }, [scenarioByIdDetails]);
 
@@ -238,6 +309,11 @@ const UpdateScenarios = () => {
 
     if (!scenarioID) return;
     setScenarioDetailState();
+
+    return () => {
+      // Cleanup function
+      source.cancel("Request canceled by cleanup");
+    };
   }, [scenarioByIdDetails]);
 
   const onChange = (event) => {
@@ -462,7 +538,12 @@ const UpdateScenarios = () => {
       return;
     } else {
       resetScenarioData();
-      setIntroFileDisplay(null);
+      // setIntroFileDisplay(null);
+      setIntroFileDisplay({
+        url: null,
+        type: null,
+        name: null,
+      });
     }
     navigateTo("/scenario");
   };
@@ -563,14 +644,27 @@ const UpdateScenarios = () => {
                     allowedFileTypes={allowedFileTypesArray}
                     onUpload={onUpload}
                     onResetFile={onResetFile}
-                    fileSrc={introFileDisplay}
+                    fileSrc={introFileDisplay.url}
                     setUrl={(file) => {
-                      setIntroFileDisplay(file);
+                      // setIntroFileDisplay(file);
+                      setIntroFileDisplay({
+                        url: file,
+                        type: file && extractFileType(file),
+                        name: file && extractFileInfo(file).name,
+                      });
                     }}
+                    // fileSrcType={
+                    //   introFileDisplay && extractFileType(introFileDisplay)
+                    // }
+                    // fileName={introFileDisplay && extractFileInfo(introFileDisplay).name}
                     fileSrcType={
-                      introFileDisplay && extractFileType(introFileDisplay)
+                      (introFileDisplay) ?
+                        introFileDisplay.type : ""
                     }
-                    fileName={introFileDisplay && extractFileInfo(introFileDisplay).name}
+                    fileName={
+                      (introFileDisplay) ?
+                        introFileDisplay.name : ""
+                    }
                   />
                 </div>
                 <div className={styles.imageDropZoneContainerRight}></div>

@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 import { extractFileInfo, extractFileType, formatDateString } from "../../../../utils/helper.js";
 import { fileTypes } from "../../../../constants/filetypes.js";
 import InputDataContainer from "../../../../components/ui/inputdatacontainer/index.jsx";
+import { getFileStream, resetFileStreamState } from "../../../../store/app/admin/fileStream/getFileStream.js";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState({
@@ -72,7 +73,16 @@ const UserProfile = () => {
 
   const [defaultUrl, setDefaultUrl] = useState(null);
 
-  const [imageURl, setImageURl] = useState(null);
+  // const [imageURl, setImageURl] = useState(null);
+  // const [imageInfo, setImageInfo] = useState({
+  //   type: null,
+  //   name: null,
+  // });
+  const [imageURl, setImageURl] = useState({
+    url: null,
+    type: null,
+    name: null,
+  });
 
   const { userID } = useParams();
 
@@ -89,8 +99,15 @@ const UserProfile = () => {
   const { createUserResponse, loading: createUserResponseLoading } =
     useSelector((state) => state.createUser);
 
+  const { fileStream, fileStreamLoading } = useSelector(
+    (state) => state.getFileStream
+  );
+
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
+
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
 
   const allowedFileTypesArray = [
     fileTypes.IMAGE_EXTENSION_1,
@@ -163,7 +180,16 @@ const UserProfile = () => {
           })
         );
       } else {
-        setImageURl(null);
+        // setImageInfo({
+        //   type: null,
+        //   name: null,
+        // });
+        // setImageURl(null);
+        setImageURl({
+          url: null,
+          type: null,
+          name: null,
+        });
         resetUserData();
       }
 
@@ -189,7 +215,16 @@ const UserProfile = () => {
   useEffect(() => {
     if (userID === null || userID === undefined) {
       resetUserData();
-      setImageURl(null);
+      // setImageInfo({
+      //   type: null,
+      //   name: null,
+      // });
+      // setImageURl(null);
+      setImageURl({
+        url: null,
+        type: null,
+        name: null,
+      });
     } else {
       dispatch(
         getUserDetailsByID({
@@ -214,9 +249,10 @@ const UserProfile = () => {
   //DEBUG:: end
 
 
-  const setUserDetailState = useCallback(() => {
+  const setUserDetailState = useCallback(async () => {
     if (isJSONString(userByIdDetails.data)) {
       const data = JSON.parse(userByIdDetails.data);
+      console.log("userByIdDetails : ", data)
 
       const newData = {
         username: {
@@ -261,10 +297,67 @@ const UserProfile = () => {
         },
       };
 
-      setImageURl(data.ProfileImageDisplay);
+      // setImageURl(data.ProfileImageDisplay);
       setDefaultUrl(data.ProfileImage);
-
       setUserData(newData);
+      // call the stream api to get the tram for the default url
+      if (data.ProfileImage && data.ProfileImage != "file") {
+        try {
+
+          // setImageInfo({
+          //   type: extractFileType(data.ProfileImage),
+          //   name: extractFileInfo(data.ProfileImage).name,
+          // });
+
+          // Define the body parameters
+          const requestBody = {
+            fileName: data.ProfileImage,
+            module: "ProfileImage"
+          };
+          // console.log("requesst body :",requestBody)
+          // dispatch(getFileStream(requestBody));
+          //Make the API call
+          const response = await axios.post(
+            `${baseUrl}/api/Storage/GetFileStream`,
+            requestBody,
+            {
+              responseType: 'blob', // Set response type to blob
+              headers: {
+                "Content-Type": "application/json", // Update content type to JSON
+              },
+              cancelToken: source.token,
+            }
+          );
+
+          if (response.data) {
+            // Assuming the response contains the file stream data
+            // console.log("responce  :")
+            const fileStream = response.data;
+
+            // Generate URL for the file stream
+            const fileUrl = URL.createObjectURL(new Blob([fileStream]));
+            // console.log("fileUrl  :", fileUrl)
+            // Set the intro file display URL
+            // setImageURl(fileUrl);
+            setImageURl({
+              url: fileUrl,
+              type: extractFileType(data.ProfileImage),
+              name: extractFileInfo(data.ProfileImage).name,
+            });
+          } else {
+            // Handle API response errors
+            console.error("File upload failed:");
+          }
+        } catch (error) {
+          // Handle API call errors
+          // console.error("Error uploading file:", error);
+          if (axios.isCancel(error)) {
+            console.log("Request canceled:", error.message);
+          } else {
+            console.error("Error:", error.message);
+          }
+        }
+      }
     }
   }, [userByIdDetails]);
 
@@ -274,7 +367,21 @@ const UserProfile = () => {
     if (!userID) return;
 
     setUserDetailState();
+
+    return () => {
+      // Cleanup function
+      source.cancel("Request canceled by cleanup");
+    };
   }, [userByIdDetails]);
+
+  // useEffect(() => {
+  //   if (fileStream === null || fileStream === undefined) return;
+
+  //   if (!userID) return;
+
+  //   setImageURl(fileStream); 
+
+  // }, [fileStream]);
 
   const onChange = (event) => {
     setUserData({
@@ -574,7 +681,16 @@ const UserProfile = () => {
       return;
     } else {
       resetUserData();
-      setImageURl(null);
+      // setImageURl(null);
+      // setImageInfo({
+      //   type: null,
+      //   name: null,
+      // });
+      setImageURl({
+        url: null,
+        type: null,
+        name: null,
+      });
     }
     navigateTo(credentials.data.role === "1" ? "/users" : -1);
 
@@ -754,16 +870,38 @@ const UserProfile = () => {
                   customstyle={{ marginTop: "0rem" }}
                   label="Upload Profile Pic"
                   onUpload={onUpload}
-                  imageSrc={imageURl}
+                  imageSrc={imageURl.url}
                   allowedFileTypes={allowedFileTypesArray}
                   onResetFile={onResetFile}
                   setUrl={(file) => {
-                    setImageURl(file);
+                    // setImageURl(file);
+                    setImageURl((previousState) => ({
+                      ...previousState,
+                      url: file,
+                      type: file && extractFileType(file),
+                      name: file && extractFileInfo(file).name,
+                    }));
                   }}
+                  // fileSrcType={
+                  //   imageURl && extractFileType(imageURl)
+                  // }
+                  // fileName={imageURl && extractFileInfo(imageURl).name}
+                  // fileSrcType={
+                  //   (imageInfo) ?
+                  //     imageInfo.type : ""
+                  // }
+                  // fileName={
+                  //   (imageInfo) ?
+                  //     imageInfo.name : ""
+                  // }
                   fileSrcType={
-                    imageURl && extractFileType(imageURl)
+                    (imageURl) ?
+                      imageURl.type : ""
                   }
-                  fileName={imageURl && extractFileInfo(imageURl).name}
+                  fileName={
+                    (imageURl) ?
+                      imageURl.name : ""
+                  }
                 />
               </div>
             </div>

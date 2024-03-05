@@ -46,7 +46,13 @@ function QuestionBuilder() {
     url: null,
     type: null,
   });
-  const [supportFileDisplayURL, setSupportFileDisplayURL] = useState(null);
+  // const [supportFileDisplayURL, setSupportFileDisplayURL] = useState(null);
+  const [supportFileDisplayURL, setSupportFileDisplayURL] = useState({
+    url: null,
+    type: null,
+    name: null,
+  });
+
 
   const { questionByIdDetails, loading: questionByIdDetailsLoading } =
     useSelector((state) => state.getQuestionDetailsByid);
@@ -63,6 +69,9 @@ function QuestionBuilder() {
   const { scenarioID, questionID } = useParams();
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
+
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
 
   const allowedFileTypesArray = [
     fileTypes.AUDIO_EXTENSION,
@@ -132,7 +141,12 @@ function QuestionBuilder() {
 
         navigateTo(`/questions/${scenarioID}`);
       } else {
-        setSupportFileDisplayURL(null);
+        // setSupportFileDisplayURL(null);
+        setSupportFileDisplayURL({
+          url: null,
+          type: null,
+          name: null,
+        });
         resetQuestionData();
       }
 
@@ -168,7 +182,12 @@ function QuestionBuilder() {
       scenarioID === undefined
     ) {
       resetQuestionData();
-      setSupportFileDisplayURL(null);
+      // setSupportFileDisplayURL(null);
+      setSupportFileDisplayURL({
+        url: null,
+        type: null,
+        name: null,
+      });
     } else {
       const data = {
         scenarioID: scenarioID,
@@ -200,12 +219,7 @@ function QuestionBuilder() {
   //     }, [questionID, scenarioID]);
 
   // set the updated data into Question state
-  const setQuestionDetailState = useCallback(() => {
-    // if (isJSONString(masters.data)) {
-    //     const data = JSON.parse(masters.data);
-    //     console.log("master data :", data);
-    // }
-
+  const setQuestionDetailState = useCallback(async () => {
     if (isJSONString(questionByIdDetails.data)) {
       const data = JSON.parse(questionByIdDetails.data);
       console.log("questionByIdDetails data:", data);
@@ -260,8 +274,8 @@ function QuestionBuilder() {
         },
         answers: answers,
       };
-      console.log("SupportFileDisplay:", data.Question.SupportFileDisplay);
-      setSupportFileDisplayURL(data.Question.SupportFileDisplay);
+      // console.log("SupportFileDisplay:", data.Question.SupportFileDisplay);
+      // setSupportFileDisplayURL(data.Question.SupportFileDisplay);
       setSupportFileDefaultUrl((previous) => ({
         ...previous,
         url: data.Question.SupportFile,
@@ -269,6 +283,60 @@ function QuestionBuilder() {
       }));
       console.log("newData to set : ", newData);
       setQuestionData(newData);
+
+      // call the stream api to get the tram for the default url
+      if (data.Question.SupportFile) {
+        try {
+          // Define the body parameters
+          const requestBody = {
+            fileName: data.Question.SupportFile,
+            module: "Question"
+          };
+
+          // Make the API call
+          const response = await axios.post(
+            `${baseUrl}/api/Storage/GetFileStream`,
+            requestBody,
+            {
+              responseType: 'blob', // Set response type to blob
+              headers: {
+                "Content-Type": "application/json", // Update content type to JSON
+              },
+              cancelToken: source.token,
+            }
+          );
+
+          if (response.data) {
+            // Assuming the response contains the file stream data
+            console.log("responce  :",)
+            const fileStream = response.data;
+
+            // Generate URL for the file stream
+            const fileUrl = URL.createObjectURL(new Blob([fileStream]));
+            console.log("fileUrl  :", fileUrl)
+            // Set the intro file display URL
+            // setIntroFileDisplay(fileUrl);
+            setSupportFileDisplayURL((previousState) => ({
+              ...previousState,
+              url: fileUrl,
+              type: extractFileType(data.Question.SupportFile),
+              name: extractFileInfo(data.Question.SupportFile).name,
+            }));
+
+          } else {
+            // Handle API response errors
+            console.error("File upload failed:");
+          }
+        } catch (error) {
+          // Handle API call errors
+          // console.error("Error uploading file:", error);
+          if (axios.isCancel(error)) {
+            console.log("Request canceled:", error.message);
+          } else {
+            console.error("Error:", error.message);
+          }
+        }
+      }
     }
   }, [questionByIdDetails]);
 
@@ -280,6 +348,11 @@ function QuestionBuilder() {
 
     setQuestionDetailState();
     console.log("questionByIdDetails :", questionByIdDetails);
+
+    return () => {
+      // Cleanup function
+      source.cancel("Request canceled by cleanup");
+    };
   }, [questionByIdDetails]);
 
   // useEffect(() => {
@@ -644,7 +717,7 @@ function QuestionBuilder() {
                   <div className={styles.questionInputLeft}>
                     <div
                       className={styles.question}
-                      // style={{ margin: '0' }}
+                    // style={{ margin: '0' }}
                     >
                       <label
                         className={styles.inputLabel}
@@ -720,17 +793,30 @@ function QuestionBuilder() {
                         allowedFileTypes={allowedFileTypesArray}
                         onUpload={onUpload}
                         onResetFile={onResetFile}
-                        fileSrc={supportFileDisplayURL}
-                        fileSrcType={
-                          supportFileDisplayURL &&
-                          extractFileType(supportFileDisplayURL)
-                        }
+                        fileSrc={supportFileDisplayURL.url}
                         setUrl={(file) => {
-                          setSupportFileDisplayURL(file);
+                          // setSupportFileDisplayURL(file);
+                          setSupportFileDisplayURL({
+                            url: file,
+                            type: file && extractFileType(file),
+                            name: file && extractFileInfo(file).name,
+                          });
                         }}
+                        // fileSrcType={
+                        //   supportFileDisplayURL &&
+                        //   extractFileType(supportFileDisplayURL)
+                        // }
+                        // fileName={
+                        //   supportFileDisplayURL &&
+                        //   extractFileInfo(supportFileDisplayURL).name
+                        // }
+                        fileSrcType={
+                          (supportFileDisplayURL) ?
+                            supportFileDisplayURL.type : ""
+                        }
                         fileName={
-                          supportFileDisplayURL &&
-                          extractFileInfo(supportFileDisplayURL).name
+                          (supportFileDisplayURL) ?
+                            supportFileDisplayURL.name : ""
                         }
                       />
                     </div>

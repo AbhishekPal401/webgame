@@ -11,16 +11,19 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { baseUrl } from "../../../../../middleware/url.js";
 import ModalContainer from "../../../../../components/modal/index.jsx";
-import { generateGUID } from "../../../../../utils/common.js";
+import { generateGUID, isJSONString } from "../../../../../utils/common.js";
 import {
   deleteQuestionByID,
   resetDeleteQuestionState
 } from "../../../../../store/app/admin/questions/deleteQuestions.js";
 import { toast } from "react-toastify";
 import { extractFirstElementHTML, extractTextContent, isHTML } from "../../../../../utils/helper.js";
+import Pagination from "../../../../../components/ui/pagination/index.jsx";
 
 
 function QuestionList() {
+  const [pageCount, setPageCount] = useState(10);
+  const [pageNumber, setPageNumber] = useState(1);
   const [showDeleteModal, setShowDeleteModal] = useState(null);
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
@@ -40,8 +43,19 @@ function QuestionList() {
 
   useEffect(() => {
     if (credentials) {
+      // const data = {
+      //   scenarioID: scenarioID,
+      // };
       const data = {
         scenarioID: scenarioID,
+        pageNumber: pageNumber,
+        pageCount: pageCount,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
       };
 
       dispatch(getQuestionsByScenarioId(data)).finally(() =>
@@ -51,14 +65,24 @@ function QuestionList() {
   }, [credentials, scenarioID, dispatch]);
 
   useEffect(() => {
+    if (questionsByScenarioIdDetails && isJSONString(questionsByScenarioIdDetails?.data)) {
+      const newPageNumber = JSON.parse(questionsByScenarioIdDetails?.data)?.CurrentPage;
+
+      if (newPageNumber && typeof newPageNumber === "number") {
+        setPageNumber(newPageNumber);
+      }
+    }
+  }, [questionsByScenarioIdDetails]);
+
+  useEffect(() => {
     if (!questionsByScenarioIdDetails) return;
 
     console.log(
       "parsed questionsByScenarioIdDetails :",
-      JSON.parse(questionsByScenarioIdDetails?.data)
+      JSON.parse(questionsByScenarioIdDetails?.data).questionDetails
     );
 
-    const questionsData = JSON.parse(questionsByScenarioIdDetails?.data);
+    const questionsData = JSON.parse(questionsByScenarioIdDetails?.data).questionDetails;
 
     if (questionsData?.length <= 0 && !isLoading) {
       navigate(`/questions/uploadquestions/${scenarioID}`);
@@ -71,8 +95,20 @@ function QuestionList() {
     if (deleteQuestionResponse.success) {
       toast.success(deleteQuestionResponse.message);
 
+      // const data = {
+      //   scenarioID: scenarioID,
+      // };
+
       const data = {
         scenarioID: scenarioID,
+        pageNumber: pageNumber,
+        pageCount: pageCount,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
       };
 
       dispatch(getQuestionsByScenarioId(data)).finally(() =>
@@ -183,7 +219,7 @@ function QuestionList() {
                 {questionsByScenarioIdDetails &&
                   questionsByScenarioIdDetails.success &&
                   questionsByScenarioIdDetails.data &&
-                  JSON.parse(questionsByScenarioIdDetails?.data).map(
+                  JSON.parse(questionsByScenarioIdDetails?.data).questionDetails?.map(
                     (question, index) => {
                       const isSelected = selectedCheckboxes.includes(question.QuestionID);
                       return (
@@ -215,7 +251,7 @@ function QuestionList() {
                                 <div  >{question.QuestionText}</div>
                               </td>
                             )
-                        }
+                          }
                           {/* <td>
                             {question.QuestionText}
                           </td> */}
@@ -269,8 +305,35 @@ function QuestionList() {
                   )}
               </tbody>
             </table>
+            {questionsByScenarioIdDetails && questionsByScenarioIdDetails.success && questionsByScenarioIdDetails.data && (
+              <div className={styles.paginationContainer}>
+                <Pagination
+                  totalCount={JSON.parse(questionsByScenarioIdDetails.data)?.TotalCount}
+                  pageNumber={pageNumber}
+                  countPerPage={pageCount}
+                  onPageChange={(pageNumber) => {
+                    const data = {
+                      scenarioID: scenarioID,
+                      pageNumber: pageNumber,
+                      pageCount: pageCount,
+                      requester: {
+                        requestID: generateGUID(),
+                        requesterID: credentials.data.userID,
+                        requesterName: credentials.data.userName,
+                        requesterType: credentials.data.role,
+                      },
+                    };
+
+                    dispatch(getQuestionsByScenarioId(data))
+                  }}
+                />
+              </div>
+            )}
+
           </div>
         </div>
+
+
 
         {/* Questions Table:: end */}
       </div>
