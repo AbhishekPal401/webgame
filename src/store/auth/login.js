@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { baseUrl } from "../../middleware/url.js";
 import { signalRService } from "../../services/signalR.js";
+import { UserManager } from "oidc-react";
+import { oidcConfig } from "../../constants/oidc.js";
 
 //api calling type 2
 
@@ -125,13 +127,18 @@ export const logoutUser = () => async (dispatch, getState) => {
   } = getState();
 
   if (loginType === "pwc") {
-    // const { success } = await azureService.azureLogout(dispatch);
-    // if (success) {
-    //   dispatch(logout());
-    // }
-    sessionStorage.clear();
-    signalRService.stopConnection();
-    dispatch(logout());
+    console.log("pwc logout");
+
+    try {
+      const userManager = new UserManager(oidcConfig);
+
+      await userManager.signoutPopup();
+      sessionStorage.clear();
+      signalRService.stopConnection();
+      dispatch(logout());
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   } else {
     signalRService.stopConnection();
 

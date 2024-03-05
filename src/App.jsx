@@ -9,18 +9,19 @@ import "react-toastify/dist/ReactToastify.css";
 
 import configureStore from "./store/setup/configureStore";
 import Routers from "./routers";
+import { oidcConfig } from "./constants/oidc";
 
 const store = configureStore();
 const persistor = persistStore(store);
 
-const oidcConfig = {
-  scope: "openid profile",
-  responseType: "code",
-  authority: import.meta.env.VITE_OPENID_AUTHORITY,
-  clientId: import.meta.env.VITE_OPENID_CLIENT_ID,
-  clientSecret:import.meta.env.VITE_OPENID_CLIENT_SECRET,
-  redirectUri: import.meta.env.VITE_OPENID_REDIRECT_URL,
-};
+// export const oidcConfig = {
+//   scope: "openid profile",
+//   responseType: "code",
+//   authority: import.meta.env.VITE_OPENID_AUTHORITY,
+//   clientId: import.meta.env.VITE_OPENID_CLIENT_ID,
+//   clientSecret: import.meta.env.VITE_OPENID_CLIENT_SECRET,
+//   redirectUri: import.meta.env.VITE_OPENID_REDIRECT_URL,
+// };
 
 function App() {
   return (

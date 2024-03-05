@@ -13,6 +13,7 @@ const azure = () => {
   const authInfo = useAuth();
 
   const openIdLogin = async () => {
+    console.log("authInfo.userManager.settings", authInfo.userManager.settings);
     const config1 = new UserManager(authInfo.userManager.settings);
 
     config1
