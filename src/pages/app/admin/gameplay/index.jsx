@@ -786,21 +786,23 @@ const GamePlay = () => {
     if (sessionDetails?.data) {
       const sessionData = JSON.parse(sessionDetails.data);
 
-      const data = {
-        InstanceID: sessionData.InstanceID,
-        SessionID: sessionData.SessionID,
-        UserID: credentials.data.userID,
-        UserName: credentials.data.userName,
-        UserRole: credentials.data.role,
-        ActionType: "UserVoteTimeout",
-        Message: "default voting submit by admin",
-        QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
-        AnswerID: "NA",
-      };
+      setTimeout(() => {
+        const data = {
+          InstanceID: sessionData.InstanceID,
+          SessionID: sessionData.SessionID,
+          UserID: credentials.data.userID,
+          UserName: credentials.data.userName,
+          UserRole: credentials.data.role,
+          ActionType: "UserVoteTimeout",
+          Message: "default voting submit by admin",
+          QuestionID: questionDetails?.data?.QuestionDetails?.QuestionID,
+          AnswerID: "NA",
+        };
 
-      console.log("default voting submit by admin", data);
+        console.log("default voting submit by admin", data);
 
-      signalRService.SendVotes(data);
+        signalRService.SendVotes(data);
+      }, 2000);
     }
   };
 
