@@ -19,6 +19,7 @@ const slice = createSlice({
     loginType: "default",
     loading: false,
     status: "idle",
+    id_token: null,
   },
   reducers: {
     requested: (users, action) => {
@@ -47,6 +48,10 @@ const slice = createSlice({
     loginType: (users, action) => {
       users.loginType = action.payload;
     },
+
+    setToken: (users, action) => {
+      users.id_token = action.payload;
+    },
   },
   // extraReducers(builder) {
   //   builder
@@ -64,8 +69,15 @@ const slice = createSlice({
   // },
 });
 
-export const { requested, success, failed, logout, reset, loginType } =
-  slice.actions;
+export const {
+  requested,
+  success,
+  failed,
+  logout,
+  reset,
+  loginType,
+  setToken,
+} = slice.actions;
 
 export default slice.reducer;
 
@@ -96,9 +108,11 @@ export const resetLoginState = () => async (dispatch) => {
   dispatch(reset());
 };
 
-export const pwclogin = (data) => async (dispatch) => {
+export const pwclogin = (data, token) => async (dispatch) => {
   try {
     dispatch(requested());
+
+    dispatch(token(token.id_token));
 
     const headers = { "Content-Type": "application/json" };
 
@@ -123,7 +137,7 @@ export const pwclogin = (data) => async (dispatch) => {
 
 export const logoutUser = () => async (dispatch, getState) => {
   const {
-    login: { loginType },
+    login: { loginType, id_token },
   } = getState();
 
   if (loginType === "pwc") {
@@ -132,7 +146,7 @@ export const logoutUser = () => async (dispatch, getState) => {
     try {
       const userManager = new UserManager(oidcConfig);
 
-      await userManager.signoutPopup();
+      await userManager.signoutPopup({ id_token_hint: id_token });
       sessionStorage.clear();
       signalRService.stopConnection();
       dispatch(logout());

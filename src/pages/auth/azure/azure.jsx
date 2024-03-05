@@ -21,7 +21,12 @@ const azure = () => {
       .then((response) => {
         console.log("response", response);
         if (response && response.profile && response.profile.preferredMail) {
-          dispatch(pwclogin({ emailID: response.profile.preferredMail }));
+          dispatch(
+            pwclogin(
+              { emailID: response.profile.preferredMail },
+              { id_token: response.profile.id_token }
+            )
+          );
         }
       })
       .catch((e) => {
