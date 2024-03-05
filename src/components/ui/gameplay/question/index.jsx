@@ -835,11 +835,12 @@ const Question = ({
                   }
                 }}
               />
-            ) : (MediaType === "pdf" || MediaType === "Pdf") && fileStream ? (
-              <div>
+            ) : (MediaType === "pdf" || MediaType === "Pdf") &&
+              fileStream ? (
+              <div className={styles.pdfContainer}>
                 <PDFPreview
                   pdfUrl={fileStream}
-                  customStyles={styles.canvas}
+                  customStyles={isAdmin ? styles.canvas : styles.userCanvas}
                   scale={0.5}
                   onLoad={() => {
                     setShowSkip(true);

@@ -228,3 +228,10 @@
   font-family: "helvetica 500";
   color: var(--primary);
 }
+/* Tablet view */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .tree > div:nth-child(1) {
+    height: 70rem !important;
+  }
+}
+ 
