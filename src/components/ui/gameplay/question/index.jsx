@@ -428,10 +428,22 @@ const Question = ({
   useEffect(() => {
     setShowSkip(false);
     if (MediaType && QuestionIntroMediaURL && fileStream) {
-      setMediaShownOnce(false);
-      setShowMedia(true);
+      if (MediaShown) {
+        setMediaShownOnce(true);
+        setShowMedia(false);
+      } else {
+        setMediaShownOnce(false);
+        setShowMedia(true);
+      }
     }
-  }, [QuestionText, QuestionNo, MediaType, QuestionIntroMediaURL, fileStream]);
+  }, [
+    QuestionText,
+    QuestionNo,
+    MediaType,
+    QuestionIntroMediaURL,
+    fileStream,
+    MediaShown,
+  ]);
 
   useEffect(() => {
     if (!mediaShownOnce && QuestionIntroMediaURL) {
