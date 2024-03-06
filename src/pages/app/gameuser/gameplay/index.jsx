@@ -830,7 +830,7 @@ const GamePlay = () => {
         <div className={styles.header_right}>
           <div className={styles.counter}>
             <div>Time elapsed</div>
-            <CountDown initialTimestamp={initGlobaTimeOffset} />
+            <CountDown initialTimestamp={initGlobaTimeOffset}  customTimerClass={styles.customTimerClass}/>
             {/* <div>MIN</div> */}
           </div>
           <div className={styles.vertical_line}></div>
@@ -846,6 +846,9 @@ const GamePlay = () => {
                   ? questionDetails?.data?.ScoreMaster
                   : []
               }
+              meterContainerClass={styles.customMeterContainerClass}
+              tickStyleClass={styles.tickStyleClass}
+              customInfoClass={styles.customInfoClass}
             />
           </div>
         </div>
