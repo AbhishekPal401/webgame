@@ -186,12 +186,12 @@ const GameInstances = () => {
                 <div className={styles.mainContainer}>
                     <div className={styles.mainTopContainer}>
                         <div className={styles.mainTopContainerLeft}>
-                            <div>
+                            {/* <div>
                                 <label>Users</label>
                             </div>
                             <div>
                                 <Link to="">See All</Link>
-                            </div>
+                            </div> */}
                         </div>
                         <div className={styles.mainTopContainerRight}>
                             <Button

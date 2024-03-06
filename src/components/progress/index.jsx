@@ -27,7 +27,14 @@ const scoreMasterDefault = [
   },
 ];
 
-const progress = ({ progress = 0, scoreMaster = [] }) => {
+const progress = ({ 
+  progress = 0, 
+  scoreMaster = [], 
+  tickStyleClass, 
+  meterContainerClass, 
+  customMeterClass,
+  customInfoClass 
+}) => {
   const [rotationDegree, setRotationDegree] = useState(0);
   const [pointerPosition, setPointerPosition] = useState(0);
 
@@ -43,14 +50,14 @@ const progress = ({ progress = 0, scoreMaster = [] }) => {
   return (
     <div
       id="progressmeter"
-      className={styles.container}
+      className={`${styles.container} ${meterContainerClass}`}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
-      <img width={"100%"} src="./images/meter.png" className={styles.meter} />
+      <img width={"100%"} src="./images/meter.png" className={`${styles.meter} ${customMeterClass}`} />
 
       <svg
-        className={styles.tick}
+        className={`${styles.tick} ${tickStyleClass}`}
         width={"4.5rem"}
         height={"8rem"}
         style={{ transform: `rotate(${rotationDegree}deg)` }}
@@ -74,7 +81,7 @@ const progress = ({ progress = 0, scoreMaster = [] }) => {
         </defs>
       </svg>
 
-      <svg className={styles.info}>
+      <svg className={`${styles.info} ${customInfoClass}`}>
         <use xlinkHref={"sprite.svg#info"} />
       </svg>
 
