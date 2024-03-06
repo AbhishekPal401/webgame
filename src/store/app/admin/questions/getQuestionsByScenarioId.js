@@ -32,7 +32,7 @@ export default slice.reducer;
 
 export const getQuestionsByScenarioId = (data) =>
   apiCallBegan({
-    url: "api/Question/GetQuestionListDetails",
+    url: "api/Question/GetQuestionListByPage",
     method: "POST",
     data,
     onStart: requested.type,
