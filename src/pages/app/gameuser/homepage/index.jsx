@@ -136,6 +136,7 @@ const UserHomePage = () => {
     if (callQuestionApi) {
       fetchSession();
     }
+    setCallQuestionApi(false);
   }, [fetchSession, callQuestionApi]);
 
   useEffect(() => {
