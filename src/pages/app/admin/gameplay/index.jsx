@@ -37,6 +37,7 @@ import momentTimezone from "moment-timezone";
 import DOMPurify from "dompurify";
 import { setProgressImageData } from "../../../../store/local/gameplay.js";
 import { toPng, toSvg } from "html-to-image";
+import { resetFileStreamState } from "../../../../store/app/admin/fileStream/getFileStream.js";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -571,6 +572,8 @@ const GamePlay = () => {
 
         console.log("get next question data", data);
 
+        dispatch(resetFileStreamState());
+
         dispatch(getNextQuestionDetails(data));
       }
     }
@@ -852,7 +855,10 @@ const GamePlay = () => {
         <div className={styles.header_right}>
           <div className={styles.counter}>
             <div>Time elapsed</div>
-            <CountDown initialTimestamp={initGlobaTimeOffset} customTimerClass={styles.customTimerClass}/>
+            <CountDown
+              initialTimestamp={initGlobaTimeOffset}
+              customTimerClass={styles.customTimerClass}
+            />
           </div>
           <div className={styles.vertical_line}></div>
           <div className={styles.score}>
