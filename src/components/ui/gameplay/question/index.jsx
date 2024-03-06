@@ -427,11 +427,11 @@ const Question = ({
 
   useEffect(() => {
     setShowSkip(false);
-    if (MediaType && QuestionIntroMediaURL) {
+    if (MediaType && QuestionIntroMediaURL && fileStream) {
       setMediaShownOnce(false);
       setShowMedia(true);
     }
-  }, [QuestionText, QuestionNo, MediaType, QuestionIntroMediaURL]);
+  }, [QuestionText, QuestionNo, MediaType, QuestionIntroMediaURL, fileStream]);
 
   useEffect(() => {
     if (!mediaShownOnce && QuestionIntroMediaURL) {
@@ -543,6 +543,9 @@ const Question = ({
   // console.log("CurrentState", CurrentState);
   // console.log("duration in question comp", Duration);
   // console.log("timerStatus", timerStatus);
+  console.log("showMedia", showMedia);
+  console.log("fileStream", fileStream);
+  console.log("loading", loading);
 
   const getVoteUsername = (Id) => {
     let html = "";
@@ -835,8 +838,7 @@ const Question = ({
                   }
                 }}
               />
-            ) : (MediaType === "pdf" || MediaType === "Pdf") &&
-              fileStream ? (
+            ) : (MediaType === "pdf" || MediaType === "Pdf") && fileStream ? (
               <div className={styles.pdfContainer}>
                 <PDFPreview
                   pdfUrl={fileStream}
