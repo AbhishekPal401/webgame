@@ -180,7 +180,12 @@ const Intro = () => {
         {loading || questionLoading ? (
           <QuestionLoader size={140} />
         ) : (
-          <div className={styles.videoContainer}>
+          <div
+            className={styles.videoContainer}
+            style={{
+              justifyContent: fileType.includes("mp4") ? "flex-end" : "center",
+            }}
+          >
             {questionDetails &&
               questionDetails.data &&
               questionDetails.data.IsIntroFile && (

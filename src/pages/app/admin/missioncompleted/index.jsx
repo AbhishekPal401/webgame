@@ -130,6 +130,8 @@ const MissionCompleted = () => {
               // link.href = dataUrl;
               // link.click();
 
+              console.log("dataUrl", dataUrl);
+
               if (dataUrl.includes("image/png")) {
                 const data = {
                   instanceID: sessionData.InstanceID,
@@ -144,6 +146,9 @@ const MissionCompleted = () => {
                     requesterType: credentials.data.role,
                   },
                 };
+
+                console.log("upload speedometer data", data);
+
                 dispatch(postImage(data));
               }
             })

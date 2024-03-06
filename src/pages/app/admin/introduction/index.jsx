@@ -181,6 +181,12 @@ const Intro = () => {
             className={styles.videoContainer}
             style={{
               justifyContent: fileType.includes("mp4") ? "flex-end" : "center",
+              alignItems:
+                fileType.includes("png") ||
+                fileType.includes("jpg") ||
+                fileType.includes("jpeg")
+                  ? "center"
+                  : "flex-end",
             }}
           >
             {questionDetails &&
