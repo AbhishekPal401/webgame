@@ -302,43 +302,94 @@ const MissionCompleted = () => {
               <Button
                 customClassName={styles.export}
                 onClick={() => {
-                  var node = document.getElementsByClassName("rd3t-svg");
-                  if (node[0]) {
-                    toPng(node[0], {
-                      filter: (node) => {
-                        return node.tagName !== "i";
-                      },
-                    })
-                      .then(function (dataUrl) {
-                        const sessionData = JSON.parse(sessionDetails.data);
+                  const sessionData = JSON.parse(sessionDetails.data);
 
-                        const data = {
-                          instanceID: sessionData.InstanceID,
-                          scoreImage: "",
-                          treeImage: dataUrl,
-                          requester: {
-                            requestID: generateGUID(),
-                            requesterID: credentials.data.userID,
-                            requesterName: credentials.data.userName,
-                            requesterType: credentials.data.role,
-                          },
-                        };
+                  if (sessionData && credentials) {
+                    var node = document.getElementById("progressmeter");
 
-                        // var link = document.createElement("a");
-                        // link.download = "tree.png";
-                        // link.href = dataUrl;
-                        // link.click();
-
-                        // var link = document.createElement("a");
-                        // link.download = "progress.png";
-                        // link.href = progressImage;
-                        // link.click();
-
-                        dispatch(getReport(data));
+                    if (node) {
+                      toPng(node, {
+                        filter: (node) => {
+                          return node.tagName !== "i";
+                        },
                       })
-                      .catch(function (error) {
-                        console.error("oops, something went wrong!", error);
-                      });
+                        .then(function (dataUrl) {
+                          // var link = document.createElement("a");
+                          // link.download = "progressmeter.png";
+                          // link.href = dataUrl;
+                          // link.click();
+
+                          console.log("dataUrl", dataUrl);
+
+                          if (dataUrl.includes("image/png")) {
+                            const data = {
+                              instanceID: sessionData.InstanceID,
+                              scoreMeterImage: dataUrl,
+                              treeImage: "",
+                              progressBarImage: "",
+
+                              requester: {
+                                requestID: generateGUID(),
+                                requesterID: credentials.data.userID,
+                                requesterName: credentials.data.userName,
+                                requesterType: credentials.data.role,
+                              },
+                            };
+
+                            console.log("upload speedometer data", data);
+
+                            dispatch(postImage(data));
+
+                            var node =
+                              document.getElementsByClassName("rd3t-svg");
+                            if (node[0]) {
+                              toPng(node[0], {
+                                filter: (node) => {
+                                  return node.tagName !== "i";
+                                },
+                              })
+                                .then(function (dataUrl) {
+                                  const sessionData = JSON.parse(
+                                    sessionDetails.data
+                                  );
+
+                                  const data = {
+                                    instanceID: sessionData.InstanceID,
+                                    scoreImage: "",
+                                    treeImage: dataUrl,
+                                    requester: {
+                                      requestID: generateGUID(),
+                                      requesterID: credentials.data.userID,
+                                      requesterName: credentials.data.userName,
+                                      requesterType: credentials.data.role,
+                                    },
+                                  };
+
+                                  // var link = document.createElement("a");
+                                  // link.download = "tree.png";
+                                  // link.href = dataUrl;
+                                  // link.click();
+
+                                  // var link = document.createElement("a");
+                                  // link.download = "progress.png";
+                                  // link.href = progressImage;
+                                  // link.click();
+
+                                  console.log("Download data", data);
+
+                                  dispatch(getReport(data));
+                                })
+                                .catch(function (error) {
+                                  console.error(
+                                    "oops, something went wrong!",
+                                    error
+                                  );
+                                });
+                            }
+                          }
+                        })
+                        .catch(function (error) {});
+                    }
                   }
                 }}
               >

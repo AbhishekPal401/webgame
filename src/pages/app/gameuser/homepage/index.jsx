@@ -125,7 +125,11 @@ const UserHomePage = () => {
 
   useEffect(() => {
     JoinWithUserID();
-  }, [JoinWithUserID]);
+  }, []);
+
+  useEffect(() => {
+    JoinWithUserID();
+  }, [isConnectedToServer]);
 
   useEffect(() => {
     fetchSession();
@@ -139,23 +143,41 @@ const UserHomePage = () => {
     setCallQuestionApi(false);
   }, [fetchSession, callQuestionApi]);
 
+  // useEffect(() => {
+  //   const gameavailable = () => {
+  //     console.log("game available called");
+  //     setCallQuestionApi(true);
+  //     setReady(true);
+  //   };
+
+  //   // signalRService.GameAvailableOff(gameavailable);
+
+  //   console.log("game available listener");
+
+  //   signalRService.GameAvailable(gameavailable);
+
+  //   return () => {
+  //     signalRService.GameAvailableOff(gameavailable);
+  //   };
+  // }, []);
+
   useEffect(() => {
     const gameavailable = () => {
-      console.log("game available called");
+      console.log("game available called 2");
       setCallQuestionApi(true);
       setReady(true);
     };
 
     signalRService.GameAvailableOff(gameavailable);
 
-    console.log("game available listener");
+    console.log("game available listener 2");
 
     signalRService.GameAvailable(gameavailable);
 
     return () => {
       signalRService.GameAvailableOff(gameavailable);
     };
-  }, []);
+  }, [isConnectedToServer]);
 
   useEffect(() => {
     if (callSessionApi) {
@@ -204,27 +226,10 @@ const UserHomePage = () => {
     }
   }, [sessionDetails, credentials]);
 
-  // useEffect(() => {
-  //   if (fileUrl) {
-  //     navigate("/intro");
-  //   }
-  // }, [fileUrl]);
-
-  const fileStream = (url) => {
-    const data = {
-      fileName: url,
-      module: "Scenario",
-    };
-    dispatch(getFileStream(data));
-  };
-
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
 
     if (questionDetails.success) {
-      // toast.success(questionDetails.message);
-      // console.log("Intro Media data", questionDetails.data);
-
       if (inProgress) {
         setInProgress(false);
         navigate("/gameplay");
@@ -235,19 +240,9 @@ const UserHomePage = () => {
               navigate("/gameplay");
             } else {
               navigate("/intro");
-              // if (questionDetails?.data?.IntroMediaURL) {
-              //   fileStream(questionDetails?.data?.IntroMediaURL);
-              // } else {
-              //   navigate("/intro");
-              // }
             }
           } else {
             navigate("/intro");
-            // if (questionDetails?.data?.IntroMediaURL) {
-            //   fileStream(questionDetails?.data?.IntroMediaURL);
-            // } else {
-            //   navigate("/intro");
-            // }
           }
         } else {
           fetchFirstQuestion();
@@ -257,7 +252,6 @@ const UserHomePage = () => {
 
       setCallQuestionApi(false);
     } else {
-      // toast.error(questionDetails.message);
     }
   }, [questionDetails]);
 

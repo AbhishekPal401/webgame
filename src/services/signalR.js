@@ -267,6 +267,7 @@ class SignalRService {
     if (!SignalRService.instance) {
       SignalRService.instance = new SignalRService();
     }
+
     return SignalRService.instance;
   }
 }

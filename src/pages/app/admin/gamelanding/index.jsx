@@ -126,6 +126,8 @@ const AdminGameLanding = () => {
       UserID: credentials.data.userID,
       UserRole: credentials.data.role,
     };
+
+    console.log("joining with user", data);
     signalRService.joinWithUserId(data);
   }, [credentials]);
 
@@ -181,6 +183,10 @@ const AdminGameLanding = () => {
       signalRService.ReceiveNotificationOff(ReceiveNotification);
     };
   }, [sessionDetails, isConnectedToServer, JoinWithUserID]);
+
+  useEffect(() => {
+    JoinWithUserID();
+  }, [isConnectedToServer, JoinWithUserID]);
 
   useEffect(() => {
     if (!credentials) return;
