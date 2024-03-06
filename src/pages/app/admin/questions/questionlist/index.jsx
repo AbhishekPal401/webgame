@@ -230,7 +230,8 @@ function QuestionList() {
                               onChange={() => handleCheckboxChange(question.QuestionID)}
                             />
                           </td>
-                          <td>{index + 1}</td>
+                          {/* <td>{index + 1}</td> */}
+                          <td>{index + pageCount * (pageNumber - 1) + 1}</td>
                           {/* {typeof question.QuestionText === 'string' && isHTML(question.QuestionText) ? (
                             <div dangerouslySetInnerHTML={{ __html: extractFirstElementHTML(question.QuestionText) || '' }}></div>
                           ) : (
