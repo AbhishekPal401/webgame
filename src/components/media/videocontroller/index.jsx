@@ -33,6 +33,7 @@ const VideoController = ({
       <video
         ref={videoRef}
         src={videoUrl}
+        autoPlay={false}
         controls={false}
         muted={false}
         onClick={handlePlayPause}
