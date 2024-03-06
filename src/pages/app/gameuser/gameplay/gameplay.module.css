@@ -240,3 +240,28 @@
   width: 100%;
   height: 100%;
 }
+/* Tablet view */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .score {
+    justify-content: center;
+  }
+  .header_middle {
+    background-size: 45%;
+  }
+  .middle {
+    justify-content: center;
+  }
+  .customMeterContainerClass {
+    width: 12rem !important;
+    padding-right: 1.5rem !important;
+  }
+  .tickStyleClass {
+    height: 5rem !important;
+  }
+  .customInfoClass {
+    right: 0.5rem !important;
+  }
+  .customTimerClass {
+    font-size: 2rem !important;
+  }
+}
