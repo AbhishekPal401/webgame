@@ -17,6 +17,8 @@
 }
 .videoWrapper {
   position: relative;
+  width: 100%;
+  height: 100%;
 }
 .videoWrapper video {
   width: 100%;
@@ -69,7 +71,7 @@
   max-height: 100%; */
   height: 100%;
   width: 100%;
-  overflow: hidden; 
+  overflow: hidden;
 }
 .previewImage {
   max-width: 100%;
