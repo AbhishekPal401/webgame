@@ -60,6 +60,8 @@ const Intro = () => {
       },
     };
 
+    dispatch(resetFileStreamState());
+
     dispatch(getNextQuestionDetails(data));
   }, [sessionDetails, credentials]);
 
