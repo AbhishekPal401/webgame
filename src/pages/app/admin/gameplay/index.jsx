@@ -175,6 +175,8 @@ const GamePlay = () => {
       dispatch(resetNextQuestionDetailsState());
       dispatch(resetAnswerDetailsState());
       dispatch(resetInstanceProgressByIDState());
+      dispatch(resetFileStreamState());
+
       console.log("refresh called");
       navigate(`/game/${JSON.parse(sessionDetails.data).InstanceID}`);
       dispatch(resetSessionDetailsState());

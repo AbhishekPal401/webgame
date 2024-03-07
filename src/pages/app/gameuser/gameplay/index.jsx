@@ -42,6 +42,7 @@ import Progress from "../../../../components/progress";
 import { getCurrentTimeStamp } from "../../../../utils/helper";
 import momentTimezone from "moment-timezone";
 import DOMPurify from "dompurify";
+import { resetFileStreamState } from "../../../../store/app/admin/fileStream/getFileStream";
 
 const DecisionTree = ({ onCancel = () => {} }) => {
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -190,6 +191,7 @@ const GamePlay = () => {
       dispatch(resetAnswerDetailsState());
       dispatch(resetSessionDetailsState());
       dispatch(resetInstanceProgressByIDState());
+      dispatch(resetFileStreamState());
       navigate("/");
       localStorage.setItem("refresh", false);
     }
@@ -375,6 +377,8 @@ const GamePlay = () => {
         };
 
         console.log("get next question data", data);
+
+        dispatch(resetFileStreamState());
 
         dispatch(getNextQuestionDetails(data));
       }
@@ -830,7 +834,10 @@ const GamePlay = () => {
         <div className={styles.header_right}>
           <div className={styles.counter}>
             <div>Time elapsed</div>
-            <CountDown initialTimestamp={initGlobaTimeOffset}  customTimerClass={styles.customTimerClass}/>
+            <CountDown
+              initialTimestamp={initGlobaTimeOffset}
+              customTimerClass={styles.customTimerClass}
+            />
             {/* <div>MIN</div> */}
           </div>
           <div className={styles.vertical_line}></div>
