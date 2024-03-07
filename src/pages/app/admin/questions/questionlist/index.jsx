@@ -123,44 +123,61 @@ function QuestionList() {
     }
   }, [deleteQuestionResponse]);
 
+  // const handleDownload = async () => {
+  //   try {
+  //     if (!scenarioID || !credentials)
+  //       return;
+
+  //     const formData = new FormData();
+  //     formData.append("TemplateType", "QuestionTemplate");
+
+  //     const response = await axios.post(
+  //       `${baseUrl}/api/Storage/GetFileTemplate`,
+  //       formData
+  //     );
+
+  //     if (response.data && response.data.success) {
+  //       const responseData = JSON.parse(response.data.data);
+  //       console.log("responseData :", responseData)
+
+  //       const data = JSON.parse(responseData.Data);
+  //       console.log("data :", data)
+
+  //       const downloadURL = data.DownloadURL;
+  //       console.log("downloadURL :", downloadURL)
+
+  //       // Create a link
+  //       const link = document.createElement('a');
+  //       link.href = downloadURL;
+  //       link.setAttribute('download', 'QuestionTemplate.xlsx');
+
+  //       // Trigger a click event
+  //       link.click();
+
+  //       // Remove the link
+  //       document.body.removeChild(link);
+  //     } else {
+  //       console.log("Download failed:", response.data.message || "Unknown error");
+  //     }
+  //   } catch (error) {
+  //     console.error('Error downloading file:', error);
+  //   }
+  // };
+
   const handleDownload = async () => {
     try {
-      if (!scenarioID || !credentials)
-        return;
+      const filePath = '/media/gametemplate/GameTemplate.xlsx'; 
 
-      const formData = new FormData();
-      formData.append("TemplateType", "QuestionTemplate");
+      // Create a link
+      const link = document.createElement('a');
+      link.href = filePath;
+      link.setAttribute('download', 'GameTemplate.xlsx');
 
-      const response = await axios.post(
-        `${baseUrl}/api/Storage/GetFileTemplate`,
-        formData
-      );
-
-      if (response.data && response.data.success) {
-        const responseData = JSON.parse(response.data.data);
-        console.log("responseData :", responseData)
-
-        const data = JSON.parse(responseData.Data);
-        console.log("data :", data)
-
-        const downloadURL = data.DownloadURL;
-        console.log("downloadURL :", downloadURL)
-
-        // Create a link
-        const link = document.createElement('a');
-        link.href = downloadURL;
-        link.setAttribute('download', 'QuestionTemplate.xlsx');
-
-        // Trigger a click event
-        link.click();
-
-        // Remove the link
-        document.body.removeChild(link);
-      } else {
-        console.log("Download failed:", response.data.message || "Unknown error");
-      }
+      // Trigger a click event
+      link.click();
     } catch (error) {
       console.error('Error downloading file:', error);
+      toast.error('Error downloading file:');
     }
   };
 
