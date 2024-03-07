@@ -232,7 +232,11 @@ const UserHomePage = () => {
     if (questionDetails.success) {
       if (inProgress) {
         setInProgress(false);
-        navigate("/gameplay");
+        if (questionDetails.data.IntroSkipped === true) {
+          navigate("/gameplay");
+        } else {
+          navigate("/intro");
+        }
       } else {
         if (questionDetails.data.IntroMediaURL) {
           if (questionDetails?.data?.IntroSkipped) {
