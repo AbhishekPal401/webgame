@@ -198,7 +198,12 @@ const Intro = () => {
                         alt="Audio icon png"
                         className={styles.previewAudioImage}
                       />
-                      <audio ref={mediaRef} controls autoPlay>
+                      <audio
+                        ref={mediaRef}
+                        controls
+                        autoPlay
+                        controlsList="nodownload"
+                      >
                         <source src={fileStream} type="audio/mp3" />
                         Your browser does not support the audio tag.
                       </audio>
