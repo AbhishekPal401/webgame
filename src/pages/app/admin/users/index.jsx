@@ -16,7 +16,7 @@ import {
   resetDeleteUserState,
 } from "../../../../store/app/admin/users/deleteUser.js";
 import { toast } from "react-toastify";
-import { formatDateString, formatTime } from "../../../../utils/helper.js";
+import { convertSecondsToHMS, formatDateString, formatTime } from "../../../../utils/helper.js";
 import Checkbox from "../../../../components/ui/checkbox/index.jsx";
 
 const Users = () => {
@@ -189,7 +189,7 @@ const Users = () => {
                       <td>{user?.OrganizationName}</td>
                       <td>{user?.UpdatedAt && formatDateString(user.UpdatedAt)}</td>
                       <td>{user?.Designation}</td>
-                      <td>{user?.Duration && formatTime(user.Duration)}</td>
+                      <td>{user?.Duration && convertSecondsToHMS(user.Duration)}</td>
                       <td>{(user?.Status === 'Active') ? "Active" : "Inactive"}</td>
 
                       <td>
