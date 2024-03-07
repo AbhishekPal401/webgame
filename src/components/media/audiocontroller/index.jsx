@@ -117,6 +117,7 @@ const AudioController = ({
           controls={true}
           // onClick={handlePlayPause}
           onEnded={handleAudioEnd}
+          controlsList="nodownload"
         />
 
         {showButton && (
