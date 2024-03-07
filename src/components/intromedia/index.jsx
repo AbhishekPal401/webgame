@@ -5,7 +5,7 @@ import PDFPreview from "../preview/pdfpreview";
 import DOMPurify from "dompurify";
 
 const IntroMedia = ({
-  onCancel = () => { },
+  onCancel = () => {},
   mediaURL = "",
   description = "",
   mediaType = "",
@@ -37,12 +37,14 @@ const IntroMedia = ({
   // console.log("resourceType", resourceType);
 
   return (
-    <div className={"modal_content"}
+    <div
+      className={"modal_content"}
       style={{
         width: "80vw",
         height: "85vh",
         overflowY: "auto",
-      }}>
+      }}
+    >
       <div className={"modal_header"}>
         <div>Introduction Resource</div>
         <div>
@@ -72,7 +74,7 @@ const IntroMedia = ({
         ) : resourceType === "Audio" ? (
           <div className={styles.audio}>
             <img src="./images/audio_background.png" alt="Audio Background" />
-            <audio controls>
+            <audio controls controlsList="nodownload">
               <source src={mediaURL} />
               Your browser does not support the audio tag.
             </audio>
