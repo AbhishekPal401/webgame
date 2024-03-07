@@ -132,6 +132,7 @@ const Intro = () => {
       questionDetails.success &&
       questionDetails?.data?.IsIntroFile === false
     ) {
+      dispatch(resetFileStreamState());
       navigate("/gameplay");
     } else if (
       questionDetails.success &&
