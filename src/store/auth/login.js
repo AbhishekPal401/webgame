@@ -159,7 +159,7 @@ export const logoutUser = () => async (dispatch, getState) => {
       console.log("id_token", id_token);
 
       const response = await axios.get(
-        "https://login-stg.pwc.com/openam/oauth2/connect/endSession",
+        `${import.meta.env.VITE_OPENID_ENDPOINT_URL}`,
         {
           headers: {
             Authorization: `Bearer ${id_token}`, // Include the ID token in the Authorization header
