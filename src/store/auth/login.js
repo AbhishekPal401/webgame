@@ -158,9 +158,22 @@ export const logoutUser = () => async (dispatch, getState) => {
 
       console.log("id_token", id_token);
 
-      await userManager.signoutPopup({ id_token_hint: id_token });
+      const response = await axios.get(
+        "https://login-stg.pwc.com/openam/oauth2/connect/endSession",
+        {
+          headers: {
+            Authorization: `Bearer ${id_token}`, // Include the ID token in the Authorization header
+            "Content-Type": "application/json",
+          },
+          params: { id_token_hint: id_token },
+        }
+      );
+      console.log("Logout response:", response.data);
+
       sessionStorage.clear();
+
       signalRService.stopConnection();
+
       dispatch(logout());
     } catch (error) {
       console.error("Error logging out:", error);
