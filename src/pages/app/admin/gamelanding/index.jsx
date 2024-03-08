@@ -275,7 +275,11 @@ const AdminGameLanding = () => {
     if (questionDetails.success) {
       console.log("inProgress", inProgress);
       if (inProgress) {
-        navigate("/gameplay");
+        if (questionDetails.data.IntroSkipped === true) {
+          navigate("/gameplay");
+        } else {
+          navigate("/intro");
+        }
       } else {
         if (questionDetails.data.IntroMediaURL) {
           if (questionDetails?.data?.IntroSkipped) {
