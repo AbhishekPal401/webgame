@@ -51,9 +51,10 @@ const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
             // )}
             data-tooltip-id="my-tooltip"
             data-tooltip-html={ReactDOMServer.renderToStaticMarkup(
-              <div className={styles.tooltipContent}
+              <div
+                className={styles.tooltipContent}
                 style={{
-                  maxWidth: '50rem',
+                  maxWidth: "50rem",
                   wordBreak: "break-all",
                 }}
               >
@@ -84,6 +85,10 @@ const CustomNode = ({ nodeDatum, foreignObjectProps }) => {
       </foreignObject>
     </g>
   );
+};
+
+const randomNumber = (min, max) => {
+  return Math.random() * (max - min) + min;
 };
 
 const OptimalTree = ({ data = {} }) => {
@@ -178,6 +183,24 @@ const OptimalTree = ({ data = {} }) => {
         depthFactor={120}
         orientation="vertical"
       />
+      <svg
+        className={styles.reset}
+        viewBox="0 0 16 16"
+        onClick={() => {
+          console.log("containerRef", containerRef);
+          if (containerRef.current) {
+            const { width, height } =
+              containerRef.current.getBoundingClientRect();
+
+            setTranslate({ x: width / 2 + randomNumber(0.1, 0.2), y: 0 });
+          }
+        }}
+      >
+        <path
+          d="M13.64 2.35C12.8999 1.60485 12.0196 1.01356 11.0499 0.610231C10.0802 0.206901 9.04024 -0.000494355 7.99 8.84845e-07C3.57 8.84845e-07 0 3.58 0 8C0 12.42 3.57 16 7.99 16C11.72 16 14.83 13.45 15.72 10H13.64C13.2281 11.1695 12.4633 12.1824 11.4513 12.8988C10.4393 13.6153 9.22994 14 7.99 14C4.68 14 1.99 11.31 1.99 8C1.99 4.69 4.68 2 7.99 2C9.65 2 11.13 2.69 12.21 3.78L8.99 7H15.99V8.84845e-07L13.64 2.35Z"
+          fill="#FFB600"
+        />
+      </svg>
       <Tooltip id="my-tooltip" place="right" />
     </div>
   );

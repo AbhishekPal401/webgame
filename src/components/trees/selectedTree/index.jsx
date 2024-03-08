@@ -111,9 +111,10 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
             className={nodeClassName}
             data-tooltip-id="my-tooltip"
             data-tooltip-html={ReactDOMServer.renderToStaticMarkup(
-              <div className={styles.tooltipContent}
+              <div
+                className={styles.tooltipContent}
                 style={{
-                  maxWidth: '50rem',
+                  maxWidth: "50rem",
                   wordBreak: "break-all",
                 }}
               >
@@ -123,8 +124,9 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
             style={{
               padding: !contentIsHTML
                 ? `${padding * 0.5}px ${padding}px`
-                : `${padding * 0.1}px ${padding}px ${padding * 0.1}px ${padding + 5
-                }px`,
+                : `${padding * 0.1}px ${padding}px ${padding * 0.1}px ${
+                    padding + 5
+                  }px`,
             }}
           >
             {/* {label} */}
@@ -132,12 +134,12 @@ const CustomNode = ({ nodeDatum, foreignObjectProps, userType }) => {
             {!contentIsHTML
               ? label
               : truncatedLabel && (
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(truncatedLabel),
-                  }}
-                />
-              )}
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(truncatedLabel),
+                    }}
+                  />
+                )}
           </div>
         </div>
       </foreignObject>
