@@ -457,6 +457,7 @@ function QuestionBuilder() {
     console.log("on submit");
     if (!scenarioID && !questionID) return;
 
+    let isEmpty = false;
     let valid = true;
     let data = { ...questionData };
     let updatedAnswers = [...questionData.answers];
@@ -471,9 +472,20 @@ function QuestionBuilder() {
           error: "Please enter question",
         },
       };
-
+      isEmpty = true;
+      valid = false;
+    } else if (questionData?.question?.value !== questionData?.question?.value?.trim()) {
+      console.log("question:", data.question);
+      data = {
+        ...data,
+        question: {
+          ...data.question,
+          error: "Please enter a valid question",
+        },
+      };
       valid = false;
     }
+
 
     if (questionData?.decisionMaker?.value?.trim() === "") {
       console.log("decisionMaker:", data.decisionMaker);
@@ -512,30 +524,61 @@ function QuestionBuilder() {
         updatedAnswer.option.error = "Please enter the answer text.";
         console.log("option:", answer.option);
         valid = false;
+        isEmpty = true;
+
+      } else if (answer?.option?.value !== answer?.option?.value?.trim()) {
+        updatedAnswer.option.error = "Please enter the valid answer text.";
+        console.log("option:", answer.option);
+        valid = false;
+        toast.error("Please enter the valid answer text.");
       }
 
       if (answer?.optimal?.value === "") {
         updatedAnswer.optimal.error = "Please select optimal.";
         console.log("optimal:", answer.optimal);
         valid = false;
+        isEmpty = true;
+
       }
 
       if (answer?.score?.value?.trim() === "") {
         updatedAnswer.score.error = "Please enter the score.";
         console.log("score:", answer.score);
         valid = false;
+        isEmpty = true;
+
+      } else if (!/^\d+$/.test(answer.score.value)) {
+        updatedAnswer.score.error = "Score should only contain numeric characters.";
+        console.log("score:", answer.score);
+        valid = false;
+        toast.error("Score should only contain numeric characters without any spaces.");
+
       }
 
       if (answer?.nextQuestion?.value === "") {
         updatedAnswer.nextQuestion.error = "Please select next question.";
         console.log("nextQuestion:", answer.nextQuestion);
         valid = false;
+        isEmpty = true;
+
+      } else if (!/^\d+$/.test(answer.nextQuestion.value)) {
+        updatedAnswer.nextQuestion.error = "Next question should only contain numeric characters.";
+        console.log("nextQuestion:", answer.nextQuestion);
+        valid = false;
+        toast.error("Next question should only contain numeric characters without any spaces.");
+
       }
 
       if (answer?.consequence?.value?.trim() === "") {
         updatedAnswer.consequence.error = "Please enter the consequence.";
         console.log("consequence:", answer.consequence);
         // valid = false;
+      } else if (/\d/.test(answer.consequence.value)) {
+        updatedAnswer.consequence.error = "Consequence should not contain numeric characters.";
+        console.log("consequence:", answer.consequence);
+        valid = false;
+        toast.error("Consequence should only contain alphabets without any leading or trailing white spaces.");
+
       }
 
       // TODO:: add choose Narrative file | not handled on backend
@@ -554,40 +597,83 @@ function QuestionBuilder() {
     };
 
     // TODO:: set the initial state to show errors
+    if (!isEmpty) {
+      if (valid) {
+        let url = supportFIleDefaultUrl.url;
+        let fileType = supportFIleDefaultUrl.type;
 
-    if (valid) {
-      let url = supportFIleDefaultUrl.url;
-      let fileType = supportFIleDefaultUrl.type;
+        if (questionData?.narrativeMedia?.value) {
+          console.log("narrative media is uploaded")
+          const formData = new FormData();
 
-      if (questionData?.narrativeMedia?.value) {
-        console.log("narrative media is uploaded")
-        const formData = new FormData();
+          formData.append("Module", "Question");
+          formData.append("ContentType", questionData.narrativeMedia.value.type);
+          formData.append("FormFile", questionData.narrativeMedia.value);
+          formData.append("ScenarioID", scenarioID);
+          formData.append("Requester.RequestID", generateGUID());
+          formData.append("Requester.RequesterID", credentials.data.userID);
+          formData.append("Requester.RequesterName", credentials.data.userName);
+          formData.append("Requester.RequesterType", credentials.data.role);
 
-        formData.append("Module", "Question");
-        formData.append("ContentType", questionData.narrativeMedia.value.type);
-        formData.append("FormFile", questionData.narrativeMedia.value);
-        formData.append("ScenarioID", scenarioID);
-        formData.append("Requester.RequestID", generateGUID());
-        formData.append("Requester.RequesterID", credentials.data.userID);
-        formData.append("Requester.RequesterName", credentials.data.userName);
-        formData.append("Requester.RequesterType", credentials.data.role);
+          const response = await axios.post(
+            `${baseUrl}/api/Storage/FileUpload`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+          console.log("response :", response);
+          if (response.data && response.data.success) {
+            const serializedData = JSON.parse(response.data.data);
 
-        const response = await axios.post(
-          `${baseUrl}/api/Storage/FileUpload`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
+            console.log("upload success");
+            url = JSON.parse(serializedData.Data).URL;
+
+            const data = {
+              questionID: questionID ? questionID : "",
+              scenarioID: scenarioID ? scenarioID : "",
+              questionText: questionData?.question?.value,
+              requester: {
+                requestID: generateGUID(),
+                requesterID: credentials.data.userID,
+                requesterName: credentials.data.userName,
+                requesterType: credentials.data.role,
+              },
+              delegatedTo: questionData?.decisionMaker?.value,
+              supportFile: url,
+              supportFileType: fileType,
+              answersData: questionData.answers.map((answer) => ({
+                answerID: answer.answerId.value,
+                answerText: answer.option.value,
+                isOptimalAnswer: answer.optimal.value,
+                answerScore: answer.score.value,
+                nextQuestionNo: answer.nextQuestion.value,
+                content: answer.consequence.value, // TODO :: consequence for now is null || not implemented in backend
+                requester: {
+                  requestID: generateGUID(),
+                  requesterID: credentials.data.userID,
+                  requesterName: credentials.data.userName,
+                  requesterType: credentials.data.role,
+                },
+              })),
+            };
+
+            console.log("data to update : ", data);
+            dispatch(updateQuestion(data));
+
+          } else if (!response.data && !response.data.success) {
+            toast.error(response.data.message);
+            console.log("upload error");
+          } else {
+            console.log("error message :", response.data.message);
+            toast.error("File upload failed.");
           }
-        );
-        console.log("response :", response);
-        if (response.data && response.data.success) {
-          const serializedData = JSON.parse(response.data.data);
+        } else {
+          console.log(" no narrative media is uploaded")
 
-          console.log("upload success");
-          url = JSON.parse(serializedData.Data).URL;
-
+          // else no narrative media is uploaded
           const data = {
             questionID: questionID ? questionID : "",
             scenarioID: scenarioID ? scenarioID : "",
@@ -599,8 +685,10 @@ function QuestionBuilder() {
               requesterType: credentials.data.role,
             },
             delegatedTo: questionData?.decisionMaker?.value,
-            supportFile: url,
-            supportFileType: fileType,
+            // supportFile: url, narrative media is not madatory 
+            // supportFileType: fileType,
+            supportFile: url || "",
+            supportFileType: fileType || "",
             answersData: questionData.answers.map((answer) => ({
               answerID: answer.answerId.value,
               answerText: answer.option.value,
@@ -619,53 +707,9 @@ function QuestionBuilder() {
 
           console.log("data to update : ", data);
           dispatch(updateQuestion(data));
-
-        } else if (!response.data && !response.data.success) {
-          toast.error(response.data.message);
-          console.log("upload error");
-        } else {
-          console.log("error message :", response.data.message);
-          toast.error("File upload failed.");
         }
-      } else {
-        console.log(" no narrative media is uploaded")
 
-        // else no narrative media is uploaded
-        const data = {
-          questionID: questionID ? questionID : "",
-          scenarioID: scenarioID ? scenarioID : "",
-          questionText: questionData?.question?.value,
-          requester: {
-            requestID: generateGUID(),
-            requesterID: credentials.data.userID,
-            requesterName: credentials.data.userName,
-            requesterType: credentials.data.role,
-          },
-          delegatedTo: questionData?.decisionMaker?.value,
-          // supportFile: url, narrative media is not madatory 
-          // supportFileType: fileType,
-          supportFile: url || "",
-          supportFileType: fileType || "",
-          answersData: questionData.answers.map((answer) => ({
-            answerID: answer.answerId.value,
-            answerText: answer.option.value,
-            isOptimalAnswer: answer.optimal.value,
-            answerScore: answer.score.value,
-            nextQuestionNo: answer.nextQuestion.value,
-            content: answer.consequence.value, // TODO :: consequence for now is null || not implemented in backend
-            requester: {
-              requestID: generateGUID(),
-              requesterID: credentials.data.userID,
-              requesterName: credentials.data.userName,
-              requesterType: credentials.data.role,
-            },
-          })),
-        };
-
-        console.log("data to update : ", data);
-        dispatch(updateQuestion(data));
       }
-
     } else {
       toast.error("Please fill all the details.");
     }
@@ -848,7 +892,7 @@ function QuestionBuilder() {
                             value={answer.option.value}
                             onChange={(e) => onAnswerChange(e, index, "option")}
                             // placeholder={`Option ${index + 1}`}
-                            placeholder={`Option ${index + 1} \u{2022}`} 
+                            placeholder={`Option ${index + 1} \u{2022}`}
                           />
                         </div>
                         {/* Option :: end */}

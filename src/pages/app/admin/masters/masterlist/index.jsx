@@ -419,7 +419,7 @@ const MasterList = () => {
         toast.error(organizationByIdDetails?.message);
         return;
       }
-      
+
       const data = JSON.parse(organizationByIdDetails?.data);
       console.log("organizationByIdDetails data:", data);
 
@@ -476,6 +476,7 @@ const MasterList = () => {
   const onAddMasterData = () => {
     console.log("onAddMasterData")
 
+    let isEmpty = false;
     let valid = true;
     let data = { ...addMasterData };
 
@@ -493,6 +494,20 @@ const MasterList = () => {
         };
 
         valid = false;
+        isEmpty = true;
+
+      } else if (addMasterData?.designation?.value !== addMasterData?.designation?.value?.trim()) {
+        console.log("designation:", data.designation);
+        data = {
+          ...data,
+          designation: {
+            ...data.designation,
+            error: "Please enter valide designation name",
+          },
+        };
+
+        valid = false;
+        toast.error("Please enter valid designation name");
       }
 
       if (addMasterData?.description?.value?.trim() === "") {
@@ -506,6 +521,20 @@ const MasterList = () => {
         };
 
         valid = false;
+        isEmpty = true;
+
+      } else if (addMasterData?.description?.value !== addMasterData?.description?.value?.trim()) {
+        console.log("description:", data.description);
+        data = {
+          ...data,
+          description: {
+            ...data.description,
+            error: "Please enter description ",
+          },
+        };
+
+        valid = false;
+        toast.error("Please enter valid description name");
       }
 
     } else if (activeTab === 'Organization') {
@@ -520,32 +549,49 @@ const MasterList = () => {
         };
 
         valid = false;
+        isEmpty = true;
+
+      } else if (addMasterData?.organization?.value !== addMasterData?.organization?.value?.trim()) {
+        console.log("organization:", data.organization);
+        data = {
+          ...data,
+          organization: {
+            ...data.organization,
+            error: "Please enter organization ",
+          },
+        };
+
+        valid = false;
+        toast.error("Please enter valid organization name");
       }
+
     }
 
     // If all validations pass
     try {
-      if (valid) {
-        const data = {
-          masterID: "",
-          masterName: (activeTab === 'Designation' ?
-            addMasterData?.designation?.value :
-            addMasterData?.organization?.value),
-          description: (activeTab === 'Designation' ? addMasterData?.description?.value : ""),
-          masterType: (activeTab === 'Designation' ? 'Designation' : 'Organization'),
-          isActive: "true",
-          requester: {
-            requestID: generateGUID(),
-            requesterID: credentials.data.userID,
-            requesterName: credentials.data.userName,
-            requesterType: credentials.data.role,
-          },
-        };
+      if (!isEmpty) {
+        if (valid) {
+          const data = {
+            masterID: "",
+            masterName: (activeTab === 'Designation' ?
+              addMasterData?.designation?.value :
+              addMasterData?.organization?.value),
+            description: (activeTab === 'Designation' ? addMasterData?.description?.value : ""),
+            masterType: (activeTab === 'Designation' ? 'Designation' : 'Organization'),
+            isActive: "true",
+            requester: {
+              requestID: generateGUID(),
+              requesterID: credentials.data.userID,
+              requesterName: credentials.data.userName,
+              requesterType: credentials.data.role,
+            },
+          };
 
-        console.log("data to update : ", data);
+          console.log("data to update : ", data);
 
-        dispatch(createMaster(data));
+          dispatch(createMaster(data));
 
+        }
       } else {
         toast.error("Please fill all the details.");
       }
@@ -592,6 +638,7 @@ const MasterList = () => {
   const onEditMasterData = () => {
     console.log("onEditMasterData")
 
+    let isEmpty = false;
     let valid = true;
     let data = { ...updateMasterData };
 
@@ -609,7 +656,21 @@ const MasterList = () => {
         };
 
         valid = false;
+        isEmpty = true;
+      } else if (updateMasterData?.designation?.value !== updateMasterData?.designation?.value?.trim()) {
+        console.log("designation:", data.designation);
+        data = {
+          ...data,
+          designation: {
+            ...data.designation,
+            error: "Please enter valide designation name",
+          },
+        };
+
+        valid = false;
+        toast.error("Please enter valid designation name");
       }
+
 
       if (updateMasterData?.description?.value?.trim() === "") {
         console.log("description:", data.description);
@@ -622,6 +683,20 @@ const MasterList = () => {
         };
 
         valid = false;
+        isEmpty = true;
+
+      } else if (updateMasterData?.description?.value !== updateMasterData?.description?.value?.trim()) {
+        console.log("description:", data.description);
+        data = {
+          ...data,
+          description: {
+            ...data.description,
+            error: "Please enter valid description ",
+          },
+        };
+
+        valid = false;
+        toast.error("Please enter valid description");
       }
 
     } else if (activeTab === 'Organization') {
@@ -636,53 +711,69 @@ const MasterList = () => {
         };
 
         valid = false;
+        isEmpty = true;
+
+      } else if (updateMasterData?.organization?.value !== updateMasterData?.organization?.value?.trim()) {
+        console.log("organization:", data.organization);
+        data = {
+          ...data,
+          organization: {
+            ...data.organization,
+            error: "Please enter valid organization ",
+          },
+        };
+
+        valid = false;
+        toast.error("Please enter valid organization");
       }
     }
 
     // If all validations pass
     try {
-      if (valid) {
+      if (!isEmpty) {
+        if (valid) {
 
-        if (activeTab === 'Designation') {
-          const data = {
-            id: showEditModal,
-            designationName: updateMasterData?.designation?.value,
-            description: updateMasterData?.description?.value,
-            // isActive: updateMasterData?.designationStatus?.value?.toString(),
-            isActive: updateMasterData?.designationStatus?.value,
-            requester: {
-              requestID: generateGUID(),
-              requesterID: credentials.data.userID,
-              requesterName: credentials.data.userName,
-              requesterType: credentials.data.role,
-            },
-          };
+          if (activeTab === 'Designation') {
+            const data = {
+              id: showEditModal,
+              designationName: updateMasterData?.designation?.value,
+              description: updateMasterData?.description?.value,
+              // isActive: updateMasterData?.designationStatus?.value?.toString(),
+              isActive: updateMasterData?.designationStatus?.value,
+              requester: {
+                requestID: generateGUID(),
+                requesterID: credentials.data.userID,
+                requesterName: credentials.data.userName,
+                requesterType: credentials.data.role,
+              },
+            };
 
-          console.log("data to edit in designation : ", data);
+            console.log("data to edit in designation : ", data);
 
-          dispatch(updateDesignation(data));
+            dispatch(updateDesignation(data));
 
-        } else {
+          } else {
 
-          const data = {
-            id: showEditModal,
-            organizationName: updateMasterData?.organization?.value,
-            // isActive: updateMasterData?.organizationStatus?.value?.toString(),
-            isActive: updateMasterData?.organizationStatus?.value,
-            requester: {
-              requestID: generateGUID(),
-              requesterID: credentials.data.userID,
-              requesterName: credentials.data.userName,
-              requesterType: credentials.data.role,
-            },
-          };
+            const data = {
+              id: showEditModal,
+              organizationName: updateMasterData?.organization?.value,
+              // isActive: updateMasterData?.organizationStatus?.value?.toString(),
+              isActive: updateMasterData?.organizationStatus?.value,
+              requester: {
+                requestID: generateGUID(),
+                requesterID: credentials.data.userID,
+                requesterName: credentials.data.userName,
+                requesterType: credentials.data.role,
+              },
+            };
 
-          console.log("data to edit in organization : ", data);
+            console.log("data to edit in organization : ", data);
 
-          dispatch(updateOrganization(data));
+            dispatch(updateOrganization(data));
+          }
+
+
         }
-
-
       } else {
         toast.error("Please fill all the details.");
       }
