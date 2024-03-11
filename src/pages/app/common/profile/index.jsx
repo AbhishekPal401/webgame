@@ -10,7 +10,7 @@ import {
   resetUserDetailState,
 } from "../../../../store/app/admin/users/getUserbyId.js";
 import { useDispatch, useSelector } from "react-redux";
-import { validateEmail, validatePhone, validatePassword } from "../../../../utils/validators";
+import { validateEmail, validatePhone, validatePassword, validateUsername } from "../../../../utils/validators";
 import { baseUrl } from "../../../../middleware/url";
 import { toast } from "react-toastify";
 import {
@@ -453,10 +453,11 @@ const UserProfile = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
 
+    let isEmpty = false;
     let valid = true;
     let data = userData;
 
-    if (userData.username.value === "") {
+    if (userData?.username?.value?.trim() === "") {
       data = {
         ...data,
         username: {
@@ -466,9 +467,21 @@ const UserProfile = () => {
       };
 
       valid = false;
+      isEmpty = true;
+    } else if (!validateUsername(userData?.username?.value)) {
+      console.log("!validateUsername :", userData?.username?.value);
+      data = {
+        ...data,
+        username: {
+          ...data.username,
+          error: "Please enter a valid username",
+        },
+      };
+      valid = false;
+      toast.error("Please enter a valid username ");
     }
 
-    if (userData.email.value === "") {
+    if (userData?.email?.value?.trim() === "") {
       data = {
         ...data,
         email: {
@@ -478,7 +491,10 @@ const UserProfile = () => {
       };
 
       valid = false;
+      isEmpty = true;
+
     } else if (!validateEmail(userData.email.value)) {
+      console.log("!validateEmail :", userData?.email?.value);
       data = {
         ...data,
         email: {
@@ -487,7 +503,9 @@ const UserProfile = () => {
         },
       };
       valid = false;
+      toast.error("Please enter a valid email with format abc@xyz.com, min 6 and max 254 characters without any spaces ");
     }
+
 
     // Validate mobile number
     if (userData?.mobile?.value?.trim() === "") {
@@ -512,9 +530,11 @@ const UserProfile = () => {
         },
       };
       valid = false;
+      toast.error("Please enter a valid mobile number");
+
     }
 
-    if (userData.role.value === "") {
+    if (userData?.role?.value?.trim() === "") {
       data = {
         ...data,
         role: {
@@ -524,9 +544,11 @@ const UserProfile = () => {
       };
 
       valid = false;
+      isEmpty = true;
+
     }
 
-    if (userData.designation.value === "") {
+    if (userData?.designation?.value?.trim() === "") {
       data = {
         ...data,
         designation: {
@@ -536,9 +558,11 @@ const UserProfile = () => {
       };
 
       valid = false;
+      isEmpty = true;
+
     }
 
-    if (userData.organizationName.value === "") {
+    if (userData?.organizationName?.value?.trim() === "") {
       data = {
         ...data,
         organizationName: {
@@ -548,6 +572,8 @@ const UserProfile = () => {
       };
 
       valid = false;
+      isEmpty = true;
+
     }
 
     // Validate password
@@ -573,9 +599,11 @@ const UserProfile = () => {
         },
       };
       // valid = false;
+      toast.error("Please enter a valid password  ");
+
     }
 
-    console.log(" password validation " + validatePassword(userData?.password?.value?.trim()) + " passwprd: " + userData.password.value)
+    // console.log(" password validation " + validatePassword(userData?.password?.value?.trim()) + " passwprd: " + userData.password.value)
 
     if (!userID && userData.profileImage.value === "") {
       data = {
@@ -590,31 +618,61 @@ const UserProfile = () => {
     }
 
     try {
-      if (valid) {
-        let url = defaultUrl;
+      if (!isEmpty) {
+        if (valid) {
+          let url = defaultUrl;
 
-        if (userData.profileImage.value) {
-          const formData = new FormData();
+          if (userData.profileImage.value) {
+            const formData = new FormData();
 
-          formData.append("Module", "ProfileImage");
-          formData.append("contentType", userData.profileImage.value.type);
-          formData.append("FormFile", userData.profileImage.value);
+            formData.append("Module", "ProfileImage");
+            formData.append("contentType", userData.profileImage.value.type);
+            formData.append("FormFile", userData.profileImage.value);
 
-          const response = await axios.post(
-            `${baseUrl}/api/Storage/FileUpload`,
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
+            const response = await axios.post(
+              `${baseUrl}/api/Storage/FileUpload`,
+              formData,
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              }
+            );
+
+            if (response.data && response.data.success) {
+              const serializedData = JSON.parse(response.data.data);
+
+              url = JSON.parse(serializedData.Data).URL;
+
+              const data = {
+                userID: userID ? userID : "",
+                userName: userData.username.value,
+                password: userData.password.value ? userData.password.value : "",
+                role: userData.role.value,
+                email: userData.email.value,
+                mobile: userData.mobile.value,
+                designation: userData.designation.value,
+                organizationName: userData.organizationName.value,
+                profileImage: url,
+                status: userData.status.value,
+                requester: {
+                  requestID: generateGUID(),
+                  requesterID: credentials.data.userID,
+                  requesterName: credentials.data.userName,
+                  requesterType: credentials.data.role,
+                },
+              };
+              console.log("data to be created :", data)
+              dispatch(createUser(data));
+
+            } else if (response.data && !response.data.success) {
+              toast.error(response.data.message);
+              console.log("error message :", response.data.message);
+            } else {
+              console.log("error message :", response.data.message);
+              toast.error("File upload failed.");
             }
-          );
-
-          if (response.data && response.data.success) {
-            const serializedData = JSON.parse(response.data.data);
-
-            url = JSON.parse(serializedData.Data).URL;
-
+          } else {
             const data = {
               userID: userID ? userID : "",
               userName: userData.username.value,
@@ -635,37 +693,12 @@ const UserProfile = () => {
             };
             console.log("data to be created :", data)
             dispatch(createUser(data));
-
-          } else if (response.data && !response.data.success) {
-            toast.error(response.data.message);
-            console.log("error message :", response.data.message);
-          } else {
-            console.log("error message :", response.data.message);
-            toast.error("File upload failed.");
           }
-        } else {
-          const data = {
-            userID: userID ? userID : "",
-            userName: userData.username.value,
-            password: userData.password.value ? userData.password.value : "",
-            role: userData.role.value,
-            email: userData.email.value,
-            mobile: userData.mobile.value,
-            designation: userData.designation.value,
-            organizationName: userData.organizationName.value,
-            profileImage: url,
-            status: userData.status.value,
-            requester: {
-              requestID: generateGUID(),
-              requesterID: credentials.data.userID,
-              requesterName: credentials.data.userName,
-              requesterType: credentials.data.role,
-            },
-          };
-          console.log("data to be created :", data)
-          dispatch(createUser(data));
-        }
 
+        }
+      } else {
+        console.log("user empty data:", userData);
+        toast.error("Please fill all the details properly.");
       }
     } catch (error) {
       toast.error("An error ocurred while saving the user.")

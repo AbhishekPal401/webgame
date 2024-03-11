@@ -277,7 +277,8 @@
 /* Tablet view */
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
   .container {
-    height: 45vh;
+    /* height: 45vh; */
+    height: 35vh;
   }
   .question {
     max-height: 10.5rem;
