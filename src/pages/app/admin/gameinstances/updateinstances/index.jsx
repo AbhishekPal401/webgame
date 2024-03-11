@@ -623,6 +623,7 @@ const UpdateInstances = () => {
         event.preventDefault();
         console.log("on submit");
 
+        let isEmpty = false;
         let valid = true;
         let data = { ...gameInstanceData };
         let updatedPlayers = [...gameInstanceData.instancePlayers];
@@ -639,6 +640,20 @@ const UpdateInstances = () => {
             };
 
             valid = false;
+            isEmpty = true;
+
+        } else if (gameInstanceData?.instanceName?.value !== gameInstanceData?.instanceName?.value?.trim()) {
+            console.log("instanceName:", data.instanceName);
+            data = {
+                ...data,
+                instanceName: {
+                    ...data.instanceName,
+                    error: "Please enter valid instance name",
+                },
+            };
+
+            valid = false;
+            toast.error("Please enter valid instance name");
         }
 
         if (gameInstanceData?.organization?.value?.trim() === "") {
@@ -652,6 +667,7 @@ const UpdateInstances = () => {
             };
 
             valid = false;
+            isEmpty = true;
         }
 
         if (gameInstanceData?.groupName?.value?.trim() === "") {
@@ -665,6 +681,7 @@ const UpdateInstances = () => {
             };
 
             valid = false;
+            isEmpty = true;
         }
 
         // if (gameInstanceData?.groupSize?.value?.trim() === "") {
@@ -691,6 +708,7 @@ const UpdateInstances = () => {
             };
 
             valid = false;
+            isEmpty = true;
         }
 
         // if (gameInstanceData?.level?.value?.trim() === "") {
@@ -749,30 +767,31 @@ const UpdateInstances = () => {
         // TODO:: set the initial state to show errors
 
 
-        if (valid) {
+        if (!isEmpty) {
+            if (valid) {
 
-            const data = {
-                instanceID: instanceID,
-                instanceName: gameInstanceData?.instanceName?.value,
-                scenarioID: gameInstanceData?.scenarioName?.value,
-                organizationID: gameInstanceData?.organization?.value,
-                level: gameInstanceData?.level?.value,
-                groupID: gameInstanceData?.groupName?.value,
-                singleOrMultiplayer: gameInstanceData?.groupSize?.value,
-                userID: "",
-                requester: {
-                    requestID: generateGUID(),
-                    requesterID: credentials.data.userID,
-                    requesterName: credentials.data.userName,
-                    requesterType: credentials.data.role,
-                },
-            };
+                const data = {
+                    instanceID: instanceID,
+                    instanceName: gameInstanceData?.instanceName?.value,
+                    scenarioID: gameInstanceData?.scenarioName?.value,
+                    organizationID: gameInstanceData?.organization?.value,
+                    level: gameInstanceData?.level?.value,
+                    groupID: gameInstanceData?.groupName?.value,
+                    singleOrMultiplayer: gameInstanceData?.groupSize?.value,
+                    userID: "",
+                    requester: {
+                        requestID: generateGUID(),
+                        requesterID: credentials.data.userID,
+                        requesterName: credentials.data.userName,
+                        requesterType: credentials.data.role,
+                    },
+                };
 
-            console.log("data to update : ", data);
-            dispatch(updateGameInstance(data));
-        }
-        else {
-            toast.error("Please fill all the details.")
+                console.log("data to update : ", data);
+                dispatch(updateGameInstance(data));
+            }
+        } else {
+            toast.error("Please fill all the mandatory details.")
         }
 
     };

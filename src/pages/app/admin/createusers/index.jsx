@@ -277,6 +277,7 @@ const CreateUser = () => {
               responseType: 'blob', // Set response type to blob
               headers: {
                 "Content-Type": "application/json", // Update content type to JSON
+                Authorization: `Bearer ${credentials.data.token}`,
               },
               cancelToken: source.token,
             }
@@ -497,7 +498,7 @@ const CreateUser = () => {
         },
       };
       valid = false;
-      toast.error("Please enter a valid mobile number");
+      toast.error("Please enter valid mobile number");
     }
 
     if (userData?.role?.value?.trim() === "") {
@@ -582,6 +583,7 @@ const CreateUser = () => {
               {
                 headers: {
                   "Content-Type": "multipart/form-data",
+                  Authorization: `Bearer ${credentials.data.token}`,
                 },
               }
             );
@@ -646,7 +648,7 @@ const CreateUser = () => {
         }
       } else {
         console.log("user empty data:", userData);
-        toast.error("Please fill all the details properly.");
+        toast.error("Please fill all the mandatory details.");
       }
     } catch (error) {
       toast.error("An error ocurred while saving the user.");

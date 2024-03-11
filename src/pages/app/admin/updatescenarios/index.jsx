@@ -264,6 +264,7 @@ const UpdateScenarios = () => {
               responseType: 'blob', // Set response type to blob
               headers: {
                 "Content-Type": "application/json", // Update content type to JSON
+                Authorization: `Bearer ${credentials.data.token}`,
               },
               cancelToken: source.token,
             }
@@ -371,6 +372,7 @@ const UpdateScenarios = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
 
+    let isEmpty = false;
     let valid = true;
     let data = scenarioData;
     console.log("scenarioData data:", data);
@@ -386,6 +388,20 @@ const UpdateScenarios = () => {
       };
 
       valid = false;
+      isEmpty = true;
+
+    } else if (scenarioData?.scenarioName?.value !== scenarioData?.scenarioName?.value?.trim()) {
+      console.log("scenarioName :", scenarioData?.scenarioName?.value);
+      data = {
+        ...data,
+        scenarioName: {
+          ...data.scenarioName,
+          error: "Please enter a valid scenario name",
+        },
+      };
+
+      valid = false;
+      toast.error("Please enter a valid scenario name")
     }
 
     if (scenarioData?.scenarioDescription?.value?.trim() === "") {
@@ -399,9 +415,26 @@ const UpdateScenarios = () => {
       };
 
       valid = false;
+      isEmpty = true;
+
+    } else if (scenarioData?.scenarioDescription?.value !== scenarioData?.scenarioDescription?.value?.trim()) {
+      console.log("scenarioDescription :", scenarioData?.scenarioDescription?.value);
+      data = {
+        ...data,
+        scenarioDescription: {
+          ...data.scenarioDescription,
+          error: "Please enter a valid scenario description",
+        },
+      };
+
+      valid = false;
+      toast.error("Please enter a valid scenario description")
     }
 
-    if (scenarioData?.gameIntroText?.value?.trim() === "") {
+    if (
+      scenarioData?.gameIntroText?.value?.trim() === "" ||
+      scenarioData?.gameIntroText?.value?.replace(/<\/?[^>]+(>|$)/g, "").trim() === ""
+      ) {
       console.log("gameIntroText:", data.gameIntroText);
       data = {
         ...data,
@@ -412,6 +445,8 @@ const UpdateScenarios = () => {
       };
 
       valid = false;
+      isEmpty = true;
+
     }
 
     if ((!scenarioID || !introFileDisplay) && scenarioData?.gameIntroFile?.value === "") {
@@ -427,107 +462,110 @@ const UpdateScenarios = () => {
       // valid = false;
     }
 
-    if (valid) {
-      let url = defaultIntroFileUrl.url;
-      let fileType = defaultIntroFileUrl.type;
+    if (!isEmpty) {
+      if (valid) {
+        let url = defaultIntroFileUrl.url;
+        let fileType = defaultIntroFileUrl.type;
 
-      if (scenarioData?.gameIntroFile?.value) {
-        console.log(" game intro file is uploaded")
-        const formData = new FormData();
+        if (scenarioData?.gameIntroFile?.value) {
+          console.log(" game intro file is uploaded")
+          const formData = new FormData();
 
-        formData.append("Module", "scenario");
-        formData.append(
-          "contentType",
-          scenarioData?.gameIntroFile?.value?.type
-        );
-        formData.append("FormFile", scenarioData?.gameIntroFile?.value);
-        formData.append("ScenarioID", scenarioID); // TODO :: not implemented in backend
-        formData.append("Requester.RequestID", generateGUID());
-        formData.append("Requester.RequesterID", credentials.data.userID);
-        formData.append("Requester.RequesterName", credentials.data.userName);
-        formData.append("Requester.RequesterType", credentials.data.role);
-
-        try {
-          const response = await axios.post(
-            `${baseUrl}/api/Storage/FileUpload`,
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            }
+          formData.append("Module", "scenario");
+          formData.append(
+            "contentType",
+            scenarioData?.gameIntroFile?.value?.type
           );
+          formData.append("FormFile", scenarioData?.gameIntroFile?.value);
+          formData.append("ScenarioID", scenarioID); // TODO :: not implemented in backend
+          formData.append("Requester.RequestID", generateGUID());
+          formData.append("Requester.RequesterID", credentials.data.userID);
+          formData.append("Requester.RequesterName", credentials.data.userName);
+          formData.append("Requester.RequesterType", credentials.data.role);
 
-          if (response.data && response.data.success) {
-            const serializedData = JSON.parse(response.data.data);
+          try {
+            const response = await axios.post(
+              `${baseUrl}/api/Storage/FileUpload`,
+              formData,
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                  Authorization: `Bearer ${credentials.data.token}`,
+                },
+              }
+            );
 
-            url = JSON.parse(serializedData.Data).URL;
+            if (response.data && response.data.success) {
+              const serializedData = JSON.parse(response.data.data);
 
-            // now dispatch 
-            const data = {
-              scenarioID: scenarioID ? scenarioID : "",
-              scenarioName: scenarioData?.scenarioName?.value,
-              description: scenarioData?.scenarioDescription?.value,
-              gameIntro: scenarioData?.gameIntroText?.value,
-              introFile: url,
-              introFileType: fileType,
-              status: "Create",
-              version: "1",
-              baseVersionID: "1",
-              // handled by backend :: status, version, baseVersionID
-              requester: {
-                requestID: generateGUID(),
-                requesterID: credentials.data.userID,
-                requesterName: credentials.data.userName,
-                requesterType: credentials.data.role,
-              },
-            };
-            dispatch(updateScenario(data));
+              url = JSON.parse(serializedData.Data).URL;
 
-          } else if (response.data && !response.data.success) {
-            toast.error(response.data.message);
-            console.log("error message :", response.data.message);
-          } else {
-            console.log("error message :", response.data.message);
-            toast.error("File upload failed.");
+              // now dispatch 
+              const data = {
+                scenarioID: scenarioID ? scenarioID : "",
+                scenarioName: scenarioData?.scenarioName?.value,
+                description: scenarioData?.scenarioDescription?.value,
+                gameIntro: scenarioData?.gameIntroText?.value,
+                introFile: url,
+                introFileType: fileType,
+                status: "Create",
+                version: "1",
+                baseVersionID: "1",
+                // handled by backend :: status, version, baseVersionID
+                requester: {
+                  requestID: generateGUID(),
+                  requesterID: credentials.data.userID,
+                  requesterName: credentials.data.userName,
+                  requesterType: credentials.data.role,
+                },
+              };
+              dispatch(updateScenario(data));
+
+            } else if (response.data && !response.data.success) {
+              toast.error(response.data.message);
+              console.log("error message :", response.data.message);
+            } else {
+              console.log("error message :", response.data.message);
+              toast.error("File upload failed.");
+            }
+
+          } catch (error) {
+            toast.error("An error occurred while uploading the file.");
+            console.error("Axios error:", error);
           }
+        } else {
+          console.log(" game intro file is not uploaded")
 
-        } catch (error) {
-          toast.error("An error occurred while uploading the file.");
-          console.error("Axios error:", error);
+          // if (url != "" || url != null || url != undefined) {
+          // else if no intro file is uploaded 
+          // console.log(" if url is not null, empty or indefiened")
+          const data = {
+            scenarioID: scenarioID ? scenarioID : "",
+            scenarioName: scenarioData?.scenarioName?.value,
+            description: scenarioData?.scenarioDescription?.value,
+            gameIntro: scenarioData?.gameIntroText?.value,
+            introFile: url || "",
+            introFileType: fileType || "",
+            status: "Create",
+            version: "1",
+            baseVersionID: "1",
+            // handled by backend :: status, version, baseVersionID
+            requester: {
+              requestID: generateGUID(),
+              requesterID: credentials.data.userID,
+              requesterName: credentials.data.userName,
+              requesterType: credentials.data.role,
+            },
+          };
+          dispatch(updateScenario(data));
+          // } else {
+          //   toast.error("Please upload Game intro file.");
+          // }
         }
-      } else {
-        console.log(" game intro file is not uploaded")
 
-        // if (url != "" || url != null || url != undefined) {
-        // else if no intro file is uploaded 
-        // console.log(" if url is not null, empty or indefiened")
-        const data = {
-          scenarioID: scenarioID ? scenarioID : "",
-          scenarioName: scenarioData?.scenarioName?.value,
-          description: scenarioData?.scenarioDescription?.value,
-          gameIntro: scenarioData?.gameIntroText?.value,
-          introFile: url || "",
-          introFileType: fileType || "",
-          status: "Create",
-          version: "1",
-          baseVersionID: "1",
-          // handled by backend :: status, version, baseVersionID
-          requester: {
-            requestID: generateGUID(),
-            requesterID: credentials.data.userID,
-            requesterName: credentials.data.userName,
-            requesterType: credentials.data.role,
-          },
-        };
-        dispatch(updateScenario(data));
-        // } else {
-        //   toast.error("Please upload Game intro file.");
-        // }
       }
-
     } else {
-      toast.error("Please fill all the details.");
+      toast.error("Please fill all the mandatory details.");
     }
   };
 

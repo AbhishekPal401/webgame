@@ -301,6 +301,7 @@ function QuestionBuilder() {
               responseType: 'blob', // Set response type to blob
               headers: {
                 "Content-Type": "application/json", // Update content type to JSON
+                Authorization: `Bearer ${credentials.data.token}`,
               },
               cancelToken: source.token,
             }
@@ -461,9 +462,16 @@ function QuestionBuilder() {
     let valid = true;
     let data = { ...questionData };
     let updatedAnswers = [...questionData.answers];
+    let answerError = false;
+    let scoreError = false;
+    let nextQuestionError = false;
+    let consequenceError = false;
 
     // validate the question fields
-    if (questionData?.question?.value?.trim() === "") {
+    if (
+      questionData?.question?.value?.trim() === "" ||
+      questionData.question.value.replace(/<\/?[^>]+(>|$)/g, "").trim() === ""
+    ) {
       console.log("question:", data.question);
       data = {
         ...data,
@@ -530,7 +538,8 @@ function QuestionBuilder() {
         updatedAnswer.option.error = "Please enter the valid answer text.";
         console.log("option:", answer.option);
         valid = false;
-        toast.error("Please enter the valid answer text.");
+        // toast.error("Please enter the valid answer text.");
+        answerError = true;
       }
 
       if (answer?.optimal?.value === "") {
@@ -551,8 +560,8 @@ function QuestionBuilder() {
         updatedAnswer.score.error = "Score should only contain numeric characters.";
         console.log("score:", answer.score);
         valid = false;
-        toast.error("Score should only contain numeric characters without any spaces.");
-
+        // toast.error("Score should only contain numeric characters without any spaces.");
+        scoreError = true;
       }
 
       if (answer?.nextQuestion?.value === "") {
@@ -565,20 +574,23 @@ function QuestionBuilder() {
         updatedAnswer.nextQuestion.error = "Next question should only contain numeric characters.";
         console.log("nextQuestion:", answer.nextQuestion);
         valid = false;
-        toast.error("Next question should only contain numeric characters without any spaces.");
-
+        // toast.error("Next question should only contain numeric characters without any spaces.");
+        nextQuestionError = true;
       }
 
       if (answer?.consequence?.value?.trim() === "") {
         updatedAnswer.consequence.error = "Please enter the consequence.";
         console.log("consequence:", answer.consequence);
         // valid = false;
-      } else if (/\d/.test(answer.consequence.value)) {
+      } else if (
+        /\d/.test(answer.consequence.value) ||
+        answer?.consequence?.value !== answer?.consequence?.value?.trim()
+      ) {
         updatedAnswer.consequence.error = "Consequence should not contain numeric characters.";
         console.log("consequence:", answer.consequence);
         valid = false;
-        toast.error("Consequence should only contain alphabets without any leading or trailing white spaces.");
-
+        // toast.error("Consequence should only contain alphabets.");
+        consequenceError = true;
       }
 
       // TODO:: add choose Narrative file | not handled on backend
@@ -598,6 +610,23 @@ function QuestionBuilder() {
 
     // TODO:: set the initial state to show errors
     if (!isEmpty) {
+
+      // Display generic error message if any error occurred in each column
+      if (answerError) {
+        toast.error("Please enter the valid answer.");
+      }
+      if (scoreError) {
+        toast.error("Please enter valid score.");
+      }
+
+      if (nextQuestionError) {
+        toast.error("Please select valid next question.");
+      }
+
+      if (consequenceError) {
+        toast.error("Please enter valid consequence.");
+      }
+
       if (valid) {
         let url = supportFIleDefaultUrl.url;
         let fileType = supportFIleDefaultUrl.type;
@@ -621,6 +650,7 @@ function QuestionBuilder() {
             {
               headers: {
                 "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${credentials.data.token}`,
               },
             }
           );
@@ -711,7 +741,7 @@ function QuestionBuilder() {
 
       }
     } else {
-      toast.error("Please fill all the details.");
+      toast.error("Please fill all the mandatory details.");
     }
   };
 
