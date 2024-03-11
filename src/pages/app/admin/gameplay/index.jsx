@@ -252,6 +252,9 @@ const GamePlay = () => {
       const topPosition = divRect.bottom + window.scrollY - 40;
       setPosition(topPosition);
     }
+    return () => {
+      toast.dismiss();
+    };
   }, []);
 
   useEffect(() => {
