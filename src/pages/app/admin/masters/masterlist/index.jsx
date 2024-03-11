@@ -529,12 +529,12 @@ const MasterList = () => {
           ...data,
           description: {
             ...data.description,
-            error: "Please enter description ",
+            error: "Please enter description.",
           },
         };
 
         valid = false;
-        toast.error("Please enter valid description name");
+        toast.error("Please enter valid description.");
       }
 
     } else if (activeTab === 'Organization') {
@@ -562,7 +562,7 @@ const MasterList = () => {
         };
 
         valid = false;
-        toast.error("Please enter valid organization name");
+        toast.error("Please enter valid organization.");
       }
 
     }

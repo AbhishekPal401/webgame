@@ -324,6 +324,7 @@ const UserProfile = () => {
               responseType: 'blob', // Set response type to blob
               headers: {
                 "Content-Type": "application/json", // Update content type to JSON
+                Authorization: `Bearer ${credentials.data.token}`,
               },
               cancelToken: source.token,
             }
@@ -635,6 +636,7 @@ const UserProfile = () => {
               {
                 headers: {
                   "Content-Type": "multipart/form-data",
+                  Authorization: `Bearer ${credentials.data.token}`,
                 },
               }
             );

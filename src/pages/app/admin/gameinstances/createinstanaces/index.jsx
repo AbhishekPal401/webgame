@@ -701,6 +701,7 @@ const CreateInstances = () => {
         console.log("add group")
         console.log("onAddGroup");
 
+        let isEmpty = false;
         let valid = true;
         let data = { ...addGroupData };
 
@@ -711,44 +712,60 @@ const CreateInstances = () => {
                 ...data,
                 groupName: {
                     ...data.groupName,
-                    error: "Please select group name",
+                    error: "Please enter group name",
                 },
             };
 
             valid = false;
+            isEmpty = true;
+        } else if (addGroupData?.groupName?.value !== addGroupData?.groupName?.value?.trim()) {
+            console.log("groupName:", data.groupName);
+            data = {
+                ...data,
+                groupName: {
+                    ...data.groupName,
+                    error: "Please enter a valid group name",
+                },
+            };
+
+            valid = false;
+            toast.error("Please enter a valid group name");
         }
 
         if (addGroupData?.addedUsers?.length === 0) {
             console.log("Please add at least one user to the group.");
             valid = false;
+            isEmpty = true;
         }
 
 
         // If all validations pass
         try {
-            if (valid) {
-                const data = {
-                    groupName: addGroupData?.groupName?.value,
-                    groupDescription: "",
-                    organizationID: addGroupData?.organizationId?.value,
-                    requester: {
-                        requestID: generateGUID(),
-                        requesterID: credentials.data.userID,
-                        requesterName: credentials.data.userName,
-                        requesterType: credentials.data.role,
-                    },
-                };
-                const groupByOrgIdData = {
-                    organizationID: addGroupData?.organizationId?.value,
+            if (!isEmpty) {
+                if (valid) {
+                    const data = {
+                        groupName: addGroupData?.groupName?.value,
+                        groupDescription: "",
+                        organizationID: addGroupData?.organizationId?.value,
+                        requester: {
+                            requestID: generateGUID(),
+                            requesterID: credentials.data.userID,
+                            requesterName: credentials.data.userName,
+                            requesterType: credentials.data.role,
+                        },
+                    };
+                    const groupByOrgIdData = {
+                        organizationID: addGroupData?.organizationId?.value,
+                    }
+
+                    console.log("data to update : ", data);
+
+                    // dispatch a request to create user and get group details by org id so the group names will be updated
+                    dispatch(createGroup(data));
+                    dispatch(getGroupDetailsByOrgID(groupByOrgIdData));
+
+
                 }
-
-                console.log("data to update : ", data);
-
-                // dispatch a request to create user and get group details by org id so the group names will be updated
-                dispatch(createGroup(data));
-                dispatch(getGroupDetailsByOrgID(groupByOrgIdData));
-
-
             } else {
                 toast.error("Please fill all the details.");
             }
@@ -764,6 +781,7 @@ const CreateInstances = () => {
         event.preventDefault();
         console.log("on submit");
 
+        let isEmpty = false;
         let valid = true;
         let data = { ...gameInstanceData };
         let updatedPlayers = [...gameInstanceData.instancePlayers];
@@ -780,6 +798,19 @@ const CreateInstances = () => {
             };
 
             valid = false;
+            isEmpty = true;
+        } else if (gameInstanceData?.instanceName?.value !== gameInstanceData?.instanceName?.value?.trim()) {
+            console.log("instanceName:", data.instanceName);
+            data = {
+                ...data,
+                instanceName: {
+                    ...data.instanceName,
+                    error: "Please enter valid instance name",
+                },
+            };
+
+            valid = false;
+            toast.error("Please enter valid instance name");
         }
 
         if (gameInstanceData?.organization?.value?.trim() === "") {
@@ -793,6 +824,8 @@ const CreateInstances = () => {
             };
 
             valid = false;
+            isEmpty = true;
+
         }
 
         if (gameInstanceData?.groupName?.value?.trim() === "") {
@@ -806,6 +839,8 @@ const CreateInstances = () => {
             };
 
             valid = false;
+            isEmpty = true;
+
         }
 
         // if (gameInstanceData?.groupSize?.value?.trim() === "") {
@@ -890,31 +925,33 @@ const CreateInstances = () => {
         // TODO:: set the initial state to show errors
 
 
-        if (valid) {
+        if (!isEmpty) {
+            if (valid) {
 
-            const data = {
-                scenarioID: gameInstanceData?.scenarioName?.value,
-                instanceName: gameInstanceData?.instanceName?.value,
-                description: "",
-                startTime: "",
-                organizationID: gameInstanceData?.organization?.value,
-                singleOrMultiplayer: gameInstanceData?.groupSize?.value,
-                timeToAppear: "",
-                instanceDuration: "",
-                endTime: "",
-                groupID: gameInstanceData?.groupName?.value,
-                userID: "",
-                level: gameInstanceData?.level?.value,
-                requester: {
-                    requestID: generateGUID(),
-                    requesterID: credentials.data.userID,
-                    requesterName: credentials.data.userName,
-                    requesterType: credentials.data.role,
-                },
-            };
+                const data = {
+                    scenarioID: gameInstanceData?.scenarioName?.value,
+                    instanceName: gameInstanceData?.instanceName?.value,
+                    description: "",
+                    startTime: "",
+                    organizationID: gameInstanceData?.organization?.value,
+                    singleOrMultiplayer: gameInstanceData?.groupSize?.value,
+                    timeToAppear: "",
+                    instanceDuration: "",
+                    endTime: "",
+                    groupID: gameInstanceData?.groupName?.value,
+                    userID: "",
+                    level: gameInstanceData?.level?.value,
+                    requester: {
+                        requestID: generateGUID(),
+                        requesterID: credentials.data.userID,
+                        requesterName: credentials.data.userName,
+                        requesterType: credentials.data.role,
+                    },
+                };
 
-            console.log("data to update : ", data);
-            dispatch(createGameInstance(data));
+                console.log("data to update : ", data);
+                dispatch(createGameInstance(data));
+            }
         } else {
             toast.error("Please fill all the details.")
         }

@@ -301,6 +301,7 @@ function QuestionBuilder() {
               responseType: 'blob', // Set response type to blob
               headers: {
                 "Content-Type": "application/json", // Update content type to JSON
+                Authorization: `Bearer ${credentials.data.token}`,
               },
               cancelToken: source.token,
             }
@@ -573,11 +574,11 @@ function QuestionBuilder() {
         updatedAnswer.consequence.error = "Please enter the consequence.";
         console.log("consequence:", answer.consequence);
         // valid = false;
-      } else if (/\d/.test(answer.consequence.value)) {
+      } else if (!/^\d+$/.test(answer.consequence.value)) {
         updatedAnswer.consequence.error = "Consequence should not contain numeric characters.";
         console.log("consequence:", answer.consequence);
         valid = false;
-        toast.error("Consequence should only contain alphabets without any leading or trailing white spaces.");
+        toast.error("Consequence should only contain alphabets.");
 
       }
 
@@ -621,6 +622,7 @@ function QuestionBuilder() {
             {
               headers: {
                 "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${credentials.data.token}`,
               },
             }
           );
