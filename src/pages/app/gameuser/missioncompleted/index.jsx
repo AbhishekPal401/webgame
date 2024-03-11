@@ -15,6 +15,7 @@ import { resetSessionDetailsState } from "../../../../store/app/user/session/get
 import { convertSecondsToHMS, formatTime } from "../../../../utils/helper";
 import Progress from "../../../../components/progress";
 import QuestionLoader from "../../../../components/loader/questionLoader";
+import { resetFileStreamState } from "../../../../store/app/admin/fileStream/getFileStream";
 
 const SelectTree = ({ clicked = 0, onSelect = () => {} }) => {
   return (
@@ -61,6 +62,7 @@ const MissionCompleted = () => {
 
   useEffect(() => {
     dispatch(resetNextQuestionDetailsState());
+    dispatch(resetFileStreamState());
   }, []);
 
   useEffect(() => {

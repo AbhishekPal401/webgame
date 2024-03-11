@@ -98,8 +98,8 @@ const UserHomePage = () => {
   }, [credentials]);
 
   useEffect(() => {
-    dispatch(resetNextQuestionDetailsState());
     dispatch(resetFileStreamState());
+    dispatch(resetNextQuestionDetailsState());
   }, []);
 
   const fetchSession = useCallback(() => {

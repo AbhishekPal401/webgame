@@ -35,6 +35,7 @@ import {
   postImage,
   resetpostImageState,
 } from "../../../../store/app/admin/report/postImages";
+import { resetFileStreamState } from "../../../../store/app/admin/fileStream/getFileStream";
 
 const SelectTree = ({ clicked = 1, onSelect = () => {} }) => {
   return (
@@ -170,6 +171,8 @@ const MissionCompleted = () => {
   }, [postImageResponse]);
 
   useEffect(() => {
+    dispatch(resetFileStreamState());
+
     const sessionData = JSON.parse(sessionDetails.data);
 
     if (sessionData && credentials) {

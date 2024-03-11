@@ -303,7 +303,7 @@ const GamePlay = () => {
           borderRight: "0.4rem solid #ffb600",
         },
         closeButton: false,
-        autoClose: 3000,
+        autoClose: 9000,
         icon: false,
       });
     }
