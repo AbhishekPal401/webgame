@@ -174,11 +174,15 @@ export const logoutUser = () => async (dispatch, getState) => {
 
       signalRService.stopConnection();
 
+      localStorage.setItem("isAuthorised_jwt", null);
+
       dispatch(logout());
     } catch (error) {
       console.error("Error logging out:", error);
     }
   } else {
+    localStorage.setItem("isAuthorised_jwt", null);
+
     signalRService.stopConnection();
 
     dispatch(logout());

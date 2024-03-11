@@ -5,6 +5,9 @@ class SignalRService {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(import.meta.env.VITE_WEBSOCKET_URL, {
         withCredentials: false,
+        accessTokenFactory: () => {
+          return localStorage.getItem("isAuthorised_jwt") || "";
+        },
       })
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Information)

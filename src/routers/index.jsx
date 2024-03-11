@@ -23,20 +23,24 @@ const Routers = () => {
     if (credentials?.success) {
       if (credentials?.data?.token) {
         setIsAuthorised(true);
+        localStorage.setItem("isAuthorised_jwt", credentials?.data?.token);
 
         if (credentials?.message) {
           toast.success(credentials?.message);
         }
       } else {
         setIsAuthorised(false);
+        localStorage.setItem("isAuthorised_jwt", null);
       }
     } else if (!credentials?.success && credentials?.message) {
       toast.error(credentials?.message);
       dispatch(resetLoginState());
       setIsAuthorised(false);
+      localStorage.setItem("isAuthorised_jwt", null);
     } else {
       dispatch(resetLoginState());
       setIsAuthorised(false);
+      localStorage.setItem("isAuthorised_jwt", null);
     }
 
     setIsLoading(false);
