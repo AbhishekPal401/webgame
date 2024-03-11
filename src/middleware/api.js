@@ -1,6 +1,8 @@
 import axios from "axios";
 import * as actions from "./actions";
 import { baseUrl } from "./url.js";
+import { jwtDecode } from "jwt-decode";
+import { logoutUser } from "../store/auth/login.js";
 
 const api =
   ({ dispatch, getState }) =>
@@ -29,6 +31,15 @@ const api =
       } = getState();
 
       if (onReset) dispatch({ type: onReset, payload: null });
+
+      const tokenData = jwtDecode(credentials?.data?.token);
+
+      console.log("tokenData", tokenData);
+
+      if (Number(tokenData.exp) < Math.round(new Date().getTime() / 1000)) {
+        console.log("session over ... singing out");
+        dispatch(logoutUser());
+      }
 
       let headers = {
         "Content-Type": "application/json",
