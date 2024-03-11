@@ -531,7 +531,7 @@ const UserProfile = () => {
         },
       };
       valid = false;
-      toast.error("Please enter a valid mobile number");
+      toast.error("Please enter valid mobile number");
 
     }
 
@@ -700,7 +700,7 @@ const UserProfile = () => {
         }
       } else {
         console.log("user empty data:", userData);
-        toast.error("Please fill all the details properly.");
+        toast.error("Please fill all the mandatory details.");
       }
     } catch (error) {
       toast.error("An error ocurred while saving the user.")

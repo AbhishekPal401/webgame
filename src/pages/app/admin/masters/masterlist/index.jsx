@@ -593,7 +593,7 @@ const MasterList = () => {
 
         }
       } else {
-        toast.error("Please fill all the details.");
+        toast.error("Please fill all the mandatory details.");
       }
     } catch (error) {
       toast.error("An error occurred while saving the master data.");
@@ -775,7 +775,7 @@ const MasterList = () => {
 
         }
       } else {
-        toast.error("Please fill all the details.");
+        toast.error("Please fill all the mandatory details.");
       }
     } catch (error) {
       toast.error("An error occurred while saving the master data.");

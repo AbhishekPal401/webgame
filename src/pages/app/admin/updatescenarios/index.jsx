@@ -431,7 +431,10 @@ const UpdateScenarios = () => {
       toast.error("Please enter a valid scenario description")
     }
 
-    if (scenarioData?.gameIntroText?.value?.trim() === "") {
+    if (
+      scenarioData?.gameIntroText?.value?.trim() === "" ||
+      scenarioData?.gameIntroText?.value?.replace(/<\/?[^>]+(>|$)/g, "").trim() === ""
+      ) {
       console.log("gameIntroText:", data.gameIntroText);
       data = {
         ...data,
@@ -562,7 +565,7 @@ const UpdateScenarios = () => {
 
       }
     } else {
-      toast.error("Please fill all the details.");
+      toast.error("Please fill all the mandatory details.");
     }
   };
 

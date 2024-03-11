@@ -791,7 +791,7 @@ const UpdateInstances = () => {
                 dispatch(updateGameInstance(data));
             }
         } else {
-            toast.error("Please fill all the details.")
+            toast.error("Please fill all the mandatory details.")
         }
 
     };
