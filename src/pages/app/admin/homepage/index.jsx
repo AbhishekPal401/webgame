@@ -24,6 +24,7 @@ import { toast } from "react-toastify";
 import ModalContainer from "../../../../components/modal/index.jsx";
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
 import { resetNextQuestionDetailsState } from "../../../../store/app/user/questions/getNextQuestion";
+import { resetFileStreamState } from "../../../../store/app/admin/fileStream/getFileStream.js";
 
 const Homepage = () => {
   const [pageCount, setPageCount] = useState(5);
@@ -250,11 +251,13 @@ const Homepage = () => {
                             <Button
                               onClick={() => {
                                 if (scenario.Status === "Create") {
+                                  dispatch(resetFileStreamState());
                                   navigate(`/game/${scenario.InstanceID}`);
                                 } else if (
                                   scenario.Status === "Start" ||
                                   scenario.Status === "InProgress"
                                 ) {
+                                  dispatch(resetFileStreamState());
                                   navigate(`/game/${scenario.InstanceID}`);
                                 }
                               }}

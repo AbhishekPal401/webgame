@@ -17,6 +17,8 @@ const IntroMedia = ({
   const [loading, setLoading] = useState(false);
   const [fileStream, setFileStream] = useState(null);
 
+  const { credentials } = useSelector((state) => state.login);
+
   const getFileStream = async (url) => {
     setLoading(true);
 
@@ -25,7 +27,10 @@ const IntroMedia = ({
       module: "Scenario",
     };
 
-    const headers = { "Content-Type": "application/json" };
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${credentials?.data?.token}`,
+    };
 
     const response = await axios.request({
       baseURL: baseUrl,

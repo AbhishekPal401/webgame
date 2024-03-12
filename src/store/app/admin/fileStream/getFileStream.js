@@ -41,11 +41,18 @@ const { requested, success, failed, reset } = slice.actions;
 
 export default slice.reducer;
 
-export const getFileStream = (data) => async (dispatch) => {
+export const getFileStream = (data) => async (dispatch, getState) => {
   try {
     dispatch(requested());
 
-    const headers = { "Content-Type": "application/json" };
+    const {
+      login: { credentials },
+    } = getState();
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${credentials?.data?.token}`,
+    };
 
     const response = await axios.request({
       baseURL: baseUrl,
