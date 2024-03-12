@@ -702,6 +702,7 @@ const CreateInstances = () => {
         console.log("onAddGroup");
 
         let isEmpty = false;
+        let isUsersEmpty = false;
         let valid = true;
         let data = { ...addGroupData };
 
@@ -727,7 +728,7 @@ const CreateInstances = () => {
                     error: "Group name should contain alphanumeric character",
                 },
             };
-        
+
             valid = false;
             toast.error("Group name should contain alphanumeric character");
         } else if (addGroupData?.groupName?.value !== addGroupData?.groupName?.value?.trim()) {
@@ -744,16 +745,23 @@ const CreateInstances = () => {
             toast.error("Please enter a valid group name");
         }
 
-        if (addGroupData?.addedUsers?.length === 0) {
-            console.log("Please add at least one user to the group.");
+        if (addGroupData?.addedUsers?.length <= 1) {
+            console.log("Please add atleast two users to the group.");
+            // toast.error("Please add atleast two users to the group.")
             valid = false;
-            isEmpty = true;
+            // isEmpty = true;
+            isUsersEmpty = true;
         }
 
 
         // If all validations pass
         try {
             if (!isEmpty) {
+                if (isUsersEmpty) {
+                    toast.error("Please add atleast two users to the group.")
+
+                }
+
                 if (valid) {
                     const data = {
                         groupName: addGroupData?.groupName?.value,
