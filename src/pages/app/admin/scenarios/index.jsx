@@ -121,7 +121,8 @@ const Scenarios = () => {
       return;
 
     if (updateScoreMasterResponse?.success) {
-      toast.success(updateScoreMasterResponse.message);
+      // toast.success(updateScoreMasterResponse.message);
+      toast.success("Score master updated successfully.");
 
       setShowEditScoreMasterModal(null);
       setSelectedCheckboxes([]);
@@ -135,7 +136,7 @@ const Scenarios = () => {
           updateScoreMasterResponse?.message : "An error occured while saving score master"
       );
       dispatch(resetUpdateScoreMasterState());
-    } else {v
+    } else {
       dispatch(resetUpdateScoreMasterState());
     }
   }, [updateScoreMasterResponse]);
