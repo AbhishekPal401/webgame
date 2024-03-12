@@ -251,6 +251,7 @@ const Homepage = () => {
                             <Button
                               onClick={() => {
                                 if (scenario.Status === "Create") {
+                                  dispatch(resetSessionDetailsState());
                                   dispatch(resetFileStreamState());
                                   navigate(`/game/${scenario.InstanceID}`);
                                 } else if (
@@ -258,6 +259,8 @@ const Homepage = () => {
                                   scenario.Status === "InProgress"
                                 ) {
                                   dispatch(resetFileStreamState());
+                                  dispatch(resetSessionDetailsState());
+
                                   navigate(`/game/${scenario.InstanceID}`);
                                 }
                               }}

@@ -28,6 +28,7 @@ const AdminGameLanding = () => {
   const [ready, setReady] = useState(false);
   const [inProgress, setInProgress] = useState(false);
   const [joinClick, setJoinClick] = useState(false);
+  const [getIntro, setGetIntro] = useState(false);
 
   const { credentials } = useSelector((state) => state.login);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -96,6 +97,8 @@ const AdminGameLanding = () => {
         },
       };
 
+      console.log("fetchIntro", data);
+
       dispatch(getNextQuestionDetails(data));
     }
   }, [sessionDetails, credentials]);
@@ -132,9 +135,16 @@ const AdminGameLanding = () => {
   }, [credentials]);
 
   useEffect(() => {
+    if (getIntro) {
+      fetchIntro();
+      setGetIntro(false);
+    }
+  }, [getIntro, fetchIntro]);
+
+  useEffect(() => {
     const ReceiveNotification = (actionType, message) => {
       if (actionType === "AdminPlayStart") {
-        fetchIntro();
+        setGetIntro(true);
       }
     };
 
@@ -260,14 +270,6 @@ const AdminGameLanding = () => {
       signalRService.SkipMediaInvoke(data);
     }
   }, [sessionDetails, credentials, questionDetails]);
-
-  const fileStream = (url) => {
-    const data = {
-      fileName: url,
-      module: "Scenario",
-    };
-    dispatch(getFileStream(data));
-  };
 
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;

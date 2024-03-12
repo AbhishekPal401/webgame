@@ -34,8 +34,9 @@ const Intro = () => {
     (state) => state.getFileStream
   );
 
-  // console.log("fileStream: ", fileStream);
-  // console.log("fileType: ", fileType);
+  console.log("fileStream: ", fileStream);
+  console.log("fileType: ", fileType);
+  console.log("questionDetails: ", questionDetails);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
