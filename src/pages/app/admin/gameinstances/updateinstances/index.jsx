@@ -642,6 +642,19 @@ const UpdateInstances = () => {
             valid = false;
             isEmpty = true;
 
+        } else if (/^\d+$/.test(gameInstanceData?.instanceName?.value)) {
+            console.log("instanceName:", data.instanceName);
+            data = {
+                ...data,
+                instanceName: {
+                    ...data.instanceName,
+                    error: "Instance name should contain alphanumeric character",
+                },
+            };
+
+            valid = false;
+            toast.error("Instance name should contain alphanumeric character");
+
         } else if (gameInstanceData?.instanceName?.value !== gameInstanceData?.instanceName?.value?.trim()) {
             console.log("instanceName:", data.instanceName);
             data = {
