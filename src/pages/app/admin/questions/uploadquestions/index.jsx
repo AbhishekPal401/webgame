@@ -196,7 +196,7 @@ function UploadQuestion() {
         setUploading(false); // Set uploading state to false after upload completion or failure
       }
     } else {
-      toast.error("Please upload an excel file.");
+      toast.error("Please upload question list file.");
     }
   };
 
