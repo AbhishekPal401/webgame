@@ -7,7 +7,7 @@ import Checkbox from "../../../../components/ui/checkbox/index.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { generateGUID, isJSONString } from "../../../../utils/common.js";
 import { getScenarioByPage } from "../../../../store/app/admin/scenario/scenario.js";
-import { extractDate, formatDateString } from "../../../../utils/helper.js";
+import { debounce, extractDate, formatDateString } from "../../../../utils/helper.js";
 import { useNavigate } from "react-router-dom";
 import ModalContainer from "../../../../components/modal/index.jsx";
 import {
@@ -18,9 +18,9 @@ import {
   getScoreMastersByScenarioID,
   resetScoreMastersByScenarioIDState
 } from "../../../../store/app/admin/questions/scoremaster/getScoreMasters.js";
-import { 
-  updateScoreMaster, 
-  resetUpdateScoreMasterState 
+import {
+  updateScoreMaster,
+  resetUpdateScoreMasterState
 } from "../../../../store/app/admin/questions/scoremaster/updateScoreMasterByScenario.js";
 import { toast } from "react-toastify";
 import Input from "../../../../components/common/input/index.jsx";
@@ -132,7 +132,7 @@ const Scenarios = () => {
     } else if (!updateScoreMasterResponse?.success) {
 
       toast.error(
-        (updateScoreMasterResponse?.message) ? 
+        (updateScoreMasterResponse?.message) ?
           updateScoreMasterResponse?.message : "An error occured while saving score master"
       );
       dispatch(resetUpdateScoreMasterState());
@@ -373,6 +373,7 @@ const Scenarios = () => {
     }
   }
 
+  const debouncedUpdateScoreMaster = debounce(onUpdateScoreMasterData, 1000);
 
 
   return (
@@ -626,7 +627,8 @@ const Scenarios = () => {
                 customStyle={{
                   marginLeft: "1rem",
                 }}
-              onClick={onUpdateScoreMasterData}
+                // onClick={onUpdateScoreMasterData}
+                onClick={debouncedUpdateScoreMaster}
               >
                 Add
               </Button>
