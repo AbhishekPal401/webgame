@@ -718,6 +718,18 @@ const CreateInstances = () => {
 
             valid = false;
             isEmpty = true;
+        } else if (/^\d+$/.test(addGroupData.groupName.value)) {
+            console.log("groupName:", data.groupName);
+            data = {
+                ...data,
+                groupName: {
+                    ...data.groupName,
+                    error: "Group name should contain alphanumeric character",
+                },
+            };
+        
+            valid = false;
+            toast.error("Group name should contain alphanumeric character");
         } else if (addGroupData?.groupName?.value !== addGroupData?.groupName?.value?.trim()) {
             console.log("groupName:", data.groupName);
             data = {
@@ -799,6 +811,18 @@ const CreateInstances = () => {
 
             valid = false;
             isEmpty = true;
+        } else if (/^\d+$/.test(addGroupData.groupName.value)) {
+            console.log("instanceName:", data.instanceName);
+            data = {
+                ...data,
+                instanceName: {
+                    ...data.instanceName,
+                    error: "Group name should contain at least one non-numeric character",
+                },
+            };
+
+            valid = false;
+            toast.error("Group name should contain at least one non-numeric character");
         } else if (gameInstanceData?.instanceName?.value !== gameInstanceData?.instanceName?.value?.trim()) {
             console.log("instanceName:", data.instanceName);
             data = {
