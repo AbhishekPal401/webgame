@@ -811,18 +811,18 @@ const CreateInstances = () => {
 
             valid = false;
             isEmpty = true;
-        } else if (/^\d+$/.test(addGroupData.groupName.value)) {
+        } else if (/^\d+$/.test(gameInstanceData?.instanceName?.value)) {
             console.log("instanceName:", data.instanceName);
             data = {
                 ...data,
                 instanceName: {
                     ...data.instanceName,
-                    error: "Group name should contain at least one non-numeric character",
+                    error: "Instance name should contain alphanumeric character",
                 },
             };
 
             valid = false;
-            toast.error("Group name should contain at least one non-numeric character");
+            toast.error("Instance name should contain alphanumeric character");
         } else if (gameInstanceData?.instanceName?.value !== gameInstanceData?.instanceName?.value?.trim()) {
             console.log("instanceName:", data.instanceName);
             data = {
