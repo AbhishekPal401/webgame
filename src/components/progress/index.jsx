@@ -27,13 +27,13 @@ const scoreMasterDefault = [
   },
 ];
 
-const progress = ({ 
-  progress = 0, 
-  scoreMaster = [], 
-  tickStyleClass, 
-  meterContainerClass, 
+const progress = ({
+  progress = 0,
+  scoreMaster = [],
+  tickStyleClass,
+  meterContainerClass,
   customMeterClass,
-  customInfoClass 
+  customInfoClass,
 }) => {
   const [rotationDegree, setRotationDegree] = useState(0);
   const [pointerPosition, setPointerPosition] = useState(0);
@@ -54,7 +54,11 @@ const progress = ({
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
-      <img width={"100%"} src="./images/meter.png" className={`${styles.meter} ${customMeterClass}`} />
+      <img
+        width={"100%"}
+        src="./images/meter.png"
+        className={`${styles.meter} ${customMeterClass}`}
+      />
 
       <svg
         className={`${styles.tick} ${tickStyleClass}`}
@@ -88,7 +92,7 @@ const progress = ({
       <div
         id="progressbar_tooltip"
         className={styles.detailContainer}
-        style={{ display: showTooltip ? "flex" : "none" }}
+        // style={{ display: showTooltip ? "flex" : "none" }}
       >
         <div className={styles.progressBar}>
           <div
