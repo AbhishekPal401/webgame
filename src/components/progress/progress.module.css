@@ -28,11 +28,12 @@
   position: absolute;
   bottom: -12rem;
   right: 3rem;
+  flex: none !important;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 32rem;
+  width: 36rem;
   background-color: var(--black);
   backdrop-filter: 1rem;
   padding: 2rem 0.25rem 2rem 0.25rem;
@@ -83,12 +84,14 @@
   flex-direction: row;
   justify-content: space-between;
   align-self: center;
+
+  gap: 0.4rem;
   margin-left: 1rem;
 }
 .label {
   width: 22.5%;
   color: #fff;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 .label:last-child {
   width: 10%;
