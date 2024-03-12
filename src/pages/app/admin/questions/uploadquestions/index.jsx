@@ -11,7 +11,7 @@ import { generateGUID } from "../../../../../utils/common.js";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { fileTypes } from "../../../../../constants/filetypes.js";
-import { extractFileType } from "../../../../../utils/helper";
+import { debounce, extractFileType } from "../../../../../utils/helper";
 import { isJSONString } from "../../../../../utils/common.js";
 
 function UploadQuestion() {
@@ -31,6 +31,7 @@ function UploadQuestion() {
   const navigateTo = useNavigate();
 
   const { scenarioID } = useParams();
+  const  INTERVAL = 500;
 
   useEffect(() => {
     if (uploadQuestionsData?.questionsExcel?.value === "") return;
@@ -200,6 +201,9 @@ function UploadQuestion() {
     }
   };
 
+  const debouncedSubmit = debounce(onSubmit, 1000); 
+
+
   return (
     <PageContainer>
       <div className={styles.conatiner}>
@@ -217,7 +221,8 @@ function UploadQuestion() {
                 Upload Questions
               </Button> */}
               <Button
-                onClick={onSubmit}
+                // onClick={onSubmit}
+                onClick={debouncedSubmit}
                 buttonType="cancel"
                 disabled={uploading} // Disable the button when uploading
                 customStyle={{

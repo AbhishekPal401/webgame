@@ -41,6 +41,7 @@ import {
     getUsersbyPage,
     resetUserState,
 } from "../../../../../store/app/admin/users/users";
+import { debounce } from "../../../../../utils/helper";
 
 
 
@@ -999,6 +1000,8 @@ const CreateInstances = () => {
         navigateTo(`/instances`);
     };
 
+    const debouncedAddGroup = debounce(onAddGroup, 1000);
+    const debouncedSubmit = debounce(onSubmit, 1000);
 
     return (
         <PageContainer>
@@ -1324,7 +1327,10 @@ const CreateInstances = () => {
                     >
                         Cancel
                     </Button>
-                    <Button onClick={onSubmit}>
+                    <Button 
+                        // onClick={onSubmit}
+                        onClick={debouncedSubmit}
+                    >
                         Save
                     </Button>
                 </div>
@@ -1418,7 +1424,8 @@ const CreateInstances = () => {
                                     customStyle={{
                                         marginLeft: "1rem",
                                     }}
-                                    onClick={onAddGroup}
+                                    // onClick={onAddGroup}
+                                    onClick={debouncedAddGroup}
                                 >
                                     Add
                                 </Button>
