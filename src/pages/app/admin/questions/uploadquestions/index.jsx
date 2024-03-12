@@ -175,7 +175,7 @@ function UploadQuestion() {
 
           const data = JSON.parse(serializedData.Data);
           console.log("response data : ", data);
-          toast.success("Excel uploaded successfully.");
+          toast.success("Question list uploaded successfully.");
           // navigateTo("/scenario");
           navigateTo(`/questions/${scenarioID}`);
         }
@@ -184,7 +184,7 @@ function UploadQuestion() {
         //     console.log("error message :",response.data.message)
         // }
         else {
-          toast.error("Excel upload failed.");
+          toast.error("Question list upload failed.");
           console.log("not uploaded");
         }
       } catch (error) {
