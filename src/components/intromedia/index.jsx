@@ -6,6 +6,7 @@ import DOMPurify from "dompurify";
 import axios from "axios";
 import { baseUrl } from "../../middleware/url";
 import QuestionLoader from "../loader/questionLoader";
+import { useSelector } from "react-redux";
 
 const IntroMedia = ({
   onCancel = () => {},
