@@ -92,7 +92,7 @@ const progress = ({
       <div
         id="progressbar_tooltip"
         className={styles.detailContainer}
-        // style={{ display: showTooltip ? "flex" : "none" }}
+        style={{ display: showTooltip ? "flex" : "none" }}
       >
         <div className={styles.progressBar}>
           <div
