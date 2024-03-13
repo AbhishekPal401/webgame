@@ -27,6 +27,24 @@ const scoreMasterDefault = [
   },
 ];
 
+// const scoreMasterDefault = [
+//   {
+//     ScoreDisplay: "Not at all meeting",
+//   },
+//   {
+//     ScoreDisplay: "Below Meeting the expectations",
+//   },
+//   {
+//     ScoreDisplay: "Meeting the expectations",
+//   },
+//   {
+//     ScoreDisplay: "Above Meeting the expectations",
+//   },
+//   {
+//     ScoreDisplay: "Slightly Meeting the expectationsdfgdf",
+//   },
+// ];
+
 const progress = ({
   progress = 0,
   scoreMaster = [],

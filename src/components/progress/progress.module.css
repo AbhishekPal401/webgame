@@ -79,20 +79,22 @@
 }
 .progresslabels {
   margin-top: 0.5rem;
-  width: 80%;
+  width: 96%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-self: center;
-  gap: 0.8rem;
+  gap: 0.5rem;
   margin-left: 0.8rem;
 }
 .label {
-  width: 22.5%;
+  flex: 2;
+  /* width: 10%; */
   color: #fff;
-  font-size: 1rem;
+  font-size: 0.8rem;
   /* word-wrap: break-word;
   word-break: break-all; */
+  text-align: center;
 }
 .label:last-child {
   width: 10%;
