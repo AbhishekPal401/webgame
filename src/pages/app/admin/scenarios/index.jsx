@@ -24,6 +24,7 @@ import {
 } from "../../../../store/app/admin/questions/scoremaster/updateScoreMasterByScenario.js";
 import { toast } from "react-toastify";
 import Input from "../../../../components/common/input/index.jsx";
+import { resetScenarioStates } from "../../../../store/local/menu.js";
 
 const Scenarios = () => {
   const [pageCount, setPageCount] = useState(10);
@@ -62,6 +63,7 @@ const Scenarios = () => {
   const { deleteScenarioResponse } = useSelector((state) => state.deleteScenario);
   const { scoreMastersByScenarioIdDetails } = useSelector((state) => state.getScoreMasters);
   const { updateScoreMasterResponse } = useSelector((state) => state.updateScoreMasterByScenario);
+  const { isScenarioReset } = useSelector((state) => state.menu);
 
   const resetUpdateScoreMasterData = useCallback(() => {
     setUpdateScoreMasterData({
@@ -105,6 +107,25 @@ const Scenarios = () => {
       dispatch(getScenarioByPage(data));
     }
   }, []);
+
+  useEffect(() => {
+    if (isScenarioReset) {
+      const data = {
+        pageNumber: 1,
+        pageCount: pageCount,
+        type: "",
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      dispatch(getScenarioByPage(data));
+      dispatch(resetScenarioStates());
+    }
+  }, [isScenarioReset]);
 
   useEffect(() => {
     if (scenarioByPage && isJSONString(scenarioByPage?.data)) {

@@ -18,6 +18,7 @@ import {
 import { toast } from "react-toastify";
 import { convertSecondsToHMS, formatDateString, formatTime } from "../../../../utils/helper.js";
 import Checkbox from "../../../../components/ui/checkbox/index.jsx";
+import { resetUserStates } from "../../../../store/local/menu.js";
 
 const Users = () => {
   const [pageCount, setPageCount] = useState(10);
@@ -31,6 +32,7 @@ const Users = () => {
   const { usersByPage, loading } = useSelector((state) => state.users);
   const { credentials } = useSelector((state) => state.login);
   const { deleteUserResponse } = useSelector((state) => state.deleteUser);
+  const { isUserReset } = useSelector((state) => state.menu);
 
   useEffect(() => {
     if (credentials) {
@@ -48,6 +50,24 @@ const Users = () => {
       dispatch(getUsersbyPage(data));
     }
   }, []);
+
+  useEffect(() => {
+    if (isUserReset) {
+      const data = {
+        pageNumber: 1,
+        pageCount: pageCount,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      dispatch(getUsersbyPage(data));
+      dispatch(resetUserStates());
+    }
+  }, [isUserReset]);
 
   useEffect(() => {
     if (usersByPage && isJSONString(usersByPage?.data)) {

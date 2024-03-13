@@ -21,7 +21,7 @@ import {
     resetClearAllGameInstancesState
 } from "../../../../../store/app/admin/gameinstances/clearAllInstances.js";
 import { toast } from "react-toastify";
-
+import { resetGameInstanceStates } from "../../../../../store/local/menu.js";
 
 const GameInstances = () => {
     const [pageCount, setPageCount] = useState(10);
@@ -37,6 +37,7 @@ const GameInstances = () => {
     const { gameInstancesByPage } = useSelector((state) => state.gameInstances);
     const { deleteGameInstanceResponse } = useSelector((state) => state.deleteGameInstance);
     const { clearAllGameInstancesResponse } = useSelector((state) => state.clearAllInstances);
+    const { isGameInstanceReset } = useSelector((state) => state.menu);
 
     useEffect(() => {
         if (credentials) {
@@ -56,6 +57,26 @@ const GameInstances = () => {
         }
 
     }, []);
+
+    useEffect(() => {
+        if (isGameInstanceReset) {
+            const data = {
+                pageNumber: 1,
+                pageCount: pageCount,
+                type: "",
+                requester: {
+                    requestID: generateGUID(),
+                    requesterID: credentials.data.userID,
+                    requesterName: credentials.data.userName,
+                    requesterType: credentials.data.role,
+                },
+            };
+
+            dispatch(getGameInstancesByPage(data));
+            dispatch(resetGameInstanceStates());
+        }
+
+    }, [isGameInstanceReset]);
 
     useEffect(() => {
         if (gameInstancesByPage && isJSONString(gameInstancesByPage?.data)) {

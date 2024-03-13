@@ -9,6 +9,13 @@ import Button from "../../../common/button/index.jsx";
 import { logoutUser } from "../../../../store/auth/login.js";
 import { useNavigate } from "react-router-dom";
 import MenuLink from "../../menulink/index.jsx";
+import { 
+  setIsResetScenarioState,
+  setIsResetHomePageState,
+  setIsResetMasterState,
+  setIsResetGameInstanceState,
+  setIsResetUserState,
+} from "../../../../store/local/menu.js";
 
 const AdminSidebar = ({
   isSideBarCollapsed,
@@ -39,6 +46,7 @@ const AdminSidebar = ({
           label="Home"
           onClick={() => {
             dispatch(setCurrentActive("home"));
+            dispatch(setIsResetHomePageState(true));
           }}
           displayLabel={isSideBarCollapsed}
           svgStyle={{ width: isSideBarCollapsed ? '100%' : '30%' }}
@@ -55,6 +63,7 @@ const AdminSidebar = ({
           label="Masters"
           onClick={() => {
             dispatch(setCurrentActive("masters"));
+            dispatch(setIsResetMasterState(true));
           }}
           displayLabel={isSideBarCollapsed}
           svgStyle={{ width: isSideBarCollapsed ? '100%' : '30%' }}
@@ -74,6 +83,7 @@ const AdminSidebar = ({
           label="Scenarios"
           onClick={() => {
             dispatch(setCurrentActive("scenario"));
+            dispatch(setIsResetScenarioState(true));
           }}
           displayLabel={isSideBarCollapsed}
           svgStyle={{ width: isSideBarCollapsed ? '100%' : '30%' }}
@@ -90,6 +100,7 @@ const AdminSidebar = ({
           label="Instances"
           onClick={() => {
             dispatch(setCurrentActive("instances"));
+            dispatch(setIsResetGameInstanceState(true));
           }}
           displayLabel={isSideBarCollapsed}
           svgStyle={{ width: isSideBarCollapsed ? '100%' : '30%' }}
@@ -106,6 +117,7 @@ const AdminSidebar = ({
           label="Users"
           onClick={() => {
             dispatch(setCurrentActive("users"));
+            dispatch(setIsResetUserState(true));
           }}
           displayLabel={isSideBarCollapsed}
           svgStyle={{ width: isSideBarCollapsed ? '100%' : '30%' }}

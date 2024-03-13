@@ -37,6 +37,7 @@ import {
 } from "../../../../../store/app/admin/masters/deleteMasterByTypeAndId.js";
 import { getDesignationDetailsByID } from "../../../../../store/app/admin/masters/getDesignationById.js";
 import { getOrganizationDetailsByID } from "../../../../../store/app/admin/masters/getOrganizationById.js";
+import { resetMasterStates } from "../../../../../store/local/menu.js";
 
 const MasterList = () => {
 
@@ -99,6 +100,7 @@ const MasterList = () => {
   const { designationByIdDetails } = useSelector((state) => state.getDesignationById);
   const { organizationByIdDetails } = useSelector((state) => state.getOrganizationById);
   const { deleteMasterByTypeAndIdResponse } = useSelector((state) => state.deleteMasterByTypeAndId);
+  const { isMasterReset } = useSelector((state) => state.menu);
 
   const resetAddMasterData = useCallback(() => {
     setAddMasterData({
@@ -160,6 +162,26 @@ const MasterList = () => {
         dispatch(getAllDesignations(data)) : dispatch(getAllOrganizations(data));
     }
   }, [activeTab, dispatch, credentials]);
+
+  useEffect(() => {
+    if (isMasterReset) {
+
+      const data = {
+        pageNumber: 1,
+        pageCount: activeTab === 'Designation' ? designationPageCount : organizationPageCount,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      activeTab === 'Designation' ?
+        dispatch(getAllDesignations(data)) : dispatch(getAllOrganizations(data));
+      dispatch(resetMasterStates());
+    }
+  }, [isMasterReset]);
 
   useEffect(() => {
     if (designations && isJSONString(designations?.data)) {
