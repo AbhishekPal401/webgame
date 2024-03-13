@@ -40,7 +40,7 @@ const Intro = () => {
   const dispatch = useDispatch();
 
   console.log("fileStream: ", fileStream);
-  console.log("fileType: ", fileType);
+  // console.log("fileType: ", fileType);
 
   const fetchIntro = useCallback(() => {
     const sessionData = JSON.parse(sessionDetails.data);
@@ -110,27 +110,51 @@ const Intro = () => {
   }, [skipData, fetchIntro]);
 
   useEffect(() => {
-    // const handleEnded = () => {
-    //   onSkip();
-    // };
+    if (fileStream) {
+      if (mediaRef.current) {
+        // mediaRef.current.addEventListener("ended", handleEnded);
+        mediaRef.current
+          .play()
+          .then(() => {})
+          .catch((error) => {
+            console.error("Autoplay failed:", error);
+          });
 
-    if (mediaRef.current) {
-      // mediaRef.current.addEventListener("ended", handleEnded);
+        console.log("muted false", mediaRef.current.muted);
 
-      mediaRef.current
-        .play()
-        .then(() => {})
-        .catch((error) => {
-          console.error("Autoplay failed:", error);
-        });
+        mediaRef.current.muted = false;
+      }
 
-      mediaRef.current.muted = false;
+      localStorage.setItem("refresh", false);
     }
+  }, [fileStream]);
 
-    localStorage.setItem("refresh", false);
+  // useEffect(() => {
+  //   // const handleEnded = () => {
+  //   //   onSkip();
+  //   // };
 
-    return () => {};
-  }, []);
+  //   // setTimeout(() => {
+
+  //   // }, 100);
+  //   if (mediaRef.current) {
+  //     // mediaRef.current.addEventListener("ended", handleEnded);
+  //     mediaRef.current
+  //       .play()
+  //       .then(() => {})
+  //       .catch((error) => {
+  //         console.error("Autoplay failed:", error);
+  //       });
+
+  //     console.log("muted false", mediaRef.current.muted);
+
+  //     mediaRef.current.muted = false;
+  //   }
+
+  //   localStorage.setItem("refresh", false);
+
+  //   return () => {};
+  // });
 
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
@@ -225,7 +249,7 @@ const Intro = () => {
                         width="100%"
                         height="100%"
                         controls={false}
-                        muted={false}
+                        muted={true}
                         // onClick={handlePlayPause}
                         // onEnded={handleVideoEnd}
                       >

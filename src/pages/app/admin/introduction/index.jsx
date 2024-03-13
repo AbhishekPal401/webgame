@@ -89,25 +89,48 @@ const Intro = () => {
     // fetchIntro();
   }, [sessionDetails, credentials, questionDetails]);
 
+  // useEffect(() => {
+  //   // const handleEnded = () => {};
+
+  //   setTimeout(() => {
+  //     if (mediaRef.current) {
+  //       // mediaRef.current.addEventListener("ended", handleEnded);
+  //       mediaRef.current
+  //         .play()
+  //         .then(() => {})
+  //         .catch((error) => {
+  //           console.error("Autoplay failed:", error);
+  //         });
+
+  //       console.log("muted false");
+  //       mediaRef.current.muted = false;
+  //     }
+  //   }, 1000);
+
+  //   localStorage.setItem("refresh", false);
+
+  //   return () => {};
+  // });
+
   useEffect(() => {
-    // const handleEnded = () => {};
+    if (fileStream) {
+      if (mediaRef.current) {
+        // mediaRef.current.addEventListener("ended", handleEnded);
+        mediaRef.current
+          .play()
+          .then(() => {})
+          .catch((error) => {
+            console.error("Autoplay failed:", error);
+          });
 
-    if (mediaRef.current) {
-      // mediaRef.current.addEventListener("ended", handleEnded);
-      mediaRef.current
-        .play()
-        .then(() => {})
-        .catch((error) => {
-          console.error("Autoplay failed:", error);
-        });
+        console.log("muted false", mediaRef.current.muted);
 
-      mediaRef.current.muted = false;
+        mediaRef.current.muted = false;
+      }
+
+      localStorage.setItem("refresh", false);
     }
-
-    localStorage.setItem("refresh", false);
-
-    return () => {};
-  }, []);
+  }, [fileStream]);
 
   useEffect(() => {
     const skipMedia = (data) => {
@@ -220,7 +243,7 @@ const Intro = () => {
                         width="100%"
                         height="100%"
                         controls={false}
-                        muted={false}
+                        muted={true}
 
                         // muted
                         // onClick={handlePlayPause}
