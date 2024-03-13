@@ -1365,7 +1365,7 @@ const CreateInstances = () => {
                                         customStyle={{ marginTop: '1rem', }}
                                         name={"groupName"}
                                         value={addGroupData.groupName.value}
-                                        placeholder="Group Name"
+                                        placeholder="Group Name  &#128900;" 
                                         onChange={onAddGroupChange}
                                     // autoFocus={!searchValue}
                                     />
