@@ -39,6 +39,9 @@ const Intro = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  console.log("fileStream: ", fileStream);
+  console.log("fileType: ", fileType);
+
   const fetchIntro = useCallback(() => {
     const sessionData = JSON.parse(sessionDetails.data);
 
@@ -111,16 +114,16 @@ const Intro = () => {
     //   onSkip();
     // };
 
-    // if (mediaRef.current) {
-    //   mediaRef.current.addEventListener("ended", handleEnded);
+    if (mediaRef.current) {
+      // mediaRef.current.addEventListener("ended", handleEnded);
 
-    //   mediaRef.current
-    //     .play()
-    //     .then(() => {})
-    //     .catch((error) => {
-    //       console.error("Autoplay failed:", error);
-    //     });
-    // }
+      mediaRef.current
+        .play()
+        .then(() => {})
+        .catch((error) => {
+          console.error("Autoplay failed:", error);
+        });
+    }
 
     localStorage.setItem("refresh", false);
 

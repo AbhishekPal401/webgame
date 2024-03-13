@@ -36,7 +36,7 @@ const Intro = () => {
 
   console.log("fileStream: ", fileStream);
   console.log("fileType: ", fileType);
-  console.log("questionDetails: ", questionDetails);
+  // console.log("questionDetails: ", questionDetails);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -92,16 +92,15 @@ const Intro = () => {
   useEffect(() => {
     // const handleEnded = () => {};
 
-    // if (mediaRef.current) {
-    //   mediaRef.current.addEventListener("ended", handleEnded);
-
-    //   mediaRef.current
-    //     .play()
-    //     .then(() => {})
-    //     .catch((error) => {
-    //       console.error("Autoplay failed:", error);
-    //     });
-    // }
+    if (mediaRef.current) {
+      // mediaRef.current.addEventListener("ended", handleEnded);
+      mediaRef.current
+        .play()
+        .then(() => {})
+        .catch((error) => {
+          console.error("Autoplay failed:", error);
+        });
+    }
 
     localStorage.setItem("refresh", false);
 
@@ -214,11 +213,12 @@ const Intro = () => {
                   {fileType.includes("mp4") && (
                     <div className={styles.videoWrapper}>
                       <video
-                        autoPlay={true}
+                        autoPlay
                         ref={mediaRef}
                         width="100%"
                         height="100%"
                         controls={false}
+                        muted
                         // onClick={handlePlayPause}
                         // onEnded={handleVideoEnd}
                       >
