@@ -91,6 +91,8 @@
   width: 22.5%;
   color: #fff;
   font-size: 1rem;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 .label:last-child {
   width: 10%;
