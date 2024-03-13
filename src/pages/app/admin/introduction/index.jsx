@@ -23,7 +23,7 @@ const Intro = () => {
 
   const [skipData, setSkipData] = useState(null);
 
-  const [isPlaying, setPlaying] = useState(false);
+  const [isPlaying, setPlaying] = useState(true);
 
   const { credentials } = useSelector((state) => state.login);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -89,30 +89,8 @@ const Intro = () => {
     // fetchIntro();
   }, [sessionDetails, credentials, questionDetails]);
 
-  // useEffect(() => {
-  //   // const handleEnded = () => {};
-
-  //   setTimeout(() => {
-  //     if (mediaRef.current) {
-  //       // mediaRef.current.addEventListener("ended", handleEnded);
-  //       mediaRef.current
-  //         .play()
-  //         .then(() => {})
-  //         .catch((error) => {
-  //           console.error("Autoplay failed:", error);
-  //         });
-
-  //       console.log("muted false");
-  //       mediaRef.current.muted = false;
-  //     }
-  //   }, 1000);
-
-  //   localStorage.setItem("refresh", false);
-
-  //   return () => {};
-  // });
-
   useEffect(() => {
+    // const handleEnded = () => {};
     if (fileStream) {
       if (mediaRef.current) {
         // mediaRef.current.addEventListener("ended", handleEnded);
@@ -123,14 +101,39 @@ const Intro = () => {
             console.error("Autoplay failed:", error);
           });
 
-        console.log("muted false", mediaRef.current.muted);
-
-        mediaRef.current.muted = false;
+        if (mediaRef.current.paused) {
+          console.log(" paused:", mediaRef.current.paused);
+          setPlaying(false);
+        } else {
+          setPlaying(true);
+        }
       }
-
-      localStorage.setItem("refresh", false);
     }
-  }, [fileStream]);
+
+    localStorage.setItem("refresh", false);
+
+    return () => {};
+  });
+
+  // useEffect(() => {
+  //   if (fileStream) {
+  //     if (mediaRef.current) {
+  //       // mediaRef.current.addEventListener("ended", handleEnded);
+  //       mediaRef.current
+  //         .play()
+  //         .then(() => {})
+  //         .catch((error) => {
+  //           console.error("Autoplay failed:", error);
+  //         });
+
+  //       console.log("muted false", mediaRef.current.muted);
+
+  //       mediaRef.current.muted = false;
+  //     }
+
+  //     localStorage.setItem("refresh", false);
+  //   }
+  // }, [fileStream]);
 
   useEffect(() => {
     const skipMedia = (data) => {
@@ -243,8 +246,6 @@ const Intro = () => {
                         width="100%"
                         height="100%"
                         controls={false}
-                        muted={true}
-
                         // muted
                         // onClick={handlePlayPause}
                         // onEnded={handleVideoEnd}
@@ -252,13 +253,13 @@ const Intro = () => {
                         <source src={fileStream} type="video/mp4" />
                         Your browser does not support the video tag.
                       </video>
-                      {/* {!isPlaying && (
+                      {!isPlaying && (
                         <div className={styles.overlay}>
                           <svg onClick={handlePlayPause}>
                             <use xlinkHref={"sprite.svg#video_play"} />
                           </svg>
                         </div>
-                      )} */}
+                      )}
                     </div>
                   )}
 
