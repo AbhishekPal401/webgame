@@ -131,7 +131,7 @@ const Homepage = () => {
 
     if (clearGameInstanceByIdResponse.success) {
       // toast.success(clearGameInstanceByIdResponse.message);
-      toast.success("Successfully cleared.");
+      toast.success("Cleared instance successfully ");
       const data = {
         pageNumber: pageNumber,
         pageCount: pageCount,
