@@ -100,6 +100,8 @@ const Intro = () => {
         .catch((error) => {
           console.error("Autoplay failed:", error);
         });
+
+      mediaRef.current.muted = false;
     }
 
     localStorage.setItem("refresh", false);
@@ -218,7 +220,9 @@ const Intro = () => {
                         width="100%"
                         height="100%"
                         controls={false}
-                        muted
+                        muted={false}
+
+                        // muted
                         // onClick={handlePlayPause}
                         // onEnded={handleVideoEnd}
                       >
