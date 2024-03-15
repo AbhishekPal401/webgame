@@ -575,7 +575,7 @@ const Question = ({
 
   return (
     <div className={styles.container}>
-      {questionLoading || loading || true ? (
+      {questionLoading || loading ? (
         <QuestionLoader size={140} />
       ) : (
         <>
