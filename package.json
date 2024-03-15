@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@appkit4/react-components": "^4.10.0",
+    "@appkit4/react-text-editor": "^4.1.0",
+    "@appkit4/styles": "^4.3.0",
     "@microsoft/signalr": "^8.0.0",
     "@reduxjs/toolkit": "^2.0.1",
     "axios": "^1.6.2",
