@@ -19,21 +19,21 @@ const Routers = () => {
 
   const { credentials } = useSelector((state) => state.login);
 
-  const handleHistoryChange = (event) => {
-    if (event.state.idx === 0) {
-    }
-    console.log("History stack changed:", event.state);
-  };
+  // const handleHistoryChange = (event) => {
+  //   if (event.state.idx === 0) {
+  //   }
+  //   console.log("History stack changed:", event.state);
+  // };
 
-  // Add event listener for popstate event
-  useEffect(() => {
-    window.addEventListener("popstate", handleHistoryChange);
+  // // Add event listener for popstate event
+  // useEffect(() => {
+  //   window.addEventListener("popstate", handleHistoryChange);
 
-    // Clean up by removing the event listener when component unmounts
-    return () => {
-      window.removeEventListener("popstate", handleHistoryChange);
-    };
-  }, []);
+  //   // Clean up by removing the event listener when component unmounts
+  //   return () => {
+  //     window.removeEventListener("popstate", handleHistoryChange);
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (credentials?.success) {
