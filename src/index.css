@@ -6,13 +6,14 @@
   --innerbackground: #ffffff;
   --red: red;
   --toastify-icon-color-success: #ffb600;
+  --color-background-primary: #ffb600 !important;
   --label: #415385;
   --input_label: #f3f3f3;
   --input_label_dark: #434343;
   --green: #50ad95;
   --active: #ffe299;
   --light_black: #474747;
-  --disabled_label: #B7B7B7;
+  --disabled_label: #b7b7b7;
 }
 
 *::after,

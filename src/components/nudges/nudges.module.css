@@ -73,6 +73,10 @@
   border: none !important;
 }
 
+/* .quill .ck.ck-button.ck-on {
+  background-color: var(--primary) !important;
+} */
+
 .quill > div:nth-child(2) {
-  height: 8rem !important;
+  height: 10rem !important;
 }

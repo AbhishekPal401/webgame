@@ -1,12 +1,28 @@
 import React, { useState } from "react";
-import styles from "./nudges.module.css";
 import Button from "../common/button";
 import { signalRService } from "../../services/signalR";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { isJSONString } from "../../utils/common";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+// import ReactQuill from "react-quill";
+// import "react-quill/dist/quill.snow.css";
+import "@appkit4/styles/appkit.min.css";
+import { TextEditor } from "@appkit4/react-text-editor";
+import "@appkit4/react-text-editor/dist/appkit4-react-texteditor.min.css";
+import styles from "./nudges.module.css";
+
+const sampleConfig = {
+  toolbar: [
+    "fontFamily",
+    "fontSize",
+    "bold",
+    "italic",
+    "alignment:left",
+    "alignment:center",
+    "alignment:right",
+    "alignment:justify",
+  ],
+};
 
 const Nudges = () => {
   const [show, setShow] = useState(false);
@@ -14,6 +30,8 @@ const Nudges = () => {
 
   const { sessionDetails } = useSelector((state) => state.getSession);
   const { credentials } = useSelector((state) => state.login);
+
+  // console.log("message", message);
 
   const sendNotification = () => {
     console.log("message", message);
@@ -68,13 +86,21 @@ const Nudges = () => {
                 setMessage(e.target.value);
               }}
             ></textarea> */}
-            <ReactQuill
+            {/* <ReactQuill
               className={styles.quill}
               value={message}
               onChange={setMessage}
               modules={Nudges.modules}
               formats={Nudges.formats}
               placeholder="Write your message..."
+            /> */}
+            <TextEditor
+              config={sampleConfig}
+              className={styles.quill}
+              data={message}
+              onChange={(event, value, message) => {
+                setMessage(message);
+              }}
             />
           </div>
           <div className={styles.buttonContainer}>
