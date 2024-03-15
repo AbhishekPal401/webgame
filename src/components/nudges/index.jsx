@@ -7,8 +7,8 @@ import { isJSONString } from "../../utils/common";
 // import ReactQuill from "react-quill";
 // import "react-quill/dist/quill.snow.css";
 import "@appkit4/styles/appkit.min.css";
-import { TextEditor } from "@appkit4/react-text-editor";
 import "@appkit4/react-text-editor/dist/appkit4-react-texteditor.min.css";
+import { TextEditor } from "@appkit4/react-text-editor";
 import styles from "./nudges.module.css";
 
 const sampleConfig = {
