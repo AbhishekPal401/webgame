@@ -27,6 +27,24 @@ const scoreMasterDefault = [
   },
 ];
 
+// const scoreMasterDefault = [
+//   {
+//     ScoreDisplay: "Not at all meeting",
+//   },
+//   {
+//     ScoreDisplay: "Below Meeting the expectations",
+//   },
+//   {
+//     ScoreDisplay: "Meeting the expectations",
+//   },
+//   {
+//     ScoreDisplay: "Above Meeting the expectations",
+//   },
+//   {
+//     ScoreDisplay: "Slightly Meeting the expectationsdfgdf",
+//   },
+// ];
+
 const progress = ({
   progress = 0,
   scoreMaster = [],
@@ -92,7 +110,7 @@ const progress = ({
       <div
         id="progressbar_tooltip"
         className={styles.detailContainer}
-        // style={{ display: showTooltip ? "flex" : "none" }}
+        style={{ display: showTooltip ? "flex" : "none" }}
       >
         <div className={styles.progressBar}>
           <div

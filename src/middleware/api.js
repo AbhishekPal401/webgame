@@ -34,7 +34,7 @@ const api =
 
       const tokenData = jwtDecode(credentials?.data?.token);
 
-      console.log("tokenData", tokenData);
+      // console.log("tokenData", tokenData);
 
       if (Number(tokenData.exp) < Math.round(new Date().getTime() / 1000)) {
         console.log("session over ... singing out");

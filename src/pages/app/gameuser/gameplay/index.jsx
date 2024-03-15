@@ -307,7 +307,7 @@ const GamePlay = () => {
           borderRight: "0.4rem solid #ffb600",
         },
         closeButton: false,
-        autoClose: 9000,
+        autoClose: 60000,
         icon: false,
       });
     }

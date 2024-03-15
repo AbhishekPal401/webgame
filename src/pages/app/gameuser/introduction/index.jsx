@@ -25,7 +25,7 @@ const Intro = () => {
   const [skipData, setSkipData] = useState(null);
   const mediaRef = useRef(null);
 
-  const [isPlaying, setPlaying] = useState(false);
+  const [isPlaying, setPlaying] = useState(true);
 
   const { credentials } = useSelector((state) => state.login);
   const { sessionDetails } = useSelector((state) => state.getSession);
@@ -38,6 +38,9 @@ const Intro = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  console.log("fileStream: ", fileStream);
+  // console.log("fileType: ", fileType);
 
   const fetchIntro = useCallback(() => {
     const sessionData = JSON.parse(sessionDetails.data);
@@ -106,26 +109,78 @@ const Intro = () => {
     }
   }, [skipData, fetchIntro]);
 
+  // useEffect(() => {
+  //   if (fileStream) {
+  //     if (mediaRef.current) {
+  //       // mediaRef.current.addEventListener("ended", handleEnded);
+  //       mediaRef.current
+  //         .play()
+  //         .then(() => {})
+  //         .catch((error) => {
+  //           console.error("Autoplay failed:", error);
+  //         });
+
+  //       console.log("muted false", mediaRef.current.muted);
+
+  //       mediaRef.current.muted = false;
+  //     }
+
+  //     localStorage.setItem("refresh", false);
+  //   }
+  // }, [fileStream]);
+
   useEffect(() => {
-    // const handleEnded = () => {
-    //   onSkip();
-    // };
+    // const handleEnded = () => {};
+    if (fileStream) {
+      if (mediaRef.current) {
+        // mediaRef.current.addEventListener("ended", handleEnded);
+        mediaRef.current
+          .play()
+          .then(() => {})
+          .catch((error) => {
+            console.error("Autoplay failed:", error);
+          });
 
-    // if (mediaRef.current) {
-    //   mediaRef.current.addEventListener("ended", handleEnded);
-
-    //   mediaRef.current
-    //     .play()
-    //     .then(() => {})
-    //     .catch((error) => {
-    //       console.error("Autoplay failed:", error);
-    //     });
-    // }
+        if (mediaRef.current.paused) {
+          console.log(" paused:", mediaRef.current.paused);
+          setPlaying(false);
+        } else {
+          setPlaying(true);
+        }
+      }
+    }
 
     localStorage.setItem("refresh", false);
 
     return () => {};
-  }, []);
+  });
+
+  // useEffect(() => {
+  //   // const handleEnded = () => {
+  //   //   onSkip();
+  //   // };
+
+  //   // setTimeout(() => {
+
+  //   // }, 100);
+  //   if (mediaRef.current) {
+  //     // mediaRef.current.addEventListener("ended", handleEnded);
+  //     mediaRef.current
+  //       .play()
+  //       .then(() => {})
+  //       .catch((error) => {
+  //         console.error("Autoplay failed:", error);
+  //       });
+
+  //     console.log("muted false", mediaRef.current.muted);
+
+  //     mediaRef.current.muted = false;
+  //   }
+
+  //   localStorage.setItem("refresh", false);
+
+  //   return () => {};
+  // });
 
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
@@ -215,7 +270,7 @@ const Intro = () => {
                   {fileType.includes("mp4") && (
                     <div className={styles.videoWrapper}>
                       <video
-                        autoPlay={true}
+                        autoPlay
                         ref={mediaRef}
                         width="100%"
                         height="100%"
@@ -226,13 +281,13 @@ const Intro = () => {
                         <source src={fileStream} type="video/mp4" />
                         Your browser does not support the video tag.
                       </video>
-                      {/* {!isPlaying && (
+                      {!isPlaying && (
                         <div className={styles.overlay}>
                           <svg onClick={handlePlayPause}>
                             <use xlinkHref={"sprite.svg#video_play"} />
                           </svg>
                         </div>
-                      )} */}
+                      )}
                     </div>
                   )}
 
