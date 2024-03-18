@@ -15,7 +15,7 @@
     "@appkit4/styles": "^4.3.0",
     "@microsoft/signalr": "^8.0.0",
     "@reduxjs/toolkit": "^2.0.1",
-    "axios": "^1.6.2",
+    "axios": "^1.6.8",
     "crypto-js": "^4.2.0",
     "dompurify": "^3.0.8",
     "framer-motion": "^10.16.16",
