@@ -222,11 +222,13 @@
   height: 3.4rem;
   /* font-weight: 600; */
   font-family: "Helvetica 500";
+  vertical-align: middle !important;
 }
 .table_content thead tr th {
   color: var(--primary);
   text-align: left;
   padding-left: 2rem;
+  vertical-align: middle !important;
 }
 
 .table_content tbody {

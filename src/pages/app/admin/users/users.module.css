@@ -22,7 +22,7 @@
   font-size: 4rem;
   color: var(--label);
   font-weight: bold;
-  font-family: 'Helvetica 500';
+  font-family: "Helvetica 500";
 }
 
 .left > div:nth-child(2) {
@@ -45,8 +45,8 @@
   background-size: cover;
   background-position: center;
   display: flex;
-  align-items: flex-end; 
-  justify-content: flex-start; 
+  align-items: flex-end;
+  justify-content: flex-start;
 }
 .right img {
   max-width: 80%;
@@ -76,6 +76,7 @@
 .table_content thead {
   width: 100%;
   background-color: var(--light_black);
+
   /* background-color: var(--black); */
   /* position: sticky;
   top: 0;
@@ -85,11 +86,13 @@
   font-size: 1.2rem;
   height: 3.4rem;
   font-weight: 600;
+  vertical-align: middle !important;
 }
 .table_content thead tr th {
   color: var(--primary);
   text-align: left;
   padding-left: 2rem;
+  vertical-align: middle !important;
 }
 
 .table_content tbody {
