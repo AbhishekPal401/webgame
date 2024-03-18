@@ -24,6 +24,7 @@ import {
 } from "../../../../store/app/admin/questions/scoremaster/updateScoreMasterByScenario.js";
 import { toast } from "react-toastify";
 import Input from "../../../../components/common/input/index.jsx";
+import { resetScenarioStates } from "../../../../store/local/menu.js";
 
 const Scenarios = () => {
   const [pageCount, setPageCount] = useState(10);
@@ -62,6 +63,7 @@ const Scenarios = () => {
   const { deleteScenarioResponse } = useSelector((state) => state.deleteScenario);
   const { scoreMastersByScenarioIdDetails } = useSelector((state) => state.getScoreMasters);
   const { updateScoreMasterResponse } = useSelector((state) => state.updateScoreMasterByScenario);
+  const { isScenarioReset } = useSelector((state) => state.menu);
 
   const resetUpdateScoreMasterData = useCallback(() => {
     setUpdateScoreMasterData({
@@ -105,6 +107,25 @@ const Scenarios = () => {
       dispatch(getScenarioByPage(data));
     }
   }, []);
+
+  useEffect(() => {
+    if (isScenarioReset) {
+      const data = {
+        pageNumber: 1,
+        pageCount: pageCount,
+        type: "",
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      dispatch(getScenarioByPage(data));
+      dispatch(resetScenarioStates());
+    }
+  }, [isScenarioReset]);
 
   useEffect(() => {
     if (scenarioByPage && isJSONString(scenarioByPage?.data)) {
@@ -163,8 +184,12 @@ const Scenarios = () => {
       dispatch(resetDeleteScenarioState());
       setShowDeleteModal(null);
       setSelectedCheckboxes([]);
-    } else if (!deleteScenarioResponse.success) {
+      // } else if (!deleteScenarioResponse.success) {
+    } else {
+
       toast.error(deleteScenarioResponse.message);
+      dispatch(resetDeleteScenarioState());
+
     }
   }, [deleteScenarioResponse]);
 
@@ -398,7 +423,7 @@ const Scenarios = () => {
         <table className={styles.table_content}>
           <thead>
             <tr>
-              <th></th>
+              {/* <th></th> */}
               <th>#</th>
               <th>Scenario Name</th>
               <th>Description</th>
@@ -415,15 +440,17 @@ const Scenarios = () => {
               scenarioByPage.data &&
               JSON.parse(scenarioByPage.data)?.ScenarioDetails.map(
                 (scenario, index) => {
-                  const isSelected = selectedCheckboxes.includes(scenario.ScenarioID);
+                  // const isSelected = selectedCheckboxes.includes(scenario.ScenarioID);
+                  const isSelected = true;
+
                   return (
                     <tr key={index}>
-                      <td>
+                      {/* <td>
                         <Checkbox
                           checked={isSelected}
                           onChange={() => handleCheckboxChange(scenario.ScenarioID)}
                         />
-                      </td>
+                      </td> */}
                       {/* <td>{index + 1}</td> */}
                       <td>{index + pageCount * (pageNumber - 1) + 1}</td>
                       <td>
@@ -477,8 +504,8 @@ const Scenarios = () => {
                             }}
                           >
                             <svg
-                              height="12"
-                              width="12"
+                              height="11"
+                              width="11"
                               style={{ opacity: isSelected ? "1" : "0.3" }}
                             >
                               <use xlinkHref="sprite.svg#edit_icon" />

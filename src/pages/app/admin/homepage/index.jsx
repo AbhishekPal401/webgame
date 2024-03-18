@@ -25,6 +25,7 @@ import ModalContainer from "../../../../components/modal/index.jsx";
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession";
 import { resetNextQuestionDetailsState } from "../../../../store/app/user/questions/getNextQuestion";
 import { resetFileStreamState } from "../../../../store/app/admin/fileStream/getFileStream.js";
+import { resetHomePageStates } from "../../../../store/local/menu.js";
 
 const Homepage = () => {
   const [pageCount, setPageCount] = useState(5);
@@ -38,11 +39,11 @@ const Homepage = () => {
 
   const { usersByPage, loading } = useSelector((state) => state.users);
   const { credentials } = useSelector((state) => state.login);
-
+  const { isHomePageReset } = useSelector((state) => state.menu);
+  const { scenarioByPage } = useSelector((state) => state.scenarios);
   const { sessionsHistoryByType } = useSelector(
     (state) => state.sessionHistory
   );
-  const { scenarioByPage } = useSelector((state) => state.scenarios);
   const { deleteScenarioResponse } = useSelector(
     (state) => state.deleteScenario
   );
@@ -85,6 +86,25 @@ const Homepage = () => {
       dispatch(getScenarioByPage(data));
     }
   }, []);
+
+  useEffect(() => {
+    if (isHomePageReset) {
+      const data = {
+        pageNumber: 1,
+        pageCount: pageCount,
+        type: "",
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      dispatch(getScenarioByPage(data));
+      dispatch(resetHomePageStates());
+    }
+  }, [isHomePageReset]);
 
   useEffect(() => {
     if (scenarioByPage && isJSONString(scenarioByPage?.data)) {
@@ -312,7 +332,7 @@ const Homepage = () => {
               <table className={styles.table_content}>
                 <thead>
                   <tr>
-                    <th></th>
+                    {/* <th></th> */}
                     <th>#</th>
                     <th>Scenario Name</th>
                     <th>Description</th>
@@ -334,14 +354,14 @@ const Homepage = () => {
                         );
                         return (
                           <tr key={index}>
-                            <td>
+                            {/* <td>
                               <Checkbox
                                 checked={isSelected}
                                 onChange={() =>
                                   handleCheckboxChange(scenario.ScenarioID)
                                 }
                               />
-                            </td>
+                            </td> */}
                             {/* <td>{index + 1}</td> */}
                             <td>{index + pageCount * (pageNumber - 1) + 1}</td>
                             <td>{scenario.ScenarioName}</td>
@@ -380,8 +400,8 @@ const Homepage = () => {
                                   }}
                                 >
                                   <svg
-                                    height="12"
-                                    width="12"
+                                    height="11"
+                                    width="11"
                                     style={{
                                       opacity: isSelected ? "1" : "0.3",
                                     }}

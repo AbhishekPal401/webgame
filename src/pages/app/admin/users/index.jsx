@@ -18,6 +18,7 @@ import {
 import { toast } from "react-toastify";
 import { convertSecondsToHMS, formatDateString, formatTime } from "../../../../utils/helper.js";
 import Checkbox from "../../../../components/ui/checkbox/index.jsx";
+import { resetUserStates } from "../../../../store/local/menu.js";
 
 const Users = () => {
   const [pageCount, setPageCount] = useState(10);
@@ -31,6 +32,7 @@ const Users = () => {
   const { usersByPage, loading } = useSelector((state) => state.users);
   const { credentials } = useSelector((state) => state.login);
   const { deleteUserResponse } = useSelector((state) => state.deleteUser);
+  const { isUserReset } = useSelector((state) => state.menu);
 
   useEffect(() => {
     if (credentials) {
@@ -48,6 +50,24 @@ const Users = () => {
       dispatch(getUsersbyPage(data));
     }
   }, []);
+
+  useEffect(() => {
+    if (isUserReset) {
+      const data = {
+        pageNumber: 1,
+        pageCount: pageCount,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      dispatch(getUsersbyPage(data));
+      dispatch(resetUserStates());
+    }
+  }, [isUserReset]);
 
   useEffect(() => {
     if (usersByPage && isJSONString(usersByPage?.data)) {
@@ -136,7 +156,7 @@ const Users = () => {
               <label>User Management</label>
             </div>
             <div>
-              <label>Users</label>
+              {/* <label>Users</label> */}
             </div>
           </div>
           <div
@@ -152,7 +172,7 @@ const Users = () => {
           <table className={styles.table_content}>
             <thead>
               <tr>
-                <th></th>
+                {/* <th></th> */}
                 <th>#</th>
                 <th>Username</th>
                 <th>Email</th>
@@ -171,15 +191,16 @@ const Users = () => {
                 usersByPage.data &&
                 isJSONString(usersByPage.data) &&
                 JSON.parse(usersByPage.data)?.UserDetails.map((user, index) => {
-                  const isSelected = selectedCheckboxes.includes(user.UserID);
+                  // const isSelected = selectedCheckboxes.includes(user.UserID);
+                  const isSelected = true;
                   return (
                     <tr key={index}>
-                      <td>
+                      {/* <td>
                         <Checkbox
                           checked={isSelected}
                           onChange={() => handleCheckboxChange(user.UserID)}
                         />
-                      </td>
+                      </td> */}
                       <td>{index + pageCount * (pageNumber - 1) + 1}</td>
                       <td>
                         {user?.UserName}
@@ -202,8 +223,8 @@ const Users = () => {
                             }}
                           >
                             <svg
-                              height="12"
-                              width="12"
+                              height="11"
+                              width="11"
                               style={{
                                 opacity: (isSelected && user?.Status === 'Active') ? "1" : "0.3"
                               }}

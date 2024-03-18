@@ -192,7 +192,8 @@ const CreateInstances = () => {
         if (createGameInstanceResponse === null || createGameInstanceResponse === undefined) return;
 
         if (createGameInstanceResponse?.success) {
-            toast.success(createGameInstanceResponse?.message);
+            // toast.success(createGameInstanceResponse?.message);
+            toast.success("Game Instance created successfully.")
             resetGameInstanceData();
 
             dispatch(resetCreateGameInstanceState());

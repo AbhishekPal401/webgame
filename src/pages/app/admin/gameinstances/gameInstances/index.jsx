@@ -21,7 +21,7 @@ import {
     resetClearAllGameInstancesState
 } from "../../../../../store/app/admin/gameinstances/clearAllInstances.js";
 import { toast } from "react-toastify";
-
+import { resetGameInstanceStates } from "../../../../../store/local/menu.js";
 
 const GameInstances = () => {
     const [pageCount, setPageCount] = useState(10);
@@ -37,6 +37,7 @@ const GameInstances = () => {
     const { gameInstancesByPage } = useSelector((state) => state.gameInstances);
     const { deleteGameInstanceResponse } = useSelector((state) => state.deleteGameInstance);
     const { clearAllGameInstancesResponse } = useSelector((state) => state.clearAllInstances);
+    const { isGameInstanceReset } = useSelector((state) => state.menu);
 
     useEffect(() => {
         if (credentials) {
@@ -56,6 +57,26 @@ const GameInstances = () => {
         }
 
     }, []);
+
+    useEffect(() => {
+        if (isGameInstanceReset) {
+            const data = {
+                pageNumber: 1,
+                pageCount: pageCount,
+                type: "",
+                requester: {
+                    requestID: generateGUID(),
+                    requesterID: credentials.data.userID,
+                    requesterName: credentials.data.userName,
+                    requesterType: credentials.data.role,
+                },
+            };
+
+            dispatch(getGameInstancesByPage(data));
+            dispatch(resetGameInstanceStates());
+        }
+
+    }, [isGameInstanceReset]);
 
     useEffect(() => {
         if (gameInstancesByPage && isJSONString(gameInstancesByPage?.data)) {
@@ -209,7 +230,7 @@ const GameInstances = () => {
                         <table className={styles.table_content}>
                             <thead>
                                 <tr>
-                                    <th></th>
+                                    {/* <th></th> */}
                                     <th>#</th>
                                     <th>Instance Name</th>
                                     {/* <th>Version</th> */}
@@ -226,15 +247,17 @@ const GameInstances = () => {
                                     gameInstancesByPage.data &&
                                     JSON.parse(gameInstancesByPage.data).InstanceDetails.map(
                                         (gameInstance, index) => {
-                                            const isSelected = selectedCheckboxes.includes(gameInstance.InstanceID);
+                                            // const isSelected = selectedCheckboxes.includes(gameInstance.InstanceID);
+                                            const isSelected = true;
+
                                             return (
                                                 <tr key={index}>
-                                                    <td>
+                                                    {/* <td>
                                                         <Checkbox
                                                             checked={isSelected}
                                                             onChange={() => handleCheckboxChange(gameInstance.InstanceID)}
                                                         />
-                                                    </td>
+                                                    </td> */}
                                                     {/* <td>{index + 1}</td> */}
                                                     <td>{index + pageCount * (pageNumber - 1) + 1}</td>
                                                     <td>
@@ -290,8 +313,8 @@ const GameInstances = () => {
                                                                 }}
                                                             >
                                                                 <svg
-                                                                    height="12"
-                                                                    width="12"
+                                                                    height="11"
+                                                                    width="11"
                                                                     style={{
                                                                         opacity: (isSelected &&
                                                                             gameInstance.Status === "Create") ? "1" : "0.3"

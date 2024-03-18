@@ -37,6 +37,7 @@ import {
 } from "../../../../../store/app/admin/masters/deleteMasterByTypeAndId.js";
 import { getDesignationDetailsByID } from "../../../../../store/app/admin/masters/getDesignationById.js";
 import { getOrganizationDetailsByID } from "../../../../../store/app/admin/masters/getOrganizationById.js";
+import { resetMasterStates } from "../../../../../store/local/menu.js";
 
 const MasterList = () => {
 
@@ -99,6 +100,7 @@ const MasterList = () => {
   const { designationByIdDetails } = useSelector((state) => state.getDesignationById);
   const { organizationByIdDetails } = useSelector((state) => state.getOrganizationById);
   const { deleteMasterByTypeAndIdResponse } = useSelector((state) => state.deleteMasterByTypeAndId);
+  const { isMasterReset } = useSelector((state) => state.menu);
 
   const resetAddMasterData = useCallback(() => {
     setAddMasterData({
@@ -160,6 +162,26 @@ const MasterList = () => {
         dispatch(getAllDesignations(data)) : dispatch(getAllOrganizations(data));
     }
   }, [activeTab, dispatch, credentials]);
+
+  useEffect(() => {
+    if (isMasterReset) {
+
+      const data = {
+        pageNumber: 1,
+        pageCount: activeTab === 'Designation' ? designationPageCount : organizationPageCount,
+        requester: {
+          requestID: generateGUID(),
+          requesterID: credentials.data.userID,
+          requesterName: credentials.data.userName,
+          requesterType: credentials.data.role,
+        },
+      };
+
+      activeTab === 'Designation' ?
+        dispatch(getAllDesignations(data)) : dispatch(getAllOrganizations(data));
+      dispatch(resetMasterStates());
+    }
+  }, [isMasterReset]);
 
   useEffect(() => {
     if (designations && isJSONString(designations?.data)) {
@@ -496,6 +518,19 @@ const MasterList = () => {
         valid = false;
         isEmpty = true;
 
+      } else if (/^\d+$/.test(addMasterData?.designation?.value)) {
+        console.log("designation:", data.designation);
+        data = {
+          ...data,
+          designation: {
+            ...data.designation,
+            error: "Designation name should contain alphanumeric characters.",
+          },
+        };
+
+        valid = false;
+        toast.error("Designation name should contain alphanumeric characters.");
+
       } else if (addMasterData?.designation?.value !== addMasterData?.designation?.value?.trim()) {
         console.log("designation:", data.designation);
         data = {
@@ -522,6 +557,19 @@ const MasterList = () => {
 
         valid = false;
         isEmpty = true;
+
+      } else if (/^\d+$/.test(addMasterData?.description?.value)) {
+        console.log("description:", data.description);
+        data = {
+          ...data,
+          description: {
+            ...data.description,
+            error: "Please enter description ",
+          },
+        };
+
+        valid = false;
+        toast.error("Description should contain alphanumeric characters.");
 
       } else if (addMasterData?.description?.value !== addMasterData?.description?.value?.trim()) {
         console.log("description:", data.description);
@@ -550,6 +598,19 @@ const MasterList = () => {
 
         valid = false;
         isEmpty = true;
+
+      } else if (/^\d+$/.test(addMasterData?.organization?.value)) {
+        console.log("organization:", data.organization);
+        data = {
+          ...data,
+          organization: {
+            ...data.organization,
+            error: "Please enter organization ",
+          },
+        };
+
+        valid = false;
+        toast.error("Organization should contain alphanumeric characters");
 
       } else if (addMasterData?.organization?.value !== addMasterData?.organization?.value?.trim()) {
         console.log("organization:", data.organization);
@@ -593,7 +654,9 @@ const MasterList = () => {
 
         }
       } else {
-        toast.error("Please fill all the mandatory details.");
+        (activeTab === 'Designation' ?
+          toast.error("Please fill all the mandatory details.") :
+          toast.error("Please fill the mandatory detail."));
       }
     } catch (error) {
       toast.error("An error occurred while saving the master data.");
@@ -657,6 +720,20 @@ const MasterList = () => {
 
         valid = false;
         isEmpty = true;
+
+      } else if (/^\d+$/.test(updateMasterData?.designation?.value)) {
+        console.log("designation:", data.designation);
+        data = {
+          ...data,
+          designation: {
+            ...data.designation,
+            error: "Designation name should contain alphanumeric characters.",
+          },
+        };
+
+        valid = false;
+        toast.error("Designation name should contain alphanumeric characters.");
+
       } else if (updateMasterData?.designation?.value !== updateMasterData?.designation?.value?.trim()) {
         console.log("designation:", data.designation);
         data = {
@@ -685,6 +762,19 @@ const MasterList = () => {
         valid = false;
         isEmpty = true;
 
+      } else if (/^\d+$/.test(updateMasterData?.description?.value)) {
+        console.log("description:", data.description);
+        data = {
+          ...data,
+          description: {
+            ...data.description,
+            error: "Please enter description ",
+          },
+        };
+
+        valid = false;
+        toast.error("Description should contain alphanumeric characters.");
+
       } else if (updateMasterData?.description?.value !== updateMasterData?.description?.value?.trim()) {
         console.log("description:", data.description);
         data = {
@@ -712,6 +802,19 @@ const MasterList = () => {
 
         valid = false;
         isEmpty = true;
+
+      } else if (/^\d+$/.test(updateMasterData?.organization?.value)) {
+        console.log("organization:", data.organization);
+        data = {
+          ...data,
+          organization: {
+            ...data.organization,
+            error: "Please enter organization ",
+          },
+        };
+
+        valid = false;
+        toast.error("Organization should contain alphanumeric characters");
 
       } else if (updateMasterData?.organization?.value !== updateMasterData?.organization?.value?.trim()) {
         console.log("organization:", data.organization);
@@ -884,7 +987,7 @@ const MasterList = () => {
                 {activeTab === 'Designation' ?
                   (
                     <tr>
-                      <th></th>
+                      {/* <th></th> */}
                       <th>#</th>
                       <th>Designation</th>
                       <th>Description</th>
@@ -895,7 +998,7 @@ const MasterList = () => {
                     </tr>
                   ) : (
                     <tr>
-                      <th></th>
+                      {/* <th></th> */}
                       <th>#</th>
                       <th>Organization</th>
                       <th>Member Users</th>
@@ -914,16 +1017,16 @@ const MasterList = () => {
                     designations?.success &&
                     designations?.data &&
                     JSON.parse(designations?.data).DesignationDetails?.map((designation, index) => {
-                      const isSelected = selectedCheckboxes.includes(designation.ID);
-
+                      // const isSelected = selectedCheckboxes.includes(designation.ID);
+                      const isSelected = true;
                       return (
                         <tr key={index}>
-                          <td>
+                          {/* <td>
                             <Checkbox
                               checked={isSelected}
                               onChange={() => handleCheckboxChange(designation.ID)}
                             />
-                          </td>
+                          </td> */}
                           {/* <td>
                             {index + 1}
                           </td> */}
@@ -958,8 +1061,8 @@ const MasterList = () => {
                                 }}
                               >
                                 <svg
-                                  height="12"
-                                  width="12"
+                                  height="11"
+                                  width="11"
                                   style={{
                                     opacity: (isSelected && designation.IsActive) ? "1" : "0.3"
                                   }}
@@ -995,16 +1098,16 @@ const MasterList = () => {
                     organizations?.success &&
                     organizations?.data &&
                     JSON.parse(organizations?.data).organizationDetails?.map((organization, index) => {
-                      const isSelected = selectedCheckboxes.includes(organization.ID);
-
+                      // const isSelected = selectedCheckboxes.includes(organization.ID);
+                      const isSelected = true;
                       return (
                         <tr key={index}>
-                          <td>
+                          {/* <td>
                             <Checkbox
                               checked={isSelected}
                               onChange={() => handleCheckboxChange(organization.ID)}
                             />
-                          </td>
+                          </td> */}
                           {/* <td>
                             {index + 1}
                           </td> */}
@@ -1035,8 +1138,8 @@ const MasterList = () => {
                                 }}
                               >
                                 <svg
-                                  height="12"
-                                  width="12"
+                                  height="11"
+                                  width="11"
                                   style={{
                                     opacity: (isSelected && organization.IsActive) ? "1" : "0.3"
                                   }}
@@ -1161,7 +1264,7 @@ const MasterList = () => {
                       customStyle={{ marginTop: '1rem', }}
                       value={addMasterData?.designation?.value}
                       name={"designation"}
-                      placeholder="Designation Name"
+                      placeholder="Designation Name &#128900;"
                       onChange={onMasterDataChange}
                     />
                     <Input
@@ -1169,7 +1272,7 @@ const MasterList = () => {
                       customStyle={{ marginTop: '1rem', }}
                       value={addMasterData?.description?.value}
                       name={"description"}
-                      placeholder="Description"
+                      placeholder="Description &#128900;"
                       textAreaStyleClass={styles.textAreaStyleClass}
                       onChange={onMasterDataChange}
                       textArea
@@ -1182,7 +1285,7 @@ const MasterList = () => {
                       customStyle={{ marginTop: '1rem', }}
                       value={addMasterData?.organization?.value}
                       name={"organization"}
-                      placeholder="Organization Name"
+                      placeholder="Organization Name &#128900;"
                       onChange={onMasterDataChange}
                     />
                   </div>
@@ -1244,7 +1347,7 @@ const MasterList = () => {
                       customStyle={{ marginTop: '1rem', }}
                       value={updateMasterData?.designation?.value}
                       name={"designation"}
-                      placeholder="Designation Name"
+                      placeholder="Designation Name &#128900;"
                       onChange={onUpdateMasterDataChange}
                     />
                     <Input
@@ -1252,7 +1355,7 @@ const MasterList = () => {
                       customStyle={{ marginTop: '1rem', }}
                       value={updateMasterData?.description?.value}
                       name={"description"}
-                      placeholder="Description"
+                      placeholder="Description &#128900;"
                       textAreaStyleClass={styles.textAreaStyleClass}
                       onChange={onUpdateMasterDataChange}
                       textArea
@@ -1265,7 +1368,7 @@ const MasterList = () => {
                       customStyle={{ marginTop: '1rem', }}
                       value={updateMasterData?.organization?.value}
                       name={"organization"}
-                      placeholder="Organization Name"
+                      placeholder="Organization Name &#128900;"
                       onChange={onUpdateMasterDataChange}
                     />
                   </div>
