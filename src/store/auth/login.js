@@ -185,6 +185,8 @@ export const logoutUser = () => async (dispatch, getState) => {
 
     signalRService.stopConnection();
 
+    sessionStorage.clear();
+
     dispatch(logout());
   }
 };
