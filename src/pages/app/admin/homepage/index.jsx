@@ -332,7 +332,7 @@ const Homepage = () => {
               <table className={styles.table_content}>
                 <thead>
                   <tr>
-                    <th></th>
+                    {/* <th></th> */}
                     <th>#</th>
                     <th>Scenario Name</th>
                     <th>Description</th>
@@ -354,14 +354,14 @@ const Homepage = () => {
                         );
                         return (
                           <tr key={index}>
-                            <td>
+                            {/* <td>
                               <Checkbox
                                 checked={isSelected}
                                 onChange={() =>
                                   handleCheckboxChange(scenario.ScenarioID)
                                 }
                               />
-                            </td>
+                            </td> */}
                             {/* <td>{index + 1}</td> */}
                             <td>{index + pageCount * (pageNumber - 1) + 1}</td>
                             <td>{scenario.ScenarioName}</td>
@@ -400,8 +400,8 @@ const Homepage = () => {
                                   }}
                                 >
                                   <svg
-                                    height="12"
-                                    width="12"
+                                    height="11"
+                                    width="11"
                                     style={{
                                       opacity: isSelected ? "1" : "0.3",
                                     }}

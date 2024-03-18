@@ -85,7 +85,7 @@
 .table_content thead tr th {
   color: var(--primary);
   text-align: left;
-  padding-left: 0.5rem;
+  padding-left: 2rem;
 }
 
 .table_content tbody {
@@ -106,8 +106,8 @@
     } */
 
 .table_content tbody tr td {
-  height: 3rem;
-  padding-left: 0.5rem;
+  height: 3.5rem;
+  padding-left: 2rem;
 }
 .table_content tbody tr > td {
   max-width: 5rem;
@@ -188,8 +188,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 2.2rem;
-  height: 2.2rem;
+  width: 2.4rem;
+  height: 2.4rem;
   border-radius: 50%;
   background-color: #ffecbd;
   cursor: pointer;

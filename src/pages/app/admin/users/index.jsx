@@ -156,7 +156,7 @@ const Users = () => {
               <label>User Management</label>
             </div>
             <div>
-              <label>Users</label>
+              {/* <label>Users</label> */}
             </div>
           </div>
           <div
@@ -172,7 +172,7 @@ const Users = () => {
           <table className={styles.table_content}>
             <thead>
               <tr>
-                <th></th>
+                {/* <th></th> */}
                 <th>#</th>
                 <th>Username</th>
                 <th>Email</th>
@@ -191,15 +191,16 @@ const Users = () => {
                 usersByPage.data &&
                 isJSONString(usersByPage.data) &&
                 JSON.parse(usersByPage.data)?.UserDetails.map((user, index) => {
-                  const isSelected = selectedCheckboxes.includes(user.UserID);
+                  // const isSelected = selectedCheckboxes.includes(user.UserID);
+                  const isSelected = true;
                   return (
                     <tr key={index}>
-                      <td>
+                      {/* <td>
                         <Checkbox
                           checked={isSelected}
                           onChange={() => handleCheckboxChange(user.UserID)}
                         />
-                      </td>
+                      </td> */}
                       <td>{index + pageCount * (pageNumber - 1) + 1}</td>
                       <td>
                         {user?.UserName}
@@ -222,8 +223,8 @@ const Users = () => {
                             }}
                           >
                             <svg
-                              height="12"
-                              width="12"
+                              height="11"
+                              width="11"
                               style={{
                                 opacity: (isSelected && user?.Status === 'Active') ? "1" : "0.3"
                               }}

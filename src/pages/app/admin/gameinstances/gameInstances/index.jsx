@@ -230,7 +230,7 @@ const GameInstances = () => {
                         <table className={styles.table_content}>
                             <thead>
                                 <tr>
-                                    <th></th>
+                                    {/* <th></th> */}
                                     <th>#</th>
                                     <th>Instance Name</th>
                                     {/* <th>Version</th> */}
@@ -247,15 +247,17 @@ const GameInstances = () => {
                                     gameInstancesByPage.data &&
                                     JSON.parse(gameInstancesByPage.data).InstanceDetails.map(
                                         (gameInstance, index) => {
-                                            const isSelected = selectedCheckboxes.includes(gameInstance.InstanceID);
+                                            // const isSelected = selectedCheckboxes.includes(gameInstance.InstanceID);
+                                            const isSelected = true;
+
                                             return (
                                                 <tr key={index}>
-                                                    <td>
+                                                    {/* <td>
                                                         <Checkbox
                                                             checked={isSelected}
                                                             onChange={() => handleCheckboxChange(gameInstance.InstanceID)}
                                                         />
-                                                    </td>
+                                                    </td> */}
                                                     {/* <td>{index + 1}</td> */}
                                                     <td>{index + pageCount * (pageNumber - 1) + 1}</td>
                                                     <td>
@@ -311,8 +313,8 @@ const GameInstances = () => {
                                                                 }}
                                                             >
                                                                 <svg
-                                                                    height="12"
-                                                                    width="12"
+                                                                    height="11"
+                                                                    width="11"
                                                                     style={{
                                                                         opacity: (isSelected &&
                                                                             gameInstance.Status === "Create") ? "1" : "0.3"

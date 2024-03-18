@@ -222,7 +222,7 @@ function QuestionList() {
             <table className={styles.table_content}>
               <thead>
                 <tr>
-                  <th></th>
+                  {/* <th></th> */}
                   <th>#</th>
                   <th>Questions</th>
                   {/* <th>Level</th> */}
@@ -238,15 +238,16 @@ function QuestionList() {
                   questionsByScenarioIdDetails.data &&
                   JSON.parse(questionsByScenarioIdDetails?.data).questionDetails?.map(
                     (question, index) => {
-                      const isSelected = selectedCheckboxes.includes(question.QuestionID);
+                      // const isSelected = selectedCheckboxes.includes(question.QuestionID);
+                      const isSelected = true;
                       return (
                         <tr key={index}>
-                          <td>
+                          {/* <td>
                             <Checkbox
                               checked={isSelected}
                               onChange={() => handleCheckboxChange(question.QuestionID)}
                             />
-                          </td>
+                          </td> */}
                           {/* <td>{index + 1}</td> */}
                           <td>{index + pageCount * (pageNumber - 1) + 1}</td>
                           {/* {typeof question.QuestionText === 'string' && isHTML(question.QuestionText) ? (
@@ -292,8 +293,8 @@ function QuestionList() {
                                 }}
                               >
                                 <svg
-                                  height="12"
-                                  width="12"
+                                  height="11"
+                                  width="11"
                                   style={{ opacity: isSelected ? "1" : "0.3" }}
                                 >
                                   <use xlinkHref="sprite.svg#edit_icon" />

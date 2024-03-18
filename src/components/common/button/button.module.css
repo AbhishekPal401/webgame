@@ -3,6 +3,7 @@
   font-weight: 500;
   text-align: center;
   border: 0.1rem solid transparent;
+  /* border: 0.2rem solid #ffe297 !important; */
   padding: 0.5rem 2.5rem;
   font-size: 1.2rem;
   line-height: 1.5;
@@ -44,7 +45,7 @@
   display: inline-block;
   font-weight: 500;
   text-align: center;
-  border: 0.1rem solid transparent;
+  /* border: 0.1rem solid transparent; */
   padding: 0.5rem 2.5rem;
   font-size: 1.2rem;
   line-height: 1.5;
@@ -52,6 +53,7 @@
   margin: 0.5rem 0;
   background-color: var(--primary-light);
   color: var(--black);
+  border: 0.2rem solid #ffe297 !important;
 }
 
 .default:hover,

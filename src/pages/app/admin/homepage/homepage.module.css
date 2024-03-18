@@ -163,6 +163,7 @@
   color: var(--black);
   background-color: #fcf2db;
   padding: 0.5rem 2.5rem;
+  border: 0.2rem solid #ffe297 !important;
 }
 
 /* Scenarios Table */
@@ -197,6 +198,7 @@
   color: var(--label);
 }
 .mainTableContainer {
+  overflow-y: auto;
   width: 100%;
   height: 100%;
   border: 0.1rem solid #707070;
@@ -224,7 +226,7 @@
 .table_content thead tr th {
   color: var(--primary);
   text-align: left;
-  padding-left: 0.5rem;
+  padding-left: 2rem;
 }
 
 .table_content tbody {
@@ -245,8 +247,23 @@
 } */
 
 .table_content tbody tr td {
-  height: 3rem;
-  padding-left: 0.5rem;
+  height: 3.5rem;
+  padding-left: 2rem;
+}
+.table_content tbody tr td {
+  min-width: 5rem;
+  max-width: 10rem;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* .table_content tbody tr > td:nth-child(1),
+.table_content tbody tr > td:nth-child(2) {
+  min-width: 2rem;
+} */
+.table_content tbody tr > td:nth-child(1) {
+  min-width: 2rem;
 }
 .table_content tbody tr > td:nth-child(3) {
   max-width: 15rem;
@@ -299,8 +316,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 2.2rem;
-  height: 2.2rem;
+  width: 2.4rem;
+  height: 2.4rem;
   border-radius: 50%;
   background-color: #ffecbd;
   cursor: pointer;
