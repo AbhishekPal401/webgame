@@ -14,11 +14,15 @@ function HashPassword(password) {
 }
 
 const azure = () => {
+  const [getUserCalled, setGetUserCalled] = useState(false);
+
   const dispatch = useDispatch();
 
   const authInfo = useAuth();
   const config1 = new UserManager(authInfo.userManager.settings);
   const openIdLogin = async () => {
+    setGetUserCalled(false);
+
     config1
       .signinRedirect()
       .then((response) => {
@@ -44,24 +48,13 @@ const azure = () => {
   };
 
   useEffect(() => {
+    if (getUserCalled) return;
+
     config1.getUser().then((user) => {
       if (user) {
         console.log("user", user);
         if (user && user.profile && user.profile.preferredMail) {
           const password = `pwc@123456${user.profile.preferredMail}`;
-
-          // dispatch(
-          //   pwclogin(
-          //     {
-          //       emailID: user.profile.preferredMail,
-          //       Password: HashPassword(password),
-          //     },
-          //     {
-          //       id_token: user.id_token,
-          //       settings: authInfo.userManager.settings,
-          //     }
-          //   )
-          // );
 
           dispatch(
             pwclogin(
@@ -72,10 +65,12 @@ const azure = () => {
               }
             )
           );
+
+          setGetUserCalled(true);
         }
       }
     });
-  }, [config1]);
+  }, [config1, getUserCalled]);
 
   return (
     <Button customClassName={styles.microsoftLoginButton} onClick={openIdLogin}>
