@@ -32,7 +32,7 @@ import IntroMedia from "../../../../components/intromedia/index.jsx";
 import { Tooltip } from "react-tooltip";
 import { resetSessionDetailsState } from "../../../../store/app/user/session/getSession.js";
 import Progress from "../../../../components/progress";
-import { getCurrentTimeStamp } from "../../../../utils/helper.js";
+import { debounce, getCurrentTimeStamp } from "../../../../utils/helper.js";
 import momentTimezone from "moment-timezone";
 import DOMPurify from "dompurify";
 import { setProgressImageData } from "../../../../store/local/gameplay.js";
@@ -341,6 +341,8 @@ const GamePlay = () => {
 
     dispatch(submitAnswerDetails(data));
   }, [credentials, questionDetails, selectedAnswer, startedAt, sessionDetails]);
+
+  const debouncedanswerSubmit = debounce(answerSubmit, 500);
 
   const onQuestionSkip = useCallback(() => {
     if (sessionDetails?.data) {
@@ -936,7 +938,7 @@ const GamePlay = () => {
                   MediaType={questionDetails.data.QuestionDetails.MediaType}
                   selectedAnswer={selectedAnswer}
                   setSelectedAnswer={setSelectedAnswer}
-                  onAnswerSubmit={answerSubmit}
+                  onAnswerSubmit={debouncedanswerSubmit}
                   CurrentState={currentState}
                   onNextQuestion={NextQuestionInvoke}
                   Votes={votesDetails}

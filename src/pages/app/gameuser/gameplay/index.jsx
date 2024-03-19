@@ -39,7 +39,7 @@ import { TIMER_STATES } from "../../../../constants/timer";
 import IntroMedia from "../../../../components/intromedia";
 import { Tooltip } from "react-tooltip";
 import Progress from "../../../../components/progress";
-import { getCurrentTimeStamp } from "../../../../utils/helper";
+import { debounce, getCurrentTimeStamp } from "../../../../utils/helper";
 import momentTimezone from "moment-timezone";
 import DOMPurify from "dompurify";
 import { resetFileStreamState } from "../../../../store/app/admin/fileStream/getFileStream";
@@ -438,6 +438,8 @@ const GamePlay = () => {
     [credentials, questionDetails, selectedAnswer, startedAt, sessionDetails]
   );
 
+  const debouncedanswerSubmit = debounce(answerSubmit, 500);
+
   const defaultAnswerSubmit = useCallback(
     (decider = false) => {
       if (!sessionDetails?.data) return;
@@ -492,12 +494,12 @@ const GamePlay = () => {
 
   const decisionSubmit = useCallback(() => {
     setIsDecision(true);
-    answerSubmit(true);
-  }, [answerSubmit]);
+    debouncedanswerSubmit(true);
+  }, [debouncedanswerSubmit]);
 
   const voteSubmit = useCallback(() => {
-    answerSubmit(false);
-  }, [answerSubmit]);
+    debouncedanswerSubmit(false);
+  }, [debouncedanswerSubmit]);
 
   useEffect(() => {
     if (questionDetails === null || questionDetails === undefined) return;
