@@ -774,6 +774,7 @@ const Question = ({
                           )}
                         {(CurrentState === PlayingStates.VotingCompleted ||
                           CurrentState === PlayingStates.DecisionInProgress) &&
+                          (IsDecisionMaker || isAdmin) &&
                           Array.isArray(Votes) &&
                           Votes.length > 0 &&
                           getVotesDetailsById(item?.AnswerID) &&
