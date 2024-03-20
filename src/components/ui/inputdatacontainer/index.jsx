@@ -1,7 +1,11 @@
 import styles from "./inputtdatacontainer.module.css";
-const InputDataContainer = ({ customRightContainerStyles, children }) => {
+const InputDataContainer = ({ 
+  customRightContainerStyles,
+  customFormContainerStyles,
+  children,
+ }) => {
   return (
-    <div className={styles.formContainer}>
+    <div style={customFormContainerStyles} className={styles.formContainer}>
       <div className={styles.formLeft}></div>
       <div
         style={{

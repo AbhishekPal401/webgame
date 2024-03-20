@@ -29,6 +29,8 @@ import {
     getGameInstanceDetailsByID,
     resetGameInstanceDetailState
 } from "../../../../../store/app/admin/gameinstances/getGameInstanceById";
+import CustomInput from "../../../../../components/common/customInput";
+import Dropdown from "../../../../../components/common/dropdown";
 
 
 const UpdateInstances = () => {
@@ -478,7 +480,7 @@ const UpdateInstances = () => {
         setGameInstanceDetailStateOnGroupChange();
     }, [gamePlayersByGroupIdDetails]);
 
-    const onChange = (event) => {
+    const onChange = (value, event) => {
         console.log("onChange name : " + event.target.name + ", value : " + event.target.value)
         setGameInstanceData({
             ...gameInstanceData,
@@ -535,6 +537,52 @@ const UpdateInstances = () => {
         dispatch(resetGamePlayerDetailsByGroupIDState());
     };
 
+    const onSelectOrganization = (value) => {
+        if (value === "" || value === undefined || value === null) {
+            console.log("onSelectOrganization value :", value);
+
+            setGameInstanceData({
+                ...gameInstanceData,
+                organization: {
+                    value: "",
+                    error: "",
+                },
+                groupName: {
+                    value: "",
+                    error: "",
+                },
+                instancePlayers: [],
+            });
+
+            dispatch(resetGroupDetailsByOrgIDState());
+            dispatch(resetGamePlayerDetailsByGroupIDState());
+
+            return;
+        }
+
+        console.log("onSelectOrganization ", value)
+
+        // set the organization id in game instance state  
+        setGameInstanceData({
+            ...gameInstanceData,
+            organization: {
+                value: value,
+                error: "",
+            },
+            groupName: {
+                value: "",
+                error: "",
+            },
+            instancePlayers: [],
+        });
+        //dispatch a request to get the group names
+        const data = {
+            organizationID: value,
+        }
+        dispatch(getGroupDetailsByOrgID(data));
+        dispatch(resetGamePlayerDetailsByGroupIDState());
+    };
+
     const onGroupNameSelect = (event) => {
         if (event.target.value === "" || event.target.value === undefined || event.target.value === null) {
             console.log("onGroupNameSelect event.target.value :", event.target.value);
@@ -573,6 +621,44 @@ const UpdateInstances = () => {
         dispatch(getGamePlayerDetailsByGroupID(data));
     };
 
+    const onSelectGroupName = (value) => {
+        if (value === "" || value === undefined || value === null) {
+            console.log("onSelectGroupName value :", value);
+            resetGamePlayerDetailsByGroupIDState();
+            setGameInstanceData({
+                ...gameInstanceData,
+                groupName: {
+                    value: "",
+                    error: "",
+                },
+                groupId: {
+                    value: "",
+                    error: "",
+                },
+                instancePlayers: [],
+            });
+            return;
+        }
+        console.log("onSelectGroupName ", value)
+        setGameInstanceData({
+            ...gameInstanceData,
+            groupName: {
+                value: value,
+                error: "",
+            },
+            groupId: {
+                value: value,
+                error: "",
+            },
+        });
+
+        //dispatch a request to get the gaeme players by group ID
+        const data = {
+            groupID: value,
+        }
+        dispatch(getGamePlayerDetailsByGroupID(data));
+    };
+
     const onGroupSizeSelect = (event) => {
         console.log("onGroupSizeSelect ", event.target.value)
         setGameInstanceData({
@@ -590,6 +676,17 @@ const UpdateInstances = () => {
             ...gameInstanceData,
             scenarioName: {
                 value: event.target.value,
+                error: "",
+            },
+        });
+    };
+
+    const onSelectScenarioName = (value) => {
+        console.log("onSelectScenarioName ", value)
+        setGameInstanceData({
+            ...gameInstanceData,
+            scenarioName: {
+                value: value,
                 error: "",
             },
         });
@@ -779,7 +876,7 @@ const UpdateInstances = () => {
 
         // TODO:: set the initial state to show errors
 
-
+        setGameInstanceData(data);
         if (!isEmpty) {
             if (valid) {
 
@@ -804,7 +901,7 @@ const UpdateInstances = () => {
                 dispatch(updateGameInstance(data));
             }
         } else {
-            toast.error("Please fill all the mandatory details.")
+            // toast.error("Please fill all the mandatory details.")
         }
 
     };
@@ -853,7 +950,7 @@ const UpdateInstances = () => {
                             <div className={styles.instanceDetailsInputContainer}>
                                 <div className={styles.firstRow}>
                                     <div className={styles.field}>
-                                        <Input
+                                        {/* <Input
                                             labelStyle={styles.inputLabel}
                                             type="text"
                                             value={gameInstanceData?.instanceName?.value}
@@ -861,11 +958,30 @@ const UpdateInstances = () => {
                                             name={"instanceName"}
                                             placeholder="Instance Name &#128900;"
                                             onChange={onChange}
+                                        /> */}
+                                        <CustomInput
+                                            type="text"
+                                            value={gameInstanceData.instanceName.value}
+                                            // customStyle={{ margin: '0' }}
+                                            // customInputStyles={{ height: "auto" }}
+                                            // inputStyleClass={styles.customInputStylesClass}
+                                            customLabelStyle={{ display: "none" }}
+                                            name={"instanceName"}
+                                            title="Instance Name"
+                                            onChange={onChange}
+                                            required
+                                            error={gameInstanceData.instanceName.error}
+                                            errorNode={(
+                                                <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                                                    {gameInstanceData.instanceName.error}
+                                                </div>
+                                            )}
+                                            maxLength={100}
                                         />
                                     </div>
                                     <div className={styles.field}>
                                         {/*Select Organization :: start */}
-                                        <div>
+                                        {/* <div>
                                             <select
                                                 id="dropdown_organization"
                                                 value={gameInstanceData?.organization?.value}
@@ -882,20 +998,41 @@ const UpdateInstances = () => {
                                                         if (item.MasterType !== "Organization") return;
                                                         return (
                                                             <option value={item.MasterID} key={index}>
-                                                                {/* change item.MasterID to 
-                                                                MasterDisplayName inorder to
-                                                                send the name insed of id to backend */}
                                                                 {item.MasterDisplayName}
                                                             </option>
                                                         );
                                                     })}
                                             </select>
-                                        </div>
+                                        </div> */}
+
+                                        <Dropdown
+                                            data={
+                                                masters &&
+                                                masters.data &&
+                                                isJSONString(masters.data) &&
+                                                Array.isArray(JSON.parse(masters.data)) &&
+                                                JSON.parse(masters.data)
+                                                    .filter(item => item.MasterType === "Organization") ||
+                                                []
+                                            }
+                                            value={gameInstanceData.organization.value}
+                                            valueKey="MasterID"
+                                            labelKey="MasterDisplayName"
+                                            placeholder="Select Organization"
+                                            onSelect={(value) => { onSelectOrganization(value) }}
+                                            error={gameInstanceData.organization.error}
+                                            errorNode={(
+                                                <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                                                    {gameInstanceData.organization.error}
+                                                </div>
+                                            )}
+                                            required
+                                        />
                                         {/*Select Organization :: end */}
                                     </div>
                                     <div className={styles.field}>
                                         {/*Select Group Name :: start */}
-                                        <div>
+                                        {/* <div>
                                             <select
                                                 id="dropdown_group_name"
                                                 value={gameInstanceData?.groupName?.value}
@@ -917,7 +1054,32 @@ const UpdateInstances = () => {
                                                         );
                                                     })}
                                             </select>
-                                        </div>
+                                        </div> */}
+
+                                        <Dropdown
+                                            data={
+                                                groupByOrgIdDetails &&
+                                                groupByOrgIdDetails.data &&
+                                                isJSONString(groupByOrgIdDetails.data) &&
+                                                Array.isArray(JSON.parse(groupByOrgIdDetails.data)) &&
+                                                JSON.parse(groupByOrgIdDetails.data) ||
+                                                []
+                                            }
+                                            value={gameInstanceData.groupName.value}
+                                            valueKey="GroupID"
+                                            labelKey="GroupName"
+                                            placeholder="Group Name"
+                                            onSelect={(value) => { onSelectGroupName(value) }}
+                                            error={gameInstanceData.groupName.error}
+                                            errorNode={(
+                                                <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                                                    {gameInstanceData.groupName.error}
+                                                </div>
+                                            )}
+                                            maxLength={100}
+                                            required
+                                        />
+
                                         {/*Select Group Name :: end */}
                                     </div>
                                     <div className={styles.field}>
@@ -943,7 +1105,7 @@ const UpdateInstances = () => {
                                 <div className={styles.secondRow}>
                                     <div className={styles.field}>
                                         {/*Select Sceanrio Name :: start */}
-                                        <div>
+                                        {/* <div>
                                             <select
                                                 id="dropdown_scenario_name"
                                                 value={gameInstanceData?.scenarioName?.value}
@@ -965,7 +1127,30 @@ const UpdateInstances = () => {
                                                         );
                                                     })}
                                             </select>
-                                        </div>
+                                        </div> */}
+
+                                        <Dropdown
+                                            data={
+                                                scenarioNameAndIdDetails &&
+                                                scenarioNameAndIdDetails.data &&
+                                                isJSONString(scenarioNameAndIdDetails.data) &&
+                                                Array.isArray(JSON.parse(scenarioNameAndIdDetails.data)) &&
+                                                JSON.parse(scenarioNameAndIdDetails.data) ||
+                                                []
+                                            }
+                                            value={gameInstanceData.scenarioName.value}
+                                            valueKey="ScenarioID"
+                                            labelKey="ScenarioName"
+                                            placeholder="Select Scenario"
+                                            onSelect={(value) => { onSelectScenarioName(value) }}
+                                            error={gameInstanceData.scenarioName.error}
+                                            errorNode={(
+                                                <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                                                    {gameInstanceData.scenarioName.error}
+                                                </div>
+                                            )}
+                                            required
+                                        />
                                         {/*Select Sceanrio Name :: end */}
                                     </div>
                                     <div className={styles.field}>
@@ -1013,7 +1198,7 @@ const UpdateInstances = () => {
                                         gameInstanceData?.instancePlayers?.map((player, index) => (
                                             <div key={index} className={styles.instancePlayersInputRow}>
                                                 <div className={styles.field}>
-                                                    <Input
+                                                    {/* <Input
                                                         labelStyle={styles.inputLabel}
                                                         type="text"
                                                         value={player?.playerName?.value}
@@ -1022,12 +1207,24 @@ const UpdateInstances = () => {
                                                         placeholder="Player Name &#128900;"
                                                         onChange={(e) => onPlayerChange(e, index, 'playerName')}
                                                         disabled
+                                                    /> */}
+                                                    <CustomInput
+                                                        type="text"
+                                                        value={player.playerName.value}
+                                                        // customStyle={{ margin: '0' }}
+                                                        customInputStyles={{ height: "3.5rem" }}
+                                                        inputStyleClass={styles.customInputStylesClass}
+                                                        name={"playerName"}
+                                                        title="Player Name"
+                                                        onChange={(e) => onPlayerChange(e, index, 'playerName')}
+                                                        required
+                                                        readonly
                                                     />
                                                 </div>
 
                                                 {/*Select Group Name :: start */}
                                                 <div className={styles.field}>
-                                                    <Input
+                                                    {/* <Input
                                                         labelStyle={styles.inputLabel}
                                                         type="text"
                                                         value={player?.playerGroupName?.value}
@@ -1036,6 +1233,18 @@ const UpdateInstances = () => {
                                                         placeholder="Assign Group &#128900;"
                                                         onChange={(e) => onPlayerChange(e, index, 'playerGroupName')}
                                                         disabled
+                                                    /> */}
+                                                    <CustomInput
+                                                        type="text"
+                                                        value={player.playerGroupName.value}
+                                                        // customStyle={{ margin: '0' }}
+                                                        customInputStyles={{ height: "3.5rem" }}
+                                                        inputStyleClass={styles.customInputStylesClass}
+                                                        name={"playerGroupName"}
+                                                        title="Assign Group"
+                                                        onChange={(e) => onPlayerChange(e, index, 'playerName')}
+                                                        required
+                                                        readonly
                                                     />
                                                     {/* <div>
                                                     <select
@@ -1066,7 +1275,7 @@ const UpdateInstances = () => {
 
                                                 {/*Select Role  :: start */}
                                                 <div className={styles.field}>
-                                                    <div>
+                                                    {/* <div>
                                                         <select
                                                             id="dropdown_player_designation"
                                                             value={player?.playerDesignation?.value}
@@ -1090,7 +1299,32 @@ const UpdateInstances = () => {
                                                                     );
                                                                 })}
                                                         </select>
-                                                    </div>
+                                                    </div> */}
+
+                                                    <Dropdown
+                                                        data={
+                                                            masters &&
+                                                            masters.data &&
+                                                            isJSONString(masters.data) &&
+                                                            Array.isArray(JSON.parse(masters.data)) &&
+                                                            JSON.parse(masters.data)
+                                                                .filter(item => item.MasterType === "Designation") ||
+                                                            []
+                                                        }
+                                                        value={player.playerDesignation.value}
+                                                        valueKey="MasterID"
+                                                        labelKey="MasterDisplayName"
+                                                        placeholder="Select Designation"
+                                                        onSelect={(value) => { onSelectOrganization(value) }}
+                                                        error={player.playerDesignation.error}
+                                                        errorNode={(
+                                                            <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                                                                {player.playerDesignation.error}
+                                                            </div>
+                                                        )}
+                                                        required
+                                                        disabled
+                                                    />
                                                 </div>
 
                                                 {/*Select Role:: end */}

@@ -64,6 +64,13 @@
 /* .inputLabel {
   color: var(--input_label);
 } */
+
+.inputLabel {
+  color: var(--input_label);
+  font-size: 1.35rem;
+  font-family: "Helvetica 500";
+}
+
 .labelNone {
   display: none;
 }

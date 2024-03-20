@@ -15,7 +15,7 @@
   font-size: 4rem;
   color: var(--label);
   font-weight: bold;
-  font-family: 'Helvetica 500';
+  font-family: "Helvetica 500";
 }
 .right {
 }
@@ -59,7 +59,7 @@
   display: flex;
   gap: 2rem;
   flex-direction: row;
-  align-items: baseline;
+  /* align-items: baseline; */
 }
 .instanceDetailsInputContainer > .firstRow > .field {
   flex: 1;
@@ -80,7 +80,7 @@
 .addGroup {
   margin-top: 1.5rem;
 }
-.addGroup p{
+.addGroup p {
   color: var(--primary);
   text-decoration: underline;
   cursor: pointer;
@@ -105,16 +105,16 @@
 }
 .instancePlayersInputContainer > .instancePlayersInputRow > .field {
   flex: 1;
+  z-index: 0 !important;
 }
 
 .noInstancePlayerContainer {
   display: flex;
   justify-content: center;
 }
-.noInstancePlayerContainer > p > label{
+.noInstancePlayerContainer > p > label {
   color: var(--primary);
   font-size: 1.35rem;
-
 }
 
 /* Button contaienr */
@@ -134,6 +134,7 @@
   flex-direction: column;
   gap: 1.5rem;
 }
+
 .modalInputLabel {
   font-size: 1rem;
   color: var(-input_label_dark);
@@ -155,7 +156,6 @@
 
 .searchInputContainer > :nth-child(2) {
   flex: 1;
-
 }
 .userInnerContainer {
   max-height: 30rem;
@@ -178,13 +178,37 @@
 .userColumns img:hover {
   width: 80%;
 }
-.modalInputContainer label {
+/* .modalInputContainer label {
   display: block;
   margin-bottom: 0.8rem;
   font-size: 1.35rem;
-  font-family: "Helvetica 500";
+  font-family: "Helvetica 400";
+} */
+.comboboxStyles span {
+  font-family: "Helvetica 400";
 }
-
+/* .comboboxStyles .ap-option-left {
+  align-items: baseline !important;
+}
+.comboboxStyles .ap-option-left label {
+  padding-left: 1rem;
+} */
+.comboboxStyles > div:nth-child(3) > div:first-child > div > div:first-child {
+  align-items: baseline !important;
+}
+.comboboxStyles
+  > div:nth-child(3)
+  > div:first-child
+  > div
+  > div:first-child
+  label {
+  padding-left: 1rem;
+}
+.comboboxStyles
+  > div:nth-child(2)
+  > span:nth-of-type(2) {
+  width: 0;
+}
 /* Input style */
 /* .formControl {
   display: block;
@@ -218,3 +242,20 @@
   outline: none;
   box-shadow: none;
 } */
+.customInputStylesClass {
+  font-size: 1.3rem;
+}
+/* .customInputStylesClass > div:first-child > div:nth-child(1),
+.customInputStylesClass > div:first-child > div:nth-child(2){
+  background:  var(--background-color);
+
+} */
+.customInputStylesClass label {
+  /* font-family: "Helvetica 400"; */
+}
+/* .customInputStylesClass > div:first-child > div:nth-child(1) {
+  font-size: 1.3rem;
+} */
+.customInputStylesClass > div:first-child > div:nth-child(2) {
+  height: 3.5rem;
+}

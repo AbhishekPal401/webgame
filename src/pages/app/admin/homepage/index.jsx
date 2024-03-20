@@ -349,9 +349,11 @@ const Homepage = () => {
                     scenarioByPage.data &&
                     JSON.parse(scenarioByPage?.data)?.ScenarioDetails.map(
                       (scenario, index) => {
-                        const isSelected = selectedCheckboxes.includes(
-                          scenario.ScenarioID
-                        );
+                        // const isSelected = selectedCheckboxes.includes(
+                        //   scenario.ScenarioID
+                        // );
+                        const isSelected = true;
+
                         return (
                           <tr key={index}>
                             {/* <td>

@@ -1,0 +1,35 @@
+.formGroup {
+  /* margin: 1rem 0 0.5rem; */
+  margin: 0;
+}
+
+.formControl {
+  font-size: 1.3rem;
+}
+.formControl > div:nth-child(2) {
+  z-index: 9999 !important;
+}
+.formControl > div:first-child > div:nth-child(1),
+.formControl > div:first-child > div:nth-child(2) {
+  /* background: var(--background-color); */
+  background-color: var(--innerbackground);
+}
+.formControl label {
+  /* font-family: "Helvetica 400"; */
+}
+
+.formControl
+  > div:first-child
+  > div:nth-child(1)
+  > div:first-child
+  > div:nth-child(2) {
+  height: 3.5rem;
+}
+/* .formControl
+  > div:first-child
+  > div:nth-child(1)
+  > div:first-child
+  > div:nth-child(2)
+  > input {
+  height: auto;
+} */

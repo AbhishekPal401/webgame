@@ -56,8 +56,12 @@
   display: block;
 }
 .inputLabel {
-  font-size: 1.3rem;
   color: var(--input_label);
+  font-size: 1.35rem;
+  font-family: "Helvetica 500";
+}
+.selecttStyleClass {
+  margin-top: 1rem;
 }
 /* Question Container */
 .questionContainer {
@@ -78,13 +82,34 @@
   max-width: 80rem;
   min-width: 30rem;
 }
+.question {
+  width: 100%;
+}
 .customRichTextEditorContaierClass {
   /* margin-top: 2rem; */
   font-family: "Helvetica 400";
+  width: 100%;
+  height: 100%;
 }
 .customRichTextEditorStyleClass > div:nth-child(2)  {
   height: 34rem;
   width: 100%;
+}
+.customEditorStyleClass {
+  width: 100%;
+}
+.customEditorStyleClass > div:nth-child(2) {
+  height: 34rem !important;
+}
+.customEditorStyleClass > div:nth-child(1) {
+  height: 4.5rem !important;
+}
+.customEditorStyleClass > div:nth-child(1) > div:nth-child(1) {
+  flex-grow: 0;
+}
+.customDropDownContainerClass {
+  /* margin: 1rem 0 0.5rem; */
+
 }
 .questionInputRight {
   flex: 3;
@@ -160,8 +185,9 @@
   display: flex;
   flex-direction: row;
   gap: 2rem;
-  align-items: baseline;
+  /* align-items: baseline; */
   justify-content: start;
+  margin-top: 1rem;
 }
 .answerInputFields > :first-child {
   flex: 4;

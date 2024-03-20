@@ -58,7 +58,7 @@
   display: flex;
   gap: 2rem;
   flex-direction: row;
-  align-items: baseline;
+  /* align-items: baseline; */
 }
 .instanceDetailsInputContainer > .firstRow > .field {
   flex: 1;

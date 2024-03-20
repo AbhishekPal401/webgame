@@ -42,6 +42,11 @@ import {
     resetUserState,
 } from "../../../../../store/app/admin/users/users";
 import { debounce } from "../../../../../utils/helper";
+import { Combobox } from '@appkit4/react-components'
+import "@appkit4/styles/appkit.min.css";
+import '@appkit4/react-components/dist/styles/appkit4-react.min.css';
+import CustomInput from "../../../../../components/common/customInput";
+import Dropdown from "../../../../../components/common/dropdown";
 
 
 
@@ -85,6 +90,14 @@ const CreateInstances = () => {
         },
         users: [],
         addedUsers: [],
+        newUsers: {
+            value: [],
+            error: "",
+        },
+        newAddedUsers: {
+            value: [],
+            error: "",
+        },
     });
 
     const [searchValue, setSearchValue] = useState('');
@@ -165,6 +178,14 @@ const CreateInstances = () => {
             },
             users: [],
             addedUsers: [],
+            newUsers: {
+                value: [],
+                error: "",
+            },
+            newAddedUsers: {
+                value: [],
+                error: "",
+            },
         })
     };
 
@@ -231,7 +252,8 @@ const CreateInstances = () => {
                 if (createdGroupData?.GroupID) {
                     const data = {
                         groupID: createdGroupData?.GroupID,
-                        userIds: addGroupData?.addedUsers,
+                        // userIds: addGroupData?.addedUsers,
+                        userIds: addGroupData?.newAddedUsers?.value,
                         requester: {
                             requestID: generateGUID(),
                             requesterID: credentials.data.userID,
@@ -378,6 +400,58 @@ const CreateInstances = () => {
     // }, []);
 
     // set the updated data into GameIstance state
+    // const setUserDetailState = useCallback(() => {
+
+    //     if (usersByPage === null ||
+    //         usersByPage === undefined ||
+    //         showAddGroupModal === null
+    //     ) return;
+
+    //     if (isJSONString(usersByPage.data)) {
+    //         const data = JSON.parse(usersByPage.data);
+    //         console.log("fetched users :", data);
+    //         // map answers from questionByIdDetails
+    //         const users = data?.UserDetails?.map((user) => {
+    //             return {
+    //                 userId: {
+    //                     value: user.UserID,
+    //                     error: "",
+    //                 },
+    //                 userName: {
+    //                     value: user.UserName,
+    //                     error: "",
+    //                 },
+    //                 userEmail: {
+    //                     value: user.UserName,
+    //                     error: "",
+    //                 },
+    //                 userRole: {
+    //                     value: user.Role,
+    //                     error: "",
+    //                 },
+    //                 userDesignation: {
+    //                     value: user.Designation,
+    //                     error: "",
+    //                 },
+    //                 isUserAdded: {
+    //                     value: false,
+    //                     error: "",
+    //                 },
+    //                 isActive: {
+    //                     value: user.Status,
+    //                     error: "",
+    //                 },
+    //             };
+    //         });
+
+    //         const newData = (prevData) => ({
+    //             ...prevData,
+    //             users: users,
+    //         })
+    //         setAddGroupData(newData);
+    //     }
+    // }, [usersByPage]);
+
     const setUserDetailState = useCallback(() => {
 
         if (usersByPage === null ||
@@ -419,16 +493,31 @@ const CreateInstances = () => {
                         value: user.Status,
                         error: "",
                     },
+                    key: user.UserID,
+                    value: user.UserID,
+                    label: user.UserName,
+                    disabled: user.IsDisabled,
+                    email: user.Email,
+                    role: user.Role,
+                    designation: user.Designation,
                 };
             });
 
+            // const newData = (prevData) => ({
+            //     ...prevData,
+            //     users: users,
+            // })
             const newData = (prevData) => ({
                 ...prevData,
-                users: users,
+                newUsers: {
+                    value: users,
+                    error: "",
+                },
             })
             setAddGroupData(newData);
         }
     }, [usersByPage]);
+
 
     useEffect(() => {
         if (usersByPage === null ||
@@ -464,7 +553,7 @@ const CreateInstances = () => {
     // // DEBUG :: end
 
 
-    const onChange = (event) => {
+    const onChange = (value, event) => {
         console.log("onChange name : " + event.target.name + ", value : " + event.target.value)
         setGameInstanceData({
             ...gameInstanceData,
@@ -475,7 +564,7 @@ const CreateInstances = () => {
         });
     };
 
-    const onOrganizationSelect = (event) => {
+    const onOrganizationSelect = (value, event) => {
         if (event.target.value === "" || event.target.value === undefined || event.target.value === null) {
             console.log("onOrganizationSelect event.target.value :", event.target.value);
 
@@ -521,6 +610,54 @@ const CreateInstances = () => {
         dispatch(resetGamePlayerDetailsByGroupIDState());
     };
 
+    const onSelectOrganization = (value, event) => {
+        if (value === "" || value === undefined || value === null) {
+            console.log("onSelectOrganization value :", value);
+
+            setGameInstanceData({
+                ...gameInstanceData,
+                organization: {
+                    value: "",
+                    error: "",
+                },
+                groupName: {
+                    value: "",
+                    error: "",
+                },
+                instancePlayers: [],
+            });
+
+            dispatch(resetGroupDetailsByOrgIDState());
+            dispatch(resetGamePlayerDetailsByGroupIDState());
+
+            return;
+        }
+
+        console.log("onSelectOrganization value", value)
+
+
+        // set the organization id in game instance state  
+        setGameInstanceData({
+            ...gameInstanceData,
+            organization: {
+                value: value,
+                error: "",
+            },
+            groupName: {
+                value: "",
+                error: "",
+            },
+            instancePlayers: [],
+        });
+        //dispatch a request to get the group names
+        const data = {
+            organizationID: value,
+        }
+        dispatch(getGroupDetailsByOrgID(data));
+        dispatch(resetGamePlayerDetailsByGroupIDState());
+    };
+
+
     const onGroupNameSelect = (event) => {
         if (event.target.value === "" || event.target.value === undefined || event.target.value === null) {
             console.log("onGroupNameSelect event.target.value :", event.target.value);
@@ -551,6 +688,36 @@ const CreateInstances = () => {
         dispatch(getGamePlayerDetailsByGroupID(data));
     };
 
+    const onSelectGroupName = (value) => {
+        if (value === "" || value === undefined || value === null) {
+            console.log("onGroupNameSelect value :", value);
+            resetGamePlayerDetailsByGroupIDState();
+            setGameInstanceData({
+                ...gameInstanceData,
+                groupName: {
+                    value: "",
+                    error: "",
+                },
+                instancePlayers: [],
+            });
+            return;
+        }
+        console.log("onGroupNameSelect ", value)
+        setGameInstanceData({
+            ...gameInstanceData,
+            groupName: {
+                value: value,
+                error: "",
+            },
+        });
+
+        //dispatch a request to get the gaeme players by group ID
+        const data = {
+            groupID: value,
+        }
+        dispatch(getGamePlayerDetailsByGroupID(data));
+    };
+
     const onGroupSizeSelect = (event) => {
         console.log("onGroupSizeSelect ", event.target.value)
         setGameInstanceData({
@@ -573,6 +740,17 @@ const CreateInstances = () => {
         });
     };
 
+    const onSelectScenarioName = (value) => {
+        console.log("onScenarioNameSelect ", value)
+        setGameInstanceData({
+            ...gameInstanceData,
+            scenarioName: {
+                value: value,
+                error: "",
+            },
+        });
+    };
+
     const onLevelSelect = (event) => {
         console.log("onLevelSelect ", event.target.value)
         setGameInstanceData({
@@ -584,7 +762,7 @@ const CreateInstances = () => {
         });
     };
 
-    const onPlayerChange = (event, index, field) => {
+    const onPlayerChange = (value, event, index, field) => {
         console.log("selcted option : ", event.target.value);
         setGameInstanceData((prevPlayerData) => {
             const updatedPlayers = [...prevPlayerData.instancePlayers];
@@ -598,7 +776,7 @@ const CreateInstances = () => {
 
     // Add group :: start
 
-    const onAddGroupChange = (event) => {
+    const onAddGroupChange = (value, event) => {
         console.log("onAddGroupChange name : " + event.target.name + ", value : " + event.target.value)
         setAddGroupData(prevData => ({
             ...prevData,
@@ -688,6 +866,17 @@ const CreateInstances = () => {
         });
     };
 
+    const onSelectUser = (clickedUserId) => {
+        console.log("clickedUserId :", clickedUserId)
+        setAddGroupData((prevData) => ({
+            ...prevData,
+            newAddedUsers: {
+                value: clickedUserId,
+                error: "",
+            },
+        }));
+    };
+
     // search input
     const onSearchChange = (event) => {
         setSearchValue(event.target.value);
@@ -700,7 +889,6 @@ const CreateInstances = () => {
 
     // on add Group details
     const onAddGroup = () => {
-        console.log("add group")
         console.log("onAddGroup");
 
         let isEmpty = false;
@@ -708,6 +896,7 @@ const CreateInstances = () => {
         let valid = true;
         let data = { ...addGroupData };
 
+        console.log("data : ", data)
         // validate the addGroupData fields
         if (addGroupData?.groupName?.value?.trim() === "") {
             console.log("groupName:", data.groupName);
@@ -747,20 +936,43 @@ const CreateInstances = () => {
             toast.error("Please enter a valid group name");
         }
 
-        if (addGroupData?.addedUsers?.length <= 1) {
+        // if (addGroupData?.addedUsers?.length <= 1) {
+        //     console.log("Please add atleast two users to the group.");
+        //     // toast.error("Please add atleast two users to the group.")
+        //     data = {
+        //         ...data,
+        //         newAddedUsers: {
+        //             ...data.newAddedUsers,
+        //             error: "Please select atleast two users.",
+        //         },
+        //     };
+        //     valid = false;
+        //     // isEmpty = true;
+        //     isUsersEmpty = true;
+        // } 
+
+        if (addGroupData?.newAddedUsers?.value?.length <= 1) {
             console.log("Please add atleast two users to the group.");
             // toast.error("Please add atleast two users to the group.")
+            data = {
+                ...data,
+                newAddedUsers: {
+                    ...data.newAddedUsers,
+                    error: "Please select atleast two users.",
+                },
+            };
             valid = false;
             // isEmpty = true;
             isUsersEmpty = true;
         }
 
+        setAddGroupData(data);
 
         // If all validations pass
         try {
             if (!isEmpty) {
                 if (isUsersEmpty) {
-                    toast.error("Please add atleast two users to the group.")
+                    // toast.error("Please add atleast two users to the group.")
 
                 }
 
@@ -789,7 +1001,7 @@ const CreateInstances = () => {
 
                 }
             } else {
-                toast.error("Please fill all the mandatory details.");
+                // toast.error("Please fill all the mandatory details.");
             }
         } catch (error) {
             toast.error("An error occurred while saving the group.");
@@ -958,7 +1170,7 @@ const CreateInstances = () => {
 
         // TODO:: set the initial state to show errors
 
-
+        setGameInstanceData(data);
         if (!isEmpty) {
             if (valid) {
 
@@ -987,7 +1199,7 @@ const CreateInstances = () => {
                 dispatch(createGameInstance(data));
             }
         } else {
-            toast.error("Please fill all the mandatory details.")
+            // toast.error("Please fill all the mandatory details.")
         }
 
 
@@ -1032,6 +1244,7 @@ const CreateInstances = () => {
                             backgroundPosition: 'bottom right',
                             padding: ' 3rem 1.5rem'
                         }}
+
                     >
                         <div className={styles.instanceDetailsContainer} >
                             <div className={styles.instanceDetailsLabelContainer}>
@@ -1040,7 +1253,7 @@ const CreateInstances = () => {
                             <div className={styles.instanceDetailsInputContainer}>
                                 <div className={styles.firstRow}>
                                     <div className={styles.field}>
-                                        <Input
+                                        {/* <Input
                                             labelStyle={styles.inputLabel}
                                             type="text"
                                             value={gameInstanceData.instanceName.value}
@@ -1048,11 +1261,30 @@ const CreateInstances = () => {
                                             name={"instanceName"}
                                             placeholder="Instance Name &#128900;"
                                             onChange={onChange}
+                                        /> */}
+                                        <CustomInput
+                                            type="text"
+                                            value={gameInstanceData.instanceName.value}
+                                            // customStyle={{ margin: '0' }}
+                                            // customInputStyles={{ height: "auto" }}
+                                            // inputStyleClass={styles.customInputStylesClass}
+                                            customLabelStyle={{ display: "none" }}
+                                            name={"instanceName"}
+                                            title="Instance Name"
+                                            onChange={onChange}
+                                            required
+                                            error={gameInstanceData.instanceName.error}
+                                            errorNode={(
+                                                <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                                                    {gameInstanceData.instanceName.error}
+                                                </div>
+                                            )}
+                                            maxLength={100}
                                         />
                                     </div>
                                     <div className={styles.field}>
                                         {/*Select Organization :: start */}
-                                        <div>
+                                        {/* <div>
                                             <select
                                                 id="dropdown_organization"
                                                 value={gameInstanceData.organization.value}
@@ -1069,21 +1301,45 @@ const CreateInstances = () => {
                                                         if (item.MasterType !== "Organization") return;
                                                         return (
                                                             <option value={item.MasterID} key={index}>
-                                                                {/* change item.MasterID to 
-                                                                MasterDisplayName inorder to
-                                                                send the name insed of id to backend */}
                                                                 {item.MasterDisplayName}
                                                             </option>
                                                         );
                                                     })}
                                             </select>
-                                        </div>
+                                        </div> */}
+
+                                        <Dropdown
+                                            data={
+                                                masters &&
+                                                masters.data &&
+                                                isJSONString(masters.data) &&
+                                                Array.isArray(JSON.parse(masters.data)) &&
+                                                JSON.parse(masters.data)
+                                                    .filter(item => item.MasterType === "Organization") ||
+                                                []
+                                            }
+                                            value={gameInstanceData.organization.value}
+                                            valueKey="MasterID"
+                                            labelKey="MasterDisplayName"
+                                            placeholder="Select Organization"
+                                            onSelect={(value) => { onSelectOrganization(value) }}
+                                            error={gameInstanceData.organization.error}
+                                            errorNode={(
+                                                <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                                                    {gameInstanceData.organization.error}
+                                                </div>
+                                            )}
+                                            required
+                                        />
+
+
+
                                         {/*Select Organization :: end */}
                                     </div>
                                     <div className={styles.field}>
                                         <div className={styles.groupContainer}>
                                             {/*Select Group Name :: start */}
-                                            <div>
+                                            {/* <div>
                                                 <select
                                                     id="dropdown_group_name"
                                                     value={gameInstanceData.groupName.value}
@@ -1105,7 +1361,34 @@ const CreateInstances = () => {
                                                             );
                                                         })}
                                                 </select>
-                                            </div>
+                                            </div> */}
+
+
+                                            <Dropdown
+                                                data={
+                                                    groupByOrgIdDetails &&
+                                                    groupByOrgIdDetails.data &&
+                                                    isJSONString(groupByOrgIdDetails.data) &&
+                                                    Array.isArray(JSON.parse(groupByOrgIdDetails.data)) &&
+                                                    JSON.parse(groupByOrgIdDetails.data) ||
+                                                    []
+                                                }
+                                                value={gameInstanceData.groupName.value}
+                                                valueKey="GroupID"
+                                                labelKey="GroupName"
+                                                placeholder="Group Name"
+                                                onSelect={(value) => { onSelectGroupName(value) }}
+                                                error={gameInstanceData.groupName.error}
+                                                errorNode={(
+                                                    <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                                                        {gameInstanceData.groupName.error}
+                                                    </div>
+                                                )}
+                                                maxLength={100}
+                                                required
+                                            />
+
+
                                             {/*Select Group Name :: end */}
 
                                             {/*Add Group Name :: start */}
@@ -1141,7 +1424,7 @@ const CreateInstances = () => {
                                 <div className={styles.secondRow}>
                                     <div className={styles.field}>
                                         {/*Select Sceanrio Name :: start */}
-                                        <div>
+                                        {/* <div>
                                             <select
                                                 id="dropdown_scenario_name"
                                                 value={gameInstanceData.scenarioName.value}
@@ -1163,7 +1446,30 @@ const CreateInstances = () => {
                                                         );
                                                     })}
                                             </select>
-                                        </div>
+                                        </div> */}
+
+                                        <Dropdown
+                                            data={
+                                                scenarioNameAndIdDetails &&
+                                                scenarioNameAndIdDetails.data &&
+                                                isJSONString(scenarioNameAndIdDetails.data) &&
+                                                Array.isArray(JSON.parse(scenarioNameAndIdDetails.data)) &&
+                                                JSON.parse(scenarioNameAndIdDetails.data) ||
+                                                []
+                                            }
+                                            value={gameInstanceData.scenarioName.value}
+                                            valueKey="ScenarioID"
+                                            labelKey="ScenarioName"
+                                            placeholder="Select Scenario"
+                                            onSelect={(value) => { onSelectScenarioName(value) }}
+                                            error={gameInstanceData.scenarioName.error}
+                                            errorNode={(
+                                                <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                                                    {gameInstanceData.scenarioName.error}
+                                                </div>
+                                            )}
+                                            required
+                                        />
                                         {/*Select Sceanrio Name :: end */}
                                     </div>
                                     <div className={styles.field}>
@@ -1210,7 +1516,7 @@ const CreateInstances = () => {
                                         gameInstanceData.instancePlayers.map((player, index) => (
                                             <div key={index} className={styles.instancePlayersInputRow}>
                                                 <div className={styles.field}>
-                                                    <Input
+                                                    {/* <Input
                                                         labelStyle={styles.inputLabel}
                                                         type="text"
                                                         value={player.playerName.value}
@@ -1219,13 +1525,24 @@ const CreateInstances = () => {
                                                         placeholder="Player Name"
                                                         onChange={(e) => onPlayerChange(e, index, 'playerName')}
                                                         disabled
+                                                    /> */}
+                                                    <CustomInput
+                                                        type="text"
+                                                        value={player.playerName.value}
+                                                        // customStyle={{ margin: '0' }}
+                                                        customInputStyles={{ height: "3.5rem" }}
+                                                        inputStyleClass={styles.customInputStylesClass}
+                                                        name={"playerName"}
+                                                        title="Player Name"
+                                                        onChange={(e) => onPlayerChange(e, index, 'playerName')}
+                                                        required
+                                                        readonly
                                                     />
-
                                                 </div>
 
                                                 {/*Select Group Name :: start */}
                                                 <div className={styles.field}>
-                                                    <Input
+                                                    {/* <Input
                                                         labelStyle={styles.inputLabel}
                                                         type="text"
                                                         value={player.playerGroupName.value}
@@ -1234,6 +1551,18 @@ const CreateInstances = () => {
                                                         placeholder="Assign Group"
                                                         onChange={(e) => onPlayerChange(e, index, 'playerGroupName')}
                                                         disabled
+                                                    /> */}
+                                                    <CustomInput
+                                                        type="text"
+                                                        value={player.playerGroupName.value}
+                                                        // customStyle={{ margin: '0' }}
+                                                        customInputStyles={{ height: "auto" }}
+                                                        inputStyleClass={styles.customInputStylesClass}
+                                                        name={"playerGroupName"}
+                                                        title="Assign Group"
+                                                        onChange={(e) => onPlayerChange(e, index, 'playerName')}
+                                                        required
+                                                        readonly
                                                     />
                                                     {/* <div>
                                                     <select
@@ -1274,7 +1603,19 @@ const CreateInstances = () => {
                                                         onChange={(e) => onPlayerChange(e, index, 'playerRole')}
                                                         disabled
                                                     /> */}
-                                                    <div>
+                                                    {/* <CustomInput
+                                                        type="text"
+                                                        value={player.playerDesignation.value}
+                                                        // customStyle={{ margin: '0' }}
+                                                        customInputStyles={{ height: "auto" }}
+                                                        inputStyleClass={styles.customInputStylesClass}
+                                                        name={"playerRole"}
+                                                        title="Assign Role"
+                                                        onChange={(e) => onPlayerChange(e, index, 'playerDesignation')}
+                                                        required
+                                                        readonly
+                                                    /> */}
+                                                    {/* <div>
                                                         <select
                                                             id="dropdown_player_designation"
                                                             value={player.playerDesignation.value}
@@ -1298,7 +1639,32 @@ const CreateInstances = () => {
                                                                     );
                                                                 })}
                                                         </select>
-                                                    </div>
+                                                    </div> */}
+
+                                                    <Dropdown
+                                                        data={
+                                                            masters &&
+                                                            masters.data &&
+                                                            isJSONString(masters.data) &&
+                                                            Array.isArray(JSON.parse(masters.data)) &&
+                                                            JSON.parse(masters.data)
+                                                                .filter(item => item.MasterType === "Designation") ||
+                                                            []
+                                                        }
+                                                        value={player.playerDesignation.value}
+                                                        valueKey="MasterID"
+                                                        labelKey="MasterDisplayName"
+                                                        placeholder="Select Designation"
+                                                        onSelect={(value) => { onSelectOrganization(value) }}
+                                                        error={player.playerDesignation.error}
+                                                        errorNode={(
+                                                            <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                                                                {player.playerDesignation.error}
+                                                            </div>
+                                                        )}
+                                                        required
+                                                        disabled
+                                                    />
                                                 </div>
 
                                                 {/*Select Role:: end */}
@@ -1328,7 +1694,7 @@ const CreateInstances = () => {
                     >
                         Cancel
                     </Button>
-                    <Button 
+                    <Button
                         // onClick={onSubmit}
                         onClick={debouncedSubmit}
                     >
@@ -1359,7 +1725,7 @@ const CreateInstances = () => {
                             </div>
                             <div className={styles.modalInputContainer}>
                                 <div>
-                                    <Input
+                                    {/* <Input
                                         labelStyle={styles.modalInputLabel}
                                         label="Group Name"
                                         type="text"
@@ -1369,25 +1735,32 @@ const CreateInstances = () => {
                                         placeholder="Group Name &#128900;" 
                                         onChange={onAddGroupChange}
                                     // autoFocus={!searchValue}
+                                    /> */}
+                                    <CustomInput
+                                        title="Group Name"
+                                        type="text"
+                                        name={"groupName"}
+                                        // customInputStyles={{ height: "3.5rem" }}
+                                        // inputStyleClass={styles.customInputStylesClass}
+                                        value={addGroupData.groupName.value}
+                                        onChange={onAddGroupChange}
+                                        required
+                                        error={addGroupData.groupName.error}
+                                        errorNode={(
+                                            <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                                                {addGroupData.groupName.error}
+                                            </div>
+                                        )}
+                                    // autoFocus={!searchValue}
                                     />
                                 </div>
-                                <div className={styles.searchContainer}>
+                                {/* <div className={styles.searchContainer}>
                                     <SearchUsers
                                         value={searchValue}
                                         onChange={onSearchChange}
                                         clearSearch={clearSearch}
                                         searchValue={searchValue}
                                     />
-                                    {/* <UsersList
-                                        users={
-                                            searchValue
-                                                ? addGroupData.users.filter((user) =>
-                                                    user.userEmail.value.includes(searchValue)
-                                                )
-                                                : addGroupData.users
-                                        }
-                                        onToggleUser={onToggleUser}
-                                    /> */}
                                     <UsersList
                                         users={
                                             searchValue
@@ -1406,8 +1779,35 @@ const CreateInstances = () => {
                                         }
                                         onToggleUser={onToggleUser}
                                     />
-                                </div>
+                                </div> */}
+                                <div className={styles.searchContainer}>
+                                    <Combobox
+                                        className={styles.comboboxStyles}
+                                        data={
+                                            addGroupData.newUsers.value
+                                                .filter(user =>
+                                                    user.userRole.value === "3")
+                                                .filter(user =>
+                                                    user.isActive.value === "Active")
+                                        }
+                                        valueKey={'value'}
+                                        labelKey={'label'}
+                                        placeholder="Users"
+                                        multiple
+                                        showSelectAll={false}
+                                        // selectAllText="Select all users."
+                                        required
+                                        onSelect={(value) => { onSelectUser(value) }}
+                                        error={addGroupData.newAddedUsers.error}
+                                        errorNode={(
+                                            <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                                                {addGroupData.newAddedUsers.error}
+                                            </div>
+                                        )}
+                                    >
 
+                                    </Combobox>
+                                </div>
                             </div>
 
                             <div className="modal_buttonContainer">

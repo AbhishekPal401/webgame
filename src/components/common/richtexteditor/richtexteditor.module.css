@@ -52,3 +52,10 @@
   font-style: normal;
 }
 
+.error {
+  /* color: var(--red); */
+  color: #ff7171;
+  font-family: 'Helvetica 400';
+  font-size: 1.1rem;
+  margin-top: 0.2rem;
+}

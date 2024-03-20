@@ -10,6 +10,8 @@ import "react-toastify/dist/ReactToastify.css";
 import configureStore from "./store/setup/configureStore";
 import Routers from "./routers";
 import { oidcConfig } from "./constants/oidc";
+import '@appkit4/styles/appkit.min.css';
+import '@appkit4/react-components/dist/styles/appkit4-react.min.css';
 
 const store = configureStore();
 const persistor = persistStore(store);

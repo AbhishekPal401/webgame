@@ -38,6 +38,7 @@ import {
 import { getDesignationDetailsByID } from "../../../../../store/app/admin/masters/getDesignationById.js";
 import { getOrganizationDetailsByID } from "../../../../../store/app/admin/masters/getOrganizationById.js";
 import { resetMasterStates } from "../../../../../store/local/menu.js";
+import CustomInput from "../../../../../components/common/customInput/index.jsx";
 
 const MasterList = () => {
 
@@ -473,7 +474,7 @@ const MasterList = () => {
 
 
   const onMasterDataChange = useCallback(
-    (event) => {
+    (v, event) => {
       const { name, value } = event.target;
       setAddMasterData((prevData) => ({
         ...prevData,
@@ -529,7 +530,7 @@ const MasterList = () => {
         };
 
         valid = false;
-        toast.error("Designation name should contain alphanumeric characters.");
+        // toast.error("Designation name should contain alphanumeric characters.");
 
       } else if (addMasterData?.designation?.value !== addMasterData?.designation?.value?.trim()) {
         console.log("designation:", data.designation);
@@ -542,7 +543,7 @@ const MasterList = () => {
         };
 
         valid = false;
-        toast.error("Please enter valid designation name");
+        // toast.error("Please enter valid designation name");
       }
 
       if (addMasterData?.description?.value?.trim() === "") {
@@ -569,7 +570,7 @@ const MasterList = () => {
         };
 
         valid = false;
-        toast.error("Description should contain alphanumeric characters.");
+        // toast.error("Description should contain alphanumeric characters.");
 
       } else if (addMasterData?.description?.value !== addMasterData?.description?.value?.trim()) {
         console.log("description:", data.description);
@@ -582,7 +583,7 @@ const MasterList = () => {
         };
 
         valid = false;
-        toast.error("Please enter valid description.");
+        // toast.error("Please enter valid description.");
       }
 
     } else if (activeTab === 'Organization') {
@@ -610,7 +611,7 @@ const MasterList = () => {
         };
 
         valid = false;
-        toast.error("Organization should contain alphanumeric characters");
+        // toast.error("Organization should contain alphanumeric characters");
 
       } else if (addMasterData?.organization?.value !== addMasterData?.organization?.value?.trim()) {
         console.log("organization:", data.organization);
@@ -623,10 +624,12 @@ const MasterList = () => {
         };
 
         valid = false;
-        toast.error("Please enter valid organization.");
+        // toast.error("Please enter valid organization.");
       }
 
     }
+
+    setAddMasterData(data);
 
     // If all validations pass
     try {
@@ -654,9 +657,9 @@ const MasterList = () => {
 
         }
       } else {
-        (activeTab === 'Designation' ?
-          toast.error("Please fill all the mandatory details.") :
-          toast.error("Please fill the mandatory detail."));
+        // (activeTab === 'Designation' ?
+        //   toast.error("Please fill all the mandatory details.") :
+        //   toast.error("Please fill the mandatory detail."));
       }
     } catch (error) {
       toast.error("An error occurred while saving the master data.");
@@ -687,7 +690,7 @@ const MasterList = () => {
   };
 
   const onUpdateMasterDataChange = useCallback(
-    (event) => {
+    (v, event) => {
       const { name, value } = event.target;
       setUpdateMasterData((prevData) => ({
         ...prevData,
@@ -732,7 +735,7 @@ const MasterList = () => {
         };
 
         valid = false;
-        toast.error("Designation name should contain alphanumeric characters.");
+        // toast.error("Designation name should contain alphanumeric characters.");
 
       } else if (updateMasterData?.designation?.value !== updateMasterData?.designation?.value?.trim()) {
         console.log("designation:", data.designation);
@@ -745,7 +748,7 @@ const MasterList = () => {
         };
 
         valid = false;
-        toast.error("Please enter valid designation name");
+        // toast.error("Please enter valid designation name");
       }
 
 
@@ -773,7 +776,7 @@ const MasterList = () => {
         };
 
         valid = false;
-        toast.error("Description should contain alphanumeric characters.");
+        // toast.error("Description should contain alphanumeric characters.");
 
       } else if (updateMasterData?.description?.value !== updateMasterData?.description?.value?.trim()) {
         console.log("description:", data.description);
@@ -786,7 +789,7 @@ const MasterList = () => {
         };
 
         valid = false;
-        toast.error("Please enter valid description");
+        // toast.error("Please enter valid description");
       }
 
     } else if (activeTab === 'Organization') {
@@ -814,7 +817,7 @@ const MasterList = () => {
         };
 
         valid = false;
-        toast.error("Organization should contain alphanumeric characters");
+        // toast.error("Organization should contain alphanumeric characters");
 
       } else if (updateMasterData?.organization?.value !== updateMasterData?.organization?.value?.trim()) {
         console.log("organization:", data.organization);
@@ -827,9 +830,11 @@ const MasterList = () => {
         };
 
         valid = false;
-        toast.error("Please enter valid organization");
+        // toast.error("Please enter valid organization");
       }
     }
+
+    setUpdateMasterData(data);
 
     // If all validations pass
     try {
@@ -878,7 +883,7 @@ const MasterList = () => {
 
         }
       } else {
-        toast.error("Please fill all the mandatory details.");
+        // toast.error("Please fill all the mandatory details.");
       }
     } catch (error) {
       toast.error("An error occurred while saving the master data.");
@@ -1259,15 +1264,37 @@ const MasterList = () => {
               {activeTab === 'Designation' ?
                 (
                   <div>
-                    <Input
+                    {/* <Input
                       type="text"
                       customStyle={{ marginTop: '1rem', }}
                       value={addMasterData?.designation?.value}
                       name={"designation"}
                       placeholder="Designation Name &#128900;"
                       onChange={onMasterDataChange}
+                    /> */}
+                    <CustomInput
+                      type="text"
+                      value={addMasterData?.designation?.value}
+                      // customStyle={{ margin: '0' }}
+                      // customInputStyles={{ height: "auto" }}
+                      // inputStyleClass={styles.customInputStylesClass}
+                      customLabelStyle={{ display: "none" }}
+                      customStyle={{ marginTop: '1rem', }}
+                      name={"designation"}
+                      title="Designation Name"
+                      onChange={onMasterDataChange}
+                      error={addMasterData?.designation?.error}
+                      errorNode={(
+                        <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                          {addMasterData?.designation?.error}
+                        </div>
+                      )}
+                      required
+                      maxLength={250}
+
                     />
-                    <Input
+
+                    {/* <Input
                       type="text"
                       customStyle={{ marginTop: '1rem', }}
                       value={addMasterData?.description?.value}
@@ -1276,17 +1303,56 @@ const MasterList = () => {
                       textAreaStyleClass={styles.textAreaStyleClass}
                       onChange={onMasterDataChange}
                       textArea
+                    /> */}
+                    <CustomInput
+                      type="text"
+                      value={addMasterData?.description?.value}
+                      // style={{ height: "15rem" }}
+                      name="description"
+                      title="Description"
+                      className={styles.masterTextAreaInputs}
+                      onChange={onMasterDataChange}
+                      errorNode={(
+                        <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                          {addMasterData?.description?.error}
+                        </div>
+                      )}
+                      error={addMasterData?.description?.error}
+                      required
+                      textArea
+                      maxLength={250}
                     />
                   </div>
                 ) : (
                   <div>
-                    <Input
+                    {/* <Input
                       type="text"
                       customStyle={{ marginTop: '1rem', }}
                       value={addMasterData?.organization?.value}
                       name={"organization"}
                       placeholder="Organization Name &#128900;"
                       onChange={onMasterDataChange}
+                    /> */}
+                    <CustomInput
+                      type="text"
+                      value={addMasterData?.organization?.value}
+                      // customStyle={{ margin: '0' }}
+                      // customInputStyles={{ height: "auto" }}
+                      // inputStyleClass={styles.customInputStylesClass}
+                      customLabelStyle={{ display: "none" }}
+                      customStyle={{ marginTop: '1rem', }}
+                      name={"organization"}
+                      title="Organization Name"
+                      onChange={onMasterDataChange}
+                      required
+                      error={addMasterData?.organization?.error}
+                      errorNode={(
+                        <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                          {addMasterData?.organization?.error}
+                        </div>
+                      )}
+                      maxLength={250}
+
                     />
                   </div>
                 )
@@ -1342,15 +1408,36 @@ const MasterList = () => {
               {activeTab === 'Designation' ?
                 (
                   <div>
-                    <Input
+                    {/* <Input
                       type="text"
                       customStyle={{ marginTop: '1rem', }}
                       value={updateMasterData?.designation?.value}
                       name={"designation"}
                       placeholder="Designation Name &#128900;"
                       onChange={onUpdateMasterDataChange}
+                    /> */}
+                    <CustomInput
+                      type="text"
+                      value={updateMasterData?.designation?.value}
+                      // customStyle={{ margin: '0' }}
+                      // customInputStyles={{ height: "auto" }}
+                      // inputStyleClass={styles.customInputStylesClass}
+                      customLabelStyle={{ display: "none" }}
+                      customStyle={{ marginTop: '1rem', }}
+                      name={"designation"}
+                      title="Designation Name"
+                      onChange={onUpdateMasterDataChange}
+                      required
+                      error={updateMasterData?.designation?.error}
+                      errorNode={(
+                        <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                          {updateMasterData?.designation?.error}
+                        </div>
+                      )}
+                      maxLength={250}
+
                     />
-                    <Input
+                    {/* <Input
                       type="text"
                       customStyle={{ marginTop: '1rem', }}
                       value={updateMasterData?.description?.value}
@@ -1359,17 +1446,55 @@ const MasterList = () => {
                       textAreaStyleClass={styles.textAreaStyleClass}
                       onChange={onUpdateMasterDataChange}
                       textArea
+                    /> */}
+                    <CustomInput
+                      type="text"
+                      value={updateMasterData?.description?.value}
+                      name="description"
+                      title="Description"
+                      className={styles.masterTextAreaInputs}
+                      onChange={onUpdateMasterDataChange}
+                      errorNode={(
+                        <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                          {updateMasterData?.description?.error}
+                        </div>
+                      )}
+                      error={updateMasterData?.description?.error}
+                      required
+                      textArea
+                      maxLength={250}
                     />
                   </div>
                 ) : (
                   <div>
-                    <Input
+                    {/* <Input
                       type="text"
                       customStyle={{ marginTop: '1rem', }}
                       value={updateMasterData?.organization?.value}
                       name={"organization"}
                       placeholder="Organization Name &#128900;"
                       onChange={onUpdateMasterDataChange}
+                    /> */}
+                    <CustomInput
+                      type="text"
+                      value={updateMasterData?.organization?.value}
+                      // customStyle={{ margin: '0' }}
+                      // customInputStyles={{ height: "auto" }}
+                      // inputStyleClass={styles.customInputStylesClass}
+                      customLabelStyle={{ display: "none" }}
+                      customStyle={{ marginTop: '1rem', }}
+                      name={"organization"}
+                      title="Organization Name"
+                      onChange={onUpdateMasterDataChange}
+                      required
+                      error={updateMasterData?.organization?.error}
+                      errorNode={(
+                        <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                          {updateMasterData?.organization?.error}
+                        </div>
+                      )}
+                      maxLength={250}
+
                     />
                   </div>
                 )

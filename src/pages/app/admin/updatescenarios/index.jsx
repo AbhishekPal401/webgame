@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import styles from "./updatescenarios.module.css";
 import bg_2 from "/images/createscenario2.png";
 import PageContainer from "../../../../components/ui/pagecontainer";
-import Input from "../../../../components/common/input";
+// import Input from "../../../../components/common/input";
 import FileDropZone from "../../../../components/common/upload/FileDropzone";
 import Button from "../../../../components/common/button";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +25,9 @@ import { extractFileInfo, formatDateString } from "../../../../utils/helper.js";
 import { dateFormats } from "../../../../constants/date.js";
 import { fileTypes } from "../../../../constants/filetypes.js";
 import { extractFileType } from "../../../../utils/helper.js";
-import RichTextEditor from "../../../../components/common/richtexteditor/index.jsx";
+import CustomInput from "../../../../components/common/customInput/index.jsx";
+import RichTextEditor from "../../../../components/common/textEditor/index.jsx";
+
 
 const UpdateScenarios = () => {
   const [scenarioData, setScenarioData] = useState({
@@ -85,6 +87,26 @@ const UpdateScenarios = () => {
     fileTypes.MIME_POWERPOINT_3,
     fileTypes.POWERPOINT_EXTENSION,
   ]
+
+  const sampleConfig = {
+    toolbar:
+      ["fontFamily",
+        "fontSize",
+        "bold",
+        "italic",
+        "strikethrough",
+        "underline",
+        "bulletedList",
+        "numberedList",
+        "indent",
+        "outdent",
+        "alignment:left",
+        "alignment:center",
+        "alignment:right",
+        "alignment:justify",
+      ]
+  };
+
 
   console.log(" scenario data :", scenarioData)
 
@@ -317,15 +339,27 @@ const UpdateScenarios = () => {
     };
   }, [scenarioByIdDetails]);
 
-  const onChange = (event) => {
+  // const onChange = (event) => {
+  //   setScenarioData({
+  //     ...scenarioData,
+  //     [event.target.name]: {
+  //       value: event.target.value,
+  //       error: "",
+  //     },
+  //   });
+  // };
+
+  const onChange = (value, event) => {
+    console.log("name:" + event.target.name + " value: " + value);
     setScenarioData({
       ...scenarioData,
       [event.target.name]: {
-        value: event.target.value,
+        value: value,
         error: "",
       },
     });
   };
+
 
   const onGameIntroTextChange = (htmlContent) => {
     console.log("Game Intro text ", htmlContent)
@@ -434,7 +468,7 @@ const UpdateScenarios = () => {
     if (
       scenarioData?.gameIntroText?.value?.trim() === "" ||
       scenarioData?.gameIntroText?.value?.replace(/<\/?[^>]+(>|$)/g, "").trim() === ""
-      ) {
+    ) {
       console.log("gameIntroText:", data.gameIntroText);
       data = {
         ...data,
@@ -461,7 +495,7 @@ const UpdateScenarios = () => {
 
       // valid = false;
     }
-
+    setScenarioData(data);
     if (!isEmpty) {
       if (valid) {
         let url = defaultIntroFileUrl.url;
@@ -565,7 +599,7 @@ const UpdateScenarios = () => {
 
       }
     } else {
-      toast.error("Please fill all the mandatory details.");
+      // toast.error("Please fill all the mandatory details.");
     }
   };
 
@@ -616,7 +650,25 @@ const UpdateScenarios = () => {
               style={{ backgroundImage: 'url("/images/particles.png")' }}
             >
               <div className={styles.createScenarioLeftInputs}>
-                <Input
+                {/* <Input
+                  type="text"
+                  name="scenarioName"
+                  value={scenarioData?.scenarioName?.value}
+                  title="Scenario Name"
+                  className="custom-input"
+                  onChange={onChange}
+                  required
+                />
+                <TextArea
+                  type="text"
+                  value={scenarioData?.scenarioDescription?.value}
+                  name="scenarioDescription"
+                  title="Scenario Description"
+                  className={styles.gameIntroductionTextAreaInputs}
+                  onChange={onChange}
+                  required
+                /> */}
+                {/* <Input
                   labelStyle={styles.inputLabel}
                   type="text"
                   name={"scenarioName"}
@@ -625,7 +677,6 @@ const UpdateScenarios = () => {
                   inputStyleClass={styles.inputStyleClass}
                   onChange={onChange}
                 />
-                {/*TODO:: Rich Text Editor */}
                 <Input
                   value={scenarioData?.scenarioDescription?.value}
                   labelStyle={styles.inputLabel}
@@ -635,6 +686,40 @@ const UpdateScenarios = () => {
                   textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
                   onChange={onChange}
                   textArea
+                /> */}
+                <CustomInput
+                  type="text"
+                  name="scenarioName"
+                  value={scenarioData?.scenarioName?.value}
+                  title="Scenario Name"
+                  inputStyleClass={styles.scenarioNameInput}
+                  onChange={onChange}
+                  required
+                  error={scenarioData.scenarioName.error}
+                  errorNode={(
+                    <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                      {scenarioData.scenarioName.error}
+                    </div>
+                  )}
+                  maxLength={100}
+                />
+                <CustomInput
+                  type="text"
+                  value={scenarioData?.scenarioDescription?.value}
+                  name="scenarioDescription"
+                  title="Scenario Description"
+                  // className={styles.gameIntroductionTextAreaInputs}
+                  // customInputStyles={{ height: "15rem"  }}
+                  onChange={onChange}
+                  required
+                  textArea={true}
+                  error={scenarioData.scenarioDescription.error}
+                  errorNode={(
+                    <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                      {scenarioData.scenarioDescription.error}
+                    </div>
+                  )}
+                  maxLength={3000}
                 />
               </div>
               <div className={styles.verticalLine}></div>
@@ -653,12 +738,22 @@ const UpdateScenarios = () => {
               <div className={styles.gameIntroductionLeftInputs}>
                 <label>Game Introduction</label>
                 {/*Rich Text Editor */}
-                <RichTextEditor
+                {/* <RichTextEditor
                   customContaierClass={styles.customRichTextEditorContaierClass}
                   customEditorStyles={styles.customRichTextEditorStyleClass}
                   onChange={onGameIntroTextChange}
                   placeholder="Game Introduction &#128900;"
                   value={scenarioData?.gameIntroText?.value}
+                /> */}
+                <RichTextEditor
+                  sampleConfig={sampleConfig}
+                  title="Game Introduction"
+                  data={scenarioData?.gameIntroText?.value}
+                  customContaierClass={styles.customRichTextEditorContaierClass}
+                  onChange={(event, value, htmlContent) => {
+                    onGameIntroTextChange(htmlContent);
+                  }}
+                  required
                 />
                 {/* <Input
                   value={scenarioData?.gameIntroText?.value}

@@ -179,3 +179,16 @@
     transform: rotate(360deg);
   }
 }
+
+/* .ap-option-left {
+  display: flex;
+  align-items: baseline !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+} */
+
+#errormessage {
+  font-size: 1.1rem;
+  color: #ff6464;
+  font-family: "Helvetica 400";
+}
