@@ -73,10 +73,12 @@
   border: none !important;
 }
 
-/* .quill .ck.ck-button.ck-on {
+.quill .ck.ck-button.ck-on {
   background-color: var(--primary) !important;
-} */
+}
 
 .quill > div:nth-child(2) {
   height: 10rem !important;
+  font-size: 1.4rem !important;
+  padding-top: 0.4rem;
 }

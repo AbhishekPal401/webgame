@@ -40,7 +40,7 @@ import IntroMedia from "../../../../components/intromedia";
 import { Tooltip } from "react-tooltip";
 import Progress from "../../../../components/progress";
 import { debounce, getCurrentTimeStamp } from "../../../../utils/helper";
-import momentTimezone from "moment-timezone";
+
 import DOMPurify from "dompurify";
 import { resetFileStreamState } from "../../../../store/app/admin/fileStream/getFileStream";
 

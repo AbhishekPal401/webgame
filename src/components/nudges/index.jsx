@@ -4,8 +4,8 @@ import { signalRService } from "../../services/signalR";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { isJSONString } from "../../utils/common";
-// import ReactQuill from "react-quill";
-// import "react-quill/dist/quill.snow.css";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import "@appkit4/styles/appkit.min.css";
 import "@appkit4/react-text-editor/dist/appkit4-react-texteditor.min.css";
 import { TextEditor } from "@appkit4/react-text-editor";
@@ -23,6 +23,38 @@ const sampleConfig = {
     "alignment:justify",
   ],
 };
+
+function getTotalTextLength(node) {
+  let totalLength = 0;
+
+  console.log("node", node);
+
+  // If the node is a text node, add its length to the total length
+  if (node.nodeType === Node.TEXT_NODE) {
+    console.log("node length", node.textContent.trim().length);
+    totalLength += node.textContent.trim().length;
+  }
+
+  // Traverse each child node of the current node
+  if (node.childNodes) {
+    for (let i = 0; i < node.childNodes.length; i++) {
+      // If the node has child nodes, recursively call the function
+      if (node.childNodes[i].nodeType === Node.ELEMENT_NODE) {
+        totalLength += getTotalTextLength(node.childNodes[i]);
+      }
+    }
+  }
+
+  console.log("totalLength", totalLength);
+
+  return totalLength;
+}
+
+function stringToHTML(htmlString) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, "text/html");
+  return doc.body.firstChild;
+}
 
 const Nudges = () => {
   const [show, setShow] = useState(false);
@@ -42,6 +74,8 @@ const Nudges = () => {
       toast.error("Message cannot be empty");
       return;
     }
+
+    // console.log("count", getTotalTextLength(stringToHTML(message)));
 
     const data = {
       InstanceID: sessionData.InstanceID,
@@ -86,22 +120,22 @@ const Nudges = () => {
                 setMessage(e.target.value);
               }}
             ></textarea> */}
-            {/* <ReactQuill
+            <ReactQuill
               className={styles.quill}
               value={message}
               onChange={setMessage}
               modules={Nudges.modules}
               formats={Nudges.formats}
               placeholder="Write your message..."
-            /> */}
-            <TextEditor
+            />
+            {/* <TextEditor
               config={sampleConfig}
               className={styles.quill}
               data={message}
               onChange={(event, value, message) => {
                 setMessage(message);
               }}
-            />
+            /> */}
           </div>
           <div className={styles.buttonContainer}>
             <Button onClick={sendNotification}>Send</Button>
