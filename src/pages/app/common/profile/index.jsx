@@ -898,7 +898,6 @@ const UserProfile = () => {
                 name={"mobile"}
                 title="Mobile No."
                 onChange={onChange}
-                required
                 error={userData.mobile.error}
                 errorNode={(
                   <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">

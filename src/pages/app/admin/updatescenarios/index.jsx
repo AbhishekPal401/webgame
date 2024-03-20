@@ -750,10 +750,12 @@ const UpdateScenarios = () => {
                   title="Game Introduction"
                   data={scenarioData?.gameIntroText?.value}
                   customContaierClass={styles.customRichTextEditorContaierClass}
+                  customEditorStyleClass={styles.customEditorStyleClass}
                   onChange={(event, value, htmlContent) => {
                     onGameIntroTextChange(htmlContent);
                   }}
                   required
+                  error={scenarioData?.gameIntroText?.error}
                 />
                 {/* <Input
                   value={scenarioData?.gameIntroText?.value}

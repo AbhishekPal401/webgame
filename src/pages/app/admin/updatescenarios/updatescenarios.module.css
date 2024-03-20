@@ -163,13 +163,13 @@
   font-family: 'Helvetica 400';
 }
 
-.customRichTextEditorContaierClass {
+/* .customRichTextEditorContaierClass {
   margin-top: 2rem;
   font-family: "Helvetica 400";
-}
-.customRichTextEditorStyleClass > div:nth-child(2)  {
+} */
+/* .customRichTextEditorStyleClass > div:nth-child(2)  {
   height: 15rem ;
-}
+} */
 .inputStyleClass {
   font: normal;
   font-family: 'Helvetica 400';
@@ -238,4 +238,33 @@ height: auto;
 .gameIntroductionTextAreaInputs > div:first-child > div:nth-child(1),
 .gameIntroductionTextAreaInputs > div:first-child > div:nth-child(2){
   background:  var(--background-color);
+}
+
+/* TextEditor */
+.customRichTextEditorContaierClass {
+  margin-top: 2rem;
+  font-family: "Helvetica 400";
+  width: 100%;
+  height: 100%;
+}
+.customRichTextEditorStyleClass > div:nth-child(2)  {
+  height: 15rem;
+  width: 100%;
+}
+.customEditorStyleClass {
+  width: 100%;
+  background-color: var(--innerbackground);
+  margin-top: 1rem;
+}
+.customEditorStyleClass > div {
+  border: none !important;
+}
+.customEditorStyleClass > div:nth-child(2) {
+  height: 15rem !important;
+}
+.customEditorStyleClass > div:nth-child(1) {
+  height: 4.5rem !important;
+}
+.customEditorStyleClass > div:nth-child(1) > div:nth-child(1) {
+  flex-grow: 0;
 }

@@ -512,13 +512,13 @@ const CreateUser = () => {
     if (userData?.mobile?.value?.trim() === "") {
       console.log("Please enter mobile number");
 
-      data = {
-        ...data,
-        mobile: {
-          ...data.mobile,
-          error: "Please enter mobile number",
-        },
-      };
+      // data = {
+      //   ...data,
+      //   mobile: {
+      //     ...data.mobile,
+      //     error: "Please enter mobile number",
+      //   },
+      // };
       // valid = false;
     } else if (!validatePhone(userData.mobile.value)) {
       console.log("Invalid mobile number");
@@ -985,7 +985,6 @@ const CreateUser = () => {
                 name={"mobile"}
                 title="Mobile No."
                 onChange={onChange}
-                required
                 error={userData.mobile.error}
                 errorNode={(
                   <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">

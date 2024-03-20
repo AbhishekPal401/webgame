@@ -545,13 +545,16 @@ const CreateScenario = () => {
                 /> */}
                 <RichTextEditor
                   config={sampleConfig}
-                  className={styles.quill}
+                  // className={styles.quill}
                   data={scenarioData?.gameIntroText?.value}
                   title="Game Introduction"
+                  customContaierClass={styles.customRichTextEditorContaierClass}
+                  customEditorStyleClass={styles.customEditorStyleClass}
                   onChange={(event, value, htmlContent) => {
                     onGameIntroTextChange(htmlContent);
                   }}
                   required
+                  error={scenarioData?.gameIntroText?.error}
                 />
                 {/* <TextEditor
                   config={sampleConfig}

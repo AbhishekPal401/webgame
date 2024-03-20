@@ -13,18 +13,20 @@ const RichTextEditor = ({
 }) => {
 
     return (
-        <div className={`${styles.container} ${customContaierClass}`}>
-            <TextEditor
-                config={sampleConfig}
-                className={`${styles.editor} ${customEditorStyleClass}`}
-                data={data}
-                title={title}
-                onChange={onChange}
-                {...props}
-            />
-            {/* {error && <div className={styles.error}>{error}</div>} */}
+        <>
+            <div className={`${styles.container} ${customContaierClass}`}>
+                <TextEditor
+                    config={sampleConfig}
+                    className={`${styles.editor} ${customEditorStyleClass}`}
+                    data={data}
+                    title={title}
+                    onChange={onChange}
+                    {...props}
+                />
+            </div>
+            {error && <div className={styles.error}>{error}</div>}
+        </>
 
-        </div>
     );
 };
 

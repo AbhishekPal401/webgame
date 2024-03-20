@@ -869,6 +869,7 @@ function QuestionBuilder() {
                           onQuestionChange(htmlContent);
                         }}
                         required
+                        error={questionData.question.error}
                       />
                     </div>
 
