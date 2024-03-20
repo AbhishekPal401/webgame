@@ -6,6 +6,7 @@ import {
   resetGetAllUsersInSessionState,
 } from "../../store/app/admin/session/getAllSessionUser";
 import { generateGUID, isJSONString } from "../../utils/common";
+import { Tooltip } from "react-tooltip";
 
 const TeamMembers = () => {
   const [show, setShow] = useState(false);
@@ -81,7 +82,12 @@ const TeamMembers = () => {
             {allUsersInSession.data.map((item, index) => {
               return (
                 <div className={styles.item} key={index}>
-                  <div>{item.designation}</div>
+                  <div
+                    data-tooltip-id="roles-tooltip"
+                    data-tooltip-content={item.designation}
+                  >
+                    {item.designation}
+                  </div>
                   <div className={styles.userContainer}>
                     {item &&
                       item.users &&
@@ -92,8 +98,18 @@ const TeamMembers = () => {
                             {i === 0 ? null : <hr />}
                             <div className={styles.itemDetails}>
                               <div>{users.UserName[0]}</div>
-                              <div>{users.UserName}</div>
-                              <div>{users.DesignationName}</div>
+                              <div
+                                data-tooltip-id="username-tooltip"
+                                data-tooltip-content={users.UserName}
+                              >
+                                {users.UserName}
+                              </div>
+                              <div
+                                data-tooltip-id="designation-tooltip"
+                                data-tooltip-content={users.DesignationName}
+                              >
+                                {users.DesignationName}
+                              </div>
                               {isActiveUser(users.UserID) ? (
                                 <div className={styles.active}></div>
                               ) : (
@@ -109,6 +125,12 @@ const TeamMembers = () => {
             })}
           </div>
         )}
+
+      <Tooltip id="username-tooltip" />
+
+      <Tooltip id="roles-tooltip" />
+
+      <Tooltip id="designation-tooltip" />
     </div>
   );
 };
