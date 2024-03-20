@@ -36,6 +36,7 @@ import {
   resetpostImageState,
 } from "../../../../store/app/admin/report/postImages";
 import { resetFileStreamState } from "../../../../store/app/admin/fileStream/getFileStream";
+import { Tooltip } from "react-tooltip";
 
 const SelectTree = ({ clicked = 1, onSelect = () => {} }) => {
   return (
@@ -243,17 +244,38 @@ const MissionCompleted = () => {
                 It. Here's A Summary Of How You Did.
               </div>
               <div className={styles.details_row}>
-                <div>
+                <div
+                  data-tooltip-id="instance-tooltip"
+                  data-tooltip-content={
+                    instanceSummary?.data?.GameInstance
+                      ? instanceSummary?.data?.GameInstance
+                      : ""
+                  }
+                >
                   {instanceSummary?.data?.GameInstance
                     ? instanceSummary?.data?.GameInstance
                     : ""}
                 </div>
-                <div>
+                <div
+                  data-tooltip-id="org-tooltip"
+                  data-tooltip-content={
+                    instanceSummary?.data?.OrganizationName
+                      ? instanceSummary?.data?.OrganizationName
+                      : ""
+                  }
+                >
                   {instanceSummary?.data?.OrganizationName
                     ? instanceSummary?.data?.OrganizationName
                     : ""}
                 </div>
-                <div>
+                <div
+                  data-tooltip-id="scenario-tooltip"
+                  data-tooltip-content={
+                    instanceSummary?.data?.GameScenario
+                      ? instanceSummary?.data?.GameScenario
+                      : ""
+                  }
+                >
                   {instanceSummary?.data?.GameScenario
                     ? instanceSummary?.data?.GameScenario
                     : ""}
@@ -405,6 +427,18 @@ const MissionCompleted = () => {
           </div>
         )}
       </div>
+      <Tooltip
+        id="instance-tooltip"
+        style={{ backgroundColor: "#fff", color: "#474747" }}
+      />
+      <Tooltip
+        id="org-tooltip"
+        style={{ backgroundColor: "#fff", color: "#474747" }}
+      />
+      <Tooltip
+        id="scenario-tooltip"
+        style={{ backgroundColor: "#fff", color: "#474747" }}
+      />
     </div>
   );
 };

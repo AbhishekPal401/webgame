@@ -221,12 +221,18 @@
   justify-content: space-around;
   align-items: center;
   margin: 1rem 0;
+  white-space: nowrap;
 }
 
 .details_row div {
   font-size: 2rem;
   font-family: "helvetica 500";
   color: var(--primary);
+  width: 30%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0 1rem;
+  height: 2.4rem;
 }
 /* Tablet view */
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
@@ -234,4 +240,3 @@
     height: 70rem !important;
   }
 }
- 

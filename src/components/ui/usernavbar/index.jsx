@@ -12,6 +12,7 @@ import { isJSONString } from "../../../utils/common";
 import { resetNextQuestionDetailsState } from "../../../store/app/user/questions/getNextQuestion";
 import { resetAnswerDetailsState } from "../../../store/app/user/answers/postAnswer";
 import { resetSessionDetailsState } from "../../../store/app/user/session/getSession";
+import { Tooltip } from "react-tooltip";
 
 const UserNavBar = ({ disable = false, role = "Player" }) => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -163,7 +164,13 @@ const UserNavBar = ({ disable = false, role = "Player" }) => {
 
       <div className={styles.label}>Game of Risks</div>
       <div className={styles.containerRight}>
-        <div className={styles.role}>
+        <div
+          className={styles.role}
+          data-tooltip-id="role-tooltip"
+          data-tooltip-content={
+            role === "Player" ? credentials.data.designation : "Admin"
+          }
+        >
           {role === "Player" ? credentials.data.designation : "Admin"}
         </div>
 
@@ -265,6 +272,12 @@ const UserNavBar = ({ disable = false, role = "Player" }) => {
           </div>
         </ModalContainer>
       )}
+
+      <Tooltip
+        id="role-tooltip"
+        place="right"
+        style={{ backgroundColor: "#fff", color: "#474747" }}
+      />
     </div>
   );
 };

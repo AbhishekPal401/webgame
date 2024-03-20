@@ -39,6 +39,9 @@
   margin-right: 2.4rem;
   font-family: "helvetica 500";
   color: var(--innerbackground);
+  width: 12rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .profileIcon {
   display: flex;

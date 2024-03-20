@@ -35,6 +35,9 @@
   font-size: 1.3rem;
   margin-right: 2.4rem;
   font-weight: 500;
+  width: 12rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .profileIcon {
   display: flex;

@@ -227,6 +227,12 @@
   font-size: 2rem;
   font-family: "helvetica 500";
   color: var(--primary);
+  width: 30%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0 1rem;
+  height: 2.4rem;
+  white-space: nowrap;
 }
 /* Tablet view */
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
