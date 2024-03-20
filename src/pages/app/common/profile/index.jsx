@@ -26,6 +26,8 @@ import { extractFileInfo, extractFileType, formatDateString } from "../../../../
 import { fileTypes } from "../../../../constants/filetypes.js";
 import InputDataContainer from "../../../../components/ui/inputdatacontainer/index.jsx";
 import { getFileStream, resetFileStreamState } from "../../../../store/app/admin/fileStream/getFileStream.js";
+import CustomInput from "../../../../components/common/customInput/index.jsx";
+import Dropdown from "../../../../components/common/dropdown/index.jsx";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState({
@@ -384,7 +386,7 @@ const UserProfile = () => {
 
   // }, [fileStream]);
 
-  const onChange = (event) => {
+  const onChange = (value, event) => {
     setUserData({
       ...userData,
       [event.target.name]: {
@@ -404,6 +406,16 @@ const UserProfile = () => {
     });
   };
 
+  const onSelectRole = (value) => {
+    setUserData({
+      ...userData,
+      role: {
+        value: value,
+        error: "",
+      },
+    });
+  };
+
   const onDesignationSelect = (event) => {
     setUserData({
       ...userData,
@@ -414,11 +426,21 @@ const UserProfile = () => {
     });
   };
 
-  const onOrganisationSelect = (event) => {
+  const onSelectDesignation = (value) => {
     setUserData({
       ...userData,
       organizationName: {
-        value: event.target.value,
+        value: value,
+        error: "",
+      },
+    });
+  };
+
+  const onSelectOrganisation = (value) => {
+    setUserData({
+      ...userData,
+      organizationName: {
+        value: value,
         error: "",
       },
     });
@@ -512,13 +534,13 @@ const UserProfile = () => {
     if (userData?.mobile?.value?.trim() === "") {
       console.log("Please enter mobile number");
 
-      data = {
-        ...data,
-        mobile: {
-          ...data.mobile,
-          error: "Please enter mobile number",
-        },
-      };
+      // data = {
+      //   ...data,
+      //   mobile: {
+      //     ...data.mobile,
+      //     error: "Please enter mobile number",
+      //   },
+      // };
       // valid = false;
     } else if (!validatePhone(userData.mobile.value)) {
       console.log("Invalid mobile number");
@@ -581,26 +603,26 @@ const UserProfile = () => {
     if (userData?.password?.value?.trim() === "") {
       console.log("Please enter password");
 
-      data = {
-        ...data,
-        mobile: {
-          ...data.mobile,
-          error: "Please enter password",
-        },
-      };
+      // data = {
+      //   ...data,
+      //   password: {
+      //     ...data.password,
+      //     error: "Please enter password",
+      //   },
+      // };
       // valid = false; password here can be empty
     } else if (!validatePassword(userData?.password?.value?.trim())) {
       console.log("Invalid password");
 
       data = {
         ...data,
-        mobile: {
-          ...data.mobile,
+        password: {
+          ...data.password,
           error: "Invalid password",
         },
       };
       // valid = false;
-      toast.error("Please enter a valid password  ");
+      // toast.error("Please enter a valid password  ");
 
     }
 
@@ -617,6 +639,8 @@ const UserProfile = () => {
       console.log("profile image is not uploaded")
       // valid = false;
     }
+
+    setUserData(data);
 
     try {
       if (!isEmpty) {
@@ -699,8 +723,8 @@ const UserProfile = () => {
 
         }
       } else {
-        console.log("user empty data:", userData);
-        toast.error("Please fill all the mandatory details.");
+        // console.log("user empty data:", userData);
+        // toast.error("Please fill all the mandatory details.");
       }
     } catch (error) {
       toast.error("An error ocurred while saving the user.")
@@ -767,7 +791,7 @@ const UserProfile = () => {
             }}
           >
             <div className={styles.leftInputs}>
-              <Input
+              {/* <Input
                 customStyle={{ margin: '0rem' }}
                 customLabelStyle={{ display: 'none' }}
                 type="text"
@@ -776,38 +800,85 @@ const UserProfile = () => {
                 placeholder="Username &#128900;"
                 onChange={onChange}
                 disabled={credentials.data.role === "3"}
+              /> */}
+
+              <CustomInput
+                type="text"
+                value={userData.username.value}
+                // customStyle={{ margin: '0' }}
+                // customInputStyles={{ height: "auto" }}
+                // inputStyleClass={styles.customInputStylesClass}
+                customLabelStyle={{ display: "none" }}
+                name={"username"}
+                title="User Name"
+                onChange={onChange}
+                required
+                readOnly={credentials.data.role === "3"}
+                error={userData.username.error}
+                errorNode={(
+                  <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                    {userData.username.error}
+                  </div>
+                )}
+                maxLength={100}
+
               />
+
               {credentials?.data?.role === "1" ||
                 credentials?.data?.role === "2" ? (
-                <div>
-                  {/* <label htmlFor="dropdown_role" className="select_label">
-                      Role:
-                    </label> */}
-                  <select
-                    id="dropdown_role"
-                    value={userData.role.value}
-                    className="select_input"
-                    onChange={onRoleSelect}
-                  >
-                    <option value={""} hidden>Role &#128900;</option>
+                // <div>
+                //   <label htmlFor="dropdown_role" className="select_label">
+                //       Role:
+                //     </label>
+                //   <select
+                //     id="dropdown_role"
+                //     value={userData.role.value}
+                //     className="select_input"
+                //     onChange={onRoleSelect}
+                //   >
+                //     <option value={""} hidden>Role &#128900;</option>
 
-                    {masters &&
-                      masters.data &&
-                      isJSONString(masters.data) &&
-                      Array.isArray(JSON.parse(masters.data)) &&
-                      JSON.parse(masters.data).map((item, index) => {
-                        if (item.MasterType !== "Role") return;
-                        return (
-                          <option value={item.MasterID} key={index}>
-                            {item.MasterDisplayName}
-                          </option>
-                        );
-                      })}
-                  </select>
-                </div>
+                //     {masters &&
+                //       masters.data &&
+                //       isJSONString(masters.data) &&
+                //       Array.isArray(JSON.parse(masters.data)) &&
+                //       JSON.parse(masters.data).map((item, index) => {
+                //         if (item.MasterType !== "Role") return;
+                //         return (
+                //           <option value={item.MasterID} key={index}>
+                //             {item.MasterDisplayName}
+                //           </option>
+                //         );
+                //       })}
+                //   </select>
+                // </div>
+
+                <Dropdown
+                  data={
+                    masters &&
+                    masters.data &&
+                    isJSONString(masters.data) &&
+                    Array.isArray(JSON.parse(masters.data)) &&
+                    JSON.parse(masters.data)
+                      .filter(item => item.MasterType === "Role") ||
+                    []
+                  }
+                  value={userData.role.value}
+                  valueKey="MasterID"
+                  labelKey="MasterDisplayName"
+                  placeholder="Roles"
+                  onSelect={(value) => { onSelectRole(value) }}
+                  error={userData.role.error}
+                  errorNode={(
+                    <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                      {userData.role.error}
+                    </div>
+                  )}
+                  required
+                />
               ) : null}
 
-              <Input
+              {/* <Input
                 customStyle={{ margin: '0rem' }}
                 customLabelStyle={{ display: 'none' }}
                 type="tel"
@@ -815,11 +886,33 @@ const UserProfile = () => {
                 name="mobile"
                 placeholder="Mobile No."
                 onChange={onChange}
+              /> */}
+
+              <CustomInput
+                type="text"
+                value={userData.mobile.value}
+                // customStyle={{ margin: '0' }}
+                // customInputStyles={{ height: "auto" }}
+                // inputStyleClass={styles.customInputStylesClass}
+                customLabelStyle={{ display: "none" }}
+                name={"mobile"}
+                title="Mobile No."
+                onChange={onChange}
+                required
+                error={userData.mobile.error}
+                errorNode={(
+                  <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                    {userData.mobile.error}
+                  </div>
+                )}
+                maxLength={10}
+
               />
-              <div>
-                {/* <label htmlFor="dropdown_Organisation" className="select_label">
+
+              {/* <div>
+                <label htmlFor="dropdown_Organisation" className="select_label">
                     Organisation:
-                  </label> */}
+                  </label>
                 <select
                   id="dropdown_Organisation"
                   value={userData.organizationName.value}
@@ -840,7 +933,32 @@ const UserProfile = () => {
                       );
                     })}
                 </select>
-              </div>
+              </div> */}
+              <Dropdown
+                data={
+                  masters &&
+                  masters.data &&
+                  isJSONString(masters.data) &&
+                  Array.isArray(JSON.parse(masters.data)) &&
+                  JSON.parse(masters.data)
+                    .filter(item => item.MasterType === "Organization") ||
+                  []
+                }
+                value={userData.organizationName.value}
+                valueKey="MasterID"
+                labelKey="MasterDisplayName"
+                placeholder="Organization"
+                onSelect={(value) => { onSelectOrganisation(value) }}
+                error={userData.organizationName.error}
+                errorNode={(
+                  <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                    {userData.organizationName.error}
+                  </div>
+                )}
+                required
+                maxLength={250}
+              />
+
               <div>
                 <label
                   className={styles.inputLabel}
@@ -850,7 +968,7 @@ const UserProfile = () => {
               </div>
             </div>
             <div className={styles.rightInputs}>
-              <Input
+              {/* <Input
                 customStyle={{ margin: '0rem' }}
                 customLabelStyle={{ display: 'none' }}
                 type="text"
@@ -859,8 +977,30 @@ const UserProfile = () => {
                 placeholder="Email &#128900;"
                 disabled={true}
                 onChange={onChange}
+              /> */}
+              <CustomInput
+                type="text"
+                value={userData.email.value}
+                // customStyle={{ margin: '0' }}
+                // customInputStyles={{ height: "auto" }}
+                // inputStyleClass={styles.customInputStylesClass}
+                customLabelStyle={{ display: "none" }}
+                name={"email"}
+                title="Email"
+                onChange={onChange}
+                required
+                error={userData.email.error}
+                errorNode={(
+                  <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                    {userData.email.error}
+                  </div>
+                )}
+                readonly
+                maxLength={320}
+
               />
-              <Input
+
+              {/* <Input
                 type="password"
                 value={userData.password.value}
                 labelStyle={styles.inputLabel}
@@ -872,11 +1012,35 @@ const UserProfile = () => {
                 label="Password"
                 placeholder="Password"
                 onChange={onChange}
+              /> */}
+              <CustomInput
+                type="text"
+                value={userData.password.value}
+                customStyle={{
+                  margin: '0',
+                  marginTop: '-2.5rem'
+                }}
+                // customStyle={{ margin: '0' }}
+                // customInputStyles={{ height: "auto" }}
+                // inputStyleClass={styles.customInputStylesClass}
+                name={"password"}
+                title="Password"
+                label="Password"
+                labelStyle={styles.inputLabel}
+                onChange={onChange}
+                required
+                error={userData.password.error}
+                errorNode={(
+                  <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                    {userData.password.error}
+                  </div>
+                )}
               />
-              <div>
-                {/* <label htmlFor="dropdown_designation" className="select_label">
+
+              {/* <div>
+                <label htmlFor="dropdown_designation" className="select_label">
                     Designation:
-                  </label> */}
+                  </label>
                 <select
                   disabled={credentials.data.role === "3"}
                   id="dropdown_designation"
@@ -898,7 +1062,35 @@ const UserProfile = () => {
                       );
                     })}
                 </select>
-              </div>
+              </div> */}
+              <Dropdown
+                data={
+                  masters &&
+                  masters.data &&
+                  isJSONString(masters.data) &&
+                  Array.isArray(JSON.parse(masters.data)) &&
+                  JSON.parse(masters.data)
+                    .filter(item => item.MasterType === "Designation") ||
+                  []
+                }
+                customContainerClass={styles.customContainerClass}
+                value={userData.designation.value}
+                valueKey="MasterID"
+                labelKey="MasterDisplayName"
+                placeholder="Designation"
+                label={"Designation"}
+                labelStyle={styles.inputLabel}
+                onSelect={(value) => { onSelectDesignation(value) }}
+                error={userData.designation.error}
+                errorNode={(
+                  <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                    {userData.designation.error}
+                  </div>
+                )}
+                required
+                maxLength={250}
+
+              />
 
               <div>
                 <ImageDropZone

@@ -25,6 +25,7 @@ import {
 import { toast } from "react-toastify";
 import Input from "../../../../components/common/input/index.jsx";
 import { resetScenarioStates } from "../../../../store/local/menu.js";
+import CustomInput from "../../../../components/common/customInput/index.jsx";
 
 const Scenarios = () => {
   const [pageCount, setPageCount] = useState(10);
@@ -280,7 +281,7 @@ const Scenarios = () => {
   };
 
   const onUpdateScoreMasterDataChange = useCallback(
-    (event) => {
+    (v, event) => {
       const { name, value } = event.target;
       setUpdateScoreMasterData((prevData) => ({
         ...prevData,
@@ -303,7 +304,7 @@ const Scenarios = () => {
         ...data,
         orderOne: {
           ...data.orderOne,
-          error: "Please enter orderOne text",
+          error: "Please enter 0% display text",
         },
       };
 
@@ -316,7 +317,7 @@ const Scenarios = () => {
         ...data,
         orderTwo: {
           ...data.orderTwo,
-          error: "Please enter orderTwo text",
+          error: "Please enter 25% display text",
         },
       };
 
@@ -329,7 +330,7 @@ const Scenarios = () => {
         ...data,
         orderThree: {
           ...data.orderThree,
-          error: "Please enter orderThree text",
+          error: "Please enter 50% display text",
         },
       };
 
@@ -342,7 +343,7 @@ const Scenarios = () => {
         ...data,
         orderFour: {
           ...data.orderFour,
-          error: "Please enter orderFour text",
+          error: "Please enter 75% display text",
         },
       };
 
@@ -355,14 +356,14 @@ const Scenarios = () => {
         ...data,
         orderFive: {
           ...data.orderFive,
-          error: "Please enter orderFive text",
+          error: "Please enter 100% display text",
         },
       };
 
       valid = false;
     }
 
-
+    setUpdateScoreMasterData(data);
     // If all validations pass
     try {
       if (valid) {
@@ -390,7 +391,7 @@ const Scenarios = () => {
 
 
       } else {
-        toast.error("Please fill all the details.");
+        // toast.error("Please fill all the details.");
       }
     } catch (error) {
       toast.error("An error occurred while saving the score master data.");
@@ -585,7 +586,7 @@ const Scenarios = () => {
             </div>
             <div className={styles.modalInputContainer}>
               <div>
-                <Input
+                {/* <Input
                   type="text"
                   labelStyle={styles.inputLabel}
                   label="0% Display Text"
@@ -594,8 +595,30 @@ const Scenarios = () => {
                   name={"orderOne"}
                   placeholder="0% Display Text"
                   onChange={onUpdateScoreMasterDataChange}
+                /> */}
+                <CustomInput
+                  type="text"
+                  value={updateScoreMasterData?.orderOne?.value}
+                  // customStyle={{ margin: '0' }}
+                  // customInputStyles={{ height: "auto" }}
+                  // inputStyleClass={styles.customInputStylesClass}
+                  customLabelStyle={{ display: "none" }}
+                  customStyle={{ marginTop: '1rem', }}
+                  name={"orderOne"}
+                  title="0% Display Text"
+                  onChange={onUpdateScoreMasterDataChange}
+                  required
+                  error={updateScoreMasterData?.orderOne?.error}
+                  errorNode={(
+                    <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                      {updateScoreMasterData?.orderOne?.error}
+                    </div>
+                  )}
+                  maxLength={50}
+
                 />
-                <Input
+
+                {/* <Input
                   type="text"
                   labelStyle={styles.inputLabel}
                   label="25% Display Text"
@@ -604,8 +627,30 @@ const Scenarios = () => {
                   name={"orderTwo"}
                   placeholder="25% Display Text"
                   onChange={onUpdateScoreMasterDataChange}
+                /> */}
+                <CustomInput
+                  type="text"
+                  value={updateScoreMasterData?.orderTwo?.value}
+                  // customStyle={{ margin: '0' }}
+                  // customInputStyles={{ height: "auto" }}
+                  // inputStyleClass={styles.customInputStylesClass}
+                  customLabelStyle={{ display: "none" }}
+                  customStyle={{ marginTop: '1rem', }}
+                  name={"orderTwo"}
+                  title="25% Display Text"
+                  onChange={onUpdateScoreMasterDataChange}
+                  required
+                  error={updateScoreMasterData?.orderTwo?.error}
+                  errorNode={(
+                    <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                      {updateScoreMasterData?.orderTwo?.error}
+                    </div>
+                  )}
+                  maxLength={50}
+
                 />
-                <Input
+
+                {/* <Input
                   type="text"
                   labelStyle={styles.inputLabel}
                   label="50% Display Text"
@@ -614,8 +659,31 @@ const Scenarios = () => {
                   name={"orderThree"}
                   placeholder="50% Display Text"
                   onChange={onUpdateScoreMasterDataChange}
+                /> */}
+
+                <CustomInput
+                  type="text"
+                  value={updateScoreMasterData?.orderThree?.value}
+                  // customStyle={{ margin: '0' }}
+                  // customInputStyles={{ height: "auto" }}
+                  // inputStyleClass={styles.customInputStylesClass}
+                  customLabelStyle={{ display: "none" }}
+                  customStyle={{ marginTop: '1rem', }}
+                  name={"orderThree"}
+                  title="50% Display Text"
+                  onChange={onUpdateScoreMasterDataChange}
+                  required
+                  error={updateScoreMasterData?.orderThree?.error}
+                  errorNode={(
+                    <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                      {updateScoreMasterData?.orderThree?.error}
+                    </div>
+                  )}
+                  maxLength={50}
+
                 />
-                <Input
+
+                {/* <Input
                   type="text"
                   labelStyle={styles.inputLabel}
                   label="75% Display Text"
@@ -624,8 +692,31 @@ const Scenarios = () => {
                   name={"orderFour"}
                   placeholder="75% Display Text"
                   onChange={onUpdateScoreMasterDataChange}
+                /> */}
+
+                <CustomInput
+                  type="text"
+                  value={updateScoreMasterData?.orderFour?.value}
+                  // customStyle={{ margin: '0' }}
+                  // customInputStyles={{ height: "auto" }}
+                  // inputStyleClass={styles.customInputStylesClass}
+                  customLabelStyle={{ display: "none" }}
+                  customStyle={{ marginTop: '1rem', }}
+                  name={"orderFour"}
+                  title="75% Display Text"
+                  onChange={onUpdateScoreMasterDataChange}
+                  required
+                  error={updateScoreMasterData?.orderFour?.error}
+                  errorNode={(
+                    <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                      {updateScoreMasterData?.orderFour?.error}
+                    </div>
+                  )}
+                  maxLength={50}
+
                 />
-                <Input
+
+                {/* <Input
                   type="text"
                   labelStyle={styles.inputLabel}
                   label="100% Display Text"
@@ -634,7 +725,30 @@ const Scenarios = () => {
                   name={"orderFive"}
                   placeholder="100% Display Text"
                   onChange={onUpdateScoreMasterDataChange}
+                /> */}
+
+                <CustomInput
+                  type="text"
+                  value={updateScoreMasterData?.orderFive?.value}
+                  // customStyle={{ margin: '0' }}
+                  // customInputStyles={{ height: "auto" }}
+                  // inputStyleClass={styles.customInputStylesClass}
+                  customLabelStyle={{ display: "none" }}
+                  customStyle={{ marginTop: '1rem', }}
+                  name={"orderFive"}
+                  title="100% Display Text"
+                  onChange={onUpdateScoreMasterDataChange}
+                  required
+                  error={updateScoreMasterData?.orderFive?.error}
+                  errorNode={(
+                    <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                      {updateScoreMasterData?.orderFive?.error}
+                    </div>
+                  )}
+                  maxLength={50}
+
                 />
+
               </div>
 
 

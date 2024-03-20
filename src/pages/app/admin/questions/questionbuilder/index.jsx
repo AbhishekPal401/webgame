@@ -22,7 +22,9 @@ import {
   resetUpdateQuestionState,
 } from "../../../../../store/app/admin/questions/updateQuestion";
 import { extractFileInfo, extractFileType } from "../../../../../utils/helper";
-import RichTextEditor from "../../../../../components/common/richtexteditor";
+import RichTextEditor from "../../../../../components/common/textEditor";
+import Dropdown from "../../../../../components/common/dropdown";
+import CustomInput from "../../../../../components/common/customInput";
 
 function QuestionBuilder() {
   const [questionData, setQuestionData] = useState({
@@ -92,6 +94,25 @@ function QuestionBuilder() {
     fileTypes.MIME_POWERPOINT_3,
     fileTypes.POWERPOINT_EXTENSION,
   ]
+
+  const sampleConfig = {
+    toolbar:
+      ["fontFamily",
+        "fontSize",
+        "bold",
+        "italic",
+        "strikethrough",
+        "underline",
+        "bulletedList",
+        "numberedList",
+        "indent",
+        "outdent",
+        "alignment:left",
+        "alignment:center",
+        "alignment:right",
+        "alignment:justify",
+      ]
+  };
 
   const resetQuestionData = () => {
     setQuestionData({
@@ -256,6 +277,14 @@ function QuestionBuilder() {
             value: "", // Fill this with appropriate value
             error: "",
           },
+          // isOptimal: {
+          //   // value: [answer.IsOptimalAnswer, !answer.IsOptimalAnswer],
+          //   value: {
+          //     value: answer.IsOptimalAnswer,
+          //     label: answer.IsOptimalAnswer ? "Yes" : "No",
+          //   },
+          //   error: "",
+          // },
         };
       });
 
@@ -406,11 +435,34 @@ function QuestionBuilder() {
     });
   };
 
+  const onSelectDecisionMaker = (value) => {
+    console.log("onDecisionMakerSelect ", value);
+    setQuestionData({
+      ...questionData,
+      decisionMaker: {
+        value: value,
+        error: "",
+      },
+    });
+  };
+
   const onAnswerChange = (event, index, field) => {
     console.log("selcted option : ", event.target.value);
     setQuestionData((prevQuestionData) => {
       const updatedAnswers = [...prevQuestionData.answers];
       updatedAnswers[index][field].value = event.target.value;
+      return {
+        ...prevQuestionData,
+        answers: updatedAnswers,
+      };
+    });
+  };
+
+  const onChangeAnswer = (value, index, field) => {
+    console.log("selcted option : ", value);
+    setQuestionData((prevQuestionData) => {
+      const updatedAnswers = [...prevQuestionData.answers];
+      updatedAnswers[index][field].value = value;
       return {
         ...prevQuestionData,
         answers: updatedAnswers,
@@ -497,27 +549,27 @@ function QuestionBuilder() {
 
     if (questionData?.decisionMaker?.value?.trim() === "") {
       console.log("decisionMaker:", data.decisionMaker);
-      data = {
-        ...data,
-        question: {
-          ...data.decisionMaker,
-          error: "Please select Decision Maker",
-        },
-      };
+      // data = {
+      //   ...data,
+      //   question: {
+      //     ...data.decisionMaker,
+      //     error: "Please select Decision Maker",
+      //   },
+      // };
 
       // valid = false;
     }
 
     if (!supportFileDisplayURL &&
       questionData?.narrativeMedia?.value === "") {
-      console.log("narrativeMedia:", data.narrativeMedia);
-      data = {
-        ...data,
-        narrativeMedia: {
-          ...data.narrativeMedia,
-          error: "Please select Narrative Media",
-        },
-      };
+      // console.log("narrativeMedia:", data.narrativeMedia);
+      // data = {
+      //   ...data,
+      //   narrativeMedia: {
+      //     ...data.narrativeMedia,
+      //     error: "Please select Narrative Media",
+      //   },
+      // };
 
       // valid = false; narrative media is not madatory 
     }
@@ -608,24 +660,26 @@ function QuestionBuilder() {
       answers: updatedAnswers,
     };
 
+    setQuestionData(data);
+
     // TODO:: set the initial state to show errors
     if (!isEmpty) {
 
       // Display generic error message if any error occurred in each column
-      if (answerError) {
-        toast.error("Please enter the valid answer.");
-      }
-      if (scoreError) {
-        toast.error("Please enter valid score.");
-      }
+      // if (answerError) {
+      //   toast.error("Please enter the valid answer.");
+      // }
+      // if (scoreError) {
+      //   toast.error("Please enter valid score.");
+      // }
 
-      if (nextQuestionError) {
-        toast.error("Please select valid next question.");
-      }
+      // if (nextQuestionError) {
+      //   toast.error("Please select valid next question.");
+      // }
 
-      if (consequenceError) {
-        toast.error("Please enter valid consequence.");
-      }
+      // if (consequenceError) {
+      //   toast.error("Please enter valid consequence.");
+      // }
 
       if (valid) {
         let url = supportFIleDefaultUrl.url;
@@ -741,7 +795,7 @@ function QuestionBuilder() {
 
       }
     } else {
-      toast.error("Please fill all the mandatory details.");
+      // toast.error("Please fill all the mandatory details.");
     }
   };
 
@@ -798,12 +852,23 @@ function QuestionBuilder() {
                       >
                         Question
                       </label>
-                      <RichTextEditor
+                      {/* <RichTextEditor
                         customContaierClass={styles.customRichTextEditorContaierClass}
                         customEditorStyles={styles.customRichTextEditorStyleClass}
                         onChange={onQuestionChange}
                         placeholder="Add question &#128900;"
                         value={questionData.question.value}
+                      /> */}
+                      <RichTextEditor
+                        sampleConfig={sampleConfig}
+                        title="Add question"
+                        data={questionData.question.value}
+                        customContaierClass={styles.customRichTextEditorContaierClass}
+                        customEditorStyleClass={styles.customEditorStyleClass}
+                        onChange={(event, value, htmlContent) => {
+                          onQuestionChange(htmlContent);
+                        }}
+                        required
                       />
                     </div>
 
@@ -821,7 +886,7 @@ function QuestionBuilder() {
                   </div>
                   <div className={styles.questionInputRight}>
                     {/* Decisin Maker :: start */}
-                    <div>
+                    {/* <div>
                       <label
                         htmlFor="dropdown_decision_maker"
                         className="select_label"
@@ -845,15 +910,40 @@ function QuestionBuilder() {
                             if (item.MasterType !== "Designation") return;
                             return (
                               <option value={item.MasterDisplayName} key={index}>
-                                {/* change item.MasterID to 
-                                                            MasterDisplayName inorder to
-                                                             send the name insed of id to backend */}
                                 {item.MasterDisplayName}
                               </option>
                             );
                           })}
                       </select>
-                    </div>
+                    </div> */}
+
+                    <Dropdown
+                      data={
+                        masters &&
+                        masters.data &&
+                        isJSONString(masters.data) &&
+                        Array.isArray(JSON.parse(masters.data)) &&
+                        JSON.parse(masters.data)
+                          .filter(item => item.MasterType === "Designation") ||
+                        []
+                      }
+                      value={questionData.decisionMaker.value}
+                      valueKey="MasterDisplayName"
+                      labelKey="MasterDisplayName"
+                      placeholder="Decision Maker"
+                      label={"Decision Maker"}
+                      labelStyle={styles.inputLabel}
+                      selecttStyleClass={styles.selecttStyleClass}
+                      customContainerClass={styles.customDropDownContainerClass}
+                      onSelect={(value) => { onSelectDecisionMaker(value) }}
+                      error={questionData.decisionMaker.error}
+                      errorNode={(
+                        <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                          {questionData.decisionMaker.error}
+                        </div>
+                      )}
+                      required
+                    />
                     {/* Decisin Maker :: end */}
 
                     {/* Narrative Media :: start */}
@@ -908,14 +998,14 @@ function QuestionBuilder() {
                       <label>Optimal</label>
                       <label>Score</label>
                       <label>Next Question</label>
-                      <label>Consequence</label>
+                      <label></label>
                       {/* <label>Narrative</label> */}
                     </div>
                     {questionData.answers.map((answer, index) => (
                       <div key={index} className={styles.answerInputFields}>
                         {/* Option :: start */}
                         <div>
-                          <Input
+                          {/* <Input
                             labelStyle={styles.inputLabel}
                             customStyle={{}}
                             name={`option-${index}`}
@@ -923,13 +1013,34 @@ function QuestionBuilder() {
                             onChange={(e) => onAnswerChange(e, index, "option")}
                             // placeholder={`Option ${index + 1}`}
                             placeholder={`Option ${index + 1} \u{2022}`}
+                          /> */}
+
+                          <CustomInput
+                            type="text"
+                            value={answer.option.value}
+                            // customStyle={{ margin: '0' }}
+                            // customInputStyles={{ height: "auto" }}
+                            // inputStyleClass={styles.customInputStylesClass}
+                            customLabelStyle={{ display: "none" }}
+                            name={`option-${index}`}
+                            title={`Option ${index + 1}`}
+                            onChange={(value, e) => onChangeAnswer(value, index, "option")}
+                            required
+                            error={answer.option.error}
+                            errorNode={(
+                              <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                                {answer.option.error}
+                              </div>
+                            )}
+                            maxLength={500}
+
                           />
                         </div>
                         {/* Option :: end */}
 
                         {/* Optimal :: start */}
                         <div>
-                          <div>
+                          {/* <div>
                             <select
                               id={`dropdown_optimal-${index}`}
                               value={answer.optimal.value}
@@ -939,7 +1050,7 @@ function QuestionBuilder() {
                                 onAnswerChange(e, index, "optimal")
                               }
                             >
-                              {/* <option value={""}>Optimal</option> */}
+                              <option value={""}>Optimal</option> 
                               {answer.optimal.value === false ? (
                                 <>
                                   <option value={false}>No</option>
@@ -952,19 +1063,65 @@ function QuestionBuilder() {
                                 </>
                               )}
                             </select>
-                          </div>
+                          </div> */}
+
+                          <Dropdown
+                            data={
+                              answer.optimal.value === false ? (
+                                [
+                                  { value: false, label: 'No' },
+                                  { value: true, label: 'Yes' }
+                                ]
+                              ) : (
+                                [
+                                  { value: true, label: 'Yes' },
+                                  { value: false, label: 'No' },
+                                ]
+                              )
+                            }
+                            value={answer.optimal.value}
+                            valueKey="value"
+                            labelKey="label"
+                            placeholder="Optimal"
+                            onSelect={(value, e) => onChangeAnswer(value, index, "optimal")}
+                            error={answer.optimal.error}
+                            errorNode={(
+                              <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                                {answer.optimal.error}
+                              </div>
+                            )}
+                            required
+                          />
                         </div>
                         {/* Optimal :: end  */}
 
                         {/* Score :: start  */}
                         <div>
-                          <Input
+                          {/* <Input
                             labelStyle={styles.inputLabel}
                             customStyle={{}}
                             name={`score-${index}`}
                             value={answer.score.value}
                             onChange={(e) => onAnswerChange(e, index, "score")}
                             placeholder={`Score ${index + 1} \u{2022}`}
+                          /> */}
+                          <CustomInput
+                            type="text"
+                            value={answer.score.value}
+                            // customStyle={{ margin: '0' }}
+                            // customInputStyles={{ height: "auto" }}
+                            // inputStyleClass={styles.customInputStylesClass}
+                            customLabelStyle={{ display: "none" }}
+                            name={`score-${index}`}
+                            title={`Score ${index + 1}`}
+                            onChange={(value, e) => onChangeAnswer(value, index, "score")}
+                            required
+                            error={answer.score.error}
+                            errorNode={(
+                              <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                                {answer.score.error}
+                              </div>
+                            )}
                           />
                         </div>
                         {/* Score :: end  */}
@@ -972,7 +1129,7 @@ function QuestionBuilder() {
                         {/* Next Question :: start  */}
                         <div>
                           <div>
-                            <Input
+                            {/* <Input
                               labelStyle={styles.inputLabel}
                               customStyle={{}}
                               name={`nextQuestion-${index}`}
@@ -981,6 +1138,24 @@ function QuestionBuilder() {
                                 onAnswerChange(e, index, "nextQuestion")
                               }
                               placeholder={`Next Question ${index + 1} \u{2022}`}
+                            /> */}
+                            <CustomInput
+                              type="text"
+                              value={answer.nextQuestion.value}
+                              // customStyle={{ margin: '0' }}
+                              // customInputStyles={{ height: "auto" }}
+                              // inputStyleClass={styles.customInputStylesClass}
+                              customLabelStyle={{ display: "none" }}
+                              name={`nextQuestion-${index}`}
+                              title={`Next Question ${index + 1}`}
+                              onChange={(value, e) => onChangeAnswer(value, index, "nextQuestion")}
+                              required
+                              error={answer.nextQuestion.error}
+                              errorNode={(
+                                <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                                  {answer.nextQuestion.error}
+                                </div>
+                              )}
                             />
                           </div>
                         </div>
@@ -988,7 +1163,7 @@ function QuestionBuilder() {
 
                         {/* Consequence :: start  */}
                         <div>
-                          <Input
+                          {/* <Input
                             labelStyle={styles.inputLabel}
                             customStyle={{}}
                             name={`consequence-${index}`}
@@ -997,7 +1172,7 @@ function QuestionBuilder() {
                               onAnswerChange(e, index, "consequence")
                             }
                             placeholder={`Consequence ${index + 1}`}
-                          />
+                          /> */}
                         </div>
                         {/* Consequence :: end  */}
 

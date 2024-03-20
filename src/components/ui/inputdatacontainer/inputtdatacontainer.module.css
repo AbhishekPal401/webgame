@@ -3,7 +3,7 @@
   height: fit-content;
   display: flex;
   flex-direction: row;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 .formLeft {
   flex: 0 0 0.6rem;

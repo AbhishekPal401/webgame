@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import styles from "./createscenarios.module.css";
 import bg_2 from "/images/createscenario2.png";
 import PageContainer from "../../../../components/ui/pagecontainer";
-import Input from "../../../../components/common/input";
+// import Input from "../../../../components/common/input";
 import FileDropZone from "../../../../components/common/upload/FileDropzone";
 import Button from "../../../../components/common/button";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +17,14 @@ import { generateGUID } from "../../../../utils/common.js";
 import axios from "axios";
 import { fileTypes } from "../../../../constants/filetypes.js";
 import { extractFileType } from "../../../../utils/helper.js";
-import RichTextEditor from "../../../../components/common/richtexteditor/index.jsx";
+import RichTextEditor from "../../../../components/common/textEditor/index.jsx";
+// import { Input } from "@appkit4/react-components/field";
+// import { TextArea } from '@appkit4/react-components/field';
+import "@appkit4/styles/appkit.min.css";
+// import { TextEditor } from "@appkit4/react-text-editor";
+import "@appkit4/react-text-editor/dist/appkit4-react-texteditor.min.css";
+import CustomInput from "../../../../components/common/customInput/index.jsx";
+
 
 const CreateScenario = () => {
   const [scenarioData, setScenarioData] = useState({
@@ -63,6 +70,36 @@ const CreateScenario = () => {
     fileTypes.MIME_POWERPOINT_3,
     fileTypes.POWERPOINT_EXTENSION,
   ]
+  // const sampleConfig = {
+  //   toolbar: [
+  //     "fontFamily",
+  //     "fontSize",
+  //     "bold",
+  //     "italic",
+  //     "alignment:left",
+  //     "alignment:center",
+  //     "alignment:right",
+  //     "alignment:justify",
+  //   ],
+  // };
+  const sampleConfig = {
+    toolbar:
+      ["fontFamily",
+        "fontSize",
+        "bold",
+        "italic",
+        "strikethrough",
+        "underline",
+        "bulletedList",
+        "numberedList",
+        "indent",
+        "outdent",
+        "alignment:left",
+        "alignment:center",
+        "alignment:right",
+        "alignment:justify",
+      ]
+  };
 
   const { credentials } = useSelector((state) => state.login);
 
@@ -132,11 +169,22 @@ const CreateScenario = () => {
     }
   }, [createScenarioResponse, resetFile]);
 
-  const onChange = (event) => {
+  // const onChange = (event) => {
+  //   console.log(" name :",event.target.name)
+  //   setScenarioData({
+  //     ...scenarioData,
+  //     [event.target.name]: {
+  //       value: event.target.value,
+  //       error: "",
+  //     },
+  //   });
+  // };
+  const onChange = (value, event) => {
+    console.log("name:" + event.target.name + " value: " + value);
     setScenarioData({
       ...scenarioData,
       [event.target.name]: {
-        value: event.target.value,
+        value: value,
         error: "",
       },
     });
@@ -173,9 +221,9 @@ const CreateScenario = () => {
     let isEmpty = false;
     let valid = true;
     let data = scenarioData;
-
+    console.log(" previous state :", data)
     if (scenarioData?.scenarioName?.value?.trim() === "") {
-      console.log("scenarioName :", scenarioData?.scenarioName?.value);
+
       data = {
         ...data,
         scenarioName: {
@@ -183,7 +231,7 @@ const CreateScenario = () => {
           error: "Please enter scenario name",
         },
       };
-
+      console.log("data :", data);
       valid = false;
       isEmpty = true;
 
@@ -230,7 +278,7 @@ const CreateScenario = () => {
     if (
       scenarioData?.gameIntroText?.value?.trim() === "" ||
       scenarioData?.gameIntroText?.value?.replace(/<\/?[^>]+(>|$)/g, "").trim() === ""
-      ) {
+    ) {
       console.log("gameIntroText :", scenarioData?.gameIntroText?.value);
       data = {
         ...data,
@@ -256,6 +304,10 @@ const CreateScenario = () => {
 
       // valid = false;
     }
+    console.log(" scenarioData : ", data)
+
+    setScenarioData(data);
+
 
     if (!isEmpty) {
       if (valid) {
@@ -351,7 +403,7 @@ const CreateScenario = () => {
 
       }
     } else {
-      toast.error("Please fill all the details.");
+      // toast.error("Please fill all the mandatory details.");
     }
   };
 
@@ -408,7 +460,47 @@ const CreateScenario = () => {
               className={styles.createScenarioFormRight}
             >
               <div className={styles.createScenarioLeftInputs}>
-                <Input
+                <CustomInput
+                  type="text"
+                  name="scenarioName"
+                  value={scenarioData?.scenarioName?.value}
+                  // style={{ height: "3.5rem" }}
+                  title="Scenario Name"
+                  inputStyleClass={styles.scenarioNameInput}
+                  onChange={onChange}
+                  errorNode={(
+                    <div id="errormessage" aria-live="polite"
+                      // style={{
+                      //   fontSize: "1.1rem",
+                      //   color: "#ff6464",
+                      //   fontFamily: 'Helvetica 400',
+                      // }}
+                      className="ap-field-email-validation-error">{scenarioData?.scenarioName?.error}
+                    </div>
+                  )}
+                  error={scenarioData?.scenarioName?.error}
+                  required
+                  maxLength={100}
+                />
+                <CustomInput
+                  type="text"
+                  value={scenarioData?.scenarioDescription?.value}
+                  style={{ height: "15rem" }}
+                  name="scenarioDescription"
+                  title="Scenario Description"
+                  className={styles.gameIntroductionTextAreaInputs}
+                  onChange={onChange}
+                  errorNode={(
+                    <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
+                      {scenarioData?.scenarioDescription?.error}
+                    </div>
+                  )}
+                  error={scenarioData?.scenarioDescription?.error}
+                  required
+                  textArea
+                  maxLength={3000}
+                />
+                {/* <Input
                   labelStyle={styles.inputLabel}
                   type="text"
                   name={"scenarioName"}
@@ -417,7 +509,6 @@ const CreateScenario = () => {
                   inputStyleClass={styles.inputStyleClass}
                   onChange={onChange}
                 />
-                {/*TODO:: Rich Text Editor */}
                 <Input
                   value={scenarioData?.scenarioDescription?.value}
                   labelStyle={styles.inputLabel}
@@ -427,7 +518,7 @@ const CreateScenario = () => {
                   textAreaStyleClass={styles.gameIntroductionTextAreaInputs}
                   onChange={onChange}
                   textArea
-                />
+                /> */}
               </div>
               <div className={styles.verticalLine}></div>
               <div className={styles.createScenarioRightInputs}></div>
@@ -445,13 +536,31 @@ const CreateScenario = () => {
               <div className={styles.gameIntroductionLeftInputs}>
                 <label>Game Introduction</label>
                 {/*TODO:: Rich Text Editor */}
-                <RichTextEditor
+                {/* <RichTextEditor
                   customContaierClass={styles.customRichTextEditorContaierClass}
                   customEditorStyles={styles.customRichTextEditorStyleClass}
                   onChange={onGameIntroTextChange}
                   placeholder="Game Introduction &#128900;"
                   value={scenarioData?.gameIntroText?.value}
+                /> */}
+                <RichTextEditor
+                  config={sampleConfig}
+                  className={styles.quill}
+                  data={scenarioData?.gameIntroText?.value}
+                  title="Game Introduction"
+                  onChange={(event, value, htmlContent) => {
+                    onGameIntroTextChange(htmlContent);
+                  }}
+                  required
                 />
+                {/* <TextEditor
+                  config={sampleConfig}
+                  className={styles.quill}
+                  data={scenarioData?.gameIntroText?.value}
+                  onChange={(event, value, message) => {
+                    onGameIntroTextChange(message);
+                  }}
+                /> */}
                 {/* <Input
                   value={scenarioData?.gameIntroText?.value}
                   labelStyle={styles.inputLabel}

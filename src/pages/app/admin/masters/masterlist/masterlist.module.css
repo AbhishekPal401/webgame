@@ -302,3 +302,8 @@
   outline: none;
   box-shadow: none;
 }
+.masterTextAreaInputs {
+  font-size: 1.3rem;
+  /* font-family: 'Helvetica 400'; */
+
+}

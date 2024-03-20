@@ -1,0 +1,105 @@
+.formGroup {
+  margin: 0;
+  /* margin: 1rem 0 0.5rem; */
+}
+
+.formGroup > label {
+  display: block;
+  margin-bottom: 0.8rem;
+  font-size: 1.35rem;
+  font-family: "Helvetica 500";
+}
+
+/* Input style */
+/* .formControl {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  height: 3.6rem;
+  font-size: 1.3rem;
+  color: #495057;
+  background-color: #fff;
+  border: 1px solid #d7d7d7;
+  border-radius: 0.7rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+} */
+
+/* .formControl::placeholder {
+  color: #b0b0b0;
+}
+
+.formControl:focus {
+  outline: none;
+  border: 1px solid var(--primary);
+  box-shadow: 0 0 0 0.2rem var(--primary-light);
+}
+
+.formControl:disabled {
+  background-color: #dedede;
+  cursor: not-allowed;
+}
+
+.formControl:disabled:focus {
+  outline: none;
+  box-shadow: none;
+} */
+.input {
+  font-size: 1.3rem;
+  /* font-family: "Helvetica 400"; */
+}
+/* .input > div:first-child > div:nth-child(1),
+.input > div:first-child > div:nth-child(2) {
+  background-color: var(--innerbackground);
+} */
+
+.input > div:first-child > div:nth-child(2) {
+  background-color: var(--innerbackground);
+}
+.input label {
+  /* font-family: "Helvetica 400"; */
+}
+
+.input > div:first-child > div:nth-child(2) {
+  height: 3.5rem;
+}
+
+/* Text editor */
+.quill {
+  /* width: 30rem !important; */
+  background-color: var(--innerbackground);
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.quill > div {
+  border: none !important;
+}
+
+.quill > div:nth-child(2) {
+  height: 15rem !important;
+  font-family: "Helvetica 400";
+  font-size: 1.3rem;
+  padding-top: 0.5rem;
+  padding-left: 2rem;
+}
+.quill > div:nth-child(1) > div:nth-child(1) {
+  /* flex-wrap: wrap !important; */
+}
+.defaultTextAreaStyles {
+  height: 15rem;
+}
+.defaultTextAreaStyles textarea {
+  height: inherit !important;
+}
+.defaultTextAreaStyles {
+  font-size: 1.3rem;
+}
+.defaultTextAreaStyles > div:first-child {
+  height: 15rem !important;
+  margin-top: 1rem;
+}
+.defaultTextAreaStyles > div:first-child > div:nth-child(1),
+.defaultTextAreaStyles > div:first-child > div:nth-child(2) {
+  /* background: var(--background-color); */
+  background-color: var(--innerbackground);
+}

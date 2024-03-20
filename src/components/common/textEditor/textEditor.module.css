@@ -1,0 +1,33 @@
+.container {
+  width: 100%;
+  height: 100%;
+  background-color: var(--innerbackground);
+}
+/* Text editor */
+.editor {
+  background-color: var(--innerbackground);
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.editor > div {
+  border: none !important;
+}
+
+.editor > div:nth-child(2) {
+  height: 15rem !important;
+  font-family: "Helvetica 400";
+  font-size: 1.3rem;
+  padding-top: 0.5rem;
+  padding-left: 2rem;
+}
+.editor > div:nth-child(1) > div:nth-child(1) {
+  /* flex-wrap: wrap !important; */
+}
+.error {
+  /* color: var(--red); */
+  color: #ff7171;
+  font-family: "Helvetica 400";
+  font-size: 1.1rem;
+  margin-top: 0.2rem;
+}
