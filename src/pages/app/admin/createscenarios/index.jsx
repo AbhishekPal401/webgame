@@ -16,7 +16,7 @@ import {
 import { generateGUID } from "../../../../utils/common.js";
 import axios from "axios";
 import { fileTypes } from "../../../../constants/filetypes.js";
-import { extractFileType } from "../../../../utils/helper.js";
+import { checkHtmlContentLength, extractFileType } from "../../../../utils/helper.js";
 import RichTextEditor from "../../../../components/common/textEditor/index.jsx";
 // import { Input } from "@appkit4/react-components/field";
 // import { TextArea } from '@appkit4/react-components/field';
@@ -284,12 +284,23 @@ const CreateScenario = () => {
         ...data,
         gameIntroText: {
           ...data.gameIntroText,
-          error: "Please select game intro text",
+          error: "Please enter game intro text",
         },
       };
 
       valid = false;
       isEmpty = true;
+    } else if (checkHtmlContentLength(scenarioData?.gameIntroText?.value, 3000)) {
+      console.log("HTML content exceeds maxLength");
+      data = {
+        ...data,
+        gameIntroText: {
+          ...data.gameIntroText,
+          error: "Game Intro content exceeds maximum length",
+        },
+      };
+
+      valid = false;
     }
 
     if (scenarioData?.gameIntroVideo?.value === "") {
@@ -465,6 +476,7 @@ const CreateScenario = () => {
                   name="scenarioName"
                   value={scenarioData?.scenarioName?.value}
                   // style={{ height: "3.5rem" }}
+                  customLabelStyle={{ display: 'none' }}
                   title="Scenario Name"
                   inputStyleClass={styles.scenarioNameInput}
                   onChange={onChange}

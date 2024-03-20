@@ -501,7 +501,18 @@ const UserProfile = () => {
         },
       };
       valid = false;
-      toast.error("Please enter a valid username ");
+      // toast.error("Please enter a valid username ");
+    } else if (/^\d+$/.test(userData?.username?.value)) {
+      data = {
+        ...data,
+        username: {
+          ...data.username,
+          error: "Username should only contain alphanumeric and special characters",
+        },
+      };
+
+      valid = false;
+
     }
 
     if (userData?.email?.value?.trim() === "") {
@@ -522,11 +533,11 @@ const UserProfile = () => {
         ...data,
         email: {
           ...data.email,
-          error: "Please enter a valid email",
+          error: "Please enter a valid email with format abc@xyz.com, min 6 and max 254 characters",
         },
       };
       valid = false;
-      toast.error("Please enter a valid email with format abc@xyz.com, min 6 and max 254 characters without any spaces ");
+      // toast.error("Please enter a valid email with format abc@xyz.com, min 6 and max 254 characters without any spaces ");
     }
 
 
@@ -553,7 +564,7 @@ const UserProfile = () => {
         },
       };
       valid = false;
-      toast.error("Please enter valid mobile number");
+      // toast.error("Please enter valid mobile number");
 
     }
 

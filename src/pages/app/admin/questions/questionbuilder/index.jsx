@@ -21,7 +21,7 @@ import {
   updateQuestion,
   resetUpdateQuestionState,
 } from "../../../../../store/app/admin/questions/updateQuestion";
-import { extractFileInfo, extractFileType } from "../../../../../utils/helper";
+import { checkHtmlContentLength, extractFileInfo, extractFileType } from "../../../../../utils/helper";
 import RichTextEditor from "../../../../../components/common/textEditor";
 import Dropdown from "../../../../../components/common/dropdown";
 import CustomInput from "../../../../../components/common/customInput";
@@ -543,6 +543,17 @@ function QuestionBuilder() {
           error: "Please enter a valid question",
         },
       };
+      valid = false;
+    }  else if (checkHtmlContentLength(questionData?.question?.value, 1000)) {
+      console.log("HTML content exceeds maxLength");
+      data = {
+        ...data,
+        gameIntroText: {
+          ...data.gameIntroText,
+          error: "Question exceeds maximum length",
+        },
+      };
+
       valid = false;
     }
 

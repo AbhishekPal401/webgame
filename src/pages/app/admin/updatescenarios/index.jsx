@@ -21,7 +21,7 @@ import {
   resetScenarioDetailState,
 } from "../../../../store/app/admin/scenario/getScenarioById.js";
 import { isJSONString } from "../../../../utils/common.js";
-import { extractFileInfo, formatDateString } from "../../../../utils/helper.js";
+import { checkHtmlContentLength, extractFileInfo, formatDateString } from "../../../../utils/helper.js";
 import { dateFormats } from "../../../../constants/date.js";
 import { fileTypes } from "../../../../constants/filetypes.js";
 import { extractFileType } from "../../../../utils/helper.js";
@@ -481,6 +481,17 @@ const UpdateScenarios = () => {
       valid = false;
       isEmpty = true;
 
+    }  else if (checkHtmlContentLength(scenarioData?.gameIntroText?.value, 3000)) {
+      console.log("HTML content exceeds maxLength");
+      data = {
+        ...data,
+        gameIntroText: {
+          ...data.gameIntroText,
+          error: "Game Intro content exceeds maximum length",
+        },
+      };
+
+      valid = false;
     }
 
     if ((!scenarioID || !introFileDisplay) && scenarioData?.gameIntroFile?.value === "") {
@@ -489,7 +500,7 @@ const UpdateScenarios = () => {
         ...data,
         gameIntroFile: {
           ...data.gameIntroFile,
-          error: "Please select game intro video",
+          error: "Please enter game intro video",
         },
       };
 

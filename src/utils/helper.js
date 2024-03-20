@@ -646,3 +646,8 @@ export const debounce = (func, delay) => {
     }, delay);
   };
 };
+
+export const checkHtmlContentLength = (htmlContent, maxLength) => {
+  const strippedContent = htmlContent.replace(/<\/?[^>]+(>|$)/g, "");
+  return strippedContent.length > maxLength;
+};

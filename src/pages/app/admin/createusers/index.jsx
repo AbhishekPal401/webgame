@@ -458,6 +458,8 @@ const CreateUser = () => {
     let valid = true;
     let data = userData;
 
+
+    console.log("username valid :",/^\d+$/.test(userData?.username?.value))
     if (userData?.username?.value?.trim() === "") {
       console.log("username :", userData?.username?.value);
       data = {
@@ -476,11 +478,23 @@ const CreateUser = () => {
         ...data,
         username: {
           ...data.username,
-          error: "Please enter a valid username",
+          error: "Please enter valid username",
         },
       };
       valid = false;
-      toast.error("Please enter a valid username ");
+      // toast.error("Please enter a valid username ");
+    } 
+    else if (/^\d+$/.test(userData?.username?.value)) {
+      data = {
+        ...data,
+        username: {
+          ...data.username,
+          error: "Username should only contain alphanumeric and special characters",
+        },
+      };
+
+      valid = false;
+
     }
 
     if (userData?.email?.value?.trim() === "") {
@@ -501,11 +515,11 @@ const CreateUser = () => {
         ...data,
         email: {
           ...data.email,
-          error: "Please enter a valid email",
+          error: "Please enter a valid email with format abc@xyz.com, min 6 and max 254 characters",
         },
       };
       valid = false;
-      toast.error("Please enter a valid email with format abc@xyz.com, min 6 and max 254 characters without any spaces ");
+      // toast.error("Please enter a valid email with format abc@xyz.com, min 6 and max 254 characters without any spaces ");
     }
 
     // Validate mobile number
@@ -531,7 +545,7 @@ const CreateUser = () => {
         },
       };
       valid = false;
-      toast.error("Please enter valid mobile number");
+      // toast.error("Please enter valid mobile number");
     }
 
     if (userData?.role?.value?.trim() === "") {

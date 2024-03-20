@@ -7,7 +7,7 @@
   display: block;
   margin-bottom: 0.8rem;
   font-size: 1.35rem;
-  font-family: "Helvetica 500";
+  /* font-family: "Helvetica 500"; */
 }
 
 /* Input style */
@@ -62,29 +62,17 @@
 .input > div:first-child > div:nth-child(2) {
   height: 3.5rem;
 }
-
-/* Text editor */
-.quill {
-  /* width: 30rem !important; */
-  background-color: var(--innerbackground);
-  width: 100%;
-  margin-top: 1rem;
+.input > div:first-child > div:nth-child(2) {
+  /* background-color: var(--innerbackground); */
+}
+/* .input > div:first-child > div:nth-child(2) > input{
+  padding-top: 1rem;
 }
 
-.quill > div {
-  border: none !important;
-}
+.input > div:first-child > div:nth-child(1) {
+  top: 1rem;
+} */
 
-.quill > div:nth-child(2) {
-  height: 15rem !important;
-  font-family: "Helvetica 400";
-  font-size: 1.3rem;
-  padding-top: 0.5rem;
-  padding-left: 2rem;
-}
-.quill > div:nth-child(1) > div:nth-child(1) {
-  /* flex-wrap: wrap !important; */
-}
 .defaultTextAreaStyles {
   height: 15rem;
 }

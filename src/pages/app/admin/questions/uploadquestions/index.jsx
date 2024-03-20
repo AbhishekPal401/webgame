@@ -31,7 +31,7 @@ function UploadQuestion() {
   const navigateTo = useNavigate();
 
   const { scenarioID } = useParams();
-  const  INTERVAL = 500;
+  const INTERVAL = 500;
 
   useEffect(() => {
     if (uploadQuestionsData?.questionsExcel?.value === "") return;
@@ -110,7 +110,7 @@ function UploadQuestion() {
 
   const handleDownload = async () => {
     try {
-      const filePath = '/media/gametemplate/GameTemplate.xlsx'; 
+      const filePath = '/media/gametemplate/GameTemplate.xlsx';
 
       // Create a link
       const link = document.createElement('a');
@@ -172,9 +172,13 @@ function UploadQuestion() {
         );
 
         if (response.data && response.data.success) {
-          const serializedData = JSON.parse(response.data.data);
+          // const serializedData = JSON.parse(response.data.data);
+          const data = response.data;
 
-          const data = JSON.parse(serializedData.Data);
+          // console.log("serializedData : ", serializedData);
+
+          // const data = JSON.parse(serializedData.Data);
+          // const data = serializedData.Data;
           console.log("response data : ", data);
           toast.success("Question list uploaded successfully.");
           // navigateTo("/scenario");
@@ -185,7 +189,11 @@ function UploadQuestion() {
         //     console.log("error message :",response.data.message)
         // }
         else {
-          toast.error("Question list upload failed.");
+          toast.error(
+            response?.data?.message ?
+              response?.data?.message :
+              "Question list upload failed."
+          );
           console.log("not uploaded");
         }
       } catch (error) {
@@ -201,7 +209,7 @@ function UploadQuestion() {
     }
   };
 
-  const debouncedSubmit = debounce(onSubmit, 1000); 
+  const debouncedSubmit = debounce(onSubmit, 1000);
 
 
   return (
