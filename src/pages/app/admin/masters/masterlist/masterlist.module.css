@@ -309,3 +309,28 @@
   /* font-family: 'Helvetica 400'; */
 
 }
+.masterTextAreaInputs {
+  height: 10rem;
+}
+.masterTextAreaInputs textarea {
+  height: inherit !important;
+}
+.masterTextAreaInputs {
+  font-size: 1.3rem;
+}
+.masterTextAreaInputs > div:first-child {
+  height: 10rem !important;
+  margin-top: 1rem;
+}
+.masterTextAreaInputs > div:first-child > div:nth-child(2) {
+  /* background: var(--background-color); */
+  background-color: var(--innerbackground);
+  
+}
+.masterTextAreaInputs > div:first-child > div:nth-child(2) > textarea{
+  padding-top: 0.5rem !important;
+
+}
+.masterTextAreaInputs > div:first-child > div:nth-child(1) {
+  line-height: 1.2rem !important;
+}

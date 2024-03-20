@@ -60,7 +60,8 @@
 }
 
 .input > div:first-child > div:nth-child(2) {
-  height: 3.5rem;
+  /* height: 3.5rem; */
+  height: 4rem;
 }
 .input > div:first-child > div:nth-child(2) {
   /* background-color: var(--innerbackground); */
@@ -68,11 +69,10 @@
 /* .input > div:first-child > div:nth-child(2) > input{
   padding-top: 1rem;
 }
-
+ */
 .input > div:first-child > div:nth-child(1) {
-  top: 1rem;
-} */
-
+  line-height: 1.2rem !important;
+}
 .defaultTextAreaStyles {
   height: 15rem;
 }
@@ -86,8 +86,24 @@
   height: 15rem !important;
   margin-top: 1rem;
 }
-.defaultTextAreaStyles > div:first-child > div:nth-child(1),
 .defaultTextAreaStyles > div:first-child > div:nth-child(2) {
   /* background: var(--background-color); */
   background-color: var(--innerbackground);
+  
 }
+.defaultTextAreaStyles > div:first-child > div:nth-child(2) > textarea{
+  padding-top: 0.5rem !important;
+
+}
+.defaultTextAreaStyles > div:first-child > div:nth-child(1) {
+  line-height: 1.2rem !important;
+}
+
+/* .ap-field.has-length .ap-field-title-container,
+.ap-field:not(.disabled):not(.readonly):not(.text-readonly):focus-within
+  .ap-field-title-container,
+.ap-field:not(.readonly) .ap-field-container.open .ap-field-title-container,
+.ap-field:not(.readonly) .ap-field-container.show .ap-field-title-container {
+  line-height: 1rem;
+
+} */

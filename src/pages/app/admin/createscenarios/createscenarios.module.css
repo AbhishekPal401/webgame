@@ -184,7 +184,7 @@
 .gameIntroductionTextAreaInputs > div:first-child > div:nth-child(1),
 .gameIntroductionTextAreaInputs > div:first-child > div:nth-child(2){
   /* background:  var(--background-color); */
-  background-color: var(--innerbackground);
+  /* background-color: var(--innerbackground); */
 }
 
 .inputStyleClass {
@@ -200,14 +200,13 @@
   margin-top: 1rem;
 }
 
-.scenarioNameInput {
+/* .scenarioNameInput {
   font-size: 1.3rem;
-  /* font-family: "Helvetica 400"; */
-}
+} */
 .scenarioNameInput > div:first-child > div:nth-child(1),
 .scenarioNameInput > div:first-child > div:nth-child(2){
   /* background:  var(--background-color); */
-  background-color: var(--innerbackground);
+  /* background-color: var(--innerbackground); */
 
 
 }
@@ -216,7 +215,7 @@
 }
 
 .scenarioNameInput > div:first-child > div:nth-child(2) {
-height: 3.5rem;
+height: 4rem;
 }
 
 /* Text editor */

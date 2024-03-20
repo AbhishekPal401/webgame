@@ -500,7 +500,7 @@ const CreateScenario = () => {
                   style={{ height: "15rem" }}
                   name="scenarioDescription"
                   title="Scenario Description"
-                  className={styles.gameIntroductionTextAreaInputs}
+                  // className={styles.gameIntroductionTextAreaInputs}
                   onChange={onChange}
                   errorNode={(
                     <div id="errormessage" aria-live="polite" className="ap-field-email-validation-error">
