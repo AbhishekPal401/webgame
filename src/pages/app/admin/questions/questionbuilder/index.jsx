@@ -550,7 +550,7 @@ function QuestionBuilder() {
         ...data,
         gameIntroText: {
           ...data.gameIntroText,
-          error: "Question exceeds maximum length",
+          error: "Question content should not exceed maximum length of 1000",
         },
       };
 

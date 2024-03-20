@@ -487,7 +487,7 @@ const UpdateScenarios = () => {
         ...data,
         gameIntroText: {
           ...data.gameIntroText,
-          error: "Game Intro content exceeds maximum length",
+          error: "Game Intro content should not exceed maximum length of 3000",
         },
       };
 
