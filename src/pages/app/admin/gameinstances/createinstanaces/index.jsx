@@ -1530,8 +1530,8 @@ const CreateInstances = () => {
                                                         type="text"
                                                         value={player.playerName.value}
                                                         // customStyle={{ margin: '0' }}
-                                                        customInputStyles={{ height: "3.5rem" }}
-                                                        inputStyleClass={styles.customInputStylesClass}
+                                                        // customInputStyles={{ height: "3.5rem" }}
+                                                        // inputStyleClass={styles.customInputStylesClass}
                                                         name={"playerName"}
                                                         title="Player Name"
                                                         onChange={(e) => onPlayerChange(e, index, 'playerName')}
@@ -1556,8 +1556,8 @@ const CreateInstances = () => {
                                                         type="text"
                                                         value={player.playerGroupName.value}
                                                         // customStyle={{ margin: '0' }}
-                                                        customInputStyles={{ height: "auto" }}
-                                                        inputStyleClass={styles.customInputStylesClass}
+                                                        // customInputStyles={{ height: "auto" }}
+                                                        // inputStyleClass={styles.customInputStylesClass}
                                                         name={"playerGroupName"}
                                                         title="Assign Group"
                                                         onChange={(e) => onPlayerChange(e, index, 'playerName')}

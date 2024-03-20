@@ -23,7 +23,15 @@
   > div:nth-child(1)
   > div:first-child
   > div:nth-child(2) {
-  height: 3.5rem;
+  /* height: 3.5rem; */
+  height: 4rem;
+}
+.formControl
+  > div:first-child
+  > div:nth-child(1)
+  > div:first-child
+  > div:nth-child(1) {
+  line-height: 1.2rem !important;
 }
 /* .formControl
   > div:first-child

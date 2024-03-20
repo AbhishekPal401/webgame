@@ -194,6 +194,7 @@
 }
 .scenarioContainerLeft a {
   font-size: 1.2rem;
+  text-decoration: underline;
 }
 .scenarioContainerLeft > div:nth-child(2) > a {
   color: var(--label);
