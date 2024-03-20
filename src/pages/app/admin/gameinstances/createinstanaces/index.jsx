@@ -41,6 +41,10 @@ import {
     getUsersbyPage,
     resetUserState,
 } from "../../../../../store/app/admin/users/users";
+import { 
+    getUserDetailsByOrgID,
+    resetUserDetailByOrgIdState,
+} from "../../../../../store/app/admin/gameinstances/getUserDetailsByOrgId";
 import { debounce } from "../../../../../utils/helper";
 import { Combobox } from '@appkit4/react-components'
 import "@appkit4/styles/appkit.min.css";
@@ -135,6 +139,9 @@ const CreateInstances = () => {
 
     const { usersByPage, loading: usersByPageLoading } =
         useSelector((state) => state.users);
+
+    const { userByOrgIdDetails, loading: userByOrgIdDetailsLoading } =
+        useSelector((state) => state.getUserDetailsByOrgId);
 
     const resetGameInstanceData = () => {
         setGameInstanceData({
@@ -452,15 +459,116 @@ const CreateInstances = () => {
     //     }
     // }, [usersByPage]);
 
+    // const setUserDetailState = useCallback(() => {
+
+    //     if (usersByPage === null ||
+    //         usersByPage === undefined ||
+    //         showAddGroupModal === null
+    //     ) return;
+
+    //     if (isJSONString(usersByPage.data)) {
+    //         const data = JSON.parse(usersByPage.data);
+    //         console.log("fetched users :", data);
+    //         // map answers from questionByIdDetails
+    //         const users = data?.UserDetails?.map((user) => {
+    //             return {
+    //                 userId: {
+    //                     value: user.UserID,
+    //                     error: "",
+    //                 },
+    //                 userName: {
+    //                     value: user.UserName,
+    //                     error: "",
+    //                 },
+    //                 userEmail: {
+    //                     value: user.UserName,
+    //                     error: "",
+    //                 },
+    //                 userRole: {
+    //                     value: user.Role,
+    //                     error: "",
+    //                 },
+    //                 userDesignation: {
+    //                     value: user.Designation,
+    //                     error: "",
+    //                 },
+    //                 isUserAdded: {
+    //                     value: false,
+    //                     error: "",
+    //                 },
+    //                 isActive: {
+    //                     value: user.Status,
+    //                     error: "",
+    //                 },
+    //                 key: user.UserID,
+    //                 value: user.UserID,
+    //                 label: user.UserName,
+    //                 disabled: user.IsDisabled,
+    //                 email: user.Email,
+    //                 role: user.Role,
+    //                 designation: user.Designation,
+    //             };
+    //         });
+
+    //         // const newData = (prevData) => ({
+    //         //     ...prevData,
+    //         //     users: users,
+    //         // })
+    //         const newData = (prevData) => ({
+    //             ...prevData,
+    //             newUsers: {
+    //                 value: users,
+    //                 error: "",
+    //             },
+    //         })
+    //         setAddGroupData(newData);
+    //     }
+    // }, [usersByPage]);
+
+
+    // useEffect(() => {
+    //     if (usersByPage === null ||
+    //         usersByPage === undefined ||
+    //         showAddGroupModal === null
+    //     ) return;
+
+    //     setUserDetailState();
+
+    // }, [usersByPage]);
+
+    // // DEBUG :: start
+
+    // useEffect(() => {
+    //     console.log(" masters  :", masters);
+    //     console.log(" JSON.parse(masters.data) :", JSON.parse(masters.data));
+    //     console.log("gameInstanceData :", gameInstanceData);
+    //     console.log("newData to set in GameInstanceData: ", gameInstanceData);
+
+    // }, []);
+
+    // useEffect(() => {
+    //     console.log(" groupByOrgIdDetails  :", groupByOrgIdDetails);
+    //     console.log(" JSON.parse(groupByOrgIdDetails.data) :", JSON.parse(groupByOrgIdDetails.data));
+    //     console.log(" Array.isArray(JSON.parse(groupByOrgIdDetails.data))  :", Array.isArray(JSON.parse(groupByOrgIdDetails.data)));
+
+    //     console.log(" JSON.parse(scenarioNameAndIdDetails.data) :", JSON.parse(scenarioNameAndIdDetails.data));
+
+    //     console.log(" gamePlayersByGroupIdDetails  :", gamePlayersByGroupIdDetails);
+    //     console.log(" JSON.parse(gamePlayersByGroupIdDetails.data) :", JSON.parse(gamePlayersByGroupIdDetails.data));
+
+    // }, [groupByOrgIdDetails, scenarioNameAndIdDetails, gamePlayersByGroupIdDetails]);
+    // // DEBUG :: end
+
+
     const setUserDetailState = useCallback(() => {
 
-        if (usersByPage === null ||
-            usersByPage === undefined ||
+        if (userByOrgIdDetails === null ||
+            userByOrgIdDetails === undefined ||
             showAddGroupModal === null
         ) return;
 
-        if (isJSONString(usersByPage.data)) {
-            const data = JSON.parse(usersByPage.data);
+        if (isJSONString(userByOrgIdDetails.data)) {
+            const data = JSON.parse(userByOrgIdDetails.data);
             console.log("fetched users :", data);
             // map answers from questionByIdDetails
             const users = data?.UserDetails?.map((user) => {
@@ -516,42 +624,18 @@ const CreateInstances = () => {
             })
             setAddGroupData(newData);
         }
-    }, [usersByPage]);
+    }, [userByOrgIdDetails]);
 
 
     useEffect(() => {
-        if (usersByPage === null ||
-            usersByPage === undefined ||
+        if (userByOrgIdDetails === null ||
+            userByOrgIdDetails === undefined ||
             showAddGroupModal === null
         ) return;
 
         setUserDetailState();
 
-    }, [usersByPage]);
-
-    // // DEBUG :: start
-
-    // useEffect(() => {
-    //     console.log(" masters  :", masters);
-    //     console.log(" JSON.parse(masters.data) :", JSON.parse(masters.data));
-    //     console.log("gameInstanceData :", gameInstanceData);
-    //     console.log("newData to set in GameInstanceData: ", gameInstanceData);
-
-    // }, []);
-
-    // useEffect(() => {
-    //     console.log(" groupByOrgIdDetails  :", groupByOrgIdDetails);
-    //     console.log(" JSON.parse(groupByOrgIdDetails.data) :", JSON.parse(groupByOrgIdDetails.data));
-    //     console.log(" Array.isArray(JSON.parse(groupByOrgIdDetails.data))  :", Array.isArray(JSON.parse(groupByOrgIdDetails.data)));
-
-    //     console.log(" JSON.parse(scenarioNameAndIdDetails.data) :", JSON.parse(scenarioNameAndIdDetails.data));
-
-    //     console.log(" gamePlayersByGroupIdDetails  :", gamePlayersByGroupIdDetails);
-    //     console.log(" JSON.parse(gamePlayersByGroupIdDetails.data) :", JSON.parse(gamePlayersByGroupIdDetails.data));
-
-    // }, [groupByOrgIdDetails, scenarioNameAndIdDetails, gamePlayersByGroupIdDetails]);
-    // // DEBUG :: end
-
+    }, [userByOrgIdDetails]);
 
     const onChange = (value, event) => {
         console.log("onChange name : " + event.target.name + ", value : " + event.target.value)
@@ -796,9 +880,20 @@ const CreateInstances = () => {
             organizationId === undefined) return;
 
         if (credentials) {
+            // const data = {
+            //     pageNumber: "0",
+            //     pageCount: "0",
+            //     requester: {
+            //         requestID: generateGUID(),
+            //         requesterID: credentials.data.userID,
+            //         requesterName: credentials.data.userName,
+            //         requesterType: credentials.data.role,
+            //     },
+            // };
+            // dispatch(getUsersbyPage(data));
+
             const data = {
-                pageNumber: "0",
-                pageCount: "0",
+                orgID: organizationId,
                 requester: {
                     requestID: generateGUID(),
                     requesterID: credentials.data.userID,
@@ -806,7 +901,8 @@ const CreateInstances = () => {
                     requesterType: credentials.data.role,
                 },
             };
-            dispatch(getUsersbyPage(data));
+            dispatch(getUserDetailsByOrgID(data));
+            
             setShowAddGroupModal(organizationId);
             setAddGroupData({
                 ...addGroupData,
@@ -1751,6 +1847,7 @@ const CreateInstances = () => {
                                                 {addGroupData.groupName.error}
                                             </div>
                                         )}
+                                        maxLength={100}
                                     // autoFocus={!searchValue}
                                     />
                                 </div>

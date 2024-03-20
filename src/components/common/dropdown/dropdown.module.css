@@ -33,6 +33,22 @@
   > div:nth-child(1) {
   line-height: 1.2rem !important;
 }
+
+/* .formControl
+  > div:first-child
+  > div:nth-child(1)
+  > div:first-child
+  > div:nth-child(1) {
+  line-height: 2rem !important;
+}
+.formControl
+  > div:first-child
+  > div:nth-child(1)
+  > div:first-child
+  > div:nth-child(2)
+  > input {
+    padding-top: 1rem;
+  } */
 /* .formControl
   > div:first-child
   > div:nth-child(1)

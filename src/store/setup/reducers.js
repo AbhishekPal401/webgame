@@ -53,6 +53,7 @@ import updateScoreMasterByScenario from "../app/admin/questions/scoremaster/upda
 import postImages from "../app/admin/report/postImages.js";
 import getFileStream from "../app/admin/fileStream/getFileStream.js";
 import menu from "../local/menu.js";
+import getUserDetailsByOrgId from "../app/admin/gameinstances/getUserDetailsByOrgId.js";
 
 const reducers = combineReducers({
   login,
@@ -106,6 +107,7 @@ const reducers = combineReducers({
   postImages,
   getFileStream,
   menu,
+  getUserDetailsByOrgId,
 });
 
 const rootReducer = (state, action) => {

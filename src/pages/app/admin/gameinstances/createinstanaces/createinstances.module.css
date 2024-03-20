@@ -193,9 +193,24 @@
 .comboboxStyles .ap-option-left label {
   padding-left: 1rem;
 } */
+.comboboxStyles > div:nth-child(2) {
+  height: 4rem;
+}
+.comboboxStyles > div:nth-child(2) > input {
+  font-size: 1.3rem !important;
+}
+.comboboxStyles > div:nth-child(2) > span:nth-child(3) {
+  top: 0.5rem;
+}
+.comboboxStyles > div:nth-child(2) > span:nth-child(5) > i {
+  top: 0.5rem;
+}
 .comboboxStyles > div:nth-child(3) > div:first-child > div > div:first-child {
   align-items: baseline !important;
 }
+/* .comboboxStyles > div:nth-child(3) > div:first-child {
+  font-family: "Helvetica 400";
+} */
 .comboboxStyles
   > div:nth-child(3)
   > div:first-child
@@ -204,11 +219,35 @@
   label {
   padding-left: 1rem;
 }
-.comboboxStyles
-  > div:nth-child(2)
-  > span:nth-of-type(2) {
+.comboboxStyles > div:nth-child(2) > span:nth-of-type(2) {
   width: 0;
 }
+.comboboxStyles
+  > div:nth-child(3)
+  > div:first-child
+  *
+  > div:first-child
+  > div:first-child
+  > div:first-child
+  > div:first-child
+  > span:nth-child(3)
+  > span {
+  line-height: 1.5rem !important;
+  font-size: 1.1rem;
+}
+/* .comboboxStyles
+  > div:nth-child(3)
+  > div:first-child
+  > div:first-child
+  > div:first-child
+  > div:first-child
+  > div:first-child
+  > div:first-child 
+  > span:nth-child(3) 
+  > span {
+  line-height: 1.5rem !important;
+} */
+
 /* Input style */
 /* .formControl {
   display: block;
