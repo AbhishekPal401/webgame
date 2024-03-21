@@ -739,18 +739,18 @@ const UpdateInstances = () => {
             valid = false;
             isEmpty = true;
 
-        } else if (/^\d+$/.test(gameInstanceData?.instanceName?.value)) {
+        } else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(gameInstanceData?.instanceName?.value)) {
             console.log("instanceName:", data.instanceName);
             data = {
                 ...data,
                 instanceName: {
                     ...data.instanceName,
-                    error: "Instance name should contain alphanumeric character",
+                    error: "Instance name should contain alphanumeric characters",
                 },
             };
 
             valid = false;
-            toast.error("Instance name should contain alphanumeric character");
+            // toast.error("Instance name should contain alphanumeric characters");
 
         } else if (gameInstanceData?.instanceName?.value !== gameInstanceData?.instanceName?.value?.trim()) {
             console.log("instanceName:", data.instanceName);
@@ -763,7 +763,7 @@ const UpdateInstances = () => {
             };
 
             valid = false;
-            toast.error("Please enter valid instance name");
+            // toast.error("Please enter valid instance name");
         }
 
         if (gameInstanceData?.organization?.value?.trim() === "") {

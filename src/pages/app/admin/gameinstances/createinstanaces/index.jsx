@@ -1006,18 +1006,18 @@ const CreateInstances = () => {
 
             valid = false;
             isEmpty = true;
-        } else if (/^\d+$/.test(addGroupData.groupName.value)) {
+        } else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(addGroupData.groupName.value)) {
             console.log("groupName:", data.groupName);
             data = {
                 ...data,
                 groupName: {
                     ...data.groupName,
-                    error: "Group name should contain alphanumeric character",
+                    error: "Group name should contain alphanumeric characters",
                 },
             };
 
             valid = false;
-            toast.error("Group name should contain alphanumeric character");
+            // toast.error("Group name should contain alphanumeric characters");
         } else if (addGroupData?.groupName?.value !== addGroupData?.groupName?.value?.trim()) {
             console.log("groupName:", data.groupName);
             data = {
@@ -1029,7 +1029,7 @@ const CreateInstances = () => {
             };
 
             valid = false;
-            toast.error("Please enter a valid group name");
+            // toast.error("Please enter a valid group name");
         }
 
         // if (addGroupData?.addedUsers?.length <= 1) {
@@ -1129,18 +1129,18 @@ const CreateInstances = () => {
 
             valid = false;
             isEmpty = true;
-        } else if (/^\d+$/.test(gameInstanceData?.instanceName?.value)) {
+        } else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(gameInstanceData?.instanceName?.value)) {
             console.log("instanceName:", data.instanceName);
             data = {
                 ...data,
                 instanceName: {
                     ...data.instanceName,
-                    error: "Instance name should contain alphanumeric character",
+                    error: "Instance name should contain alphanumeric characters",
                 },
             };
 
             valid = false;
-            toast.error("Instance name should contain alphanumeric character");
+            // toast.error("Instance name should contain alphanumeric characters");
         } else if (gameInstanceData?.instanceName?.value !== gameInstanceData?.instanceName?.value?.trim()) {
             console.log("instanceName:", data.instanceName);
             data = {
@@ -1152,7 +1152,7 @@ const CreateInstances = () => {
             };
 
             valid = false;
-            toast.error("Please enter valid instance name");
+            // toast.error("Please enter valid instance name");
         }
 
         if (gameInstanceData?.organization?.value?.trim() === "") {

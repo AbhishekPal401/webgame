@@ -519,7 +519,7 @@ const MasterList = () => {
         valid = false;
         isEmpty = true;
 
-      } else if (/^\d+$/.test(addMasterData?.designation?.value)) {
+      } else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(addMasterData?.designation?.value)) {
         console.log("designation:", data.designation);
         data = {
           ...data,
@@ -559,7 +559,7 @@ const MasterList = () => {
         valid = false;
         isEmpty = true;
 
-      } else if (/^\d+$/.test(addMasterData?.description?.value)) {
+      } else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(addMasterData?.description?.value)) {
         console.log("description:", data.description);
         data = {
           ...data,
@@ -600,7 +600,7 @@ const MasterList = () => {
         valid = false;
         isEmpty = true;
 
-      } else if (/^\d+$/.test(addMasterData?.organization?.value)) {
+      } else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(addMasterData?.organization?.value)) {
         console.log("organization:", data.organization);
         data = {
           ...data,
@@ -724,7 +724,7 @@ const MasterList = () => {
         valid = false;
         isEmpty = true;
 
-      } else if (/^\d+$/.test(updateMasterData?.designation?.value)) {
+      } else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(updateMasterData?.designation?.value)) {
         console.log("designation:", data.designation);
         data = {
           ...data,
@@ -765,13 +765,13 @@ const MasterList = () => {
         valid = false;
         isEmpty = true;
 
-      } else if (/^\d+$/.test(updateMasterData?.description?.value)) {
+      } else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(updateMasterData?.description?.value)) {
         console.log("description:", data.description);
         data = {
           ...data,
           description: {
             ...data.description,
-            error: "Please enter description ",
+            error: "Description should contain alphanumeric characters. ",
           },
         };
 
@@ -799,20 +799,20 @@ const MasterList = () => {
           ...data,
           organization: {
             ...data.organization,
-            error: "Please enter organization ",
+            error: "Please enter organization name",
           },
         };
 
         valid = false;
         isEmpty = true;
 
-      } else if (/^\d+$/.test(updateMasterData?.organization?.value)) {
+      } else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(updateMasterData?.organization?.value)) {
         console.log("organization:", data.organization);
         data = {
           ...data,
           organization: {
             ...data.organization,
-            error: "Please enter organization ",
+            error: "Organization name should contain alphanumeric characters",
           },
         };
 
@@ -825,7 +825,7 @@ const MasterList = () => {
           ...data,
           organization: {
             ...data.organization,
-            error: "Please enter valid organization ",
+            error: "Please enter valid organization name ",
           },
         };
 
