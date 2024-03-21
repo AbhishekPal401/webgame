@@ -548,8 +548,8 @@ function QuestionBuilder() {
       console.log("HTML content exceeds maxLength");
       data = {
         ...data,
-        gameIntroText: {
-          ...data.gameIntroText,
+        question: {
+          ...data.question,
           error: "Question content should not exceed maximum length of 1000",
         },
       };
@@ -603,6 +603,10 @@ function QuestionBuilder() {
         valid = false;
         // toast.error("Please enter the valid answer text.");
         answerError = true;
+      }  else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(answer?.option?.value)) {
+        updatedAnswer.option.error = "Answer should only contain aplhanumeric characters.";
+        valid = false;
+        answerError = true;
       }
 
       if (answer?.optimal?.value === "") {
@@ -619,7 +623,7 @@ function QuestionBuilder() {
         valid = false;
         isEmpty = true;
 
-      } else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(answer.score.value)) {
+      } else if (!/^\d+$/.test(answer.score.value)) {
         updatedAnswer.score.error = "Score should only contain numeric characters.";
         console.log("score:", answer.score);
         valid = false;
@@ -633,7 +637,7 @@ function QuestionBuilder() {
         valid = false;
         isEmpty = true;
 
-      } else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(answer.nextQuestion.value)) {
+      } else if (!/^\d+$/.test(answer.nextQuestion.value)) {
         updatedAnswer.nextQuestion.error = "Next question should only contain numeric characters.";
         console.log("nextQuestion:", answer.nextQuestion);
         valid = false;

@@ -533,7 +533,7 @@ const UserProfile = () => {
         ...data,
         email: {
           ...data.email,
-          error: "Please enter a valid email with format abc@xyz.com, min 6 and max 254 characters",
+          error: "Please enter a valid email with format abc@xyz.com, min 6 and max 320 characters",
         },
       };
       valid = false;
