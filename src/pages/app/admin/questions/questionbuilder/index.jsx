@@ -633,7 +633,7 @@ function QuestionBuilder() {
       }
 
       if (answer?.nextQuestion?.value === "") {
-        updatedAnswer.nextQuestion.error = "Please select next question.";
+        updatedAnswer.nextQuestion.error = "Please enter next question.";
         console.log("nextQuestion:", answer.nextQuestion);
         valid = false;
         isEmpty = true;
