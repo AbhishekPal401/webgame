@@ -459,7 +459,7 @@ const CreateUser = () => {
     let data = userData;
 
 
-    console.log("username valid :",/^\d+$/.test(userData?.username?.value))
+    // console.log("username valid :",!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(userData?.username?.value))
     if (userData?.username?.value?.trim() === "") {
       console.log("username :", userData?.username?.value);
       data = {
@@ -484,7 +484,7 @@ const CreateUser = () => {
       valid = false;
       // toast.error("Please enter a valid username ");
     } 
-    else if (/^\d+$/.test(userData?.username?.value)) {
+    else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(userData?.username?.value)) {
       data = {
         ...data,
         username: {

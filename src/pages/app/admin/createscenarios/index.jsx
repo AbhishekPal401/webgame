@@ -246,8 +246,21 @@ const CreateScenario = () => {
       };
 
       valid = false;
-      toast.error("Please enter a valid scenario name")
-    }
+      // toast.error("Please enter a valid scenario name")
+    } else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(scenarioData?.scenarioName?.value)) {
+      console.log("scenarioName :", scenarioData?.scenarioName?.value);
+      data = {
+        ...data,
+        scenarioName: {
+          ...data.scenarioName,
+          error: "Scenario name should contain alphanumeric characters",
+        },
+      };
+
+      valid = false;
+      // toast.error("Group name should contain alphanumeric characters");
+    }         
+
 
     if (scenarioData?.scenarioDescription?.value?.trim() === "") {
       console.log("scenarioDescription :", scenarioData?.scenarioDescription?.value);
@@ -272,7 +285,7 @@ const CreateScenario = () => {
       };
 
       valid = false;
-      toast.error("Please enter a valid scenario description")
+      // toast.error("Please enter a valid scenario description")
     }
 
     if (

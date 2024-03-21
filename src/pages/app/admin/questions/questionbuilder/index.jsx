@@ -619,7 +619,7 @@ function QuestionBuilder() {
         valid = false;
         isEmpty = true;
 
-      } else if (!/^\d+$/.test(answer.score.value)) {
+      } else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(answer.score.value)) {
         updatedAnswer.score.error = "Score should only contain numeric characters.";
         console.log("score:", answer.score);
         valid = false;
@@ -633,7 +633,7 @@ function QuestionBuilder() {
         valid = false;
         isEmpty = true;
 
-      } else if (!/^\d+$/.test(answer.nextQuestion.value)) {
+      } else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(answer.nextQuestion.value)) {
         updatedAnswer.nextQuestion.error = "Next question should only contain numeric characters.";
         console.log("nextQuestion:", answer.nextQuestion);
         valid = false;
