@@ -463,6 +463,7 @@ function QuestionBuilder() {
     setQuestionData((prevQuestionData) => {
       const updatedAnswers = [...prevQuestionData.answers];
       updatedAnswers[index][field].value = value;
+      updatedAnswers[index][field].error = "";
       return {
         ...prevQuestionData,
         answers: updatedAnswers,
@@ -1050,7 +1051,7 @@ function QuestionBuilder() {
                             )}
                             maxLength={500}
 
-                          />
+                          />  
                         </div>
                         {/* Option :: end */}
 
