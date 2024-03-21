@@ -143,15 +143,19 @@ function UploadQuestion() {
       valid = false;
     }
 
+    console.log("Type :", uploadQuestionsData.questionsExcel.value.type)
+    console.log("ScenarioID", scenarioID);
+    console.log("Requester.RequestID", generateGUID());
+    console.log("Requester.RequesterID", credentials.data.userID);
+    console.log("Requester.RequesterName", credentials.data.userName);
+    console.log("Requester.RequesterType", credentials.data.role);
     if (valid) {
       setUploading(true); // Set uploading state to true when starting upload
       const formData = new FormData();
 
       formData.append("Module", "questions");
-      formData.append(
-        "ContentType",
-        uploadQuestionsData.questionsExcel.value.type
-      );
+      // formData.append("ContentType", uploadQuestionsData.questionsExcel.value.type);
+      formData.append("ContentType","Excel");
       formData.append("FormFile", uploadQuestionsData.questionsExcel.value);
       formData.append("ScenarioID", scenarioID); // TODO :: scenarioID
       formData.append("Requester.RequestID", generateGUID());

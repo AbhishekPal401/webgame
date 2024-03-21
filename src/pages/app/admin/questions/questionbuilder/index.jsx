@@ -463,6 +463,7 @@ function QuestionBuilder() {
     setQuestionData((prevQuestionData) => {
       const updatedAnswers = [...prevQuestionData.answers];
       updatedAnswers[index][field].value = value;
+      updatedAnswers[index][field].error = "";
       return {
         ...prevQuestionData,
         answers: updatedAnswers,
@@ -548,8 +549,8 @@ function QuestionBuilder() {
       console.log("HTML content exceeds maxLength");
       data = {
         ...data,
-        gameIntroText: {
-          ...data.gameIntroText,
+        question: {
+          ...data.question,
           error: "Question content should not exceed maximum length of 1000",
         },
       };
@@ -603,6 +604,10 @@ function QuestionBuilder() {
         valid = false;
         // toast.error("Please enter the valid answer text.");
         answerError = true;
+      }  else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(answer?.option?.value)) {
+        updatedAnswer.option.error = "Answer should only contain aplhanumeric characters.";
+        valid = false;
+        answerError = true;
       }
 
       if (answer?.optimal?.value === "") {
@@ -628,7 +633,7 @@ function QuestionBuilder() {
       }
 
       if (answer?.nextQuestion?.value === "") {
-        updatedAnswer.nextQuestion.error = "Please select next question.";
+        updatedAnswer.nextQuestion.error = "Please enter next question.";
         console.log("nextQuestion:", answer.nextQuestion);
         valid = false;
         isEmpty = true;
@@ -1046,7 +1051,7 @@ function QuestionBuilder() {
                             )}
                             maxLength={500}
 
-                          />
+                          />  
                         </div>
                         {/* Option :: end */}
 

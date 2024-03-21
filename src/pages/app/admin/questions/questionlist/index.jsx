@@ -262,7 +262,7 @@ function QuestionList() {
                           {question.QuestionText && isHTML(question.QuestionText) ?
                             (
                               <td className={styles.tableContentCell}>
-                                <div dangerouslySetInnerHTML={{ __html: extractFirstElementHTML(question.QuestionText) || '' }}></div>
+                                <div dangerouslySetInnerHTML={{ __html: extractFirstElementHTML(question.QuestionText).trim() || '' }}></div>
                               </td>
                             ) :
                             (

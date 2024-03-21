@@ -502,7 +502,7 @@ const UserProfile = () => {
       };
       valid = false;
       // toast.error("Please enter a valid username ");
-    } else if (/^\d+$/.test(userData?.username?.value)) {
+    } else if (!/[a-zA-Z][a-zA-Z0-9\s]*$/.test(userData?.username?.value)) {
       data = {
         ...data,
         username: {
@@ -533,7 +533,7 @@ const UserProfile = () => {
         ...data,
         email: {
           ...data.email,
-          error: "Please enter a valid email with format abc@xyz.com, min 6 and max 254 characters",
+          error: "Please enter a valid email with format abc@xyz.com, min 6 and max 320 characters",
         },
       };
       valid = false;
