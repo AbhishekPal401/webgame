@@ -4,6 +4,7 @@ import { baseUrl } from "../../middleware/url.js";
 import { signalRService } from "../../services/signalR.js";
 import { UserManager } from "oidc-react";
 import { oidcConfig } from "../../constants/oidc.js";
+import { jwtDecode } from "jwt-decode";
 
 //api calling type 2
 
@@ -158,7 +159,9 @@ export const logoutUser = () => async (dispatch, getState) => {
 
       console.log("id_token", id_token);
 
-      if (Number(id_token.exp) < Math.round(new Date().getTime() / 1000)) {
+      const tokenData = jwtDecode(id_token);
+
+      if (Number(tokenData.exp) < Math.round(new Date().getTime() / 1000)) {
         console.log("token expired ... singing out");
         sessionStorage.clear();
 
