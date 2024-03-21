@@ -593,7 +593,7 @@ const MasterList = () => {
           ...data,
           organization: {
             ...data.organization,
-            error: "Please enter organization ",
+            error: "Please enter organization",
           },
         };
 
@@ -606,7 +606,7 @@ const MasterList = () => {
           ...data,
           organization: {
             ...data.organization,
-            error: "Please enter organization ",
+            error: "Organization should contain alphanumeric characters",
           },
         };
 
@@ -619,7 +619,7 @@ const MasterList = () => {
           ...data,
           organization: {
             ...data.organization,
-            error: "Please enter organization ",
+            error: "Please enter valid organization ",
           },
         };
 
@@ -799,7 +799,7 @@ const MasterList = () => {
           ...data,
           organization: {
             ...data.organization,
-            error: "Please enter organization name",
+            error: "Please enter organization",
           },
         };
 
@@ -812,7 +812,7 @@ const MasterList = () => {
           ...data,
           organization: {
             ...data.organization,
-            error: "Organization name should contain alphanumeric characters",
+            error: "Organization should contain alphanumeric characters",
           },
         };
 
@@ -825,7 +825,7 @@ const MasterList = () => {
           ...data,
           organization: {
             ...data.organization,
-            error: "Please enter valid organization name ",
+            error: "Please enter valid organization ",
           },
         };
 

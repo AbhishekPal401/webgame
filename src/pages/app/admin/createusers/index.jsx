@@ -586,7 +586,7 @@ const CreateUser = () => {
         ...data,
         organizationName: {
           ...data.organizationName,
-          error: "Please select organization name",
+          error: "Please select organization.",
         },
       };
 
