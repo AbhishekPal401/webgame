@@ -158,6 +158,19 @@ export const logoutUser = () => async (dispatch, getState) => {
 
       console.log("id_token", id_token);
 
+      if (Number(id_token) < Math.round(new Date().getTime() / 1000)) {
+        console.log("token expired ... singing out");
+        sessionStorage.clear();
+
+        signalRService.stopConnection();
+
+        localStorage.setItem("isAuthorised_jwt", null);
+
+        dispatch(logout());
+
+        return;
+      }
+
       const response = await axios.get(
         `${import.meta.env.VITE_OPENID_ENDPOINT_URL}`,
         {
@@ -168,6 +181,7 @@ export const logoutUser = () => async (dispatch, getState) => {
           params: { id_token_hint: id_token },
         }
       );
+
       console.log("Logout response:", response.data);
 
       sessionStorage.clear();
