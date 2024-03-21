@@ -33,7 +33,7 @@
 .mainContainer {
   width: 100%;
   height: fit-content;
-  height: 36rem;
+  /* height: 36rem; */
 }
 .formContainer {
   width: 100%;
