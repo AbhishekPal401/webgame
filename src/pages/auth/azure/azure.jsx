@@ -54,11 +54,15 @@ const azure = () => {
       if (user) {
         console.log("user", user);
         if (user && user.profile && user.profile.preferredMail) {
-          const password = `pwc@123456${user.profile.preferredMail}`;
+          const password = `${import.meta.env.VITE_Encr}${
+            user.profile.preferredMail
+          }`;
+
+          console.log("password", password);
 
           dispatch(
             pwclogin(
-              { emailID: user.profile.preferredMail },
+              { emailID: user.profile.preferredMail, password: password },
               {
                 id_token: user.id_token,
                 settings: authInfo.userManager.settings,
