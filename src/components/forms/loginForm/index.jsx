@@ -37,7 +37,7 @@ const LoginForm = () => {
 
   const onKeyPress = (e) => {
     if (e.key === "Enter") {
-      e.preventDefault(); 
+      e.preventDefault();
       loginSubmit(e);
     }
   };
@@ -102,10 +102,13 @@ const LoginForm = () => {
 
       dispatch(login(data));
     } else {
-      toast.error("Please fill all the mandatory details.")
+      toast.error("Please fill all the mandatory details.");
       setLoginData(data);
     }
   };
+
+  const showCustomLogin =
+    import.meta.env.VITE_CUSTOM_LOGIN_DISABLED === "true" ? true : false;
 
   return (
     <div className={styles.container}>
@@ -116,47 +119,50 @@ const LoginForm = () => {
         <h3>Game of Risks</h3>
         <p>Please login to continue</p>
       </div>
+      {showCustomLogin && (
+        <>
+          <div>
+            <Input
+              type="text"
+              name={"username"}
+              label="Username"
+              value={loginData.username.value}
+              onChange={onChange}
+              onKeyPress={onKeyPress}
+              inputStyleClass={styles.inputStyleClass}
+            />
+            <Input
+              type="password"
+              name={"password"}
+              label="Password"
+              value={loginData.password.value}
+              customStyle={{
+                marginTop: "2rem",
+              }}
+              onChange={onChange}
+              onKeyPress={onKeyPress}
+              inputStyleClass={styles.inputStyleClass}
+            />
+          </div>
 
-      <div>
-        <Input
-          type="text"
-          name={"username"}
-          label="Username"
-          value={loginData.username.value}
-          onChange={onChange}
-          onKeyPress={onKeyPress}
-          inputStyleClass={styles.inputStyleClass}
-        />
-        <Input
-          type="password"
-          name={"password"}
-          label="Password"
-          value={loginData.password.value}
-          customStyle={{
-            marginTop: "2rem",
-          }}
-          onChange={onChange}
-          onKeyPress={onKeyPress}
-          inputStyleClass={styles.inputStyleClass}
-        />
-      </div>
+          <div style={{ marginTop: "1.2rem" }}>
+            <Checkbox label="Remember me" />
+          </div>
 
-      <div style={{ marginTop: "1.2rem" }}>
-        <Checkbox label="Remember me" />
-      </div>
+          <div className={styles.containerRow}>
+            <Link className={styles.forgotpassword}>Forgot Password ?</Link>
+            <div>
+              <Button type="submit" buttonType="login" onClick={loginSubmit}>
+                Login
+              </Button>
+            </div>
+          </div>
 
-      <div className={styles.containerRow}>
-        <Link className={styles.forgotpassword}>Forgot Password ?</Link>
-        <div>
-          <Button type="submit" buttonType="login" onClick={loginSubmit}>
-            Login
-          </Button>
-        </div>
-      </div>
-
-      <div className={styles.containerDivider}>
-        <hr />
-      </div>
+          <div className={styles.containerDivider}>
+            <hr />
+          </div>
+        </>
+      )}
 
       <div>
         <Azure />
