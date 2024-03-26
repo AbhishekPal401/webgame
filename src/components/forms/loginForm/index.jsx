@@ -108,7 +108,7 @@ const LoginForm = () => {
   };
 
   const showCustomLogin =
-    import.meta.env.VITE_CUSTOM_LOGIN_DISABLED === "true" ? true : false;
+    import.meta.env.VITE_CUSTOM_LOGIN_DISABLED === "true" ? false : true;
 
   return (
     <div className={styles.container}>
