@@ -161,6 +161,10 @@
   z-index: 1; 
   height: inherit;
 } */
+.table_content thead tr > th,
+.table_content tbody tr > td{
+  vertical-align: middle;
+}
 
 .questions:hover {
   text-decoration: underline;

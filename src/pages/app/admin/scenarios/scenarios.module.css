@@ -36,6 +36,7 @@
   position: absolute;
   bottom: 0;
   right: 0.8rem;
+  margin-bottom: 0.5rem;
 }
 .mainTableContainer {
   width: 100%;
@@ -128,6 +129,11 @@
 .table_content tbody tr > td:nth-child(1) {
   min-width: 2rem;
 }
+.table_content thead tr > th,
+.table_content tbody tr > td{
+  vertical-align: middle;
+}
+
 .scenarioName:hover {
   text-decoration: underline;
   cursor: pointer;
