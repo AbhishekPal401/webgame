@@ -54,9 +54,9 @@ const azure = () => {
       if (user) {
         console.log("user", user);
         if (user && user.profile && user.profile.preferredMail) {
-          const password = `${import.meta.env.VITE_Encr}${
-            user.profile.preferredMail
-          }`;
+          const password = HashPassword(
+            `${import.meta.env.VITE_Encr}${user.profile.preferredMail}`
+          );
 
           console.log("password", password);
 
