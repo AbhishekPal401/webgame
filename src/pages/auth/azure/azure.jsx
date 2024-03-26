@@ -58,8 +58,6 @@ const azure = () => {
             `${import.meta.env.VITE_Encr}${user.profile.preferredMail}`
           );
 
-          console.log("password", password);
-
           dispatch(
             pwclogin(
               { emailID: user.profile.preferredMail, password: password },
