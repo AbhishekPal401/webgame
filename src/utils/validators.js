@@ -24,7 +24,8 @@ export const validatePhone = (phone) => {
 };
 
 export const validateUsername = (username) => {
-  const re = /^[a-zA-Z0-9_]{1,100}$/; // max 30 chars
+   const re = /^[a-zA-Z0-9_]{1,100}$/; // max 30 chars
+  //const re = /^(?=\S)(?=.*\S$)[a-zA-Z0-9_ ]{1,100}$/; // max 30 chars with spaces
   return re.test(username);
   // return !/[a-zA-Z][a-zA-Z0-9\s]*$/.test(username);
 
